@@ -1,1 +1,6 @@
 *.template
+.idea
+target
+*.iml
+.classpath
+.project
