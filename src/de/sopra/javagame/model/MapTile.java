@@ -31,4 +31,12 @@ public class MapTile {
         return false;
     }
 
+	public MapTileState getState() {
+		return state;
+	}
+
+	public void setState(MapTileState state) {
+		this.state = state;
+	}
+
 }
