@@ -338,6 +338,14 @@ public class TestDummy {
             return activePlayer;
         }
 
+        /**
+         * Ob die View auf Replay-Modus gestellt wurde
+         *
+         * @return <code>false</code> standardmäßig
+         */
+        public boolean isReplay() {
+            return isReplay;
+        }
     }
 
 }
