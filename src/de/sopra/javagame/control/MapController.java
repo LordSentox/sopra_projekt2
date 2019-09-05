@@ -7,7 +7,8 @@ import de.sopra.javagame.view.MapEditorViewAUI;
  * haben.
  */
 public class MapController {
-    private ControllerChan controllerChan;
+
+    private final ControllerChan controllerChan;
 
     /**
      * Die AUI mit der die angezeigten Daten im {@link de.sopra.javagame.view.MapEditorViewController} aktualisiert
@@ -17,9 +18,12 @@ public class MapController {
 
     /**
      * Erstellt einen neün {@link MapController}
-     * @param mapEditorViewAUI Das AUI mit dem die Daten übertragen werden sollen.
      */
-    public MapController(MapEditorViewAUI mapEditorViewAUI) {
+    MapController(ControllerChan controllerChan) {
+        this.controllerChan = controllerChan;
+    }
+
+    public void setMapEditorViewAUI(MapEditorViewAUI mapEditorViewAUI) {
         this.mapEditorViewAUI = mapEditorViewAUI;
     }
 
@@ -46,7 +50,7 @@ public class MapController {
      * geladen werden kann. Existiert die Datei bereits, überschreibt die Funktion sie. Kann die Datei nicht gespeichert
      * werden, wird eine Fehlermeldung im Karteneditor ausgegeben.
      *
-     * @param name Der Name der Karte, die gespeichert werden soll.
+     * @param name  Der Name der Karte, die gespeichert werden soll.
      * @param tiles Die Tiles, die die Karte beschreiben.
      */
     public void saveMap(String name, boolean[][] tiles) {

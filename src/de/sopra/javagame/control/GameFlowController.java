@@ -4,7 +4,12 @@ package de.sopra.javagame.control;
  * Kontrolliert den Spielablauf, auf den kein Spieler einen direkten Einfluss hat.
  */
 public class GameFlowController {
-    private ControllerChan controllerChan;
+
+    private final ControllerChan controllerChan;
+
+    GameFlowController(ControllerChan controllerChan) {
+        this.controllerChan = controllerChan;
+    }
 
     /**
      * Zieht zwei Artefaktkarten vom Artefaktkartenstapel und gibt sie dem aktiven Spieler auf die Hand. Die Karten

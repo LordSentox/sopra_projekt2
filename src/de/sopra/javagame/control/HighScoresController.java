@@ -8,7 +8,8 @@ import de.sopra.javagame.view.HighScoresViewAUI;
  * nicht miteinander verglichen werden.
  */
 public class HighScoresController {
-    private ControllerChan controllerChan;
+
+    private final ControllerChan controllerChan;
 
     /**
      * Die  AUI mit der die angezeigten Daten im {@link de.sopra.javagame.view.HighScoresViewController} aktualisiert
@@ -18,14 +19,18 @@ public class HighScoresController {
 
     /**
      * Erstellt einen neün {@link HighScoresController}
-     * @param highScoresViewAUI das AUI mit dem die Daten übertragen werden sollen.
      */
-    HighScoresController(HighScoresViewAUI highScoresViewAUI) {
+    HighScoresController(ControllerChan controllerChan) {
+        this.controllerChan = controllerChan;
+    }
+
+    public void setHighScoresViewAUI(HighScoresViewAUI highScoresViewAUI) {
         this.highScoresViewAUI = highScoresViewAUI;
     }
 
     /**
      * Lädt die aktülle Bestenliste aus einer Bestenlistendatei.
+     *
      * @param mapName Der Name der Karte, für den die Datei geladen werden soll.
      */
     public void loadHighScores(String mapName) {
@@ -34,6 +39,7 @@ public class HighScoresController {
 
     /**
      * Löscht die komplette Bestenliste.
+     *
      * @param mapName Der Name der Karte, dessen Datei zurückgesetzt werden soll.
      */
     public void resetHighScores(String mapName) {
