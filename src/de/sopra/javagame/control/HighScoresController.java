@@ -9,8 +9,12 @@ import de.sopra.javagame.view.HighScoresViewAUI;
  */
 public class HighScoresController {
 
+    public static final String SCORE_FOLDER = "data/high_scores/scores/";
+    
+    public static final String REPLAY_FOLDER = "data/high_scores/replays/";
+    
     private final ControllerChan controllerChan;
-
+    
     /**
      * Die  AUI mit der die angezeigten Daten im {@link de.sopra.javagame.view.HighScoresViewController} aktualisiert
      * werden.

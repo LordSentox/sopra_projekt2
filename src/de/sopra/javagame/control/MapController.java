@@ -8,6 +8,8 @@ import de.sopra.javagame.view.MapEditorViewAUI;
  */
 public class MapController {
 
+    public static final String MAP_FOLDER = "data/maps/";
+    
     private final ControllerChan controllerChan;
 
     /**
