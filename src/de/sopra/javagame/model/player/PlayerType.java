@@ -1,7 +1,7 @@
 package de.sopra.javagame.model.player;
 
 /**
- * Der Typ des Spielerfigur
+ * Der Typ der Spielerfigur
  */
 public enum PlayerType {
     /**
