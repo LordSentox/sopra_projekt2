@@ -7,12 +7,12 @@ package de.sopra.javagame.view;
  */
 public interface MapEditorViewAUI {
 
+
     /**
      * zeigt dem Benutzer die übergebene Nachricht in dem dafür vorgesehenen Fenster
      * @param notification Nachricht an den Benutzer
      */
     void showNotification(String notification);
-
 
     /**
      * setzt die Karte auf eine vorher ausgewählte Karte, die in Form eines boolean Arryas übergeben wurde
