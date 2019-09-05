@@ -8,6 +8,7 @@ import org.junit.Test;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.view.MapEditorViewAUI;
 
 public class MapControllerTest {
 
@@ -15,19 +16,26 @@ public class MapControllerTest {
 	private MapController mapController;
 	private JavaGame javaGame;
 	private Turn turn;
+	private MapEditorView mapEditorView;
+	private boolean[][] map;
+	private String name;
 	
 	@Before
 	public void setUp() {
 		controllerChan = TestDummy.getDummyControllerChan();
 		mapController = controllerChan.getMapController();
 		javaGame = controllerChan.getJavaGame();
-		turn = javaGame.getTurn();
+		turn = javaGame.getCurrentTurn();
+		mapEditorView = mapController.getMapEditorViewAUI();
+		map = new boolean[12][12];
+		name = "hallo";
 	}
 	
 	
 	@Test
 	public void testGenerateMapToEditor() {
-		fail("Not yet implemented");
+		mapController.generateMapToEditor();
+		
 	}
 
 	@Test
@@ -36,10 +44,7 @@ public class MapControllerTest {
 	}
 
 	@Test
-	public void testSaveMap() throws IllegalArgumentException {
-		boolean[][] map = new boolean[12][12];
-		String name = "hallo";
-		
+	public void testSaveMap() throws IllegalArgumentException {	
 		
 		//teste saveMap ohne map
 		mapController.saveMap(name, null);
@@ -77,7 +82,7 @@ public class MapControllerTest {
 		}
 		mapController.saveMap(name, map);
 		
-		assert.assertEquals(map, javaGame.getTurn().getTiles());
+		assert.assertEquals(map, javaGame.getCurrentTurn().getTiles());
 		
 		//teste mit korrekter map ohne Namen
 		mapController.saveMap("", map);

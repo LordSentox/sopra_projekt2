@@ -27,6 +27,10 @@ public class MapController {
         this.mapEditorViewAUI = mapEditorViewAUI;
     }
 
+    public MapEditorViewAUI getMapEditorViewAUI() {
+		return mapEditorViewAUI;
+	}
+    
     /**
      * Generiert zufällig eine Karte und lädt den Inhalt in den offenen Karteneditor. Erzeugt immer eine einzige,
      * zusammenhängende Insel.
