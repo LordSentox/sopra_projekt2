@@ -1,7 +1,7 @@
 package model.util;
 
 import model.model.MapTile;
-import model.model.PlayerType;
+import model.player.PlayerType;
 
 public class MapUtil {
 

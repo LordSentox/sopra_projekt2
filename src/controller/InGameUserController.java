@@ -1,6 +1,7 @@
 package model.control;
 
-import model.model.PlayerType;
+import model.player.PlayerType;
+
 import java.util.List;
 
 public class InGameUserController {

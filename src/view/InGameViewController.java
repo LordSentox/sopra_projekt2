@@ -1,9 +1,10 @@
 package model.view;
 
-import java.util.List;
-import model.model.PlayerType;
 import model.model.CardStack;
 import model.model.MapTile;
+import model.player.PlayerType;
+
+import java.util.List;
 
 public class InGameViewController extends AbstractViewController implements InGameViewAUI {
 
@@ -123,7 +124,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
 
 	/**
-	 * @see model.view.InGameViewAUI#refreshHand(model.model.PlayerType, java.util.List)
+	 * @see model.view.InGameViewAUI#refreshHand(PlayerType, java.util.List)
 	 * 
 	 *  
 	 */
@@ -163,7 +164,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
 
 	/**
-	 * @see model.view.InGameViewAUI#refreshPlayerPosition(Point, model.model.PlayerType)
+	 * @see model.view.InGameViewAUI#refreshPlayerPosition(Point, PlayerType)
 	 * 
 	 *  
 	 */
@@ -181,7 +182,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
 
 	/**
-	 * @see model.view.InGameViewAUI#refreshActivePlayer(model.model.PlayerType)
+	 * @see model.view.InGameViewAUI#refreshActivePlayer(PlayerType)
 	 * 
 	 *  
 	 */
@@ -201,7 +202,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
 
 	/**
-	 * @see model.view.InGameViewAUI#refreshPlayerName(java.lang.String, model.model.PlayerType)
+	 * @see model.view.InGameViewAUI#refreshPlayerName(java.lang.String, PlayerType)
 	 * 
 	 *  
 	 */

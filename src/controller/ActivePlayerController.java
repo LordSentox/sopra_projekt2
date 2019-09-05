@@ -1,6 +1,6 @@
 package model.control;
 
-import model.model.PlayerType;
+import model.player.PlayerType;
 
 public class ActivePlayerController {
 

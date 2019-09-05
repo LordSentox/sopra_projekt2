@@ -1,9 +1,10 @@
 package model.view;
 
-import java.util.List;
-import model.model.PlayerType;
 import model.model.CardStack;
 import model.model.MapTile;
+import model.player.PlayerType;
+
+import java.util.List;
 
 public interface InGameViewAUI {
 
