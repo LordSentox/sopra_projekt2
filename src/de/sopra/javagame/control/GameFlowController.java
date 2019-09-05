@@ -2,7 +2,11 @@ package de.sopra.javagame.control;
 
 public class GameFlowController {
 
-    private ControllerChan controllerChan;
+    private final ControllerChan controllerChan;
+
+    public GameFlowController(ControllerChan controllerChan) {
+        this.controllerChan = controllerChan;
+    }
 
     public void drawArtifactCards() {
 

@@ -5,17 +5,23 @@ import java.util.List;
 import java.util.Stack;
 
 /**
+<<<<<<< HEAD
  * 
  * @author Max Bühmann, Melanie Arnds
  * 
  * Ein CardStack implementiert einen Zieh- sowie einen Ablagestapel eines Kartentyps.
  *
  * @param <T> ist der Kartentyp. Entweder {@link ArtifactCard} oder {@link FloodCard}
+=======
+ * @see FloodCard
+ * @see ArtifactCard
+>>>>>>> branch 'master' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
  */
 public class CardStack<T> {
 
-    private Stack drawStack;
+    private Stack<T> drawStack;
 
+<<<<<<< HEAD
     private Collection discardPile;
     
     /**
@@ -24,6 +30,10 @@ public class CardStack<T> {
      * @param discard bezeichnet, ob die gezogenen Karten sofort ausgeführt und abgeworfen werden sollen
      * @return gibt eine Liste vom Kartentyp T zurück
      */
+=======
+    private Collection<T> discardPile;
+
+>>>>>>> branch 'master' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
     List<T> draw(int amount, boolean discard) {
         return null;
     }
@@ -34,12 +44,20 @@ public class CardStack<T> {
     void shuffleBack() {
 
     }
+<<<<<<< HEAD
     
     /**
      * discard fügt eine beliebige Anzahl an Karten dem discardPile hinzu.
      * @param card ist ein varargs mit beliebiger Anzahl an Karten vom Typ T.
      * @return false, wenn fehlgeschlagen, true, sonst.
      */
+=======
+
+    void shuffleDrawStack() {
+
+    }
+
+>>>>>>> branch 'master' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
     boolean discard(T... card) {
         return false;
     }
