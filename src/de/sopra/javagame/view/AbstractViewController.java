@@ -1,11 +1,13 @@
 package de.sopra.javagame.view;
-/*
- * @author Hannah, Lisa
 
- * 
+import javafx.stage.Stage;
+
+/**
+ * bietet Schnittstellenmethoden die alle ViewController benötigen
+ * @author Lisa, Hannah
+ *
  */
-
-public class AbstractViewController {
+public abstract class AbstractViewController {
 	
 	private GameWindow gameWindow;
 
