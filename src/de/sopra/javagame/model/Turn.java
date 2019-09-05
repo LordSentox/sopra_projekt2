@@ -4,6 +4,7 @@ import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.util.Direction;
 
 import java.util.Collection;
+import java.util.EnumSet;
 
 /**
  * enthält die Informationen über den aktuellen Spielzug des zugehörigen {@link JavaGame}s
@@ -13,10 +14,10 @@ import java.util.Collection;
 public class Turn {
 
     /**
-     * ein Array der Größe 4.Der Index bestimmt die Art des Artefakts
-     * true: Artefakt wurde bereits gefunden
+     * Eine Menge aller Artefakte, die bereits gefunden wurden.
+     * @see ArtifactType
      */
-    private boolean[] discoveredArtifacts;
+    private EnumSet<ArtifactType> discoveredArtifacts;
 
     /**
      * eine Beschreibung der ausgeführten Aktion
