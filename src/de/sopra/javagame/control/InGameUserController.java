@@ -9,7 +9,7 @@ public class InGameUserController {
 
     private final ControllerChan controllerChan;
 
-    public InGameUserController(ControllerChan controllerChan) {
+    InGameUserController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
     }
 

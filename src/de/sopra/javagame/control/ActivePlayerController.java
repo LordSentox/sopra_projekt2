@@ -10,11 +10,10 @@ import java.awt.*;
 
 public class ActivePlayerController {
 
-    private ControllerChan controllerChan;
+    private final ControllerChan controllerChan;
     
-    public ActivePlayerController(ControllerChan controllerChan){
-    	this.controllerChan=controllerChan;
-    	
+	ActivePlayerController(ControllerChan controllerChan) {
+        this.controllerChan = controllerChan;
     }
 
     /**
