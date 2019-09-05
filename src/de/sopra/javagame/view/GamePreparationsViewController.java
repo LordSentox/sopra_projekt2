@@ -4,8 +4,8 @@ import javafx.stage.Stage;
 
 /**
  * GUI für die Spielvorbereitung
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class GamePreparationsViewController extends AbstractViewController {
 
@@ -23,7 +23,7 @@ public class GamePreparationsViewController extends AbstractViewController {
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.GAME_PREPARATIONS;
     }
 
     @Override

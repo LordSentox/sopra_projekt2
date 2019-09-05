@@ -27,7 +27,7 @@ public class SettingsViewController extends AbstractViewController {
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.SETTINGS;
     }
 
     @Override
