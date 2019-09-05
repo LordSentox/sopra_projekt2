@@ -9,7 +9,7 @@ import de.sopra.javagame.view.MapEditorViewAUI;
 public class MapController {
 
     public static final String MAP_FOLDER = "data/maps/";
-    
+
     private final ControllerChan controllerChan;
 
     /**
@@ -30,9 +30,9 @@ public class MapController {
     }
 
     public MapEditorViewAUI getMapEditorViewAUI() {
-		return mapEditorViewAUI;
-	}
-    
+        return mapEditorViewAUI;
+    }
+
     /**
      * Generiert zufällig eine Karte und lädt den Inhalt in den offenen Karteneditor. Erzeugt immer eine einzige,
      * zusammenhängende Insel.
