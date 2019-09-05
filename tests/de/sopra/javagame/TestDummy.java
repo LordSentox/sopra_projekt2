@@ -12,6 +12,7 @@ import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -99,85 +100,244 @@ public class TestDummy {
 
     public static class InGameView implements InGameViewAUI {
 
+        private List<Point> movementPoints;
+        private List<Point> drainPoints;
+        private List<String> notifications = new LinkedList<>();
+        private Boolean transferable;
+        private Integer waterlevel;
+        private HashMap<PlayerType, List<ArtifactCard>> playerHands = new HashMap<>();
+        private boolean[] artifactsFound = new boolean[4];
+        private CardStack<ArtifactCard> cardStackArtifact;
+        private CardStack<FloodCard> cardStackFlood;
+        private HashMap<PlayerType, Point> playerPositions = new HashMap<>();
+        private HashMap<Point, MapTile> mapTiles = new HashMap<>();
+        private PlayerType activePlayer;
+        private Integer actionsLeft;
+        private HashMap<PlayerType, String> playerNames = new HashMap<>();
+        private int refreshedAll = 0;
+        private boolean isReplay = false;
+
         @Override
         public void refreshMovementOptions(List<Point> points) {
-
+            this.movementPoints = points;
         }
 
         @Override
         public void refreshDrainOptions(List<Point> points) {
-
+            this.drainPoints = points;
         }
 
         @Override
         public void showNotification(String notification) {
-
+            notifications.add(notification);
         }
 
         @Override
         public void refreshCardsTransferable(boolean transferable) {
-
+            this.transferable = transferable;
         }
 
         @Override
         public void refreshWaterLevel(int level) {
-
+            this.waterlevel = level;
         }
 
         @Override
         public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
-
+            playerHands.put(player, cards);
         }
 
         @Override
         public void refreshArtifactsFound(boolean[] artifacts) {
-
+            this.artifactsFound = artifacts;
         }
 
         @Override
         public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
-
+            this.cardStackArtifact = stack;
         }
 
         @Override
         public void refreshFloodStack(CardStack<FloodCard> stack) {
-
+            this.cardStackFlood = stack;
         }
 
         @Override
         public void refreshPlayerPosition(Point position, PlayerType player) {
-
+            playerPositions.put(player, position);
         }
 
         @Override
         public void refreshMapTile(Point position, MapTile tile) {
-
+            mapTiles.put(position, tile);
         }
 
         @Override
         public void refreshActivePlayer(PlayerType player) {
-
+            this.activePlayer = player;
         }
 
         @Override
         public void refreshActionsLeft(int actionsLeft) {
-
+            this.actionsLeft = actionsLeft;
         }
 
         @Override
         public void refreshPlayerName(String name, PlayerType player) {
-
+            playerNames.put(player, name);
         }
 
         @Override
         public void refreshAll() {
-
+            refreshedAll++;
         }
 
         @Override
         public void setIsReplayWindow(boolean replay) {
-
+            this.isReplay = replay;
         }
+
+        /**
+         * Gibt die Liste vergangener Notifications zurück.
+         * Die Neueste ist die Letzte in der Liste
+         *
+         * @return ist leer, wenn keine Notifications erfolgt sind
+         */
+        public List<String> getNotifications() {
+            return notifications;
+        }
+
+        /**
+         * @return <code>null</code> wenn niemals gesetzt
+         * @see #refreshCardsTransferable(boolean)
+         */
+        public Boolean getTransferable() {
+            return transferable;
+        }
+
+        /**
+         * @return <code>null</code> wenn niemals gesetzt
+         * @see #refreshArtifactsFound(boolean[])
+         */
+        public boolean[] getArtifactsFound() {
+            return artifactsFound;
+        }
+
+        /**
+         * Der aktuelle Artifaktkartenstapel
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         */
+        public CardStack<ArtifactCard> getCardStackArtifact() {
+            return cardStackArtifact;
+        }
+
+        /**
+         * Die aktuelle Spielerhand  eines gegebenen Spielers
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         * @see #refreshHand(PlayerType, List)
+         */
+        public List<ArtifactCard> getPlayerHand(PlayerType playerType) {
+            return playerHands.get(playerType);
+        }
+
+        /**
+         * Der aktuelle Flutkartenstapel
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         */
+        public CardStack<FloodCard> getCardStackFlood() {
+            return cardStackFlood;
+        }
+
+        /**
+         * Die Spielerpositionen
+         *
+         * @return leer wenn niemals gesetzt
+         * @see #refreshPlayerPosition(Point, PlayerType)
+         */
+        public HashMap<PlayerType, Point> getPlayerPositions() {
+            return playerPositions;
+        }
+
+        /**
+         * Die Name des Spieler
+         *
+         * @return null wenn niemals gesetzt
+         * @see #refreshPlayerName(String, PlayerType)
+         */
+        public String getPlayerName(PlayerType type) {
+            return playerNames.get(type);
+        }
+
+        /**
+         * Alle refreshten MapTile sind hier mit ihren Points verzeichnet.
+         * Zwei Refreshes auf dem gleichen Punkt überschreiben einander
+         *
+         * @return leer wenn niemals gesetzt
+         * @see #refreshMapTile(Point, MapTile)
+         */
+        public HashMap<Point, MapTile> getRefreshedMapTiles() {
+            return mapTiles;
+        }
+
+        /**
+         * Der Zähler für die verbleibenden Aktionen
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         */
+        public Integer getActionsLeft() {
+            return actionsLeft;
+        }
+
+        /**
+         * Das aktuelle Wasserlevel
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         */
+        public Integer getWaterlevel() {
+            return waterlevel;
+        }
+
+        /**
+         * Die Anzahl an Aufrufen von refreshAll seit Erstellung
+         *
+         * @return <code>0</code> wenn niemals verwendet
+         */
+        public int getRefreshedAll() {
+            return refreshedAll;
+        }
+
+        /**
+         * Die zuletzt gezeigten Punkte, die ein Spieler trocknen kann
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         * @see #refreshDrainOptions(List)
+         */
+        public List<Point> getDrainPoints() {
+            return drainPoints;
+        }
+
+        /**
+         * Die zuletzt gezeigten Punkte, zu denen sich ein Spieler bewegen kann
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         * @see #refreshMovementOptions(List)
+         */
+        public List<Point> getMovementPoints() {
+            return movementPoints;
+        }
+
+        /**
+         * Der aktive Spieler (am Zug)
+         *
+         * @return <code>null</code> wenn niemals gesetzt
+         */
+        public PlayerType getActivePlayer() {
+            return activePlayer;
+        }
+
     }
 
 }
