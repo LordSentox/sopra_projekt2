@@ -1,12 +1,29 @@
 package de.sopra.javagame.control;
 
-/**
- * <h1>projekt2</h1>
- *
- * @author Julius Korweck
- * @version 05.09.2019
- * @since 05.09.2019
- */
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 public class HighScoresControllerTest {
+
+	@Test
+	public void testHighScoresController() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetHighScoresViewAUI() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testLoadHighScores() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testResetHighScores() {
+		fail("Not yet implemented");
+	}
 
 }

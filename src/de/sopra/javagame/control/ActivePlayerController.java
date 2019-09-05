@@ -10,7 +10,11 @@ import java.awt.*;
 
 public class ActivePlayerController {
 
-    private ControllerChan controllerChan;
+    private final ControllerChan controllerChan;
+    
+	ActivePlayerController(ControllerChan controllerChan) {
+        this.controllerChan = controllerChan;
+    }
 
     /**
      * Zeigt alle Bewegungsmöglichkeiten des aktiven Spieler an.
