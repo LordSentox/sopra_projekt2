@@ -6,5 +6,5 @@ In diesem Repository entsteht euer zweites Projekt im Sopra. Für Planung, Model
 
 Wenn programmiert wird, vergesst nicht, regelmäßig den PMD-Bericht hier oder direkt in Eclipse zu überprüfen.
 
-[PMD-Bericht](https://sopra.cs.tu-dortmund.de/bin/pmd.py?XXY=19B&GROUPNUMBER=4&PROJECT=2)
+[PMD-Bericht](https://sopra.cs.tu-dortmund.de/bin/pmd-experimental.py?XXY=19B&GROUPNUMBER=4&PROJECT=2)
 
