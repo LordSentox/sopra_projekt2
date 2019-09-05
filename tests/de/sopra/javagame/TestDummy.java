@@ -12,6 +12,7 @@ import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,27 +44,60 @@ public class TestDummy {
         return new HighScoreView();
     }
 
-    static class HighScoreView implements HighScoresViewAUI {
+    public static class HighScoreView implements HighScoresViewAUI {
+        private List<HighScore> highScores;
+
         @Override
         public void refreshList(List<HighScore> scores) {
+            this.highScores = scores;
+        }
 
+        /**
+         * Gibt die zuletzt refreshte Liste zurück
+         *
+         * @return <code>null</code> wenn die Liste nie refreshed wurde
+         */
+        public List<HighScore> getHighScores() {
+            return highScores;
         }
     }
 
-    static class MapEditorView implements MapEditorViewAUI {
+    public static class MapEditorView implements MapEditorViewAUI {
+
+        private List<String> notifications = new LinkedList<>();
+        private boolean[][] tiles;
 
         @Override
         public void showNotification(String notification) {
-
+            notifications.add(notification);
         }
 
         @Override
         public void setMap(boolean[][] tiles) {
+            this.tiles = tiles;
+        }
 
+        /**
+         * Gibt die Liste vergangener Notifications zurück.
+         * Die Neueste ist die Letzte in der Liste
+         *
+         * @return ist leer, wenn keine Notifications erfolgt sind
+         */
+        public List<String> getNotifications() {
+            return notifications;
+        }
+
+        /**
+         * Gibt die aktuell gesetzten Tiles zurück
+         *
+         * @return <code>null</code> wenn die tiles nie gesetzt wurden
+         */
+        public boolean[][] getTiles() {
+            return tiles;
         }
     }
 
-    static class InGameView implements InGameViewAUI {
+    public static class InGameView implements InGameViewAUI {
 
         @Override
         public void refreshMovementOptions(List<Point> points) {
