@@ -2,8 +2,8 @@ package de.sopra.javagame.model;
 
 /**
  * enthält die Informationen wie hoch der aktuelle Wasserpegel ist und wie viele karten zu ziehen sind und die Information, ob das Spiel bereits verloren ist
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class WaterLevel {
 
@@ -16,6 +16,14 @@ public class WaterLevel {
      */
     private int level;
 
+    public WaterLevel() {
+        this(Difficulty.NOVICE);
+    }
+
+    public WaterLevel(Difficulty difficulty) {
+        this.level = difficulty.getInitialWaterLevel();
+    }
+
     /**
      * erhöht das akutelle Wasserlevel um 1
      */
@@ -25,8 +33,9 @@ public class WaterLevel {
 
     /**
      * git zurück, ob das Spiel aufgrund des Wasserstandes bereits verloren ist(Level=10)
+     *
      * @return true: Level=10
-     * 		   false: level<10
+     * false: level<10
      */
     boolean isGameLost() {
         return false;
@@ -34,6 +43,7 @@ public class WaterLevel {
 
     /**
      * liest das Arry am index des jeweiligen Levels aus
+     *
      * @return Zahl der zu ziehenden Karten
      */
     int getDrawAmount() {
