@@ -5,19 +5,24 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * <FloodCard>
+ * @see FloodCard
+ * @see ArtifactCard
  */
 public class CardStack<T> {
 
-    private Stack drawStack;
+    private Stack<T> drawStack;
 
-    private Collection discardPile;
+    private Collection<T> discardPile;
 
-    List draw(int amount, boolean discard) {
+    List<T> draw(int amount, boolean discard) {
         return null;
     }
 
     void shuffleBack() {
+
+    }
+
+    void shuffleDrawStack() {
 
     }
 
