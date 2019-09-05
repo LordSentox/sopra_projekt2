@@ -2,6 +2,11 @@ package de.sopra.javagame.view;
 
 import javafx.stage.Stage;
 
+/**
+ * GUI für die Spieleinstellungen
+ * @author Lisa, Hannah
+ *
+ */
 public class SettingsViewController extends AbstractViewController {
 
     public void onEffectVolumeChanged() {
@@ -22,7 +27,7 @@ public class SettingsViewController extends AbstractViewController {
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.SETTINGS;
     }
 
     @Override

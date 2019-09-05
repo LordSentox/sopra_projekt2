@@ -8,6 +8,11 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * GUI für den Spielablauf
+ *
+ * @author Lisa, Hannah
+ */
 public class InGameViewController extends AbstractViewController implements InGameViewAUI {
 
     public void onShowMovementOptionsClicked() {
@@ -77,7 +82,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.IN_GAME;
     }
 
     @Override
@@ -121,7 +126,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshArtifactsFound(boolean artifacts) {
+    public void refreshArtifactsFound(boolean[] artifacts) {
 
     }
 

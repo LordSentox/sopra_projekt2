@@ -1,40 +1,50 @@
 package de.sopra.javagame.view;
-/*
- * @author Hannah, Lisa
 
- * 
+import javafx.stage.Stage;
+
+/**
+ * bietet Schnittstellenmethoden die alle ViewController benötigen
+ *
+ * @author Lisa, Hannah
  */
+public abstract class AbstractViewController {
 
-public class AbstractViewController {
-	
-	private GameWindow gameWindow;
+    private GameWindow gameWindow;
 
-	private ViewState viewState;
+    void setGameWindow(GameWindow gameWindow) {
+        this.gameWindow = gameWindow;
+    }
 
-	/**
-	 * gibt zurück welches Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) zurzeit angezeigt wird 
-	 * @return Typ des Fensters
-	 */
-	abstract ViewState getType();
+    GameWindow getGameWindow() {
+        return gameWindow;
+    }
 
-	/**
-	 * neu initailisieren aller GUIs
-	 */
-	abstract void reset();
+    /**
+     * definiert den Typen des aktuellen Fensters über {@link ViewState}
+     *
+     * @return Typ des Fensters
+     */
+    abstract ViewState getType();
 
-	
-	/**
-	 * zeigen einer stage
-	 * @param stage Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
-	 */
-	abstract void show(Stage stage);
+    /**
+     * neu initailisieren des aktuellen Controllers
+     */
+    abstract void reset();
 
-	/**
-	 * Wechsel zur übergebenen Stage
-	 * @param next Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
-	 */
-	void changeState(ViewState next) {
+    /**
+     * zeigen des aktuellen controllers als neue scene auf der gegebenen stage
+     *
+     * @param stage Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
+     */
+    abstract void show(Stage stage);
 
-	}
+    /**
+     * Wechsel zum übergebenen ViewState
+     *
+     * @param next Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
+     */
+    void changeState(ViewState next) {
+
+    }
 
 }

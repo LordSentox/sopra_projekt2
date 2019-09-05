@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
+ * bietet Methoden zum aktualisieren der InGameView 
  * @author Hannah, Lisa
  */
 public interface InGameViewAUI {
@@ -56,7 +57,7 @@ public interface InGameViewAUI {
      * @param player Spieler dessen Handkarten aktualisiert werden sollen
      * @param cards  Liste der neuen Handkarten
      */
-    void refreshHand(PlayerType player, List cards);
+    void refreshHand(PlayerType player, List<ArtifactCard> cards);
 
     /**
      * aktualisiert die Anzeige der gefundenen Artefakte. Gefundene Artefakte sind nicht mehr ausgegraut.
