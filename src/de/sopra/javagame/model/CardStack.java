@@ -34,7 +34,9 @@ public class CardStack<T> {
     void shuffleBack() {
 
     }
-   
+   /**
+    * mischt den drawStack in eine zufällige Reihenfolge
+    */
     void shuffleDrawStack() {
 
     }
