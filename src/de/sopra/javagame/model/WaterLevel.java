@@ -13,6 +13,7 @@ public class WaterLevel {
     private static final int[] DRAW_AMOUNT_BY_LEVEL = new int[]{}; //TODO 
     /**
      * Index mit dem das Array ausgelesen wird
+     * Im Code, sollte dieser Wert von 0 bis 9 Zählen.
      */
     private int level;
 
@@ -32,17 +33,17 @@ public class WaterLevel {
     }
 
     /**
-     * git zurück, ob das Spiel aufgrund des Wasserstandes bereits verloren ist(Level=10)
+     * Gibt zurück, ob das Spiel aufgrund des Wasserstandes bereits verloren ist (Level=9)
      *
-     * @return true: Level=10
-     * false: level<10
+     * @return true: Level=9
+     * false: level<9
      */
     boolean isGameLost() {
         return false;
     }
 
     /**
-     * liest das Arry am index des jeweiligen Levels aus
+     * liest das Array am Index des jeweiligen Levels aus
      *
      * @return Zahl der zu ziehenden Karten
      */
