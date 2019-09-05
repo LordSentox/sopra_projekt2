@@ -27,6 +27,11 @@ public class JavaGame {
     private Stack<Turn> undoTurns;
 
     /**
+     * Der aktülle Zug, der noch nicht vollendet wurde.
+     */
+    private Turn currentTurn;
+
+    /**
      * Stack mit den Zügen, die gesehen vom Zug, der gerade getätigt wird in der Zukunft liegen. Er ist leer, wenn das
      * Spiel gerade gespielt wird und kein Zug rückgängig gemacht wurde.
      */
@@ -38,10 +43,21 @@ public class JavaGame {
     private Difficulty difficulty;
 
     /**
+     * Beendet den aktüllen Zug und erstellt einen neuen, der zum aktüllen Zug gemacht wird. Gibt es auf dem redo-Stack
+     * noch Züge, wird der neue Zug davor eingefügt.
+     */
+    public void endCurrentTurn() {
+    }
+
+    /**
      * Berechnet die Punkte, die es für das Spiel gibt. Es gibt keine Punkte, wenn die cheetah-Variable auf true ist.
      * @return Die berechneten Punkte
      */
     public int calculateScore() {
         return 0;
+    }
+
+    public Turn getCurrentTurn() {
+        return this.currentTurn;
     }
 }
