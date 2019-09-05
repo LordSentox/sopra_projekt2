@@ -28,7 +28,7 @@ public class MapEditorViewController extends AbstractViewController implements M
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.MAP_EDITOR;
     }
 
     @Override

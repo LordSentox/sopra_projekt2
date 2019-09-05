@@ -39,7 +39,7 @@ public class MainMenuViewController extends AbstractViewController {
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.MENU;
     }
 
     @Override

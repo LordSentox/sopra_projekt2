@@ -9,4 +9,26 @@ package de.sopra.javagame.util;
  */
 public class HighScore {
 
+    private String name;
+    private String mapName;
+    private int score;
+
+    public HighScore(String name, String mapName, int score) {
+        this.name = name;
+        this.mapName = mapName;
+        this.score = score;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
 }

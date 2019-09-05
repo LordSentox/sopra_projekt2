@@ -4,39 +4,47 @@ import javafx.stage.Stage;
 
 /**
  * bietet Schnittstellenmethoden die alle ViewController benötigen
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public abstract class AbstractViewController {
-	
-	private GameWindow gameWindow;
 
-	private ViewState viewState;
+    private GameWindow gameWindow;
 
-	/**
-	 * gibt zurück welches Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) zurzeit angezeigt wird 
-	 * @return Typ des Fensters
-	 */
-	abstract ViewState getType();
+    void setGameWindow(GameWindow gameWindow) {
+        this.gameWindow = gameWindow;
+    }
 
-	/**
-	 * neu initailisieren aller GUIs
-	 */
-	abstract void reset();
+    GameWindow getGameWindow() {
+        return gameWindow;
+    }
 
-	
-	/**
-	 * zeigen einer stage
-	 * @param stage Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
-	 */
-	abstract void show(Stage stage);
+    /**
+     * definiert den Typen des aktuellen Fensters über {@link ViewState}
+     *
+     * @return Typ des Fensters
+     */
+    abstract ViewState getType();
 
-	/**
-	 * Wechsel zur übergebenen Stage
-	 * @param next Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
-	 */
-	void changeState(ViewState next) {
+    /**
+     * neu initailisieren des aktuellen Controllers
+     */
+    abstract void reset();
 
-	}
+    /**
+     * zeigen des aktuellen controllers als neue scene auf der gegebenen stage
+     *
+     * @param stage Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
+     */
+    abstract void show(Stage stage);
+
+    /**
+     * Wechsel zum übergebenen ViewState
+     *
+     * @param next Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
+     */
+    void changeState(ViewState next) {
+        gameWindow.setState(next);
+    }
 
 }
