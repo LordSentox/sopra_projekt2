@@ -1,5 +1,16 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.model.player.Player;
+
+/**
+ * 
+ * @author Max Bühmann, Melanie Arnds
+ * Dieses enum beschreibt die verschiedenen Typen, die eine {@link ArtifactCard} haben kann.
+ * AIR, EARTH, FIRE, WATER die Rolle der Elemente.
+ * HELICOPTER, SANDBAGS beschreiben Spezialkarten, die der Spieler, genauso wie die Elementkarten, auf die Hand ziehen kann {@link Player}.
+ * WATERS_RISE ist eine Karte, deren Effekt sofort ausgeführt wird.
+ * 
+ */
 public enum ArtifactCardType {
 
     AIR,
@@ -9,6 +20,10 @@ public enum ArtifactCardType {
     HELICOPTER,
     SANDBAGS,
     WATERS_RISE;
+	
+	/**
+	 * @return toString wandelt den Typen der Karten in einen String um und gibt ihn zurück	 * 
+	 */
 
     public String toString() {
         return null;
