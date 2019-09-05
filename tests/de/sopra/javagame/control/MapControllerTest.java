@@ -2,13 +2,20 @@ package de.sopra.javagame.control;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.TestDummy.MapEditorView;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.view.MapEditorViewAUI;
+import junit.framework.Assert;
 
 public class MapControllerTest {
 
@@ -26,7 +33,7 @@ public class MapControllerTest {
 		mapController = controllerChan.getMapController();
 		javaGame = controllerChan.getJavaGame();
 		turn = javaGame.getCurrentTurn();
-		mapEditorView = mapController.getMapEditorViewAUI();
+		mapEditorView = mapController.getMapEditorView();
 		map = new boolean[12][12];
 		name = "hallo";
 	}
@@ -35,16 +42,26 @@ public class MapControllerTest {
 	@Test
 	public void testGenerateMapToEditor() {
 		mapController.generateMapToEditor();
+		map = mapEditorView.getTiles();
 		
 	}
 
 	@Test
 	public void testLoadMapToEditor() {
-		fail("Not yet implemented");
+		for(int i = 1; i<11; i++){
+			for(int j = 1; j<3; j++){
+				map[i][j]=true;
+			}	
+		}
+		for(int i = 1; i<5; i+=2){
+			map[i][3]=true;
+		}
+		
+		mapController.loadMapToEditor("map");
 	}
 
 	@Test
-	public void testSaveMap() throws IllegalArgumentException {	
+	public void testSaveMap() throws IllegalArgumentException, UnsupportedEncodingException, IOException {	
 		
 		//teste saveMap ohne map
 		mapController.saveMap(name, null);
@@ -81,8 +98,22 @@ public class MapControllerTest {
 			map[i][3]=true;
 		}
 		mapController.saveMap(name, map);
+		String mapString = "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;1;1;1;1;1;1;1;1;1;1;-\n"
+					  + "-;1;1;1;1;1;1;1;1;1;1;-\n"
+					  + "-;1;1;1;1;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n"
+					  + "-;-;-;-;-;-;-;-;-;-;-;-\n";
 		
-		assert.assertEquals(map, javaGame.getCurrentTurn().getTiles());
+	   String content = new String(Files.readAllBytes(Paths.get(name + ".java")), "UTF-8");		  
+	   Assert.assertEquals(mapString, content);
 		
 		//teste mit korrekter map ohne Namen
 		mapController.saveMap("", map);
