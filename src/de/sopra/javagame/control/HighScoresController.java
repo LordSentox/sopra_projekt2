@@ -2,8 +2,6 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.view.HighScoresViewAUI;
 
-import de.sopra.javagame.view.HighScoresViewAUI;
-
 /**
  * Lädt, löscht und speichert die Bestenliste im {@link de.sopra.javagame.view.HighScoresViewController}. Hat keinen
  * Einfluss auf das {@link de.sopra.javagame.model.JavaGame}. Jede Karte hat eine eigene Bestenliste. Die Punkte können
@@ -21,8 +19,6 @@ public class HighScoresController {
 
     /**
      * Erstellt einen neün {@link HighScoresController}
-     *
-     * @param highScoresViewAUI das AUI mit dem die Daten übertragen werden sollen.
      */
     HighScoresController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;

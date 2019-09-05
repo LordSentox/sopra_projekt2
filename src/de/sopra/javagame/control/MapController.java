@@ -18,10 +18,8 @@ public class MapController {
 
     /**
      * Erstellt einen neün {@link MapController}
-     *
-     * @param mapEditorViewAUI Das AUI mit dem die Daten übertragen werden sollen.
      */
-    public MapController(ControllerChan controllerChan) {
+    MapController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
     }
 
