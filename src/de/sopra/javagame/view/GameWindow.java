@@ -5,6 +5,7 @@ import de.sopra.javagame.control.ControllerChan;
 import java.util.Collection;
 
 /**
+ * Schnittstelle für alle Views und die Controller Schicht
  * @author Hannah, Lisa
  *
  */
