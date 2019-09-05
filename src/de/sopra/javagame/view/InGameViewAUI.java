@@ -9,36 +9,36 @@ import java.util.List;
 
 public interface InGameViewAUI {
 
-    public abstract void refreshMovementOptions(List<Point> points);
+    void refreshMovementOptions(List<Point> points);
 
-    public abstract void refreshDrainOptions(List<Point> points);
+    void refreshDrainOptions(List<Point> points);
 
-    public abstract void showNotification(String notification);
+    void showNotification(String notification);
 
-    public abstract void refreshCardsTransferable(boolean transferable);
+    void refreshCardsTransferable(boolean transferable);
 
-    public abstract void refreshWaterLevel(int level);
+    void refreshWaterLevel(int level);
 
-    public abstract void refreshHand(PlayerType player, List cards);
+    void refreshHand(PlayerType player, List cards);
 
-    public abstract void refreshArtifactsFound(boolean artifacts);
+    void refreshArtifactsFound(boolean artifacts);
 
-    public abstract void refreshArtifactStack(CardStack stack);
+    void refreshArtifactStack(CardStack stack);
 
-    public abstract void refreshFloodStack(CardStack stack);
+    void refreshFloodStack(CardStack stack);
 
-    public abstract void refreshPlayerPosition(Point position, PlayerType player);
+    void refreshPlayerPosition(Point position, PlayerType player);
 
-    public abstract void refreshMapTile(Point position, MapTile tile);
+    void refreshMapTile(Point position, MapTile tile);
 
-    public abstract void refreshActivePlayer(PlayerType player);
+    void refreshActivePlayer(PlayerType player);
 
-    public abstract void refreshActionsLeft(int actionsLeft);
+    void refreshActionsLeft(int actionsLeft);
 
-    public abstract void refreshPlayerName(String name, PlayerType player);
+    void refreshPlayerName(String name, PlayerType player);
 
-    public abstract void refreshAll();
+    void refreshAll();
 
-    public abstract void setIsReplayWindow(boolean replay);
+    void setIsReplayWindow(boolean replay);
 
 }

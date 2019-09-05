@@ -1,27 +1,80 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.model.model.Difficulty;
-import de.sopra.javagame.model.model.JavaGame;
-import de.sopra.javagame.model.view.InGameViewAUI;
+import de.sopra.javagame.model.Difficulty;
+import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.view.HighScoresViewAUI;
+import de.sopra.javagame.view.InGameViewAUI;
+import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.io.File;
 import java.util.List;
 
 public class ControllerChan {
 
-    private JavaGame javaGame;
+    private final ActivePlayerController activePlayerController;
 
-    private ActivePlayerController activePlayerController;
+    private final GameFlowController gameFlowController;
 
-    private GameFlowController gameFlowController;
+    private final InGameUserController inGameUserController;
 
-    private InGameUserController inGameUserController;
+    private final HighScoresController highScoresController;
 
-    private HighScoresController highScoresController;
+    private final MapController mapController;
 
     private InGameViewAUI inGameViewAUI;
 
-    private MapController mapController;
+    private JavaGame javaGame;
+
+    public ControllerChan() {
+        this.javaGame = null;
+        this.activePlayerController = new ActivePlayerController(this);
+        this.gameFlowController = new GameFlowController(this);
+        this.inGameUserController = new InGameUserController(this);
+        this.highScoresController = new HighScoresController(this);
+        this.mapController = new MapController(this);
+    }
+
+    public void setMapEditorViewAUI(MapEditorViewAUI mapEditorViewAUI) {
+        this.mapController.setMapEditorViewAUI(mapEditorViewAUI);
+    }
+
+    public void setHighScoresViewAUI(HighScoresViewAUI highScoresViewAUI) {
+        this.highScoresController.setHighScoresViewAUI(highScoresViewAUI);
+    }
+
+    public void setInGameViewAUI(InGameViewAUI inGameViewAUI) {
+        this.inGameViewAUI = inGameViewAUI;
+    }
+
+    public InGameViewAUI getInGameViewAUI() {
+        return inGameViewAUI;
+    }
+
+    public ActivePlayerController getActivePlayerController() {
+        return activePlayerController;
+    }
+
+    public GameFlowController getGameFlowController() {
+        return gameFlowController;
+    }
+
+    public HighScoresController getHighScoresController() {
+        return highScoresController;
+    }
+
+    public InGameUserController getInGameUserController() {
+        return inGameUserController;
+    }
+
+    public MapController getMapController() {
+        return mapController;
+    }
+
+    public JavaGame getJavaGame() {
+        return javaGame;
+    }
+
+    //----------------------------------------------------------------------------------------------------
 
     public void startNewGame(boolean[][] tiles, List players, Difficulty difficulty) {
 
