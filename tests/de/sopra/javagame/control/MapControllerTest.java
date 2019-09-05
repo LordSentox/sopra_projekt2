@@ -25,7 +25,7 @@ public class MapControllerTest {
 	private MapController mapController;
 	private JavaGame javaGame;
 	private Turn turn;
-	private MapEditorView mapEditorView;
+	private TestDummy.MapEditorView mapEditorView;
 	private boolean[][] map;
 	private String name;
 	private String mapString;
@@ -36,7 +36,7 @@ public class MapControllerTest {
 		mapController = controllerChan.getMapController();
 		javaGame = controllerChan.getJavaGame();
 		turn = javaGame.getCurrentTurn();
-		mapEditorView = (MapEditorView)mapController.getMapEditorViewAUI();
+		mapEditorView = (TestDummy.MapEditorView)mapController.getMapEditorViewAUI();
 		map = new boolean[12][12];
 		name = "hallo";
 		mapString = "-;-;-;-;-;-;-;-;-;-;-;-\n"

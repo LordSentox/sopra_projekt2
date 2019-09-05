@@ -28,6 +28,10 @@ public class HighScoresController {
         this.highScoresViewAUI = highScoresViewAUI;
     }
 
+    public HighScoresViewAUI getHighScoresViewAUI() {
+        return highScoresViewAUI;
+    }
+    
     /**
      * Lädt die aktülle Bestenliste aus einer Bestenlistendatei.
      *

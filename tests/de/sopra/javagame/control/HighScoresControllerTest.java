@@ -10,11 +10,15 @@ import org.junit.Test;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.view.HighScoresViewAUI;
+import de.sopra.javagame.view.HighScoresViewController;
+import junit.framework.Assert;
 
 public class HighScoresControllerTest {
 	
 	private ControllerChan controllerChan; 
 	private HighScoresController highScoresController;
+	private TestDummy.HighScoreView highScoresView;
 	private JavaGame javaGame;
 
 
@@ -22,13 +26,19 @@ public class HighScoresControllerTest {
 	public void setUp() {
 		controllerChan = TestDummy.getDummyControllerChan();
 		highScoresController = controllerChan.getHighScoresController();
+		highScoresView = (TestDummy.HighScoreView) highScoresController.getHighScoresViewAUI();
 		javaGame = controllerChan.getJavaGame();
 	}
 
 	@Test
 	public void testLoadHighScores() {
-		ArrayList<HighScore> list = new ArrayList<HighScore>();
-		JavaGame game = new JavaGame();
+
+	    
+	    HighScore no1 = new HighScore("no1", "newMap", 1000);
+				
+		highScoresController.loadHighScores("newMap");
+		Assert.assertTrue("", highScoresView.getHighScores().contains(no1));
+		
 	}
 
 	@Test
