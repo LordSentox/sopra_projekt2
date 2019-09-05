@@ -1,10 +1,7 @@
 package de.sopra.javagame;
 
 import de.sopra.javagame.control.ControllerChan;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.CardStack;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.view.HighScoresViewAUI;
@@ -12,6 +9,7 @@ import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +29,13 @@ public class TestDummy {
         controllerChan.setMapEditorViewAUI(getMapEditorViewAUI());
         controllerChan.setHighScoresViewAUI(getHighScoresViewAUI());
         return controllerChan;
+    }
+
+    public static void injectJavaGame(ControllerChan controllerChan, JavaGame game) throws Exception {
+        Field field = ControllerChan.class.getDeclaredField("javaGame");
+        field.setAccessible(true);
+        field.set(controllerChan, game);
+        field.setAccessible(false);
     }
 
     private static InGameViewAUI getInGameViewAUI() {
