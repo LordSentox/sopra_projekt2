@@ -13,4 +13,8 @@ public class MapUtil {
 		return null;
 	}
 
+	public static MapTile[][] createMapFromNumbers(int[][] numbers) {
+		return null;
+	}
+
 }

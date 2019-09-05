@@ -1,13 +1,10 @@
 package model.control;
 
-import model.view.InGameViewAUI;
 import model.model.PlayerType;
 
 public class ActivePlayerController {
 
 	private ControllerChan controllerChan;
-
-	private InGameViewAUI inGameViewAUI;
 
 	public void showMovements(boolean specialActive) {
 

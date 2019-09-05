@@ -1,12 +1,9 @@
 package model.control;
 
-import model.view.InGameViewAUI;
 import model.model.PlayerType;
 import java.util.List;
 
 public class InGameUserController {
-
-	private InGameViewAUI inGameViewAUI;
 
 	private ControllerChan controllerChan;
 

@@ -1,10 +1,6 @@
 package model.control;
 
-import model.view.InGameViewAUI;
-
 public class GameFlowController {
-
-	private InGameViewAUI inGameViewAUI;
 
 	private ControllerChan controllerChan;
 

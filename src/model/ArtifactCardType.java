@@ -14,9 +14,7 @@ public enum ArtifactCardType {
 
 	SANDBAGS,
 
-	WATERS_RISE,
-
-	NONE;
+	WATERS_RISE;
 
 	public String toString() {
 		return null;
