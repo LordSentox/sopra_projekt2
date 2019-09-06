@@ -3,6 +3,7 @@ package de.sopra.javagame;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
@@ -10,6 +11,7 @@ import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,7 +113,7 @@ public class TestDummy {
         private Boolean transferable;
         private Integer waterlevel;
         private HashMap<PlayerType, List<ArtifactCard>> playerHands = new HashMap<>();
-        private boolean[] artifactsFound = new boolean[4];
+        private EnumSet<ArtifactType> artifactsFound = EnumSet.noneOf(ArtifactType.class);
         private CardStack<ArtifactCard> cardStackArtifact;
         private CardStack<FloodCard> cardStackFlood;
         private HashMap<PlayerType, Point> playerPositions = new HashMap<>();
@@ -153,7 +155,7 @@ public class TestDummy {
         }
 
         @Override
-        public void refreshArtifactsFound(boolean[] artifacts) {
+        public void refreshArtifactsFound(EnumSet<ArtifactType> artifacts) {
             this.artifactsFound = artifacts;
         }
 
@@ -222,9 +224,9 @@ public class TestDummy {
 
         /**
          * @return <code>null</code> wenn niemals gesetzt
-         * @see #refreshArtifactsFound(boolean[])
+         * @see #refreshArtifactsFound(EnumSet)
          */
-        public boolean[] getArtifactsFound() {
+        public EnumSet<ArtifactType> getArtifactsFound() {
             return artifactsFound;
         }
 

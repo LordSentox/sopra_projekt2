@@ -2,6 +2,9 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -10,25 +13,23 @@ import java.io.File;
 import java.util.List;
 
 /**
- * 
  * @author Max Bühmann, Melanie Arnds
- *
  */
 public class ControllerChan {
+    public static final String SAVE_GAME_FOLDER = "data/save_games/";
+    public static final String REPLAY_FOLDER = "data/replays/";
+    public static final File SETTINGS_FILE = new File("data/settings");
 
     private final ActivePlayerController activePlayerController;
-
     private final GameFlowController gameFlowController;
-
     private final InGameUserController inGameUserController;
-
     private final HighScoresController highScoresController;
-
     private final MapController mapController;
 
     private InGameViewAUI inGameViewAUI;
 
     private JavaGame javaGame;
+    private Turn currentTurn;
 
     public ControllerChan() {
         this.javaGame = null;
@@ -80,18 +81,21 @@ public class ControllerChan {
     }
 
     //----------------------------------------------------------------------------------------------------
-    
+
     /**
      * startNewGame erstellt ein neues JavaGame
-     * @param tiles ein boolean Array, das die Form der Insel angibt
-     * @param players ein Listli, welches die teilnehmenden Spielfiguren enthält
+     *
+     * @param tiles      ein boolean Array, das die Form der Insel angibt
+     * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-    public void startNewGame(boolean[][] tiles, List players, Difficulty difficulty) {
+    public void startNewGame(boolean[][] tiles, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
 
     }
+
     /**
-     * loadGame lädt ein gespeichertes JavaGame aus einer Datei 
+     * loadGame lädt ein gespeichertes JavaGame aus einer Datei
+     *
      * @param file ist die zu ladende Spieldatei
      */
 
@@ -101,6 +105,7 @@ public class ControllerChan {
 
     /**
      * saveGame speichert das aktuell ausgeführte JavaGame in einer Datei
+     *
      * @param file ist die Datei, in der gespeichert wird
      */
 
@@ -109,11 +114,12 @@ public class ControllerChan {
     }
 
     /**
-     * replayGame spielt ein beendetes Spiel ab, welches vorher geladen wurde 
+     * replayGame spielt ein beendetes Spiel ab, welches vorher geladen wurde
      */
     public void replayGame() {
 
     }
+
     /**
      * continueGame setzt ein gespeichertes Spiel nach dem zuletzt ausgeführten Spielzug (vor dem Speichern) fort
      */
@@ -121,4 +127,11 @@ public class ControllerChan {
 
     }
 
+    public Turn getCurrentTurn() {
+        return this.currentTurn;
+    }
+
+    public void endTurn() {
+        this.currentTurn = this.javaGame.endTurn(this.currentTurn);
+    }
 }

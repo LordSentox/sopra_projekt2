@@ -11,22 +11,23 @@ import java.awt.*;
 public class ActivePlayerController {
 
     private final ControllerChan controllerChan;
-    
-	ActivePlayerController(ControllerChan controllerChan) {
+
+    ActivePlayerController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
     }
 
     /**
      * Zeigt alle Bewegungsmöglichkeiten des aktiven Spieler an.
+     *
      * @param specialActive Falls <code>true</code>, werden die Spezialbewegungsfähigkeiten des jeweiligen Spielers miteinberechnet.
-     * Sonst. weiden nur die Standardbewegungsmöglichkeiten angezeigt.
+     *                      Sonst. weiden nur die Standardbewegungsmöglichkeiten angezeigt.
      */
     public void showMovements(boolean specialActive) {
 
     }
 
     /**
-     *  Zeigt alle Felder an, die vom aktiven Spieler trockengelegt werden können.
+     * Zeigt alle Felder an, die vom aktiven Spieler trockengelegt werden können.
      */
     public void showDrainOptions() {
 
@@ -34,7 +35,8 @@ public class ActivePlayerController {
 
     /**
      * Zeigt die Möglichkeiten an, die Spezialfähigkeit des aktiven Spielers anzuwenden.
-     * 		Zum Beispiel werden beim Piloten alle Felder angezeigt, auf die er mit seiner Spezialfähigkeit ziehen kann.
+     * Zum Beispiel werden beim Piloten alle Felder angezeigt, auf die er mit seiner Spezialfähigkeit ziehen kann.
+     *
      * @see PlayerType
      */
     public void showSpecialAbility() {
@@ -43,6 +45,7 @@ public class ActivePlayerController {
 
     /**
      * Bricht das einsetzen einer Spezialfähigkeit ab, das vorher durch {@link #showSpecialAbility()} eingeleitet wurde.
+     *
      * @see PlayerType
      * @see #showSpecialAbility
      */
@@ -52,6 +55,7 @@ public class ActivePlayerController {
 
     /**
      * Zeigt an, ob der aktive Spieler dem gegebenen Spieler eine Karte geben kann
+     *
      * @param targetPlayer Der Spieler, dem eine Karte gegeben werden soll.
      */
     public void showTransferable(PlayerType targetPlayer) {
@@ -60,8 +64,9 @@ public class ActivePlayerController {
 
     /**
      * Gibt die Karte mit dem gegebenen Index aus der Hand des aktiven Spielers, dem gegebenen anderen Spieler
+     *
      * @param handCardIndex Der Index der Karte, die übergeben werden soll.
-     * @param targetPlayer Der Spieler, dem die Karte gegeben werden soll
+     * @param targetPlayer  Der Spieler, dem die Karte gegeben werden soll
      */
     public void transferCard(int handCardIndex, PlayerType targetPlayer) {
 
@@ -69,6 +74,7 @@ public class ActivePlayerController {
 
     /**
      * Sammelt das Artefakt, das auf dem {@link MapTile} erhältlich ist, falls der Spieler die nötigen Artefaktkarten besitzt
+     *
      * @see ArtifactCard
      */
     public void collectArtifact() {
@@ -77,8 +83,9 @@ public class ActivePlayerController {
 
     /**
      * Bewegt den aktiven Spieler auf das von dem {@link Point} angegebenen {@link MapTile}
+     *
      * @param destination Die Position des {@link MapTile}, auf das der Spieler bewegt werden soll
-     * @param useSpecial Falls true, benutzt der Spieler seine Spezialfähigkeit, um sich auf das Feld zu bewegen
+     * @param useSpecial  Falls true, benutzt der Spieler seine Spezialfähigkeit, um sich auf das Feld zu bewegen
      */
     public void move(Point destination, boolean useSpecial) {
 
@@ -86,8 +93,9 @@ public class ActivePlayerController {
 
     /**
      * Bewegt einen anderen Spieler in eine Richtung.
+     *
      * @param direction Die Richtung in die sich der Spieler um ein Feld bewegt werden soll.
-     * @param target Der Spieler, der Bewegt werden soll.
+     * @param target    Der Spieler, der Bewegt werden soll.
      * @see Direction
      * @see PlayerType
      */
@@ -97,6 +105,7 @@ public class ActivePlayerController {
 
     /**
      * Legt alle Felder trocken an den gegebenen Positionen.
+     *
      * @param position Die Positionen aller Felder die Trockengelegt werden sollen.
      */
     public void drain(Point... position) {
@@ -105,6 +114,7 @@ public class ActivePlayerController {
 
     /**
      * Zeigt einen Spielhinweis an. Danach wird dieses Spiel nicht mehr in die Bestenliste aufgenommen
+     *
      * @see HighScore
      */
     public void showTip() {

@@ -1,7 +1,6 @@
 package de.sopra.javagame.util;
 
-import org.
-        junit.Test;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,9 +14,8 @@ import static org.junit.Assert.assertEquals;
 public class PairTest {
 
     @Test
-    public void coverage()
-    {
-        Pair<String, String> pair = new Pair<>("left","right");
+    public void coverage() {
+        Pair<String, String> pair = new Pair<>("left", "right");
         assertEquals(pair.getLeft(), "left");
         assertEquals(pair.getRight(), "right");
         pair.setLeft("links");

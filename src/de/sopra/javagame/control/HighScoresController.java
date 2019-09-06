@@ -9,6 +9,10 @@ import de.sopra.javagame.view.HighScoresViewAUI;
  */
 public class HighScoresController {
 
+    public static final String SCORE_FOLDER = "data/high_scores/scores/";
+
+    public static final String REPLAY_FOLDER = "data/high_scores/replays/";
+
     private final ControllerChan controllerChan;
 
     /**
@@ -26,6 +30,10 @@ public class HighScoresController {
 
     public void setHighScoresViewAUI(HighScoresViewAUI highScoresViewAUI) {
         this.highScoresViewAUI = highScoresViewAUI;
+    }
+
+    public HighScoresViewAUI getHighScoresViewAUI() {
+        return highScoresViewAUI;
     }
 
     /**

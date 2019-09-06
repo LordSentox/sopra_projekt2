@@ -5,7 +5,7 @@ package de.sopra.javagame.model;
  *
  * @author Lisa, Hannah
  */
-public class WaterLevel {
+public class WaterLevel implements Copyable<WaterLevel> {
 
     /**
      * Hat am jeweiligen index die Anzahl der zu ziehenden Karten
@@ -23,6 +23,10 @@ public class WaterLevel {
 
     public WaterLevel(Difficulty difficulty) {
         this.level = difficulty.getInitialWaterLevel();
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     /**
@@ -51,4 +55,10 @@ public class WaterLevel {
         return 0;
     }
 
+    @Override
+    public WaterLevel copy() {
+        WaterLevel waterLevel = new WaterLevel();
+        waterLevel.level = this.level;
+        return waterLevel;
+    }
 }

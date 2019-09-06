@@ -1,12 +1,14 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.CardStack;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStack;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -64,7 +66,7 @@ public interface InGameViewAUI {
      *
      * @param artifacts Array der Größe 4, index gibt Art des Artefakt an, wenn true ist es gefunden
      */
-    void refreshArtifactsFound(boolean[] artifacts);
+    void refreshArtifactsFound(EnumSet<ArtifactType> artifacts);
 
     /**
      * aktualisiert die Anzeige des Ziehstapels (Höhe) und des Ablagestapels der Artefaktkarten
