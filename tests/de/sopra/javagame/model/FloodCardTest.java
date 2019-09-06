@@ -3,6 +3,8 @@ package de.sopra.javagame.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.sopra.javagame.model.player.PlayerType;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -19,15 +21,15 @@ public class FloodCardTest {
 
     @Before
     public void setup() {
-        blubBlub = new MapTile();
-        wannKommtDieFlut = new FloodCard();
+        blubBlub = new MapTile("blubBlub", PlayerType.NONE, ArtifactType.NONE);
+        wannKommtDieFlut = new FloodCard(blubBlub);
     }
 
     @Test
     public void testFlood() {
-        blubBlub = new MapTile();
-        wannKommtDieFlut = new FloodCard();
-
+        blubBlub = new MapTile("blubBlub", PlayerType.NONE, ArtifactType.NONE);
+        wannKommtDieFlut = new FloodCard(blubBlub);
+        
         wannKommtDieFlut.setTile(blubBlub);
         assertEquals(MapTileState.DRY, wannKommtDieFlut.getTile().getState());
 
@@ -42,7 +44,8 @@ public class FloodCardTest {
     @Test(expected = IllegalStateException.class)
     public void testWrongFlood() {
 
-        wannKommtDieFlut = new FloodCard();
+        blubBlub = new MapTile("blubBlub", PlayerType.NONE, ArtifactType.NONE);
+        wannKommtDieFlut = new FloodCard(blubBlub);
         wannKommtDieFlut.flood();
         wannKommtDieFlut.flood();
 
