@@ -52,7 +52,7 @@ public class InGameUserControllerTest {
         inGameCont = controllerChan.getInGameUserController();
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
         javaGame = controllerChan.getJavaGame();
-        turn = javaGame.getCurrentTurn();
+        turn = controllerChan.getCurrentTurn();
         artifactCardStack = turn.getArtifactCardStack();
         List<ArtifactCard> cardList = artifactCardStack.draw(28, false);
         
