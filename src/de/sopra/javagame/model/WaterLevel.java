@@ -6,6 +6,8 @@ package de.sopra.javagame.model;
  * @author Lisa, Hannah
  */
 public class WaterLevel {
+    public static final int LOSE_GAME_AT = 9;
+    public static final int CONTINUE_GAME = 5;
 
     /**
      * Hat am jeweiligen index die Anzahl der zu ziehenden Karten

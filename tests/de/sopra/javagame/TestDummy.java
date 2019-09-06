@@ -22,6 +22,7 @@ import java.util.List;
  * @since 05.09.2019
  */
 public class TestDummy {
+    
 
     public static ControllerChan getDummyControllerChan() {
         ControllerChan controllerChan = new ControllerChan();
