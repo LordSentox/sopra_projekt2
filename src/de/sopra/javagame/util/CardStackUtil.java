@@ -1,6 +1,8 @@
 package de.sopra.javagame.util;
 
+import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.CardStack;
+import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 
 /**
@@ -15,7 +17,7 @@ public class CardStackUtil {
      * @param tiles Die Tiles, für die Karten gemacht werden sollen
      * @return Der Kartenstapel, der die Flutkarten für {@param tiles} enthält.
      */
-    public static CardStack createFloodCardStack(MapTile[][] tiles) {
+    public static CardStack<FloodCard> createFloodCardStack(MapTile[][] tiles) {
         return null;
     }
 
@@ -25,7 +27,7 @@ public class CardStackUtil {
      *
      * @return Der gemischte Artefaktkartenstapel
      */
-    public static CardStack createArtifactCardStack() {
+    public static CardStack<ArtifactCard> createArtifactCardStack() {
         return null;
     }
 }

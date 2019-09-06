@@ -7,6 +7,7 @@ package de.sopra.javagame.model;
  */
 
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CopyUtil;
 
 public class MapTile implements Copyable<MapTile> {
 
@@ -41,7 +42,7 @@ public class MapTile implements Copyable<MapTile> {
         return false;
     }
 
-    MapTileState getState() {
+    public MapTileState getState() {
         return this.state;
     }
 
@@ -49,9 +50,29 @@ public class MapTile implements Copyable<MapTile> {
         this.state = state;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public boolean hasPlayerSpawn() {
+        return playerSpawn != PlayerType.NONE;
+    }
+
+    public boolean hasHiddenArtifact() {
+        return hiddenArtifact != ArtifactType.NONE;
+    }
+
+    public ArtifactType getHiddenArtifact() {
+        return hiddenArtifact;
+    }
+
+    public PlayerType getPlayerSpawn() {
+        return playerSpawn;
+    }
+
     @Override
     public MapTile copy() {
-        MapTile mapTile = new MapTile(new String(name.toCharArray()), playerSpawn, hiddenArtifact);
+        MapTile mapTile = new MapTile(CopyUtil.copy(this.name), playerSpawn, hiddenArtifact);
         mapTile.state = this.state;
         return mapTile;
     }

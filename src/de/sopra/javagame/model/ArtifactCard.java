@@ -7,7 +7,7 @@ package de.sopra.javagame.model;
  * ArtifactCards repräsentieren die Artefaktkarten des Spieles. Sie können folgende Typen annehmen:
  * {@link ArtifactCardType}
  */
-public class ArtifactCard {
+public class ArtifactCard implements Copyable<ArtifactCard> {
 
     private final ArtifactCardType type;
 
@@ -17,5 +17,10 @@ public class ArtifactCard {
 
     public ArtifactCardType getType() {
         return type;
+    }
+
+    @Override
+    public ArtifactCard copy() {
+        return new ArtifactCard(type);
     }
 }

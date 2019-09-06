@@ -17,6 +17,10 @@ import java.util.stream.Collectors;
  */
 public class CopyUtil {
 
+    public static String copy(String string) {
+        return new String(string.toCharArray());
+    }
+
     public static <C, T extends Copyable<T>> C copy(Collection<T> collection, Collector<T, ?, C> collector) {
         return collection.stream().map(item -> item.copy()).collect(collector);
     }
@@ -29,17 +33,17 @@ public class CopyUtil {
         return copy(collection, Collectors.toSet());
     }
 
-    public static <T extends Copyable<T>> void copy(T[] array, T[] target) {
+    public static <T extends Copyable<T>> void copyArr(T[] array, T[] target) {
         for (int i = 0; i < array.length; i++) {
             target[i] = array[i].copy();
         }
     }
 
-    public static <T extends Copyable<T>> void copy(T[][] array, T[][] target) {
+    public static <T extends Copyable<T>> void copyArr(T[][] array, T[][] target) {
         for (int i = 0; i < array.length; i++) {
             T[] targetPart = target[i];
             T[] arrayPart = array[i];
-            copy(arrayPart, targetPart);
+            copyArr(arrayPart, targetPart);
             target[i] = targetPart;
         }
     }
