@@ -72,4 +72,8 @@ public class Explorer extends Player {
         return null;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }

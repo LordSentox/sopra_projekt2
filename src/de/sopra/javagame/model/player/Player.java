@@ -10,21 +10,29 @@ import java.util.List;
  * @author Max Bühmann, Melanie Arnds
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
-public class Player {
+
+public abstract class Player implements Copyable<Player> {
     
-    private PlayerType type;
-
-    private String name;
-
+    private final PlayerType type;
+    
+    private final String name;
+    
+    private final Turn turn;
+    
     private Point position;
-    
-    private Turn turn;
-
+   
     private int actionsLeft;
 
     private boolean isAI;
 
-    private Collection<ArtifactCard> hand;
+
+    private List<ArtifactCard> hand;
+
+    Player(PlayerType type, String name, Turn turn) {
+        this.type = type;
+        this.name = name;
+        this.turn = turn;
+    }
 
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der Spieler sich regelkonform hinbewegen darf
@@ -97,4 +105,28 @@ public class Player {
         return null;
     }
 
+
+    public int getActionsLeft() {
+        return actionsLeft;
+    }
+
+    public List<ArtifactCard> getHand() {
+        return hand;
+    }
+
+    public PlayerType getType() {
+        return type;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Turn getTurn() {
+        return turn;
+    }
 }

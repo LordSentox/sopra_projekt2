@@ -62,4 +62,8 @@ public class Navigator extends Player {
         return true;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }

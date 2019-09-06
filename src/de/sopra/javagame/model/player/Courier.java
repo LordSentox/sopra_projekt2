@@ -61,4 +61,8 @@ public class Courier extends Player {
         return null;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }

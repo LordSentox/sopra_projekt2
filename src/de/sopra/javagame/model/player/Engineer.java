@@ -67,4 +67,8 @@ public class Engineer extends Player {
         return false;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }
