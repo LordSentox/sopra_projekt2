@@ -7,8 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.Courier;
+import de.sopra.javagame.model.player.Explorer;
 import org.junit.Before;
 import org.junit.Test;
+
 
 
 import de.sopra.javagame.TestDummy;
@@ -23,6 +28,9 @@ import de.sopra.javagame.model.player.Navigator;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import junit.framework.Assert;
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 public class InGameUserControllerTest {
 

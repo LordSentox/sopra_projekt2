@@ -3,6 +3,7 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.util.CopyUtil;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -18,6 +19,16 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
     private Stack<T> drawStack;
 
     private Collection<T> discardPile;
+
+    public CardStack() {
+        this(Collections.emptyList());
+    }
+
+    public CardStack(Collection<T> cards) {
+        drawStack = new Stack<>();
+        drawStack.addAll(cards);
+        discardPile = Collections.emptyList();
+    }
 
     /**
      * draw nimmt die angegebene Anzahl Karten von oben vom Stack
@@ -58,7 +69,7 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
     public CardStack<T> copy() {
         CardStack<T> stack = new CardStack<>();
         stack.discardPile = CopyUtil.copyAsList(this.discardPile);
-        stack.drawStack = CopyUtil.copy(stack.drawStack, Collectors.toCollection(Stack::new));
+        stack.drawStack = CopyUtil.copy(this.drawStack, Collectors.toCollection(Stack::new));
         return stack;
     }
 }

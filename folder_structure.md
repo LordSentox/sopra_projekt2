@@ -19,12 +19,12 @@ data
 Enthält die vom MapEditor gespeicherten und ladbaren Dateien. Sie enthalten nur Informationen darüber, wo sich Land und
 wo sich Wasser befindet. Der Ordner enthält Dateien mit Namen in der Form
 ```data/maps/<mapName>.map```
-Es handelt sich dabei um CSV-Dateien, welche für jedes Stück Land auf der Karte eine 0 enthalten, während sie für Wasser
+Es handelt sich dabei um CSV-Dateien, welche für jedes Stück Land auf der Karte ein X enthalten, während sie für Wasser
 einen - enthalten. Eine 2x2 quadratische Insel umgeben von Wasser sieht demnach in der Datei wie folgt aus:
 ```
 -;-;-;-
--;0;0;-
--;0;0;-
+-;X;X;-
+-;X;X;-
 -;-;-;-
 ```
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit

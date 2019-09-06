@@ -1,14 +1,13 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CopyUtil;
+
 /**
  * MapTile beschreibt die einzelnen Kacheln, die das Spielfeld bilden
  *
  * @author Hermann "Roxi" Bühmann, Melanie Arnds
  */
-
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CopyUtil;
-
 public class MapTile implements Copyable<MapTile> {
 
     private String name;
