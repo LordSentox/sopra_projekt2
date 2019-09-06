@@ -13,6 +13,7 @@ public class MapUtil {
     /**
      * Füllt die einfache Karte, die nur die Inselform enthält mit zufällig ausgewählten MapTiles und gibt die so
      * entstandene, spielbare Karte zurück.
+     *
      * @param tiles Die Inselform, die gefüllt werden soll
      * @return Spielbare Karte
      */
@@ -23,7 +24,7 @@ public class MapUtil {
     /**
      * Gibt den Anfangspunkt der Spielerfigur auf der Karte zurück.
      *
-     * @param tiles Die Insel, auf der der Anfangspunkt gesucht wird.
+     * @param tiles  Die Insel, auf der der Anfangspunkt gesucht wird.
      * @param player Die Figur, dessen Anfangspunkt bestimmt werden soll.
      * @return Der Anfangspunkt oder <code>null</code>, wenn kein Anfangspunkt für die Figur gefunden werden kann.
      */

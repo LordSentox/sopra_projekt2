@@ -2,6 +2,7 @@ package de.sopra.javagame.util;
 
 /**
  * Vereinigt zwei verschiedene Objekte, die zusammen eine eigene Bedeutung haben, zu einem.
+ *
  * @param <L> Das erste, linke Objekt
  * @param <R> Das zweite, rechte Objekt
  */
@@ -11,7 +12,8 @@ public class Pair<L, R> {
 
     /**
      * Erstellt ein Paar aus den einzelnen Objekten
-     * @param left Das linke Objekt
+     *
+     * @param left  Das linke Objekt
      * @param right Das rechte Objekt
      */
     public Pair(L left, R right) {
