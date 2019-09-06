@@ -12,17 +12,18 @@ public class FloodCard {
     /**
      * Ruft Methode {@link FloodCard.tile.flood} auf.
      * Diese setzt das der FloodCard entsprechende MapTile von DRY auf FLOODED oder von FLOODED auf GONE
-     * @throws IllegalStateException wenn das Feld bereits versunken war. 
-     * Die Karte hätte dann aus dem Stapel entfernt werden sollen.
+     *
+     * @throws IllegalStateException wenn das Feld bereits versunken war.
+     *                               Die Karte hätte dann aus dem Stapel entfernt werden sollen.
      */
     void flood() throws IllegalStateException {
     }
 
-	public MapTile getTile() {
-		return tile;
-	}
+    public MapTile getTile() {
+        return tile;
+    }
 
-	public void setTile(MapTile tile) {
-		this.tile = tile;
-	}
+    public void setTile(MapTile tile) {
+        this.tile = tile;
+    }
 }

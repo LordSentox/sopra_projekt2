@@ -8,13 +8,14 @@ import java.util.EnumSet;
 
 /**
  * enthält die Informationen über den aktuellen Spielzug des zugehörigen {@link JavaGame}s
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class Turn {
 
     /**
      * Eine Menge aller Artefakte, die bereits gefunden wurden.
+     *
      * @see ArtifactType
      */
     private EnumSet<ArtifactType> discoveredArtifacts;
@@ -30,7 +31,7 @@ public class Turn {
     private int activePlayer;
 
     /**
-     * Die Verteilung der {@link MapTile} 
+     * Die Verteilung der {@link MapTile}
      */
     private MapTile[][] tiles;
 
@@ -43,7 +44,7 @@ public class Turn {
      * Nachziehstapel mit den {@link FloodCard}
      */
     private Collection<CardStack<FloodCard>> floodCardStack;
-    
+
 
     /**
      * Nachziehstapel mit den {@link ArtifactCard}
@@ -98,9 +99,10 @@ public class Turn {
 
     /**
      * Methode um einen Spieler ohne Kosten von seinen Aktionspunkten zu bewegen
+     *
      * @param direction (oben, unten, rechts, links) Richtung in die bewegt werden darf
-     * @param caster Spieler welcher den anderen bewegt
-     * @param other der zu bewegende Spieler
+     * @param caster    Spieler welcher den anderen bewegt
+     * @param other     der zu bewegende Spieler
      * @return gibt zurück, ob das Bewegen erfolgreich war
      */
     boolean forcePush(Direction direction, Player caster, Player other) {
@@ -108,9 +110,10 @@ public class Turn {
     }
 
     /**
-     * Methode um Artefakkarten an andere Spieler zu übergeben 
-     * @param card die zu übergebende Karte
-     * @param source Spieler, der die Karte abgibt (aktiver Spieler)
+     * Methode um Artefakkarten an andere Spieler zu übergeben
+     *
+     * @param card     die zu übergebende Karte
+     * @param source   Spieler, der die Karte abgibt (aktiver Spieler)
      * @param receiver Spieler, der die Karte erhalten soll
      * @return gibt zurück, ob das Übergeben erfolgreich war
      */

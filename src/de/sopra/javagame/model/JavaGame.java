@@ -51,6 +51,7 @@ public class JavaGame {
 
     /**
      * Berechnet die Punkte, die es für das Spiel gibt. Es gibt keine Punkte, wenn die cheetah-Variable auf true ist.
+     *
      * @return Die berechneten Punkte
      */
     public int calculateScore() {

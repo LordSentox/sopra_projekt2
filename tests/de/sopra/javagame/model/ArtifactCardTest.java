@@ -8,7 +8,7 @@ package de.sopra.javagame.model;
  * @since 05.09.2019
  */
 public class ArtifactCardTest {
-	
-	//keine zu testenden Methoden
+
+    //keine zu testenden Methoden
 
 }
