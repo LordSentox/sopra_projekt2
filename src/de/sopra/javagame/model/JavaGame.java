@@ -57,9 +57,10 @@ public class JavaGame {
      */
     public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players) {
         // Erstellen des ersten Turns, der auf den undoTurns-Stapel abgelegt wird.
-        Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
+        //Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
 
-        return endTurn(initialTurn);
+        //return endTurn(initialTurn);
+        return null;
     }
 
     /**

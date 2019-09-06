@@ -4,6 +4,7 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * Enthält Helferfunktionen für Kartenerstellung und Kartenmanipulation
@@ -48,10 +49,34 @@ public class MapUtil {
      * Parst einen String als int[][], der als Karte interpretiert werden kann
      *
      * @param toParse Die Eingabe aus der gelesen werden soll
-     * @return
+     * @return Die Nummern, die einzelnen Tiles entsprechen, bzw. -1, wo Wasser ist.
      */
     public static int[][] readNumberMapFromString(String toParse) {
-        // Parse die Karteninformationen
+        // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
+        String[] lines = toParse.split("\n");
+        String[][] map = new String[lines.length][];
+        for (int i = 0; i < lines.length; ++i) {
+            String[] split = lines[i].split(";");
+            map[i] = split;
+        }
+
+        // Erstelle eine leere Map
+        int[][] numbers = new int[12][12];
+        for (int[] line : numbers) {
+            Arrays.fill(line, -1);
+        }
+
+        // Fülle die map mit den Werten, die in map stehen. Ist die map größer als die Kartengröße werden Sachen, die
+        // rechts und unten überstehen ignoriert.
+        for (int y = 0; y < Math.min(numbers.length, map.length); ++y) {
+            for (int x = 0; x < Math.min(numbers[y].length, map[y].length); ++x) {
+                String sign = map[y][x].trim();
+                if (!sign.equals("-")) {
+                    numbers[y][x] = Integer.parseUnsignedInt(sign);
+                }
+            }
+        }
+
         return null;
     }
 }
