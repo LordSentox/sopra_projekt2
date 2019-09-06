@@ -1,6 +1,7 @@
 package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
 
 import java.util.Collection;
@@ -60,39 +61,39 @@ public class Turn implements Copyable<Turn> {
      * Enum das Auskunft über die aktuelle Phase gibt
      */
     private TurnState state;
-    
+
     public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
     }
-    
+
     public CardStack<FloodCard> getFloodCardStack() {
         return floodCardStack;
     }
-    
+
     public Collection<Player> getPlayers() {
         return players;
     }
-    
+
     public int getActivePlayer() {
         return activePlayer;
     }
-    
+
     public String getDescription() {
         return description;
     }
-    
+
     public EnumSet<ArtifactType> getDiscoveredArtifacts() {
         return discoveredArtifacts;
     }
-    
+
     public TurnState getState() {
         return state;
     }
-    
+
     public MapTile[][] getTiles() {
         return tiles;
     }
-    
+
     public WaterLevel getWaterLevel() {
         return waterLevel;
     }
@@ -123,6 +124,17 @@ public class Turn implements Copyable<Turn> {
 
     @Override
     public Turn copy() {
-        return null; //TODO
+        Turn turn = new Turn();
+        turn.activePlayer = this.activePlayer;
+        turn.artifactCardStack = this.artifactCardStack.copy();
+        turn.description = CopyUtil.copy(this.description);
+        turn.discoveredArtifacts = EnumSet.copyOf(this.discoveredArtifacts);
+        turn.floodCardStack = this.floodCardStack.copy();
+        turn.players = CopyUtil.copyAsList(this.players);
+        turn.state = this.state;
+        turn.tiles = new MapTile[this.tiles.length][this.tiles[0].length];
+        CopyUtil.copyArr(this.tiles, turn.tiles);
+        turn.waterLevel = this.waterLevel.copy();
+        return turn;
     }
 }
