@@ -43,13 +43,13 @@ public class Turn {
     /**
      * Nachziehstapel mit den {@link FloodCard}
      */
-    private Collection<CardStack<FloodCard>> floodCardStack;
+    private CardStack<FloodCard> floodCardStack;
 
 
     /**
      * Nachziehstapel mit den {@link ArtifactCard}
      */
-    private Collection<CardStack<ArtifactCard>> artifactCardStack;
+    private CardStack<ArtifactCard> artifactCardStack;
 
     /**
      * Listli mit den {@link Player}
@@ -61,11 +61,11 @@ public class Turn {
      */
     private TurnState state;
     
-    public Collection<CardStack<ArtifactCard>> getArtifactCardStack() {
+    public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
     }
     
-    public Collection<CardStack<FloodCard>> getFloodCardStack() {
+    public CardStack<FloodCard> getFloodCardStack() {
         return floodCardStack;
     }
     

@@ -11,18 +11,18 @@ import java.util.List;
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
 public class Player {
+    
+    private PlayerType type;
 
     private String name;
 
     private Point position;
+    
+    private Turn turn;
 
     private int actionsLeft;
 
     private boolean isAI;
-
-    private PlayerType type;
-
-    private Turn turn;
 
     private Collection<ArtifactCard> hand;
 
