@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.Stack;
 
 import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Explorer;
+import de.sopra.javagame.util.CardStack;
 import org.junit.Before;
 import org.junit.Test;
 

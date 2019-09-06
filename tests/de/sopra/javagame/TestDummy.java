@@ -3,6 +3,7 @@ package de.sopra.javagame;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
