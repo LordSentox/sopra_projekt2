@@ -1,11 +1,13 @@
 package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.util.CardStackUtil;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * enthält die Informationen über den aktuellen Spielzug des zugehörigen {@link JavaGame}s
@@ -55,7 +57,7 @@ public class Turn implements Copyable<Turn> {
     /**
      * Listli mit den {@link Player}
      */
-    private Collection<Player> players;
+    private List<Player> players;
 
     /**
      * Enum das Auskunft über die aktuelle Phase gibt
@@ -70,7 +72,7 @@ public class Turn implements Copyable<Turn> {
         return floodCardStack;
     }
 
-    public Collection<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
@@ -97,6 +99,29 @@ public class Turn implements Copyable<Turn> {
     public WaterLevel getWaterLevel() {
         return waterLevel;
     }
+
+
+    private Turn(){}
+
+
+    /**
+     * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
+     * @param difficulty Die Startschwierigkeit des Spiels
+     * @param tiles Die Map des Spiels
+     */
+    public static Turn createInitialTurn(Difficulty difficulty, List<Player> players, MapTile[][] tiles) {
+        Turn turn = new Turn();
+        turn.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
+        turn.description = "";
+        turn.tiles = tiles;
+        turn.waterLevel = new WaterLevel(difficulty);
+        turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
+        turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
+        turn.players = new ArrayList<>();
+        turn.state = TurnState.FLOOD;
+        return turn;
+    }
+
 
     /**
      * Methode um einen Spieler ohne Kosten von seinen Aktionspunkten zu bewegen
