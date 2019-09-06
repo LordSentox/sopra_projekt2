@@ -3,6 +3,8 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CopyUtil;
 
+import java.util.function.Function;
+
 /**
  * MapTile beschreibt die einzelnen Kacheln, die das Spielfeld bilden
  *
@@ -23,6 +25,46 @@ public class MapTile implements Copyable<MapTile> {
         this.playerSpawn = playerSpawn;
         this.state = MapTileState.DRY;
         this.hiddenArtifact = hiddenArtifact;
+    }
+
+    /**
+     * Erstellt ein neues MapTile vom übergebenen Wert number.
+     *
+     * @param number Der Index des gesuchten MapTiles. Muss eine Zahl zwischen 0 und 23 sein
+     */
+    public static MapTile fromNumber(int number) {
+        if (number < 0 || number > 23) throw new IndexOutOfBoundsException();
+
+        Function<Integer, MapTile> function = num -> {
+            switch (num) {
+                case  0: return new MapTile("Wächter der Sterne", PlayerType.NONE, ArtifactType.NONE);
+                case  1: return new MapTile("Höhle des Grauens", PlayerType.NONE, ArtifactType.NONE);
+                case  2: return new MapTile("Sümpfe der Ruhe", PlayerType.NONE, ArtifactType.NONE);
+                case  3: return new MapTile("Wächter der Insel", PlayerType.NONE, ArtifactType.NONE);
+                case  4: return new MapTile("Garten der Stille", PlayerType.NONE, ArtifactType.AIR);
+                case  5: return new MapTile("Tor der Sehnsucht", PlayerType.ENGINEER, ArtifactType.NONE);
+                case  6: return new MapTile("Wald der Finsternis", PlayerType.NONE, ArtifactType.NONE);
+                case  7: return new MapTile("Wüste der Entbehrung", PlayerType.NONE, ArtifactType.NONE);
+                case  8: return new MapTile("Brücke des Verderbens", PlayerType.NONE, ArtifactType.NONE);
+                case  9: return new MapTile("Pfad der Einsamkeit", PlayerType.NONE, ArtifactType.NONE);
+                case 10: return new MapTile("Medusas Palast", PlayerType.NONE, ArtifactType.WATER);
+                case 11: return new MapTile("Tor der Vergangenheit", PlayerType.EXPLORER, ArtifactType.NONE);
+                case 12: return new MapTile("Lagune des Lebens", PlayerType.NONE, ArtifactType.NONE);
+                case 13: return new MapTile("Tempel der Sonne", PlayerType.NONE, ArtifactType.EARTH);
+                case 14: return new MapTile("Tempel des Mondes", PlayerType.NONE, ArtifactType.EARTH);
+                case 15: return new MapTile("Garten des Windes", PlayerType.NONE, ArtifactType.AIR);
+                case 16: return new MapTile("Poseidons Palast", PlayerType.NONE, ArtifactType.WATER);
+                case 17: return new MapTile("Tor der Dämmerung", PlayerType.DIVER, ArtifactType.NONE);
+                case 18: return new MapTile("Höhle des Feuers", PlayerType.NONE, ArtifactType.FIRE);
+                case 19: return new MapTile("Höhle der Schatten", PlayerType.NONE, ArtifactType.FIRE);
+                case 20: return new MapTile("Landeplatz der Versager", PlayerType.PILOT, ArtifactType.NONE);
+                case 21: return new MapTile("Tor des Vergessens", PlayerType.COURIER, ArtifactType.NONE);
+                case 22: return new MapTile("Tor des Lichtes", PlayerType.NAVIGATOR, ArtifactType.NONE);
+                case 23: return new MapTile("Klippen der Verzweiflung", PlayerType.NONE, ArtifactType.NONE);
+                default: return null;
+            }
+        };
+        return function.apply(number);
     }
 
     /**
