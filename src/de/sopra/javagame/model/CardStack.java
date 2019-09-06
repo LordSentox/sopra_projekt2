@@ -10,7 +10,7 @@ import java.util.Stack;
  * <p>
  * Ein CardStack implementiert einen Zieh- sowie einen Ablagestapel eines Kartentyps.
  */
-public class CardStack<T> {
+public class CardStack<T> implements Copyable<CardStack<T>> {
 
     private Stack<T> drawStack;
 
@@ -51,4 +51,8 @@ public class CardStack<T> {
         return false;
     }
 
+    @Override
+    public CardStack<T> copy() {
+        return null; //TODO
+    }
 }

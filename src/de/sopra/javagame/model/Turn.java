@@ -11,7 +11,7 @@ import java.util.EnumSet;
  *
  * @author Lisa, Hannah
  */
-public class Turn {
+public class Turn implements Copyable<Turn> {
 
     /**
      * Eine Menge aller Artefakte, die bereits gefunden wurden.
@@ -85,4 +85,8 @@ public class Turn {
         return false;
     }
 
+    @Override
+    public Turn copy() {
+        return null; //TODO
+    }
 }
