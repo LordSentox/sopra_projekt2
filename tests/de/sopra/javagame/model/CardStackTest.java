@@ -8,8 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * <h1>projekt2</h1>
@@ -31,7 +30,7 @@ public class CardStackTest {
         tiles = new MapTile[1][1];
         tiles[1][1] = wirHabenLandGefunden;
 
-        hand = new ArrayList<ArtifactCard>();
+        hand = new ArrayList<>();
         floodCardStack = new CardStackUtil().createFloodCardStack(tiles);
         artifactCardStack = new CardStackUtil().createArtifactCardStack();
     }
@@ -63,6 +62,7 @@ public class CardStackTest {
         for (int i = 0; i < 5; i++) {
             //moppedStapel.shuffleDrawStack();
             moppedStapel2.shuffleDrawStack();
+            //FIXME Vergleich mit equals nicht möglich
             if (moppedStapel.equals(moppedStapel2)) {
                 countEquals++;
             }
@@ -75,21 +75,41 @@ public class CardStackTest {
         tiles[1][1] = wirHabenLandGefunden;
         MapTile javaIstauchEineInsel = new MapTile("javaIstAuchEineInsel", PlayerType.NONE, ArtifactType.NONE);
         tiles[1][2] = javaIstauchEineInsel;
-        
+
         floodCardStack = new CardStackUtil().createFloodCardStack(tiles);
         CardStack<FloodCard> floodMoppedStapel = new CardStackUtil().createFloodCardStack(tiles);
-        
+
         int countEqualsForFloodCard = 0;
 
         for (int i = 0; i < 5; i++) {
             //moppedStapel.shuffleDrawStack();
             floodCardStack.shuffleDrawStack();
+            //FIXME Vergleich mit equals nicht möglich
             if (floodMoppedStapel.equals(floodCardStack)) {
                 countEqualsForFloodCard++;
             }
         }
+        //FIXME Anzahl der Tests (5 Versuche) zu gering für 3/2 Stand
         //bei 5 maligem mischen mit 2 karten, sollte höchsten 3 mal die reihenfolge gleich sein
         assertTrue(countEquals <= 3);
-        
+
+
     }
+
+    @Test
+    public void copyTest() {
+        CardStack<ArtifactCard> copy = this.artifactCardStack.copy();
+        List<ArtifactCard> drawOriginal = this.artifactCardStack.draw(1, false);
+        List<ArtifactCard> drawCopy = copy.draw(1, false);
+        assertFalse(drawCopy.get(0) == drawOriginal.get(0));
+        assertEquals(drawCopy.get(0).getType(), drawOriginal.get(0).getType());
+
+        copy.shuffleDrawStack();
+        drawCopy = copy.draw(2, false);
+        drawOriginal = this.artifactCardStack.draw(2, false);
+        if (drawCopy.get(0).equals(drawOriginal.get(0))
+                && drawCopy.get(1).equals(drawOriginal.get(1)))
+            fail("deck shuffle");
+    }
+
 }
