@@ -5,6 +5,11 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * GUI für das anzeigen der Highscores
+ *
+ * @author Hannah, Lisa
+ */
 public class HighScoresViewController extends AbstractViewController implements HighScoresViewAUI {
 
     public void onResetClicked() {
@@ -30,7 +35,7 @@ public class HighScoresViewController extends AbstractViewController implements 
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.HIGH_SCORES;
     }
 
     @Override

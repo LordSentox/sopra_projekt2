@@ -2,6 +2,11 @@ package de.sopra.javagame.view;
 
 import javafx.stage.Stage;
 
+/**
+ * GUI für das Hauptfenster
+ * @author Lisa, Hannah
+ *
+ */
 public class MainMenuViewController extends AbstractViewController {
 
     public void onSettingsClicked() {
@@ -34,7 +39,7 @@ public class MainMenuViewController extends AbstractViewController {
 
     @Override
     ViewState getType() {
-        return null;
+        return ViewState.MENU;
     }
 
     @Override
