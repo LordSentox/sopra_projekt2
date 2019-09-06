@@ -1,5 +1,12 @@
 package de.sopra.javagame.model;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import de.sopra.javagame.model.player.PlayerType;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -9,4 +16,8 @@ package de.sopra.javagame.model;
  */
 public class JavaGameTest {
 
+    @Before
+    public void setUp(){
+        
+    }
 }

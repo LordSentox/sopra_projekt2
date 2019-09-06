@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * <h1>projekt2</h1>
  *
- * @author Julius Korweck, Max Bühmann, Melanie Arnds
+ * @author Julius Korweck, Max Bühmann, Mel Mel
  * @version 05.09.2019
  * @since 05.09.2019
  */
