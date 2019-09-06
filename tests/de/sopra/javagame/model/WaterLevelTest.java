@@ -43,4 +43,19 @@ public class WaterLevelTest {
         waterLevel.increment();
         Assert.assertEquals("Incorrect amount of cards drawn", 5, waterLevel.getDrawAmount());
     }
+
+    @Test
+    public void copyTest() {
+        WaterLevel level = new WaterLevel();
+        level.increment();
+        level.increment();
+        WaterLevel copy = level.copy(); //make copy
+        copy.increment(); //change copy
+        copy.increment();
+        copy.increment();
+        //original should not change
+        Assert.assertNotEquals(level, copy);
+        Assert.assertNotEquals(level.getDrawAmount(), copy.getDrawAmount());
+    }
+
 }
