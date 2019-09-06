@@ -31,7 +31,7 @@ public class MapUtil {
                 // Damit bei falscher Benutzung keine Endlosschleife entsteht, muss die Methode beendet werden, wenn
                 // alle Tiles schon benutzt wurden.
                 if (!Arrays.asList(tilesUsed).contains(false)) {
-                    System.err.println("Misuse of function createAndFillMap. Tiles must be ")
+                    System.err.println("Misuse of function createAndFillMap. Island cannot consist of more than 24 tiles.");
                     return null;
                 }
 
@@ -39,13 +39,18 @@ public class MapUtil {
                 if (tiles[y][x]) {
                     int nextTile = random.nextInt(24);
                     do {
-                        nextTile = nextTile + 1 % 24;
+                        nextTile = (nextTile + 1) % 24;
                     } while (tilesUsed[nextTile]);
 
                     mapTiles[y][x] = MapTile.fromNumber(nextTile);
                     tilesUsed[nextTile] = true;
                 }
             }
+        }
+
+        if (Arrays.asList(tilesUsed).contains(false)) {
+            System.err.println("Misuse of function createAndFillMap. Island must consist of exactly 24 tiles.");
+            return null;
         }
 
         return mapTiles;
