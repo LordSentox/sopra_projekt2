@@ -30,7 +30,7 @@ public class MapControllerTest {
         controllerChan = TestDummy.getDummyControllerChan();
         mapController = controllerChan.getMapController();
         javaGame = controllerChan.getJavaGame();
-        turn = javaGame.getCurrentTurn();
+        turn = controllerChan.getCurrentTurn();
         mapEditorView = (TestDummy.MapEditorView) mapController.getMapEditorViewAUI();
         map = new boolean[12][12];
         name = "hallo";

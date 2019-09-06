@@ -77,6 +77,6 @@ public class MapUtil {
             }
         }
 
-        return null;
+        return numbers;
     }
 }
