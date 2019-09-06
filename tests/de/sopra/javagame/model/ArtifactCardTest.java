@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -15,14 +17,14 @@ public class ArtifactCardTest {
 
     //keine zu testenden Methoden
     private ArtifactCard cardToTest;
-    
+
     @Before
     public void setUp() {
         cardToTest = new ArtifactCard(ArtifactCardType.HELICOPTER);
     }
-    
+
     @Test
-    public void testGetType () {
+    public void testGetType() {
         assertEquals(ArtifactCardType.HELICOPTER, cardToTest.getType());
         cardToTest = new ArtifactCard(ArtifactCardType.AIR);
         assertEquals(ArtifactCardType.AIR, cardToTest.getType());
@@ -36,6 +38,13 @@ public class ArtifactCardTest {
         assertEquals(ArtifactCardType.SANDBAGS, cardToTest.getType());
         cardToTest = new ArtifactCard(ArtifactCardType.WATERS_RISE);
         assertEquals(ArtifactCardType.WATERS_RISE, cardToTest.getType());
+    }
+
+    @Test
+    public void copyTest() {
+        ArtifactCard copy = cardToTest.copy();
+        assertFalse(copy == cardToTest);
+        assertEquals(copy.getType(), cardToTest.getType());
     }
 
 }
