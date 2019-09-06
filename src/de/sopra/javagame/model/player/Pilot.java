@@ -16,46 +16,25 @@ import java.util.List;
  */
 public class Pilot extends Player {
 
-    private PlayerType type;
-
-    private String name;
-
-    private Point position;
-    
-    private Turn turn;
-
-    private int actionsLeft;
-
-    private boolean isAI;
-
-    private Collection<ArtifactCard> hand;
-
     /**
      * Der Pilot kann seine Spezialfähigkeit nur einmal pro Zug nutzen, also wird sie nach benutzen auf false gesetzt
      */
     private boolean hasSpecialMove;
     
     public Pilot (String name, Point position, Turn turn){
-        this.type = PlayerType.PILOT;
-        this.name = name;
+        super(PlayerType.PILOT, name, turn);
         this.position = position;
-        this.turn = turn;
-        this.actionsLeft = 0;
-        this.hand = new ArrayList<ArtifactCard>();
         this.isAI = false;
+        this.hasSpecialMove = false;
     } 
     
     public Pilot (String name, Point position, Turn turn, boolean isAI){
-        this.type = PlayerType.PILOT;
-        this.name = name;
+        super(PlayerType.PILOT, name, turn);
         this.position = position;
-        this.turn = turn;
-        this.actionsLeft = 0;
-        this.hand = new ArrayList<ArtifactCard>();
         this.isAI = isAI;
+        this.hasSpecialMove = false;
     }
-    
-    
+        
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der Spieler sich regelkonform hinbewegen darf.
      * Wenn specialActive, dann werden alle {@link MapTile} der Liste hinzugefügt, die nicht GONE sind

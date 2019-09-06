@@ -16,44 +16,22 @@ import java.util.Collection;
  */
 public class Engineer extends Player {
 
-    private PlayerType type;
-
-    private String name;
-
-    private Point position;
-    
-    private Turn turn;
-
-    private int actionsLeft;
-
-    private boolean isAI;
-
-    private Collection<ArtifactCard> hand;
-    
     private boolean hasExtraDrain;
     
     public Engineer (String name, Point position, Turn turn){
-        this.type = PlayerType.ENGINEER;
-        this.name = name;
+        super(PlayerType.ENGINEER, name, turn);
         this.position = position;
-        this.turn = turn;
-        this.actionsLeft = 0;
         this.isAI = false;
-        this.hand = new ArrayList<ArtifactCard>();
         this.hasExtraDrain = false;
     } 
     
     public Engineer (String name, Point position, Turn turn, boolean isAI){
-        this.type = PlayerType.ENGINEER;
-        this.name = name;
+        super(PlayerType.ENGINEER, name, turn);
         this.position = position;
-        this.turn = turn;
-        this.actionsLeft = 0;
         this.isAI = isAI;
-        this.hand = new ArrayList<ArtifactCard>();
         this.hasExtraDrain = false;
     }
-
+    
     /**
      * drain wandelt den State des {@link MapTile} in DRY um. {@link MapTileState}
      * Wenn der Engineer zweimal direkt aufeinander folgend drained, wird ihm nur eine Aktion dafür abgezogen.
