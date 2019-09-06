@@ -42,4 +42,16 @@ public class MapUtil {
     public static MapTile[][] createMapFromNumbers(int[][] numbers) {
         return null;
     }
+
+
+    /**
+     * Parst einen String als int[][], der als Karte interpretiert werden kann
+     *
+     * @param toParse Die Eingabe aus der gelesen werden soll
+     * @return
+     */
+    public static int[][] readNumberMapFromString(String toParse) {
+        // Parse die Karteninformationen
+        return null;
+    }
 }
