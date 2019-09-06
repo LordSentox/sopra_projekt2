@@ -59,6 +59,42 @@ public class Turn {
      * Enum das Auskunft über die aktuelle Phase gibt
      */
     private TurnState state;
+    
+    public Collection<CardStack<ArtifactCard>> getArtifactCardStack() {
+        return artifactCardStack;
+    }
+    
+    public Collection<CardStack<FloodCard>> getFloodCardStack() {
+        return floodCardStack;
+    }
+    
+    public Collection<Player> getPlayers() {
+        return players;
+    }
+    
+    public int getActivePlayer() {
+        return activePlayer;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public EnumSet<ArtifactType> getDiscoveredArtifacts() {
+        return discoveredArtifacts;
+    }
+    
+    public TurnState getState() {
+        return state;
+    }
+    
+    public MapTile[][] getTiles() {
+        return tiles;
+    }
+    
+    public WaterLevel getWaterLevel() {
+        return waterLevel;
+    }
 
     /**
      * Methode um einen Spieler ohne Kosten von seinen Aktionspunkten zu bewegen
