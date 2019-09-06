@@ -1,13 +1,17 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.CardStackUtil;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Pair;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * enthält die Informationen über den aktuellen Spielzug des zugehörigen {@link JavaGame}s
@@ -109,7 +113,7 @@ public class Turn implements Copyable<Turn> {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param tiles Die Map des Spiels
      */
-    public static Turn createInitialTurn(Difficulty difficulty, List<Player> players, MapTile[][] tiles) {
+    public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles) {
         Turn turn = new Turn();
         turn.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
         turn.description = "";
@@ -117,7 +121,35 @@ public class Turn implements Copyable<Turn> {
         turn.waterLevel = new WaterLevel(difficulty);
         turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
         turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
-        turn.players = new ArrayList<>();
+
+        Map<PlayerType, Point> startPositions = new EnumMap<>(PlayerType.class);
+
+        for (int y = 0; y < tiles.length; y++) {
+            for (int x = 0; x < tiles[y].length; x++) {
+                MapTile tile = tiles[y][x];
+                if (tile.getPlayerSpawn() != PlayerType.NONE) startPositions.put(tile.getPlayerSpawn(), new Point(x, y));
+            }
+        }
+
+        turn.players = players.stream().map(pair -> {
+            Point start = startPositions.get(pair.getLeft());
+            switch (pair.getLeft()) {
+                case COURIER:
+                    return new Courier("Hartmut Kurier", start, turn);
+                case DIVER:
+                    return new Diver("Hartmut im Spanienurlaub", start, turn);
+                case PILOT:
+                    return new Pilot("Hartmut auf dem Weg in den Urlaub", start, turn);
+                case NAVIGATOR:
+                    return new Navigator("Hartmut Verlaufen", start, turn);
+                case EXPLORER:
+                    return new Explorer("Hartmut im Dschungel", start, turn);
+                case ENGINEER:
+                    return new Engineer("Hartmut Auto Kaputt", start, turn);
+                default:
+                    throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
+            }
+        }).collect(Collectors.toList());
         turn.state = TurnState.FLOOD;
         return turn;
     }
