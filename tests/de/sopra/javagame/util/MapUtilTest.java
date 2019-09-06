@@ -1,5 +1,8 @@
 package de.sopra.javagame.util;
 
+import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,6 +18,33 @@ public class MapUtilTest {
 
     @Test
     public void createMapFromNumbers() {
+        int[][] numbers = {
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, 20, 19, -1, -1,  2,  6, -1, -1, -1},
+                {-1, -1, 21, 22, 18, 11,  3,  5,  4,  8, -1, -1},
+                {-1, -1,  7, 12, 23, 14, 13,  1, 17,  0, -1, -1},
+                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1, -1}};
+
+        MapTile[][] map = MapUtil.createMapFromNumbers(numbers);
+
+        // Um den Test nicht zu repititiv zu gestalten werden nur drei besonders interessante Reihen betrachtet.
+        MapTile[] nullRow = {null, null, null, null, null, null, null, null, null, null, null, null};
+        MapTile[] thirdRow = {
+                null, null,
+                new MapTile("Tor des Vergessens", PlayerType.COURIER, ArtifactType.NONE),
+                new MapTile("Tor des Lichtes", PlayerType.NAVIGATOR, ArtifactType.NONE),
+                new MapTile("Höhle des Feuers", PlayerType.NONE, ArtifactType.FIRE),
+                new MapTile("Tor der Vergangenheit", PlayerType.EXPLORER, ArtifactType.NONE),
+                new MapTile("Wächter der Insel", PlayerType.NONE, ArtifactType.NONE),
+                new MapTile("Tor der Sehnsucht", PlayerType.ENGINEER, ArtifactType.NONE),
+                new MapTile("Garten der Stille", PlayerType.NONE, ArtifactType.AIR),
+                new MapTile("Brücke des Verderbens", PlayerType.NONE, ArtifactType.NONE),
+                null, null
+        };
+
+        Assert.assertArrayEquals("Erste Reihe der Map wurde nicht richtig gefüllt.", nullRow, map[0]);
+        Assert.assertArrayEquals("Reihe unter der Map wurde nicht richtig gefüllt.", nullRow, map[5]);
+        Assert.assertArrayEquals("Volle Reihe der Map wurde nicht richtig gefüllt.", thirdRow, map[2]);
     }
 
     @Test

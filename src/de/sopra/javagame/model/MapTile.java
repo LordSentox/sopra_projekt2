@@ -3,6 +3,7 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CopyUtil;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -116,5 +117,18 @@ public class MapTile implements Copyable<MapTile> {
         MapTile mapTile = new MapTile(CopyUtil.copy(this.name), playerSpawn, hiddenArtifact);
         mapTile.state = this.state;
         return mapTile;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null) return false;
+        if (this.getClass() != other.getClass()) return false;
+
+        MapTile tile = (MapTile) other;
+        return Objects.equals(this.hiddenArtifact, tile.hiddenArtifact) &&
+                Objects.equals(this.name, tile.name) &&
+                Objects.equals(this.playerSpawn, tile.playerSpawn) &&
+                Objects.equals(this.state, tile.state);
     }
 }

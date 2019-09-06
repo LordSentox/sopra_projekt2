@@ -84,8 +84,9 @@ public class MapUtil {
      */
     public static MapTile[][] createMapFromNumbers(int[][] numbers) {
         // Gehe durch den numbers-array und fülle die MapTiles mit den den numbers entsprechenden Werten
-        MapTile[][] tiles = new MapTile[numbers.length][];
+        MapTile[][] tiles = new MapTile[12][12];
         for (int y = 0; y < numbers.length; ++y) {
+            tiles[y] = new MapTile[12];
             for (int x = 0; x < numbers[y].length; ++x) {
                 if (numbers[y][x] != -1)
                     tiles[y][x] = MapTile.fromNumber(numbers[y][x]);
