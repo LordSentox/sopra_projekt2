@@ -3,16 +3,19 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.Pair;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class InGameUserControllerTest {
@@ -39,6 +42,11 @@ public class InGameUserControllerTest {
     @Before
     public void setUp() {
         controllerChan = TestDummy.getDummyControllerChan();
+        boolean [][] tiles = new boolean [12][12];
+        List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair(PlayerType.COURIER, false), 
+                                                                new Pair(PlayerType.EXPLORER, false), 
+                                                                new Pair(PlayerType.NAVIGATOR, false));
+        controllerChan.startNewGame(tiles, players, Difficulty.NORMAL);
         mapController = controllerChan.getMapController();
         inGameCont = controllerChan.getInGameUserController();
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
