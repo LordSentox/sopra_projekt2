@@ -12,10 +12,10 @@ import de.spaceparrots.translator.core.Language;
  */
 public class TranslationUtil {
 
-    public static Language LANG = Translator.getDefaultLanguage();
+    public static Language jLANG = Translator.getDefaultLanguage();
 
     public static void setLanguage(String langKey) {
-        LANG = Translator.getLanguage(langKey);
+        jLANG = Translator.getLanguage(langKey);
     }
 
 }
