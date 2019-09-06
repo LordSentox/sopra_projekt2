@@ -14,38 +14,16 @@ import de.sopra.javagame.model.Turn;
  * @author Max Bühmann, Melanie Arnds
  */
 public class Courier extends Player {
-
-    private PlayerType type;
-
-    private String name;
-
-    private Point position;
-    
-    private Turn turn;
-
-    private int actionsLeft;
-
-    private boolean isAI;
-
-    private Collection<ArtifactCard> hand;
     
     public Courier (String name, Point position, Turn turn){
-        this.type = PlayerType.COURIER;
-        this.name = name;
+        super(PlayerType.COURIER, name, turn);
         this.position = position;
-        this.turn = turn;
-        this.actionsLeft = 0;
-        this.hand = new ArrayList<ArtifactCard>();
         this.isAI = false;
     } 
     
     public Courier (String name, Point position, Turn turn, boolean isAI){
-        this.type = PlayerType.DIVER;
-        this.name = name;
+        super(PlayerType.COURIER, name, turn);
         this.position = position;
-        this.turn = turn;
-        this.actionsLeft = 0;
-        this.hand = new ArrayList<ArtifactCard>();
         this.isAI = isAI;
     }
     

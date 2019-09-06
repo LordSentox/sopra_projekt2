@@ -3,6 +3,7 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,19 +20,21 @@ public abstract class Player implements Copyable<Player> {
     
     private final Turn turn;
     
-    private Point position;
+    protected Point position;
    
-    private int actionsLeft;
+    protected int actionsLeft;
 
-    private boolean isAI;
+    protected boolean isAI;
 
 
-    private List<ArtifactCard> hand;
+    protected List<ArtifactCard> hand;
 
     Player(PlayerType type, String name, Turn turn) {
         this.type = type;
         this.name = name;
         this.turn = turn;
+        this.actionsLeft = 0;
+        this.hand = new ArrayList<ArtifactCard>();
     }
 
     /**
