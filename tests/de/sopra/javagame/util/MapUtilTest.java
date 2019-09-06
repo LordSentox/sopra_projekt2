@@ -6,6 +6,8 @@ import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.awt.*;
+
 public class MapUtilTest {
 
     @Test
@@ -14,6 +16,22 @@ public class MapUtilTest {
 
     @Test
     public void getPlayerSpawnPoint() {
+        int[][] numbers = {
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, 20, 19, -1, -1,  2,  6, -1, -1, -1},
+                {-1, -1, 21, 22, 18, 11,  3,  5,  4,  8, -1, -1},
+                {-1, -1,  7, 12, 23, 14, 13,  1, 17,  0, -1, -1},
+                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1, -1}};
+
+        MapTile[][] map = MapUtil.createMapFromNumbers(numbers);
+
+        Assert.assertEquals("Der Spawnpunkt des Piloten wurde nicht richtig gesetzt.", new Point(3, 1), MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT));
+        Assert.assertEquals("Der Spawnpunkt des Botens wurde nicht richtig gesetzt.", new Point(2, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.COURIER));
+        Assert.assertEquals("Der Spawnpunkt des Abenteurers wurde nicht richtig gesetzt.", new Point(5, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.EXPLORER));
+        Assert.assertEquals("Der Spawnpunkt des Tauchers wurde nicht richtig gesetzt.", new Point(8, 3), MapUtil.getPlayerSpawnPoint(map, PlayerType.DIVER));
+        Assert.assertEquals("Der Spawnpunkt des Navigators wurde nicht richtig gesetzt.", new Point(3, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.NAVIGATOR));
+        Assert.assertEquals("Der Spawnpunkt des Ingenieurs wurde nicht richtig gesetzt.", new Point(7, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.ENGINEER));
+        Assert.assertEquals("Wenn kein Spieler übergeben wird gibt es keinen Spawnpunkt.", null, MapUtil.getPlayerSpawnPoint(map, PlayerType.NONE));
     }
 
     @Test

@@ -64,6 +64,10 @@ public class MapUtil {
      * @return Der Anfangspunkt oder <code>null</code>, wenn kein Anfangspunkt für die Figur gefunden werden kann.
      */
     public static Point getPlayerSpawnPoint(MapTile[][] tiles, PlayerType player) {
+        if (player == PlayerType.NONE) {
+            return null;
+        }
+
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[y].length; ++x) {
                 if (tiles[y][x] != null && tiles[y][x].getPlayerSpawn() == player) {
