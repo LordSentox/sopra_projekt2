@@ -25,6 +25,10 @@ public class WaterLevel implements Copyable<WaterLevel> {
         this.level = difficulty.getInitialWaterLevel();
     }
 
+    public int getLevel() {
+        return level;
+    }
+
     /**
      * erhöht das akutelle Wasserlevel um 1
      */
