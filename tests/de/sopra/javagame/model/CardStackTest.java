@@ -68,7 +68,27 @@ public class CardStackTest {
         }
 
         assertTrue(countEquals <= 1);
+        //test floodCardStack shuffle mopped
+        tiles = new MapTile[1][2];
+        wirHabenLandGefunden = new MapTile();
+        tiles[1][1] = wirHabenLandGefunden;
+        MapTile javaIstauchEineInsel = new MapTile();
+        tiles[1][2] = javaIstauchEineInsel;
+        
+        floodCardStack = new CardStackUtil().createFloodCardStack(tiles);
+        CardStack<FloodCard> floodMoppedStapel = new CardStackUtil().createFloodCardStack(tiles);
+        
+        int countEqualsForFloodCard = 0;
 
-        //TODO fertig machen, aber wie?
+        for (int i = 0; i < 5; i++) {
+            //moppedStapel.shuffleDrawStack();
+            floodCardStack.shuffleDrawStack();
+            if (floodMoppedStapel.equals(floodCardStack)) {
+                countEqualsForFloodCard++;
+            }
+        }
+        //bei 5 maligem mischen mit 2 karten, sollte höchsten 3 mal die reihenfolge gleich sein
+        assertTrue(countEquals <= 3);
+        
     }
 }
