@@ -2,5 +2,5 @@
 # Einkommentieren, um die Ordner zu aendern
 model = "src/de/sopra/javagame/model"
 controller = "src/de/sopra/javagame/control"
-additional="src/de/sopra/javagame/util"
+additional = "src/de/sopra/javagame/util"
 # filter = ""
