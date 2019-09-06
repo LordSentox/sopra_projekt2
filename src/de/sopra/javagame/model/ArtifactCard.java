@@ -1,5 +1,6 @@
 package de.sopra.javagame.model;
 
+
 /**
  * @author Max Hauke Georg Bühmann, Melanie Arnds
  * <p>
