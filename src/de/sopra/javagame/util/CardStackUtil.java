@@ -11,11 +11,10 @@ import java.util.List;
 public class CardStackUtil {
 
     /**
-     * Erstellt für jedes MapTile in tiles eine Flutkarte, die diese überfluten kann, wenn sie gezogen wird. Erstellt
-     * damit einen gemischten Kartenstapel.
+     * Erstellt für jedes MapTile in tiles eine Flutkarte, die diese überfluten kann, wenn sie gezogen wird.
      *
      * @param tiles Die Tiles, für die Karten gemacht werden sollen
-     * @return Der Kartenstapel, der die Flutkarten für {@param tiles} enthält.
+     * @return Der ungemischte Kartenstapel, der die Flutkarten für {@param tiles} enthält.
      */
     public static CardStack<FloodCard> createFloodCardStack(MapTile[][] tiles) {
         List<FloodCard> cards = new LinkedList<>();
@@ -30,10 +29,9 @@ public class CardStackUtil {
     }
 
     /**
-     * Erstellt einen neuen Artefaktkartenstapel mit den Artefaktkarten, die im Regelwerk vorgesehen sind und gibt ihn in
-     * gemischter Form zurück.
+     * Erstellt einen neuen Artefaktkartenstapel mit den Artefaktkarten, die im Regelwerk vorgesehen sind und gibt ihn zurück.
      *
-     * @return Der gemischte Artefaktkartenstapel
+     * @return Der neu generierte ungemischte Artefaktkartenstapel
      */
     public static CardStack<ArtifactCard> createArtifactCardStack() {
         List<ArtifactCard> cards = new LinkedList<>();
