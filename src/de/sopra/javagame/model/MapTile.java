@@ -42,12 +42,32 @@ public class MapTile implements Copyable<MapTile> {
         return false;
     }
 
-    MapTileState getState() {
+    public MapTileState getState() {
         return this.state;
     }
 
     void setState(MapTileState state) {
         this.state = state;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean hasPlayerSpawn() {
+        return playerSpawn != PlayerType.NONE;
+    }
+
+    public boolean hasHiddenArtifact() {
+        return hiddenArtifact != ArtifactType.NONE;
+    }
+
+    public ArtifactType getHiddenArtifact() {
+        return hiddenArtifact;
+    }
+
+    public PlayerType getPlayerSpawn() {
+        return playerSpawn;
     }
 
     @Override
