@@ -47,10 +47,11 @@ public class MapUtil {
     /**
      * Parst einen String als int[][], der als Karte interpretiert werden kann
      *
-     * @param s Die Eingabe aus der gelesen werden soll
+     * @param toParse Die Eingabe aus der gelesen werden soll
      * @return
      */
-    public static int[][] readNumberMapFromString(String s) {
+    public static int[][] readNumberMapFromString(String toParse) {
+        // Parse die Karteninformationen
         return null;
     }
 }
