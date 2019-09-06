@@ -1,11 +1,13 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.CardStack;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -126,7 +128,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshArtifactsFound(boolean[] artifacts) {
+    public void refreshArtifactsFound(EnumSet<ArtifactType> artifacts) {
 
     }
 
