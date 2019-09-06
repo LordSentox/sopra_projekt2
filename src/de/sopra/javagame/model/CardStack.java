@@ -23,7 +23,7 @@ public class CardStack<T> implements Copyable<CardStack<T>> {
      * @param discard bezeichnet, ob die gezogenen Karten sofort ausgeführt und abgeworfen werden sollen
      * @return gibt eine Liste vom Kartentyp T zurück
      */
-    List<T> draw(int amount, boolean discard) {
+    public List<T> draw(int amount, boolean discard) {
         return null;
     }
 

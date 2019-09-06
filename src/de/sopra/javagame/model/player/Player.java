@@ -10,19 +10,19 @@ import java.util.List;
  * @author Max Bühmann, Melanie Arnds
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
-public class Player implements Copyable<Player> {
+public class Player {
+    
+    private PlayerType type;
 
     private String name;
 
     private Point position;
+    
+    private Turn turn;
 
     private int actionsLeft;
 
     private boolean isAI;
-
-    private PlayerType type;
-
-    private Turn turn;
 
     private Collection<ArtifactCard> hand;
 
@@ -97,8 +97,4 @@ public class Player implements Copyable<Player> {
         return null;
     }
 
-    @Override
-    public Player copy() {
-        return null; //TODO
-    }
 }
