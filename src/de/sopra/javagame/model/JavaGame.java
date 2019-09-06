@@ -11,7 +11,6 @@ import java.util.Stack;
  * werden mit undo und redo.
  */
 public class JavaGame {
-
     /**
      * Wenn ein Spiel gestartet wird, ist diese Variable zunächst false. Sollte ein Spieler sich aber im Laufe des Spiels
      * einen Tipp holen oder einen Zug rückgängig machen wird sie auf true gesetzt und das Spiel kann nicht mehr in die
@@ -81,5 +80,17 @@ public class JavaGame {
      */
     public int calculateScore() {
         return 0;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public boolean getIsCheetah() {
+        return this.cheetah;
     }
 }
