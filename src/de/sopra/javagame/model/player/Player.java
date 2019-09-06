@@ -3,28 +3,28 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.*;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Max Bühmann, Melanie Arnds
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
-public class Player {
-
-    private String name;
-
+public abstract class Player {
+    private final PlayerType type;
+    private final String name;
+    private final Turn turn;
     private Point position;
 
     private int actionsLeft;
-
     private boolean isAI;
 
-    private PlayerType type;
+    private List<ArtifactCard> hand;
 
-    private Turn turn;
-
-    private Collection<ArtifactCard> hand;
+    Player(PlayerType type, String name, Turn turn) {
+        this.type = type;
+        this.name = name;
+        this.turn = turn;
+    }
 
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der Spieler sich regelkonform hinbewegen darf
@@ -61,7 +61,6 @@ public class Player {
      *
      * @return Listli
      */
-
     List<Point> drainablePositions() {
         return null;
     }
@@ -97,4 +96,27 @@ public class Player {
         return null;
     }
 
+    public int getActionsLeft() {
+        return actionsLeft;
+    }
+
+    public List<ArtifactCard> getHand() {
+        return hand;
+    }
+
+    public PlayerType getType() {
+        return type;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Turn getTurn() {
+        return turn;
+    }
 }
