@@ -10,7 +10,7 @@ import java.util.List;
  * @author Max Bühmann, Melanie Arnds
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
-public class Player {
+public class Player implements Copyable<Player> {
 
     private String name;
 
@@ -97,4 +97,8 @@ public class Player {
         return null;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }
