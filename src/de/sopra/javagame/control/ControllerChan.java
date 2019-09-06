@@ -86,7 +86,7 @@ public class ControllerChan {
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-    public void startNewGame(boolean[][] tiles, List<PlayerType> players, Difficulty difficulty) {
+    public void startNewGame(boolean[][] tiles, List<Pair<PlayerType, boolean>> players, Difficulty difficulty) {
 
     }
 

@@ -1,9 +1,15 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.Difficulty;
+import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.player.PlayerType;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * <h1>projekt2</h1>
@@ -35,6 +41,11 @@ public class ControllerChanTest {
 
     @Test
     public void startNewGame() {
+        this.controllerChan.startNewGame(this.testMap, Arrays.asList(PlayerType.COURIER, PlayerType.PILOT), Difficulty.LEGENDARY);
+        JavaGame game = this.controllerChan.getJavaGame();
+
+        Assert.assertFalse("Spieler wurden als Cheater abgestempelt, obwohl das Spiel gerade erst gestartet wurde", game.getCheetah());
+        Assert.assertEquals("Schwierigkeit wurde nicht korrekt im Spiel gesetzt", Difficulty.LEGENDARY, game.getDifficulty());
     }
 
     @Test
