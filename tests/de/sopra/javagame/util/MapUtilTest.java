@@ -67,12 +67,12 @@ public class MapUtilTest {
 
     @Test
     public void readNumberMapFromString() {
-        String extendedMap = "-; -; -; -; -; -; -; -; -; -; -; -\n" +
-                             "-; -; -;20;19; -; -; 2; 6; -; -; -\n" +
-                             "-; -;21;22;18;11; 3; 5; 4; 8; -; -\n" +
-                             "-; -; 7;12;23;14;13; 1;17; 0; -; -\n" +
-                             "-; -; -; 9;16; -; -;15;10; -; -; -\n" +
-                             "-; -; -; -; -; -; -; -; -; -; -; -\n";
+        String extendedMap = "-, -, -, -, -, -, -, -, -, -, -, -\n" +
+                             "-, -, -,20,19, -, -, 2, 6, -, -, -\n" +
+                             "-, -,21,22,18,11, 3, 5, 4, 8, -, -\n" +
+                             "-, -, 7,12,23,14,13, 1,17, 0, -, -\n" +
+                             "-, -, -, 9,16, -, -,15,10, -, -, -\n" +
+                             "-, -, -, -, -, -, -, -, -, -, -, -\n";
 
         int[][] numbers = MapUtil.readNumberMapFromString(extendedMap);
         Assert.assertNotNull("Zahlen wurden nicht aus dem String gelesen", numbers);

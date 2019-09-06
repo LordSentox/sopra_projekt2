@@ -112,7 +112,7 @@ public class MapUtil {
         String[] lines = toParse.split("\n");
         String[][] map = new String[lines.length][];
         for (int i = 0; i < lines.length; ++i) {
-            String[] split = lines[i].split(";");
+            String[] split = lines[i].split(",");
             map[i] = split;
         }
 
