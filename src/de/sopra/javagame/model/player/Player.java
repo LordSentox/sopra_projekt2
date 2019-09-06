@@ -119,9 +119,4 @@ public abstract class Player implements Copyable<Player> {
     public Turn getTurn() {
         return turn;
     }
-
-    @Override
-    public Player copy() {
-        return null; //TODO
-    }
 }

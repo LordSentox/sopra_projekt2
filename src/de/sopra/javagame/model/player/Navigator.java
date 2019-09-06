@@ -10,7 +10,6 @@ public class Navigator extends Player {
      * er kann zwei spieler (auch zweimal den gleichen) pro aktion pushen
      */
     private boolean hasExtraPush;
-
     /**
      * Der Navigator kann auch andere Spieler bewegen.
      */
@@ -18,4 +17,8 @@ public class Navigator extends Player {
         return true;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }

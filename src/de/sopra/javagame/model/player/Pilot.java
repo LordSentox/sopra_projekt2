@@ -40,4 +40,8 @@ public class Pilot extends Player {
         return false;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }

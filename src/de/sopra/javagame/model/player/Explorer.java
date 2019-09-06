@@ -10,6 +10,7 @@ import java.util.List;
  * @author Georg Bühmann, Melanie Arnds
  */
 public class Explorer extends Player {
+
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der Spieler sich regelkonform hinbewegen darf.
      * Der Forscher darf auch diagonal laufen.
@@ -32,4 +33,8 @@ public class Explorer extends Player {
         return null;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }

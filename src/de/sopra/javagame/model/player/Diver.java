@@ -23,4 +23,8 @@ public class Diver extends Player {
         return null;
     }
 
+    @Override
+    public Player copy() {
+        return null; //TODO
+    }
 }
