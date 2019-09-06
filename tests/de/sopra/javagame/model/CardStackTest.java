@@ -1,5 +1,6 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStackUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class CardStackTest {
 
     @Before
     public void setUp() {
-        wirHabenLandGefunden = new MapTile();
+        wirHabenLandGefunden = new MapTile("wirHabenLandGefunden", PlayerType.NONE, ArtifactType.NONE);
         tiles = new MapTile[1][1];
         tiles[1][1] = wirHabenLandGefunden;
 
@@ -70,9 +71,9 @@ public class CardStackTest {
         assertTrue(countEquals <= 1);
         //test floodCardStack shuffle mopped
         tiles = new MapTile[1][2];
-        wirHabenLandGefunden = new MapTile();
+        wirHabenLandGefunden = new MapTile("wirHabenLandGefunden", PlayerType.NONE, ArtifactType.NONE);
         tiles[1][1] = wirHabenLandGefunden;
-        MapTile javaIstauchEineInsel = new MapTile();
+        MapTile javaIstauchEineInsel = new MapTile("javaIstAuchEineInsel", PlayerType.NONE, ArtifactType.NONE);
         tiles[1][2] = javaIstauchEineInsel;
         
         floodCardStack = new CardStackUtil().createFloodCardStack(tiles);
