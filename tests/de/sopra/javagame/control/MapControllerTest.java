@@ -3,7 +3,7 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.Turn;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

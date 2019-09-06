@@ -8,7 +8,7 @@ package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.PlayerType;
 
-public class MapTile {
+public class MapTile implements Copyable<MapTile> {
 
     private String name;
 
@@ -17,6 +17,13 @@ public class MapTile {
     private MapTileState state;
 
     private ArtifactType hiddenArtifact;
+
+    public MapTile(String name, PlayerType playerSpawn, ArtifactType hiddenArtifact) {
+        this.name = name;
+        this.playerSpawn = playerSpawn;
+        this.state = MapTileState.DRY;
+        this.hiddenArtifact = hiddenArtifact;
+    }
 
     /**
      * setzt den state des MapTile von FLOODER auf DRY
@@ -27,6 +34,7 @@ public class MapTile {
 
     /**
      * setzt den state des MapTile von DRY auf FLOODED oder von FLOODED auf GONE
+     *
      * @return false wenn Fehler, true, sonst
      */
     boolean flood() {
@@ -39,5 +47,12 @@ public class MapTile {
 
     void setState(MapTileState state) {
         this.state = state;
+    }
+
+    @Override
+    public MapTile copy() {
+        MapTile mapTile = new MapTile(new String(name.toCharArray()), playerSpawn, hiddenArtifact);
+        mapTile.state = this.state;
+        return mapTile;
     }
 }

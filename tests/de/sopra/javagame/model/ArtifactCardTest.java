@@ -1,5 +1,9 @@
 package de.sopra.javagame.model;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 /**
  * <h1>projekt2</h1>
  *
@@ -10,5 +14,28 @@ package de.sopra.javagame.model;
 public class ArtifactCardTest {
 
     //keine zu testenden Methoden
+    private ArtifactCard cardToTest;
+    
+    @Before
+    public void setUp() {
+        cardToTest = new ArtifactCard(ArtifactCardType.HELICOPTER);
+    }
+    
+    @Test
+    public void testGetType () {
+        assertEquals(ArtifactCardType.HELICOPTER, cardToTest.getType());
+        cardToTest = new ArtifactCard(ArtifactCardType.AIR);
+        assertEquals(ArtifactCardType.AIR, cardToTest.getType());
+        cardToTest = new ArtifactCard(ArtifactCardType.EARTH);
+        assertEquals(ArtifactCardType.EARTH, cardToTest.getType());
+        cardToTest = new ArtifactCard(ArtifactCardType.FIRE);
+        assertEquals(ArtifactCardType.FIRE, cardToTest.getType());
+        cardToTest = new ArtifactCard(ArtifactCardType.WATER);
+        assertEquals(ArtifactCardType.WATER, cardToTest.getType());
+        cardToTest = new ArtifactCard(ArtifactCardType.SANDBAGS);
+        assertEquals(ArtifactCardType.SANDBAGS, cardToTest.getType());
+        cardToTest = new ArtifactCard(ArtifactCardType.WATERS_RISE);
+        assertEquals(ArtifactCardType.WATERS_RISE, cardToTest.getType());
+    }
 
 }

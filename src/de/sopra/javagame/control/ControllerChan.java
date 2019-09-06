@@ -2,6 +2,7 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -13,21 +14,14 @@ import java.util.List;
  * @author Max Bühmann, Melanie Arnds
  */
 public class ControllerChan {
-
     public static final String SAVE_GAME_FOLDER = "data/save_games/";
-
     public static final String REPLAY_FOLDER = "data/replays/";
-
     public static final File SETTINGS_FILE = new File("data/settings");
 
     private final ActivePlayerController activePlayerController;
-
     private final GameFlowController gameFlowController;
-
     private final InGameUserController inGameUserController;
-
     private final HighScoresController highScoresController;
-
     private final MapController mapController;
 
     private InGameViewAUI inGameViewAUI;
@@ -92,7 +86,7 @@ public class ControllerChan {
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-    public void startNewGame(boolean[][] tiles, List players, Difficulty difficulty) {
+    public void startNewGame(boolean[][] tiles, List<PlayerType> players, Difficulty difficulty) {
 
     }
 
