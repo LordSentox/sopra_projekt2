@@ -1,8 +1,11 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.util.CopyUtil;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * @param <T> ist der Kartentyp. Entweder {@link ArtifactCard} oder {@link FloodCard}
@@ -10,7 +13,7 @@ import java.util.Stack;
  * <p>
  * Ein CardStack implementiert einen Zieh- sowie einen Ablagestapel eines Kartentyps.
  */
-public class CardStack<T> implements Copyable<CardStack<T>> {
+public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> {
 
     private Stack<T> drawStack;
 
@@ -53,6 +56,9 @@ public class CardStack<T> implements Copyable<CardStack<T>> {
 
     @Override
     public CardStack<T> copy() {
-        return null; //TODO
+        CardStack<T> stack = new CardStack<>();
+        stack.discardPile = CopyUtil.copyAsList(this.discardPile);
+        stack.drawStack = CopyUtil.copy(stack.drawStack, Collectors.toCollection(Stack::new));
+        return stack;
     }
 }
