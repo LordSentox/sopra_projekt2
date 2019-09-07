@@ -12,6 +12,7 @@ public class MapUtilTest {
 
     @Test
     public void createAndFillMap() {
+
     }
 
     @Test
@@ -31,7 +32,7 @@ public class MapUtilTest {
         Assert.assertEquals("Der Spawnpunkt des Tauchers wurde nicht richtig gesetzt.", new Point(8, 3), MapUtil.getPlayerSpawnPoint(map, PlayerType.DIVER));
         Assert.assertEquals("Der Spawnpunkt des Navigators wurde nicht richtig gesetzt.", new Point(3, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.NAVIGATOR));
         Assert.assertEquals("Der Spawnpunkt des Ingenieurs wurde nicht richtig gesetzt.", new Point(7, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.ENGINEER));
-        Assert.assertEquals("Wenn kein Spieler übergeben wird gibt es keinen Spawnpunkt.", null, MapUtil.getPlayerSpawnPoint(map, PlayerType.NONE));
+        Assert.assertNull("Wenn kein Spieler übergeben wird gibt es keinen Spawnpunkt.", MapUtil.getPlayerSpawnPoint(map, PlayerType.NONE));
     }
 
     @Test
