@@ -37,18 +37,7 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
      * @return gibt eine Liste vom Kartentyp T zurück
      */
     public List<T> draw(int amount, boolean discard) {
-        List<T> drawn = new LinkedList<>();
-        while (amount > 0) {
-            if (drawStack.isEmpty()) //wenn der stack leer ist, Ablagestapel zurückmischen
-                shuffleBack();
-            if (drawStack.isEmpty()) //wenn der stack immernoch leer ist, aufhören zu ziehen
-                drawn.add(drawStack.pop());
-        }
-        if (discard) {
-            for (T item : drawn)
-                discard(item);
-        }
-        return drawn;
+        return null;
     }
 
     /**
