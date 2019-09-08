@@ -1,12 +1,9 @@
 package de.sopra.javagame.model.player;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.Turn;
+
+import java.awt.*;
+import java.util.List;
 
 /**
  * Courier implementiert die Spielfigur "Bote".

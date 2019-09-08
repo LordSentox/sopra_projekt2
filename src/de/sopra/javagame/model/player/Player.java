@@ -4,7 +4,6 @@ import de.sopra.javagame.model.*;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public abstract class Player implements Copyable<Player> {
         this.name = name;
         this.turn = turn;
         this.actionsLeft = 0;
-        this.hand = new ArrayList<ArtifactCard>();
+        this.hand = new ArrayList<>();
     }
 
     /**

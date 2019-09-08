@@ -1,13 +1,10 @@
 package de.sopra.javagame.model.player;
 
-import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.Turn;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Engineer implementiert die Spielfigur "Ingenieur".

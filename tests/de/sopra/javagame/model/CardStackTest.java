@@ -29,11 +29,11 @@ public class CardStackTest {
     public void setUp() {
         wirHabenLandGefunden = new MapTile("wirHabenLandGefunden", PlayerType.NONE, ArtifactType.NONE);
         tiles = new MapTile[1][1];
-        tiles[1][1] = wirHabenLandGefunden;
+        tiles[0][0] = wirHabenLandGefunden;
 
         hand = new ArrayList<>();
-        floodCardStack = new CardStackUtil().createFloodCardStack(tiles);
-        artifactCardStack = new CardStackUtil().createArtifactCardStack();
+        floodCardStack = CardStackUtil.createFloodCardStack(tiles);
+        artifactCardStack = CardStackUtil.createArtifactCardStack();
     }
 
     @Test
@@ -55,8 +55,8 @@ public class CardStackTest {
     @Test
     public void testShuffleDrawStack() {
         //test artifactCardStack shuffle mopped
-        CardStack<ArtifactCard> moppedStapel = new CardStackUtil().createArtifactCardStack();
-        CardStack<ArtifactCard> moppedStapel2 = new CardStackUtil().createArtifactCardStack();
+        CardStack<ArtifactCard> moppedStapel = CardStackUtil.createArtifactCardStack();
+        CardStack<ArtifactCard> moppedStapel2 = CardStackUtil.createArtifactCardStack();
 
         int countEquals = 0;
 
@@ -77,8 +77,8 @@ public class CardStackTest {
         MapTile javaIstauchEineInsel = new MapTile("javaIstAuchEineInsel", PlayerType.NONE, ArtifactType.NONE);
         tiles[1][2] = javaIstauchEineInsel;
 
-        floodCardStack = new CardStackUtil().createFloodCardStack(tiles);
-        CardStack<FloodCard> floodMoppedStapel = new CardStackUtil().createFloodCardStack(tiles);
+        floodCardStack = CardStackUtil.createFloodCardStack(tiles);
+        CardStack<FloodCard> floodMoppedStapel = CardStackUtil.createFloodCardStack(tiles);
 
         int countEqualsForFloodCard = 0;
 
@@ -102,7 +102,7 @@ public class CardStackTest {
         CardStack<ArtifactCard> copy = this.artifactCardStack.copy();
         List<ArtifactCard> drawOriginal = this.artifactCardStack.draw(1, false);
         List<ArtifactCard> drawCopy = copy.draw(1, false);
-        assertFalse(drawCopy.get(0) == drawOriginal.get(0));
+        assertNotSame(drawCopy.get(0), drawOriginal.get(0));
         assertEquals(drawCopy.get(0).getType(), drawOriginal.get(0).getType());
 
         copy.shuffleDrawStack();

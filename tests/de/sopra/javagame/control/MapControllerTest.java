@@ -7,10 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -61,7 +58,8 @@ public class MapControllerTest {
 
     @Test
     public void testLoadMapToEditor() throws FileNotFoundException {
-        PrintWriter out = new PrintWriter(name + ".txt");
+        File outFile = new File(MapController.MAP_FOLDER + name + ".txt");
+        PrintWriter out = new PrintWriter(outFile);
         out.println(mapString);
 
         for (int i = 1; i < 11; i++) {
@@ -75,6 +73,8 @@ public class MapControllerTest {
 
         mapController.loadMapToEditor(name);
         Assert.assertEquals(map, mapEditorView.getTiles());
+        
+        outFile.delete();
     }
 
     @Test(expected = NullPointerException.class)
