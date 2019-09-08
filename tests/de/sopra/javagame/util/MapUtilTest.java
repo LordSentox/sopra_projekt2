@@ -26,12 +26,12 @@ public class MapUtilTest {
 
         MapTile[][] map = MapUtil.createMapFromNumbers(numbers);
 
-        Assert.assertEquals("Der Spawnpunkt des Piloten wurde nicht richtig gesetzt.", new Point(3, 1), MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT));
-        Assert.assertEquals("Der Spawnpunkt des Botens wurde nicht richtig gesetzt.", new Point(2, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.COURIER));
-        Assert.assertEquals("Der Spawnpunkt des Abenteurers wurde nicht richtig gesetzt.", new Point(5, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.EXPLORER));
-        Assert.assertEquals("Der Spawnpunkt des Tauchers wurde nicht richtig gesetzt.", new Point(8, 3), MapUtil.getPlayerSpawnPoint(map, PlayerType.DIVER));
-        Assert.assertEquals("Der Spawnpunkt des Navigators wurde nicht richtig gesetzt.", new Point(3, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.NAVIGATOR));
-        Assert.assertEquals("Der Spawnpunkt des Ingenieurs wurde nicht richtig gesetzt.", new Point(7, 2), MapUtil.getPlayerSpawnPoint(map, PlayerType.ENGINEER));
+        Assert.assertEquals("Der Spawnpunkt des Piloten wurde nicht richtig gesetzt.", new Point(7, 3), MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT));
+        Assert.assertEquals("Der Spawnpunkt des Botens wurde nicht richtig gesetzt.", new Point(4, 4), MapUtil.getPlayerSpawnPoint(map, PlayerType.COURIER));
+        Assert.assertEquals("Der Spawnpunkt des Abenteurers wurde nicht richtig gesetzt.", new Point(7, 4), MapUtil.getPlayerSpawnPoint(map, PlayerType.EXPLORER));
+        Assert.assertEquals("Der Spawnpunkt des Tauchers wurde nicht richtig gesetzt.", new Point(6, 3), MapUtil.getPlayerSpawnPoint(map, PlayerType.DIVER));
+        Assert.assertEquals("Der Spawnpunkt des Navigators wurde nicht richtig gesetzt.", new Point(3, 3), MapUtil.getPlayerSpawnPoint(map, PlayerType.NAVIGATOR));
+        Assert.assertEquals("Der Spawnpunkt des Ingenieurs wurde nicht richtig gesetzt.", new Point(5, 3), MapUtil.getPlayerSpawnPoint(map, PlayerType.ENGINEER));
         Assert.assertNull("Wenn kein Spieler übergeben wird gibt es keinen Spawnpunkt.", MapUtil.getPlayerSpawnPoint(map, PlayerType.NONE));
     }
 
@@ -50,14 +50,14 @@ public class MapUtilTest {
         MapTile[] nullRow = {null, null, null, null, null, null, null, null, null, null, null, null};
         MapTile[] thirdRow = {
                 null, null,
-                new MapTile("Tor des Vergessens", PlayerType.COURIER, ArtifactType.NONE),
-                new MapTile("Tor des Lichtes", PlayerType.NAVIGATOR, ArtifactType.NONE),
-                new MapTile("Höhle des Feuers", PlayerType.NONE, ArtifactType.FIRE),
-                new MapTile("Tor der Vergangenheit", PlayerType.EXPLORER, ArtifactType.NONE),
-                new MapTile("Wächter der Insel", PlayerType.NONE, ArtifactType.NONE),
-                new MapTile("Tor der Sehnsucht", PlayerType.ENGINEER, ArtifactType.NONE),
-                new MapTile("Garten der Stille", PlayerType.NONE, ArtifactType.AIR),
+                new MapTile("Medusas Palast", PlayerType.NONE, ArtifactType.WATER),
+                new MapTile("Poseidons Palast", PlayerType.NONE, ArtifactType.WATER),
+                new MapTile("Tempel der Sonne", PlayerType.NONE, ArtifactType.EARTH),
+                new MapTile("Höhle des Grauens", PlayerType.NONE, ArtifactType.NONE),
                 new MapTile("Brücke des Verderbens", PlayerType.NONE, ArtifactType.NONE),
+                new MapTile("Wald der Finsternis", PlayerType.NONE, ArtifactType.NONE),
+                new MapTile("Pfad der Einsamkeit", PlayerType.NONE, ArtifactType.NONE),
+                new MapTile("Wächter der Sterne", PlayerType.NONE, ArtifactType.NONE),
                 null, null
         };
 
