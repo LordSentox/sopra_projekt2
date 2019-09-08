@@ -19,22 +19,16 @@ public class MapUtil {
      * @return Spielbare Karte
      */
     public static MapTile[][] createAndFillMap(boolean[][] tiles) {
-        MapTile[][] mapTiles = new MapTile[tiles.length][];
+        MapTile[][] mapTiles = new MapTile[tiles.length][12];
 
         Random random = new Random();
 
         // Damit Karten nicht öfters benutzt werden muss sich gemerkt werden, welche bereits benutzt wurden.
         Boolean[] tilesUsed = new Boolean[24];
+        Arrays.fill(tilesUsed, false);
         // Gehe durch alle tiles
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[y].length; ++x) {
-                // Damit bei falscher Benutzung keine Endlosschleife entsteht, muss die Methode beendet werden, wenn
-                // alle Tiles schon benutzt wurden.
-                if (!Arrays.asList(tilesUsed).contains(false)) {
-                    System.err.println("Misuse of function createAndFillMap. Island cannot consist of more than 24 tiles.");
-                    return null;
-                }
-
                 // Wenn es sich um eine Insel-Tile handelt muss sie mit einem zufälligen Tile gefüllt werden.
                 if (tiles[y][x]) {
                     int nextTile = random.nextInt(24);
@@ -44,15 +38,16 @@ public class MapUtil {
 
                     mapTiles[y][x] = MapTile.fromNumber(nextTile);
                     tilesUsed[nextTile] = true;
+
+                    // Beende die Funktion, wenn alle MapTiles benutzt wurden
+                    if (!Arrays.asList(tilesUsed).contains(false)) {
+                        return mapTiles;
+                    }
                 }
             }
         }
 
-        if (Arrays.asList(tilesUsed).contains(false)) {
-            System.err.println("Misuse of function createAndFillMap. Island must consist of exactly 24 tiles.");
-            return null;
-        }
-
+        System.err.println("createAndFillMap wurde falsch benutzt. Die Insel besteht aus weniger als 24 Tiles.");
         return mapTiles;
     }
 

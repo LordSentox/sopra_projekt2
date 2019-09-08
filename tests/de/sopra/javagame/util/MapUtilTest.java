@@ -7,12 +7,44 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MapUtilTest {
 
     @Test
     public void createAndFillMap() {
+        boolean[][] tiles = {
+                {false, false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false,  true,  true,  true, false, false, false},
+                {false, false,  true, false,  true,  true,  true,  true,  true,  true, false, false},
+                {false, false,  true, false,  true,  true,  true,  true,  true,  true, false, false},
+                {false, false,  true,  true,  true, false,  true,  true, false, false, false, false},
+                {false, false, false, false,  true,  true, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false, false}
+        };
 
+        MapTile[][] map = MapUtil.createAndFillMap(tiles);
+        Assert.assertNotNull("Annehmbare Map wurde fälschlicherweise abgelehnt", map);
+
+        // Array, um sicherzustellen, dass jedes MapTile nur ein einziges Mal benutzt wird
+        Set<MapTile> tilesUsed = new HashSet<>();
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[y].length; ++x) {
+                if (tiles[y] == null || !tiles[y][x]) {
+                    Assert.assertNull("Wasserfeld wurde mit Inselfeld belegt", map[y][x]);
+                } else {
+                    Assert.assertFalse("Ein MapTile wurde zweimal benutzt", tilesUsed.contains(map[y][x]));
+                    tilesUsed.add(map[y][x]);
+                }
+            }
+        }
+
+        Assert.assertEquals("Es wurden nicht alle MapTiles bei Belegung der Insel verwendet", 24, tilesUsed.size());
+
+        // Entfernen eines Inselfeldes. Die Map soll immernoch gefüllt werden, aber es muss ein Fehler ausgegeben werden.
+        tiles[2][2] = false;
+        MapTile[][] nonFullMap = MapUtil.createAndFillMap(tiles);
     }
 
     @Test
@@ -22,7 +54,8 @@ public class MapUtilTest {
                 {-1, -1, -1, 20, 19, -1, -1,  2,  6, -1, -1, -1},
                 {-1, -1, 21, 22, 18, 11,  3,  5,  4,  8, -1, -1},
                 {-1, -1,  7, 12, 23, 14, 13,  1, 17,  0, -1, -1},
-                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1, -1}};
+                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1, -1}
+        };
 
         MapTile[][] map = MapUtil.createMapFromNumbers(numbers);
 
@@ -42,7 +75,8 @@ public class MapUtilTest {
                 {-1, -1, -1, 20, 19, -1, -1,  2,  6, -1, -1, -1},
                 {-1, -1, 21, 22, 18, 11,  3,  5,  4,  8, -1, -1},
                 {-1, -1,  7, 12, 23, 14, 13,  1, 17,  0, -1, -1},
-                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1, -1}};
+                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1, -1}
+        };
 
         MapTile[][] map = MapUtil.createMapFromNumbers(numbers);
 
@@ -90,7 +124,8 @@ public class MapUtilTest {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
+        };
 
         for (int y = 0; y < expectedNumbers.length; ++y) {
             Assert.assertArrayEquals("Fehler beim Einlesen einer Kartenzeile", expectedNumbers[y], numbers[y]);
