@@ -80,7 +80,7 @@ public class MapTile implements Copyable<MapTile> {
      *
      * @return false wenn Fehler, true, sonst
      */
-    boolean flood() {
+    public boolean flood() {
         return false;
     }
 
