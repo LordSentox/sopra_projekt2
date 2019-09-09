@@ -4,10 +4,53 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1200.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.InGameViewController">
    <children>
    		<GridPane fx:id="gridPane" styleClass="bg" layoutX="550.0" layoutY="15.0"/>
    
    		<GridPane fx:id="cardGridPane" styleClass="bg2" layoutX="550.0" layoutY="975.0"/>
+   		
+   		<GridPane fx:id="handOneCardGridPane" styleClass="bg2" layoutX="40.0" layoutY="415.0"/>
+   		
+   		<GridPane fx:id="handTwoCardGridPane" styleClass="bg2" layoutX="40.0" layoutY="615.0"/>
+   		
+   		<GridPane fx:id="handThreeCardGridPane" styleClass="bg2" layoutX="40.0" layoutY="815.0"/>
+   		
+   		<GridPane fx:id="artifactCardDrawStackGridPane" styleClass="bg2" layoutX="40.0" layoutY="1015.0"/>
+   		
+   		<Button fx:id="artifactCardDrawStackButton" prefHeight="120.0" prefWidth="110.0" layoutX="40.0" layoutY="1015.0" visible="false" disable="true" onAction="#onArtifactCardDrawStackClicked"/>
+   		   		
+   		<GridPane fx:id="artifactCardDicardGridPane" styleClass="bg2" layoutX="170.0" layoutY="1015.0"/>
+   		
+   		<Button fx:id="artifactCardDiscarStaclButton" prefHeight="120.0" prefWidth="110.0" layoutX="170.0" layoutY="1015.0" visible="false" onAction="#onArtifactCardDiscardStackClicked"/>
+   		
+   		<GridPane fx:id="floodCardDrawStackGridPane" styleClass="bg2" layoutX="300.0" layoutY="1015.0"/>
+   		
+   		<Button fx:id="floodCardDrawStackButton" prefHeight="120.0" prefWidth="110.0" layoutX="300.0" layoutY="1015.0" visible="false" disable="true" onAction="#onFloodCardDrawStackClicked"/>
+   		
+   		<GridPane fx:id="floodCardDiscardGridPane" styleClass="bg2" layoutX="430.0" layoutY="1015.0"/>
+   		
+   		<Button fx:id="floodCardDiscardStackButton" prefHeight="120.0" prefWidth="110.0" layoutX="430.0" layoutY="1015.0" visible="false" onAction="#onFloodCardDiscardStackClicked"/>
+   		
+   		<ImageView fx:id="activePlayerTypeImageView" styleClass="bg2" layoutX="1330.0" layoutY="975.0"/>
+   		
+   		<Button fx:id="endTurnButton" layoutX="1500.0" layoutY="975.0" text="Zug beenden" prefHeight="30" prefWidth="150" onAction="#onEndTurnClicked"/>
+   		
+   		<Button fx:id="redoButton" layoutX="1500.0" layoutY="1035.0" text="Zug rückgängig" prefHeight="30" prefWidth="150" onAction="#onRedoClicked"/>
+   		
+   		<Button fx:id="undoButton" layoutX="1500.0" layoutY="1095.0" text="Zug wiederholen" prefHeight="30" prefWidth="150" onAction="#onUndoClicked"/>
+   		
+   		<Button fx:id="settingsButton" layoutX="1500.0" layoutY="1155.0" text="Einstellungen" prefHeight="30" prefWidth="150" onAction="#onSettingsClicked"/>
+   		
+   		<Label fx:id="highscoreLabel" text="Highscore:" layoutX="20.0" layoutY="15.0"/>
+   		
+   		<Label fx:id="playerOneLabel" text="Player1" layoutX="40.0" layoutY="370.0"/>
+   		
+   		<Label fx:id="playerTwoLabel" text="Player2" layoutX="40.0" layoutY="570.0"/>
+   		
+   		<Label fx:id="playerThreeLabel" text="Player3" layoutX="40.0" layoutY="770.0"/>
    </children>
 </AnchorPane>

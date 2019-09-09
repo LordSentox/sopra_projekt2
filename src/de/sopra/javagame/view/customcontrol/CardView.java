@@ -8,9 +8,10 @@ public class CardView extends ImageView{
     private final Image frontImage, backImage;
     private boolean frontShown = false;
     
-    public CardView(String pack, String frontImage, String backImage){
-        this.frontImage = new Image(getClass().getResource("/textures/" + pack + "/" + frontImage).toExternalForm(), 150, 0, true, true);
-        this.backImage = new Image(getClass().getResource("/textures/" + pack + "/" + backImage).toExternalForm(), 150, 0, true, true);
+    
+    public CardView(String pack, String frontImage, String backImage, int size){
+        this.frontImage = new Image(getClass().getResource("/textures/" + pack + "/" + frontImage).toExternalForm(), size, 0, true, true);
+        this.backImage = new Image(getClass().getResource("/textures/" + pack + "/" + backImage).toExternalForm(), size, 0, true, true);
         this.showBackImage();
     }
     
