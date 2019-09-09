@@ -85,7 +85,7 @@ public class JavaGame {
      */
     public int calculateScore() {
         int playerOne = 0;
-        int turns = 0;
+        int turns = 1;
         int extraPoints = 0;
         double score = 0;
         boolean finishedOneRound = false;
@@ -101,11 +101,13 @@ public class JavaGame {
                 }
             }
             score = (1 / turns) * 100;
-            for (ArtifactType cur : undoTurns.peek().getDiscoveredArtifacts()) {
-                extraPoints += 100;
-            }
-            if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
-                extraPoints += 1000;
+            if (!undoTurns.isEmpty()){
+                for (ArtifactType cur : undoTurns.peek().getDiscoveredArtifacts()) {
+                    extraPoints += 100;
+                }
+                if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
+                    extraPoints += 1000;
+                }
             }
             score += extraPoints;
         }
@@ -126,5 +128,9 @@ public class JavaGame {
 
     public Turn getPreviousTurn () {
         return undoTurns.peek();
+    }
+
+    public void setCheetah(boolean cheetah) {
+        this.cheetah = cheetah;
     }
 }

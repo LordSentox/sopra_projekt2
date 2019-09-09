@@ -113,11 +113,10 @@ public class TurnTest {
         Courier courier = (Courier) turn.getPlayer(PlayerType.COURIER);
         courier.getHand().add(earthCard2);
         transferred = turn.transferArtifactCard(earthCard2, courier, navigator);
-        transferred = turn.transferArtifactCard(fireCard, navigator, explorer);
         Assert.assertFalse("Die Karte hätte von der Hand des Boten verschwinden sollen.",
-                courier.getHand().contains(fireCard));
+                courier.getHand().contains(earthCard2));
         Assert.assertTrue("Der Navigator sollte die Karte erhalten haben.",
-                navigator.getHand().contains(fireCard));
+                navigator.getHand().contains(earthCard2));
         Assert.assertTrue("Die Karte hätte übergeben werden müssen.",
                 transferred);
 
@@ -132,7 +131,7 @@ public class TurnTest {
                 explorer.getHand().contains(fireCard));
         Assert.assertTrue("Die Karte hätte nicht von der Hand des Tauchers verschwinden sollen.",
                 diver.getHand().contains(fireCard));
-        Assert.assertTrue("Die Karte hätte nicht übergeben werden dürfen.",
+        Assert.assertFalse("Die Karte hätte nicht übergeben werden dürfen.",
                 transferred);
 
         //test ohne gleiches Feld und Bote ist reciever
