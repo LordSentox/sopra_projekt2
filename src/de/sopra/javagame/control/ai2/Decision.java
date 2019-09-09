@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2;
 
+import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.model.JavaGame;
 
 /**
@@ -16,18 +17,18 @@ public interface Decision {
     /**
      * Entscheidet, ob die mit diesem Objekt verbundene Aktion ausgeführt werden soll, oder nicht.
      *
-     * @param javaGame das aktuelle Spiel
+     * @param control der AIController mit allen wichtigen Inhalten
      * @return sich selbst, wenn die Entscheidung positiv ausfiel, andernfalls <code>null</code>
      */
-    Decision decide(JavaGame javaGame);
+    Decision decide(AIController control);
 
     /**
      * Führt die Aktion aus.
-     * Soll nur nach getroffener Entscheidung durch {@link #decide(JavaGame)} geschehen.
+     * Soll nur nach getroffener Entscheidung durch {@link #decide(AIController)} geschehen.
      *
-     * @param javaGame das aktuelle Spiel
+     * @param control der AIController mit allen wichtigen Inhalten
      */
-    void act(JavaGame javaGame);
+    void act(AIController control);
 
     /**
      * Baut aus zwei entscheidungsabhängigen Aktionen einen Turm.
@@ -39,15 +40,15 @@ public interface Decision {
     default Decision onTop(Decision moreImportantDecision) {
         return new Decision() {
             @Override
-            public Decision decide(JavaGame javaGame) {
-                Decision decision = moreImportantDecision.decide(javaGame);
+            public Decision decide(AIController control) {
+                Decision decision = moreImportantDecision.decide(control);
                 if (decision == null) {
-                    return decide(javaGame);
+                    return decide(control);
                 } else return decision;
             }
 
             @Override
-            public void act(JavaGame javaGame) {
+            public void act(AIController control) {
                 //empty
             }
         };

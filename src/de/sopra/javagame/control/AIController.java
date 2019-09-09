@@ -4,10 +4,10 @@ import java.awt.Point;
 
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+import java.util.*;
+
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Pair;
 
 /**
  * <h1>projekt2</h1>
@@ -38,6 +38,9 @@ public class AIController {
     }
    
     public Pair<Point, MapTile> getTile(ArtifactType artifactType){
+        return null; //TODO
+    }
+    public List<Player> getAllPlayers(){
         return null; //TODO
     }
 }

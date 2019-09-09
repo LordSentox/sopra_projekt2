@@ -1,6 +1,6 @@
 package de.sopra.javagame.control.ai2;
 
-import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.control.AIController;
 
 /**
  * <h1>projekt2</h1>
@@ -9,7 +9,7 @@ import de.sopra.javagame.model.JavaGame;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class DicisionMaker {
+public class DecisionMaker {
 
     private Decision turnDecisionTower;
     private Decision discardDecisionTower;
@@ -27,16 +27,16 @@ public class DicisionMaker {
 
     }
 
-    Decision makeTurnDecision(JavaGame javaGame) {
-        return turnDecisionTower.decide(javaGame);
+    Decision makeTurnDecision(AIController control) {
+        return turnDecisionTower.decide(control);
     }
 
-    Decision makeDiscardDecision(JavaGame javaGame) {
-        return discardDecisionTower.decide(javaGame);
+    Decision makeDiscardDecision(AIController control) {
+        return discardDecisionTower.decide(control);
     }
 
-    Decision makeSpecialCardDecision(JavaGame javaGame) {
-        return specialCardDecisionTower.decide(javaGame);
+    Decision makeSpecialCardDecision(AIController control) {
+        return specialCardDecisionTower.decide(control);
     }
 
 }
