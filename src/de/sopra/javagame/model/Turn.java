@@ -185,7 +185,7 @@ public class Turn implements Copyable<Turn> {
      * @return Tile an der Position
      */
     public MapTile getTile(Point position) {
-        return this.tiles[position.y][position.x];
+        return this.tiles[position.yPos][position.xPos];
     }
 
 

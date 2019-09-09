@@ -50,24 +50,13 @@ public abstract class Player implements Copyable<Player> {
      */
 
     public List<Point> legalMoves(boolean specialActive) {
-        List<Point> movement = new ArrayList<>();
-        MapTile right = this.turn.getTiles()[position.y][position.x + 1];
-        if (right != null && right.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.x + 1, position.y));
-        }
-        MapTile left = this.turn.getTiles()[position.y][position.x - 1];
-        if (left != null && left.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.x - 1, position.y));
-        }
-        MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
-        if (upper != null && upper.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.x, position.y - 1));
-        }
-        MapTile down = this.turn.getTiles()[position.y + 1][position.x];
-        if (down != null && down.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.x, position.y + 1));
-        }
-        return movement;
+        List<Point> moves = this.position.getNeighbours();
+        moves = moves.stream().filter(point -> {
+            MapTile tile = this.turn.getTile(point);
+            return tile != null && tile.getState() != GONE;
+        }).collect(Collectors.toList());
+
+        return moves;
     }
 
     /**
@@ -200,10 +189,10 @@ public abstract class Player implements Copyable<Player> {
      */
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList();
-        MapTile mapTile = this.turn.getTiles()[position.y][position.x];
+        MapTile mapTile = this.turn.getTiles()[position.yPos][position.xPos];
         List<Player> players = turn.getPlayers();
         for (Player player : players) {
-            if (mapTile == this.turn.getTiles()[player.position.y][player.position.x] && player != this) {
+            if (mapTile == this.turn.getTiles()[player.position.yPos][player.position.xPos] && player != this) {
                 receivers.add(player.getType());
             }
         }

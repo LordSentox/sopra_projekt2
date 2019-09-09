@@ -52,8 +52,8 @@ public class PlayerTest {
         turn.nextPlayerActive();
         Point oldPos = new Point(pilot.getPosition()); // Position des Piloten
         Assert.assertTrue("Konnte einen Spieler nicht bewegen, obwohl der Zug legal ist", navigator.forcePush(Direction.UP, pilot));
-        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.x, pilot.getPosition().x);
-        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.y - 1, pilot.getPosition().y);
+        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.xPos, pilot.getPosition().xPos);
+        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.yPos - 1, pilot.getPosition().yPos);
 
         // Der Spieler soll keine Aktionen mehr haben, damit extraPush auch notwendig ist
         pilot.setActionsLeft(0);
@@ -61,8 +61,8 @@ public class PlayerTest {
         // Der zweite muss auch noch gültig sein, denn es handelt sich um den extra-push
         oldPos = new Point(pilot.getPosition()); // Position des Piloten
         Assert.assertTrue("Konnte einen Spieler nicht bewegen, obwohl der Zug legal ist", navigator.forcePush(Direction.RIGHT, pilot));
-        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.x + 1, pilot.getPosition().x);
-        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.y, pilot.getPosition().y);
+        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.xPos + 1, pilot.getPosition().xPos);
+        Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.yPos, pilot.getPosition().yPos);
 
         // Da der Spieler keine Aktionen mehr hat muss der dritte forcePush fehlschlagen
         oldPos = new Point(pilot.getPosition());

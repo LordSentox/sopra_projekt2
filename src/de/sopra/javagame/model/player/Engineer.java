@@ -41,7 +41,7 @@ public class Engineer extends Player {
     @Override
     public boolean drain(Point position) {
         if (!hasExtraDrain) {
-            MapTile mapTile = this.turn.getTiles()[position.y][position.x];
+            MapTile mapTile = this.turn.getTiles()[position.yPos][position.xPos];
             if (mapTile.getState() == MapTileState.GONE || mapTile.getState() == MapTileState.DRY) {
                 return false;
             } else {

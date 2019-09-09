@@ -5,51 +5,51 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Point {
-    public int x;
-    public int y;
+    public int xPos;
+    public int yPos;
 
     public Point() {
         this(0, 0);
     }
 
     public Point(Point point) {
-        this(point.x, point.y);
+        this(point.xPos, point.yPos);
     }
 
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Point(int xPos, int yPos) {
+        this.xPos = xPos;
+        this.yPos = yPos;
     }
 
     public Point getLocation() {
-        return new Point(this.x, this.y);
+        return new Point(this.xPos, this.yPos);
     }
 
     public void setLocation(Point location) {
-        this.setLocation(location.x, location.y);
+        this.setLocation(location.xPos, location.yPos);
     }
 
-    public void setLocation(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public void setLocation(int xPos, int yPos) {
+        this.xPos = xPos;
+        this.yPos = yPos;
     }
 
     public void move(int deltaX, int deltaY) {
-        this.x += deltaX;
-        this.y += deltaY;
+        this.xPos += deltaX;
+        this.yPos += deltaY;
     }
 
     public void move(Point delta) {
-        this.x += delta.x;
-        this.y += delta.y;
+        this.xPos += delta.xPos;
+        this.yPos += delta.yPos;
     }
 
-    public Point add(int x, int y) {
-        return new Point(this.x + x, this.y + y);
+    public Point add(int deltaX, int deltaY) {
+        return new Point(this.xPos + deltaX, this.yPos + deltaY);
     }
 
     public Point add(Point toAdd) {
-        return new Point(this.x + toAdd.x, this.y + toAdd.y);
+        return new Point(this.xPos + toAdd.xPos, this.yPos + toAdd.yPos);
     }
 
     /**
@@ -59,10 +59,10 @@ public class Point {
      */
     public List<Point> getNeighbours() {
         List<Point> neighbours = new ArrayList<>();
-        neighbours.add(new Point(this.x, this.y - 1));
-        neighbours.add(new Point(this.x - 1, this.y));
-        neighbours.add(new Point(this.x, this.y + 1));
-        neighbours.add(new Point(this.x + 1, this.y));
+        neighbours.add(new Point(this.xPos, this.yPos - 1));
+        neighbours.add(new Point(this.xPos - 1, this.yPos));
+        neighbours.add(new Point(this.xPos, this.yPos + 1));
+        neighbours.add(new Point(this.xPos + 1, this.yPos));
 
         return neighbours;
     }
@@ -81,10 +81,10 @@ public class Point {
         List<Point> neighbours = this.getNeighbours();
 
         // Entferne Punkte, welche nicht innerhalb der gegebenen Grenzen sind
-        neighbours = neighbours.stream().filter(point -> point.x >= minimum.x &&
-                point.y >= minimum.y &&
-                point.x <= maximum.x &&
-                point.y <= maximum.y).collect(Collectors.toList());
+        neighbours = neighbours.stream().filter(point -> point.xPos >= minimum.xPos &&
+                point.yPos >= minimum.yPos &&
+                point.xPos <= maximum.xPos &&
+                point.yPos <= maximum.yPos).collect(Collectors.toList());
 
         return neighbours;
     }
@@ -94,11 +94,11 @@ public class Point {
             return super.equals(other);
         } else {
             Point point = (Point) other;
-            return this.x == point.x && this.y == point.y;
+            return this.xPos == point.xPos && this.yPos == point.yPos;
         }
     }
 
     public String toString() {
-        return this.getClass().getName() + "[x=" + this.x + ",y=" + this.y + "]";
+        return this.getClass().getName() + "[x=" + this.xPos + ",y=" + this.yPos + "]";
     }
 }
