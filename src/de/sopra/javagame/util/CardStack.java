@@ -126,4 +126,19 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
         stack.drawStack = CopyUtil.copy(this.drawStack, Collectors.toCollection(Stack::new));
         return stack;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CardStack<?> other = (CardStack<?>) o;
+        return drawStack.equals(other.drawStack) &&
+                discardPile.containsAll(other.discardPile) &&
+                other.discardPile.containsAll(discardPile);
+    }
+
+    @Override
+    public int hashCode() {
+        return drawStack.hashCode() + 3 * new HashSet<>(discardPile).hashCode();
+    }
 }

@@ -1,5 +1,7 @@
 package de.sopra.javagame.model;
 
+import java.util.Objects;
+
 /**
  * Flutkarten können einen bestimmten Feldtyp fluten oder versenken, falls das Inselfeld schon überflutet war.
  */
@@ -34,5 +36,18 @@ public class FloodCard implements Copyable<FloodCard> {
     @Override
     public FloodCard copy() {
         return new FloodCard(tile);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FloodCard floodCard = (FloodCard) o;
+        return tile.equals(floodCard.tile);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tile);
     }
 }

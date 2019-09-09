@@ -126,9 +126,14 @@ public class MapTile implements Copyable<MapTile> {
         if (this.getClass() != other.getClass()) return false;
 
         MapTile tile = (MapTile) other;
-        return Objects.equals(this.hiddenArtifact, tile.hiddenArtifact) &&
-                Objects.equals(this.name, tile.name) &&
-                Objects.equals(this.playerSpawn, tile.playerSpawn) &&
-                Objects.equals(this.state, tile.state);
+        return Objects.equals(this.name, tile.name) &&
+                this.hiddenArtifact == tile.hiddenArtifact &&
+                this.playerSpawn == tile.playerSpawn &&
+                this.state == tile.state;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, hiddenArtifact, playerSpawn, state);
     }
 }

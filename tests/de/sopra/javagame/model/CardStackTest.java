@@ -73,9 +73,9 @@ public class CardStackTest {
         //test floodCardStack shuffle mopped
         tiles = new MapTile[1][2];
         wirHabenLandGefunden = new MapTile("wirHabenLandGefunden", PlayerType.NONE, ArtifactType.NONE);
-        tiles[1][1] = wirHabenLandGefunden;
+        tiles[0][0] = wirHabenLandGefunden;
         MapTile javaIstauchEineInsel = new MapTile("javaIstAuchEineInsel", PlayerType.NONE, ArtifactType.NONE);
-        tiles[1][2] = javaIstauchEineInsel;
+        tiles[0][1] = javaIstauchEineInsel;
 
         floodCardStack = CardStackUtil.createFloodCardStack(tiles);
         CardStack<FloodCard> floodMoppedStapel = CardStackUtil.createFloodCardStack(tiles);
