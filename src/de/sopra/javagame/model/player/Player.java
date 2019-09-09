@@ -42,7 +42,7 @@ public abstract class Player implements Copyable<Player> {
      * @param specialActive gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja, wird die Liste um zusätzlich erreichbare Punkte erweitert
      * @return das erstellte Listli
      */
-    List<Point> legalMoves(boolean specialActive) {
+    public List<Point> legalMoves(boolean specialActive) {
         return null;
     }
 
@@ -53,7 +53,7 @@ public abstract class Player implements Copyable<Player> {
      * @param costsAction wenn false, wird keine Action abgezogen, wenn true, wird eine abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
-    boolean move(Point destination, boolean costsAction) {
+    public boolean move(Point destination, boolean costsAction) {
         return false;
     }
 
@@ -62,7 +62,7 @@ public abstract class Player implements Copyable<Player> {
      *
      * @return false, wenn Spieler andere nicht bewegen kann, true, sonst.
      */
-    boolean canMoveOthers() {
+    public boolean canMoveOthers() {
         return false;
     }
 
@@ -72,7 +72,7 @@ public abstract class Player implements Copyable<Player> {
      * @return Listli
      */
 
-    List<Point> drainablePositions() {
+    public List<Point> drainablePositions() {
         return null;
     }
 
@@ -82,7 +82,7 @@ public abstract class Player implements Copyable<Player> {
      * @param position Koordinate des zu verändernden MapTiles
      * @return false, wenn Fehler eingetroffen, true sonst
      */
-    boolean drain(Point position) {
+    public boolean drain(Point position) {
         return false;
     }
 
@@ -94,7 +94,7 @@ public abstract class Player implements Copyable<Player> {
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
 
-    ArtifactType collectArtifact() {
+    public ArtifactType collectArtifact() {
         return null;
     }
 
@@ -103,7 +103,7 @@ public abstract class Player implements Copyable<Player> {
      *
      * @return das erstellte Listli, wenn Player exisitieren, denen Handkarten übergeben werden dürfen. Null, sonst.
      */
-    List<Player> legalReceivers() {
+    public List<Player> legalReceivers() {
         return null;
     }
 

@@ -4,10 +4,8 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
 import java.awt.*;
-import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -119,17 +117,8 @@ public class Turn implements Copyable<Turn> {
         turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
         turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
 
-        Map<PlayerType, Point> startPositions = new EnumMap<>(PlayerType.class);
-
-        for (int y = 0; y < tiles.length; y++) {
-            for (int x = 0; x < tiles[y].length; x++) {
-                MapTile tile = tiles[y][x];
-                if (tile.getPlayerSpawn() != PlayerType.NONE) startPositions.put(tile.getPlayerSpawn(), new Point(x, y));
-            }
-        }
-
         turn.players = players.stream().map(pair -> {
-            Point start = startPositions.get(pair.getLeft());
+            Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
             switch (pair.getLeft()) {
                 case COURIER:
                     return new Courier("Hartmut Kurier", start, turn);
@@ -161,6 +150,27 @@ public class Turn implements Copyable<Turn> {
      * @return gibt zurück, ob das Bewegen erfolgreich war
      */
     boolean forcePush(Direction direction, Player caster, Player other) {
+        if (!caster.canMoveOthers()) {
+            return false;
+        }
+
+        int deltaX;
+        int deltaY;
+        switch (direction) {
+            case UP:
+                deltaY = -1;
+                break;
+            case LEFT:
+                deltaX = -1;
+                break;
+            case DOWN:
+                deltaY = 1;
+                break;
+            case RIGHT:
+                deltaX = 1;
+                break;
+        }
+
         return false;
     }
 
@@ -174,6 +184,10 @@ public class Turn implements Copyable<Turn> {
      */
     boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
         return false;
+    }
+
+    public void nextPlayerActive() {
+        this.activePlayer = (this.activePlayer + 1) % this.players.size();
     }
 
     @Override
