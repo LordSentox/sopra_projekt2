@@ -63,6 +63,11 @@ public class Turn implements Copyable<Turn> {
      */
     private TurnState state;
 
+    private boolean gameEnded;
+
+    private boolean gameWon;
+
+
     public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
     }
@@ -107,10 +112,6 @@ public class Turn implements Copyable<Turn> {
     public WaterLevel getWaterLevel() {
         return waterLevel;
     }
-
-    private boolean gameEnded;
-
-    private boolean gameWon;
 
     private Turn() {}
 
