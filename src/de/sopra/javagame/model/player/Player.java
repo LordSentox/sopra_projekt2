@@ -166,7 +166,7 @@ public abstract class Player implements Copyable<Player> {
 
     ArtifactType collectArtifact() {
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
-        ArtifactType hiddenArtifact = mapTile.getHiddenArtifact();
+        ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
         int count = 0;
         for (ArtifactCard card : hand){
            if (card.getType().toArtifactType() == hiddenArtifact) {

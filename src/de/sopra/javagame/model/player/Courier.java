@@ -33,7 +33,7 @@ public class Courier extends Player {
 
     @Override
     public List<Player> legalReceivers() {
-        return null;
+        return this.turn.getPlayers();
     }
 
     @Override
