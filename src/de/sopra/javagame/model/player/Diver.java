@@ -1,9 +1,12 @@
 package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.util.CopyUtil;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +41,10 @@ public class Diver extends Player {
 
     @Override
     public Player copy() {
-        return null; //TODO
+        Player player = new Diver(CopyUtil.copy(this.name), new Point(position), null);
+        player.hand = this.hand;
+        player.actionsLeft = this.actionsLeft;
+        player.isAI = this.isAI;
+        return player;
     }
 }
