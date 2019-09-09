@@ -1,5 +1,8 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.model.player.Player;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -9,6 +12,18 @@ package de.sopra.javagame.control;
  */
 public class AIController {
 
+    private ControllerChan controllerChan;
 
+    public AIController(ControllerChan controllerChan) {
+        this.controllerChan = controllerChan;
+    }
+
+    public Turn getActiveTurn() {
+        return controllerChan.getCurrentTurn();
+    }
+
+    public Player getActivePlayer() {
+        return null; //TODO
+    }
 
 }
