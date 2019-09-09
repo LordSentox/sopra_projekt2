@@ -13,6 +13,7 @@ import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class JavaGameTest {
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
         int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        players =  Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
-                                 new Pair<>(PlayerType.NAVIGATOR, true),
-                                 new Pair<>(PlayerType.DIVER, false),
-                                 new Pair<>(PlayerType.COURIER, true));
+        players =  new ArrayList(){{add(new Pair<>(PlayerType.EXPLORER, false));
+                                 add(new Pair<>(PlayerType.NAVIGATOR, true));
+                                 add(new Pair<>(PlayerType.DIVER, false));
+                                 add(new Pair<>(PlayerType.COURIER, true));}};
     }
 
     @Test

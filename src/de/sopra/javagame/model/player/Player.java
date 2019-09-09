@@ -198,13 +198,13 @@ public abstract class Player implements Copyable<Player> {
      *         übergeben werden dürfen. Null, sonst.
      */
 
-    List<Player> legalReceivers() {
-        List<Player> receivers = new ArrayList();
+    public List<PlayerType> legalReceivers() {
+        List<PlayerType> receivers = new ArrayList();
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
         List<Player> players = turn.getPlayers();
         for (Player player : players) {
             if (mapTile == this.turn.getTiles()[player.position.y][player.position.x] && player != this) {
-                receivers.add(player);
+                receivers.add(player.getType());
             }
         }
         return receivers;

@@ -34,14 +34,14 @@ public class Courier extends Player {
      * @return das Listli aller Spieler außer dem Boten selbst.
      */
     @Override
-    public List<Player> legalReceivers() {
-<<<<<<< HEAD
-        List<Player> receivers = new ArrayList();
-        receivers.remove(this);
+    public List<PlayerType> legalReceivers() {
+        List<PlayerType> receivers = new ArrayList();
+        for(Player currentPlayer : turn.getPlayers()) {
+            if (currentPlayer.getType() != this.getType()) {
+                receivers.add(currentPlayer.getType());
+            }
+        }
         return receivers;
-=======
-        return this.turn.getPlayers();
->>>>>>> branch 'implement-model' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
     }
 
     @Override

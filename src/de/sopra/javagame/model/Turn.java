@@ -161,7 +161,7 @@ public class Turn implements Copyable<Turn> {
      * @return gibt zurück, ob das Übergeben erfolgreich war
      */
     boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
-        if (source.legalReceivers().contains(receiver)) {
+        if (source.legalReceivers().contains(receiver.getType())) {
             source.getHand().remove(card);
             receiver.getHand().add(card);
             return true;
