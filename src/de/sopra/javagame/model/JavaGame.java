@@ -95,4 +95,8 @@ public class JavaGame {
     public boolean getIsCheetah() {
         return this.cheetah;
     }
+
+    public boolean hasGameEnded() {return false;}
+
+    public boolean isGameWon() {return false;}
 }
