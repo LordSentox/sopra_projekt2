@@ -1,10 +1,20 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ControllerChan;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Schnittstelle für alle Views und die Controller Schicht
@@ -15,7 +25,8 @@ public class GameWindow {
 
     private ControllerChan controllerChan;
 
-    private Stage fullscreenStage;
+    private Stage fullScreenStage;
+    
 
     private List<AbstractViewController> views;
 
@@ -25,11 +36,25 @@ public class GameWindow {
         this.controllerChan = new ControllerChan();
         this.views = new LinkedList<>();
         currentView = 0;
-        this.fullscreenStage = stage;
+        this.fullScreenStage = stage;
     }
 
-    public void init() {
-        //TODO init stage
+    public void init() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GameWindow.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        InGameViewController inGameViewController = fxmlLoader.getController();
+
+
+        Scene mainScene = new Scene(mainPane);
+        mainScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
+        fullScreenStage.setScene(mainScene);
+        fullScreenStage.setResizable(false);
+        fullScreenStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        fullScreenStage.setFullScreen(true);
+        fullScreenStage.show();
+        
+        inGameViewController.init();
+
     }
 
     /**
@@ -45,10 +70,13 @@ public class GameWindow {
         for (int i = 0; i < views.size(); i++) {
             if (views.get(i).getType() == state) {
                 currentView = i;
-                views.get(i).show(fullscreenStage);
+                views.get(i).show(fullScreenStage);
                 return;
             }
         }
     }
 
+    public ControllerChan getControllerChan() {
+        return this.controllerChan;
+    }
 }

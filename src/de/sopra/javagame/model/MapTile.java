@@ -67,7 +67,7 @@ public class MapTile implements Copyable<MapTile> {
         };
         return function.apply(number);
     }
-
+    
     /**
      * setzt den state des MapTile von FLOODER auf DRY
      */

@@ -1,5 +1,7 @@
 package de.sopra.javagame.application;
 
+import java.io.IOException;
+
 import de.sopra.javagame.view.GameWindow;
 import de.sopra.javagame.view.ViewState;
 import de.spaceparrots.translator.api.Translator;
@@ -19,8 +21,13 @@ public class Main extends Application {
 //        Dictionary dictionary = new Dictionary();
 //        dictionary.registerDictionaryFile(new DictionaryFile(getClass().getResourceAsStream("/lang/de_DE.xml")));
 //        Translator.setDictionary(dictionary);
-        GameWindow window = new GameWindow(primaryStage);
-        window.init();
-        window.setState(ViewState.MENU);
+        try {
+            GameWindow window = new GameWindow(primaryStage);
+            window.init();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+//        window.setState(ViewState.MENU);
     }
 }

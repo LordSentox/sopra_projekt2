@@ -1,5 +1,9 @@
 /* JavaFX CSS - Leave this comment until you have at least created one rule which uses -fx-Property */
 
-.text-area *.text {
-    -fx-text-alignment: center;
+.bg {
+    -fx-background-color: "#001d7a";
+}
+
+.bg2 {
+    -fx-background-color: "#ff0000";
 }

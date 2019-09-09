@@ -4,11 +4,22 @@ import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.view.customcontrol.CardView;
+import de.sopra.javagame.view.customcontrol.TileView;
+import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
-import java.awt.*;
+import java.awt.Point;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 /**
  * GUI für den Spielablauf
@@ -16,6 +27,58 @@ import java.util.List;
  * @author Lisa, Hannah
  */
 public class InGameViewController extends AbstractViewController implements InGameViewAUI {
+    
+    @FXML GridPane gridPane, cardGridPane;
+    
+    public void init() {
+        //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentTurn().getTiles();
+        
+        /* TEMP */
+        MapTile[][] tiles = new MapTile[7][10];
+        IntStream.range(0, 24).forEach(i -> tiles[i/7][i%10] = MapTile.fromNumber(i));
+        IntStream.range(0, 7).forEach(i -> IntStream.range(0, 10).forEach(j -> System.out.println(tiles[i][j])));
+        /* END TEMP */ 
+        
+        initGridPane();
+        
+        /* Island */
+        IntStream.range(0, 7).forEach(y -> 
+            IntStream.range(0, 10).forEach(x -> {
+                TileView v = new TileView(tiles[y][x].getNumber());
+                gridPane.getChildren().add(v);
+                GridPane.setConstraints(v, y, x);
+            }));
+        
+        
+
+           
+        
+        /* Cards */
+        for(int i = 0; i < 9; i+=2) {
+            CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png");
+            v.showFrontImage();
+            cardGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, i, 0);
+        }
+        
+        
+    }
+    
+    private void initGridPane() {
+        IntStream.range(0, 21).forEach(i -> gridPane.getColumnConstraints().add(new ColumnConstraints(i%2==0 ? 5 : 130)));
+        IntStream.range(0, 15).forEach(i -> gridPane.getRowConstraints().add(new RowConstraints(i%2==0 ? 5 : 130)));
+        IntStream.range(0, 9).forEach(i -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(i%2==0 ? 150 : 5)));
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public void onShowMovementOptionsClicked() {
 
