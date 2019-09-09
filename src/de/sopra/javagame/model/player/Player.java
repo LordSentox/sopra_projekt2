@@ -2,8 +2,8 @@ package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,19 +53,19 @@ public abstract class Player implements Copyable<Player> {
         List<Point> movement = new ArrayList<>();
         MapTile right = this.turn.getTiles()[position.y][position.x + 1];
         if (right != null && right.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y, position.x + 1));
+            movement.add(new Point(position.x + 1, position.y));
         }
         MapTile left = this.turn.getTiles()[position.y][position.x - 1];
         if (left != null && left.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y, position.x - 1));
+            movement.add(new Point(position.x - 1, position.y));
         }
         MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
         if (upper != null && upper.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y - 1, position.x));
+            movement.add(new Point(position.x, position.y - 1));
         }
         MapTile down = this.turn.getTiles()[position.y + 1][position.x];
         if (down != null && down.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y + 1, position.x));
+            movement.add(new Point(position.x, position.y + 1));
         }
         return movement;
     }

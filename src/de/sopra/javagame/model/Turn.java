@@ -3,7 +3,6 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
-import java.awt.*;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;

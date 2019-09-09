@@ -4,8 +4,7 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
-
-import java.awt.*;
+import de.sopra.javagame.util.Point;
 
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -68,7 +67,7 @@ public class Navigator extends Player {
 
         // Ist das Feld, auf das der Spieler bewegt werden soll ein Inselfeld?
         Point newPosition = new Point(other.getPosition());
-        newPosition.translate(deltaX, deltaY);
+        newPosition.move(deltaX, deltaY);
         MapTile destinationTile = this.turn.getTile(newPosition);
         if (destinationTile == null || destinationTile.getState() == GONE) {
             return false;
@@ -80,7 +79,7 @@ public class Navigator extends Player {
                 this.hasExtraPush = true;
             }
 
-            other.getPosition().translate(deltaX, deltaY);
+            other.getPosition().move(deltaX, deltaY);
             return true;
         }
     }
