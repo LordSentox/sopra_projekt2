@@ -1,6 +1,9 @@
 package de.sopra.javagame.util;
 
-import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.FloodCard;
+import de.sopra.javagame.model.MapTile;
 
 import java.util.LinkedList;
 import java.util.List;

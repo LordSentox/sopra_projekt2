@@ -10,5 +10,5 @@ public enum ArtifactType {
     EARTH,
     FIRE,
     WATER,
-    NONE;
+    NONE
 }

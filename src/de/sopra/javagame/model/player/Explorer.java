@@ -1,12 +1,9 @@
 package de.sopra.javagame.model.player;
 
-import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -15,19 +12,19 @@ import java.util.List;
  * @author Georg Bühmann, Melanie Arnds
  */
 public class Explorer extends Player {
-    
-    public Explorer (String name, Point position, Turn turn){
+
+    public Explorer(String name, Point position, Turn turn) {
         super(PlayerType.EXPLORER, name, turn);
         this.position = position;
         this.isAI = false;
-    } 
-    
-    public Explorer (String name, Point position, Turn turn, boolean isAI){
+    }
+
+    public Explorer(String name, Point position, Turn turn, boolean isAI) {
         super(PlayerType.EXPLORER, name, turn);
         this.position = position;
         this.isAI = isAI;
     }
-       
+
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der Spieler sich regelkonform hinbewegen darf.
      * Der Forscher darf auch diagonal laufen.

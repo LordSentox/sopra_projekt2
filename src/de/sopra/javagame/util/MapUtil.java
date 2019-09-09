@@ -5,12 +5,12 @@ import de.sopra.javagame.model.player.PlayerType;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Enthält Helferfunktionen für Kartenerstellung und Kartenmanipulation
  */
 public class MapUtil {
-
     /**
      * Füllt die einfache Karte, die nur die Inselform enthält mit zufällig ausgewählten MapTiles und gibt die so
      * entstandene, spielbare Karte zurück.
@@ -19,7 +19,36 @@ public class MapUtil {
      * @return Spielbare Karte
      */
     public static MapTile[][] createAndFillMap(boolean[][] tiles) {
-        return null;
+        MapTile[][] mapTiles = new MapTile[tiles.length][12];
+
+        Random random = new Random();
+
+        // Damit Karten nicht öfters benutzt werden muss sich gemerkt werden, welche bereits benutzt wurden.
+        Boolean[] tilesUsed = new Boolean[24];
+        Arrays.fill(tilesUsed, false);
+        // Gehe durch alle tiles
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[y].length; ++x) {
+                // Wenn es sich um eine Insel-Tile handelt muss sie mit einem zufälligen Tile gefüllt werden.
+                if (tiles[y][x]) {
+                    int nextTile = random.nextInt(24);
+                    do {
+                        nextTile = (nextTile + 1) % 24;
+                    } while (tilesUsed[nextTile]);
+
+                    mapTiles[y][x] = MapTile.fromNumber(nextTile);
+                    tilesUsed[nextTile] = true;
+
+                    // Beende die Funktion, wenn alle MapTiles benutzt wurden
+                    if (!Arrays.asList(tilesUsed).contains(false)) {
+                        return mapTiles;
+                    }
+                }
+            }
+        }
+
+        System.err.println("createAndFillMap wurde falsch benutzt. Die Insel besteht aus weniger als 24 Tiles.");
+        return mapTiles;
     }
 
     /**
@@ -30,6 +59,18 @@ public class MapUtil {
      * @return Der Anfangspunkt oder <code>null</code>, wenn kein Anfangspunkt für die Figur gefunden werden kann.
      */
     public static Point getPlayerSpawnPoint(MapTile[][] tiles, PlayerType player) {
+        if (player == PlayerType.NONE) {
+            return null;
+        }
+
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[y].length; ++x) {
+                if (tiles[y][x] != null && tiles[y][x].getPlayerSpawn() == player) {
+                    return new Point(x, y);
+                }
+            }
+        }
+
         return null;
     }
 
@@ -41,7 +82,17 @@ public class MapUtil {
      * @return Die erstellte Karte, oder <code>null</code>, wenn die Nummerndaten nicht interpretiert werden konnten.
      */
     public static MapTile[][] createMapFromNumbers(int[][] numbers) {
-        return null;
+        // Gehe durch den numbers-array und fülle die MapTiles mit den den numbers entsprechenden Werten
+        MapTile[][] tiles = new MapTile[12][12];
+        for (int y = 0; y < numbers.length; ++y) {
+            tiles[y] = new MapTile[12];
+            for (int x = 0; x < numbers[y].length; ++x) {
+                if (numbers[y][x] != -1)
+                    tiles[y][x] = MapTile.fromNumber(numbers[y][x]);
+            }
+        }
+
+        return tiles;
     }
 
 
@@ -56,7 +107,7 @@ public class MapUtil {
         String[] lines = toParse.split("\n");
         String[][] map = new String[lines.length][];
         for (int i = 0; i < lines.length; ++i) {
-            String[] split = lines[i].split(";");
+            String[] split = lines[i].split(",");
             map[i] = split;
         }
 

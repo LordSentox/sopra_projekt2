@@ -4,8 +4,8 @@ import javafx.stage.Stage;
 
 /**
  * GUI für das Hauptfenster
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class MainMenuViewController extends AbstractViewController {
 

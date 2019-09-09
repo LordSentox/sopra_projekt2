@@ -4,8 +4,8 @@ import javafx.stage.Stage;
 
 /**
  * GUI für die Spieleinstellungen
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class SettingsViewController extends AbstractViewController {
 

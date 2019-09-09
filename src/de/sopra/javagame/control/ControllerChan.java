@@ -4,6 +4,7 @@ import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -88,7 +89,7 @@ public class ControllerChan {
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-    public void startNewGame(boolean[][] tiles, List<PlayerType> players, Difficulty difficulty) {
+    public void startNewGame(boolean[][] tiles, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
 
     }
 
