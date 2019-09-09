@@ -4,6 +4,8 @@ import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.Objects;
 
+import static de.sopra.javagame.model.MapTileState.*;
+
 /**
  * MapTile beschreibt die einzelnen Kacheln, die das Spielfeld bilden
  *
@@ -15,7 +17,7 @@ public class MapTile implements Copyable<MapTile> {
 
     public MapTile(MapTileProperties properties) {
         this.properties = properties;
-        this.state = MapTileState.DRY;
+        this.state = DRY;
     }
 
     /**
@@ -31,7 +33,11 @@ public class MapTile implements Copyable<MapTile> {
      * setzt den state des MapTile von FLOODED auf DRY
      */
     public void drain() {
-
+        // Ist die Insel bereits trocken oder ganz versunken passiert nichts, ansonsten wird sie
+        // trockengelegt
+        if (this.state == FLOODED) {
+            this.state = DRY;
+        }
     }
 
     /**
@@ -40,6 +46,15 @@ public class MapTile implements Copyable<MapTile> {
      * @return false wenn Fehler, true, sonst
      */
     public boolean flood() {
+        if (this.state == DRY) {
+            this.state = FLOODED;
+            return true;
+        }
+        if (this.state == FLOODED) {
+            this.state = GONE;
+            return true;
+        }
+
         return false;
     }
 
