@@ -48,4 +48,8 @@ public class AIController {
     public List<Player> getAllPlayers() {
         return null; //TODO
     }
+    
+    public List<Point> getDrainablePositionsOneMoveAway(Point position, PlayerType playerType){
+        return null; //TODO
+    }
 }

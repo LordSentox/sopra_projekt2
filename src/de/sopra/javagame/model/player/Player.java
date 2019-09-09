@@ -75,7 +75,7 @@ public abstract class Player implements Copyable<Player> {
      * @param costsAction wenn false, wird keine Action abgezogen, wenn true, wird eine abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
-    boolean move(Point destination, boolean costsAction, boolean specialActive) {
+    public boolean move(Point destination, boolean costsAction, boolean specialActive) {
         List<Point> legelMovement = legalMoves(specialActive);
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {
 
