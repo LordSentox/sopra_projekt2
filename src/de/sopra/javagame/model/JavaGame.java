@@ -127,5 +127,4 @@ public class JavaGame {
     public Turn getPreviousTurn () {
         return undoTurns.peek();
     }
-
 }
