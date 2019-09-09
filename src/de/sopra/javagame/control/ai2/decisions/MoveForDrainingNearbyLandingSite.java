@@ -22,23 +22,11 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class StayOnLandingSiteWaitingForDeparture implements Decision {
+public class MoveForDrainingNearbyLandingSite implements Decision {
 
     @Override
     public Decision decide(AIController control) {
-        Turn turn = control.getActiveTurn();
-        EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
-        
-        Player activePlayer = control.getActivePlayer();
-        Point playerPosition = activePlayer.getPosition();
-        
-        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
-        Point landingSitePosition = informationLandingSite.getLeft();
-        
-        if(discoveredArtifacts.size()==4 && landingSitePosition.equals(playerPosition)){
-            return this;
-            
-        }
+        // TODO Auto-generated method stub
         return null;
     }
 
@@ -47,6 +35,5 @@ public class StayOnLandingSiteWaitingForDeparture implements Decision {
         // TODO Auto-generated method stub
         
     }
-    
 
 }
