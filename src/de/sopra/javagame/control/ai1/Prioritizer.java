@@ -13,7 +13,7 @@ import java.util.Optional;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class Prioritizer {
+public class Prioritizer implements AIController.AIProcessor {
 
     private List<Priority> priorities;
 
@@ -29,6 +29,16 @@ public class Prioritizer {
         Optional<Priority> priority = priorities.stream()
                 .reduce((pr1, pr2) -> (act,con) -> pr1.getPriority(act,con) + pr2.getPriority(act,con));
         return priority.map(value -> value.getPriority(action,control)).orElse(-1.0);
+    }
+
+    @Override
+    public void makeStep(AIController control) {
+        //TODO
+    }
+
+    @Override
+    public String getTip(AIController control) {
+        return null; //TODO
     }
 
 }
