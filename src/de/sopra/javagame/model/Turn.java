@@ -99,6 +99,9 @@ public class Turn implements Copyable<Turn> {
         return waterLevel;
     }
 
+    private boolean gameEnded;
+
+    private boolean gameWon;
 
     private Turn(){}
 
@@ -183,7 +186,13 @@ public class Turn implements Copyable<Turn> {
      * @return gibt zurück, ob das Übergeben erfolgreich war
      */
     boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
-        return false;
+        if (source.legalReceivers().contains(receiver)) {
+            source.getHand().remove(card);
+            receiver.getHand().add(card);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void nextPlayerActive() {
@@ -204,5 +213,21 @@ public class Turn implements Copyable<Turn> {
         CopyUtil.copyArr(this.tiles, turn.tiles);
         turn.waterLevel = this.waterLevel.copy();
         return turn;
+    }
+
+    public boolean isGameEnded() {
+        return this.gameEnded;
+    }
+
+    public boolean isGameWon() {
+        return this.gameWon;
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
+    }
+
+    public void setGameWon(boolean gameWon) {
+        this.gameWon = gameWon;
     }
 }
