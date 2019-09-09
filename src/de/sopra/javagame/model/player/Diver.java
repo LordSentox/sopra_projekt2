@@ -94,11 +94,11 @@ public class Diver extends Player {
      * @param premise Die Prämisse, die auf dem Zielfeld erfüllt sein muss.
      */
     private void setTrueAroundWithTargetPremise(boolean[][] reachable, Point around, Function<MapTile, Boolean> premise) {
-        MapTile up = this.turn.getTile(around.x, around.y - 1);
+        MapTile upper = this.turn.getTile(around.x, around.y - 1);
         MapTile left = this.turn.getTile(around.x - 1, around.y);
         MapTile down = this.turn.getTile(around.x, around.y + 1);
         MapTile right = this.turn.getTile(around.x + 1, around.y);
-        if (premise.apply(up)) {
+        if (premise.apply(upper)) {
             reachable[around.y - 1][around.x] = true;
         }
         if (left != null && left.getState() != DRY) {

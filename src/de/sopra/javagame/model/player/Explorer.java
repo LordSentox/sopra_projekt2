@@ -39,7 +39,7 @@ public class Explorer extends Player {
     public List legalMoves(boolean specialActive) {
         if (!specialActive)
             return super.legalMoves(specialActive);
-        if (actionsLeft >= 1) {
+        if (actionsLeft > 0) {
             List<Point> movement = new ArrayList<>();
             MapTile right = this.turn.getTiles()[position.y][position.x + 1];
             if (right != null && right.getState() != MapTileState.GONE) {
@@ -49,8 +49,8 @@ public class Explorer extends Player {
             if (left != null && left.getState() != MapTileState.GONE) {
                 movement.add(new Point(position.y, position.x - 1));
             }
-            MapTile up = this.turn.getTiles()[position.y - 1][position.x];
-            if (up != null && up.getState() != MapTileState.GONE) {
+            MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
+            if (upper != null && upper.getState() != MapTileState.GONE) {
                 movement.add(new Point(position.y - 1, position.x));
             }
             MapTile down = this.turn.getTiles()[position.y + 1][position.x];
@@ -87,7 +87,7 @@ public class Explorer extends Player {
      * @return Listli
      */
     public List drainablePositions() {
-        if (actionsLeft >= 1) {
+        if (actionsLeft > 0) {
             List<Point> drainable = new ArrayList<>();
             MapTile right = this.turn.getTiles()[position.y][position.x + 1];
             if (right != null && right.getState() != MapTileState.GONE) {
@@ -97,8 +97,8 @@ public class Explorer extends Player {
             if (left != null && left.getState() != MapTileState.GONE) {
                 drainable.add(new Point(position.y, position.x - 1));
             }
-            MapTile up = this.turn.getTiles()[position.y - 1][position.x];
-            if (up != null && up.getState() != MapTileState.GONE) {
+            MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
+            if (upper != null && upper.getState() != MapTileState.GONE) {
                 drainable.add(new Point(position.y - 1, position.x));
             }
             MapTile down = this.turn.getTiles()[position.y + 1][position.x];
