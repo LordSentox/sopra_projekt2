@@ -35,13 +35,15 @@ public class Courier extends Player {
      */
     @Override
     public List<Player> legalReceivers() {
-<<<<<<< HEAD
+
         List<Player> receivers = new ArrayList();
-        receivers.remove(this);
+        List<Player> players = turn.getPlayers();
+        for (Player player : players) {
+            if (player != this) {
+                receivers.add(player);
+            }    
+        }
         return receivers;
-=======
-        return this.turn.getPlayers();
->>>>>>> branch 'implement-model' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
     }
 
     @Override
