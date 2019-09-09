@@ -38,7 +38,11 @@ public class AIController {
         return null; //TODO
     }
 
-    public Pair<Point, MapTile> getTile(ArtifactType artifactType) {
+    public Pair<Pair<Point, MapTile>, Pair<Point, MapTile>> getTile(ArtifactType artifactType) {
+        return null; //TODO
+    }
+    
+    public List<Pair<Point, MapTile>> getTemples(){
         return null; //TODO
     }
 
