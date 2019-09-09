@@ -71,7 +71,7 @@ public class MapTile implements Copyable<MapTile> {
     /**
      * setzt den state des MapTile von FLOODER auf DRY
      */
-    void drain() {
+    public void drain() {
 
     }
 
@@ -80,7 +80,7 @@ public class MapTile implements Copyable<MapTile> {
      *
      * @return false wenn Fehler, true, sonst
      */
-    boolean flood() {
+    public boolean flood() {
         return false;
     }
 
