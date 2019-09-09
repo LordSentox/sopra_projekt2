@@ -6,6 +6,7 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.AIActionTip;
 import de.sopra.javagame.util.Pair;
 
 import java.awt.*;
@@ -19,6 +20,25 @@ import java.util.List;
  * @since 09.09.2019
  */
 public class AIController {
+
+    public interface AIProcessor {
+
+        /**
+         * Fordert die KI auf, mit dem aktuellen Spieler einen automatischen Zug durchzuführen.
+         * Dieser Zug kann mehrere Aktionen verbrauchen und das Ausspielen von Spezialkarten beinhalten.
+         * MakeStep kann ebenfalls zum Abwerfen von Karten verwendet werden.
+         */
+        void makeStep();
+
+        /**
+         * Fordert einen Tipp von der KI an.
+         * Der Tipp wird in Befehlsform definiert durch {@link AIActionTip} dargestellt.
+         *
+         * @return ein Tipp in Befehlsform
+         */
+        String getTip();
+
+    }
 
     private ControllerChan controllerChan;
 
@@ -53,8 +73,8 @@ public class AIController {
     public List<Player> getAllPlayers() {
         return null; //TODO
     }
-    
-    public List<Point> getDrainablePositionsOneMoveAway(Point position, PlayerType playerType){
+
+    public List<Point> getDrainablePositionsOneMoveAway(Point position, PlayerType playerType) {
         return null; //TODO
     }
 
