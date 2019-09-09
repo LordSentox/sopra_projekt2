@@ -1,8 +1,11 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 
+import java.lang.reflect.Array;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Stack;
 
@@ -83,7 +86,32 @@ public class JavaGame {
      * @return Die berechneten Punkte
      */
     public int calculateScore() {
-        return 0;
+        int playerOne = 0;
+        int turns = 0;
+        int extraPoints = 0;
+        double score = 0;
+        boolean finishedOneRound = false;
+        if (!getIsCheetah()) {
+            for (Turn currentTurn : undoTurns) {
+                if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
+                    turns++;
+                    finishedOneRound = true;
+                } else {
+                    if (currentTurn.getActivePlayer() != playerOne) {
+                        finishedOneRound = false;
+                    }
+                }
+            }
+            score = (1 / turns) * 100;
+            for (ArtifactType cur : undoTurns.peek().getDiscoveredArtifacts()) {
+                extraPoints += 100;
+            }
+            if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
+                extraPoints += 1000;
+            }
+            score += extraPoints;
+        }
+        return (int)score;
     }
 
     public Difficulty getDifficulty() {
@@ -97,4 +125,9 @@ public class JavaGame {
     public boolean getIsCheetah() {
         return this.cheetah;
     }
+
+    public Turn getPreviousTurn () {
+        return undoTurns.peek();
+    }
+
 }
