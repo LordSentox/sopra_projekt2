@@ -2,6 +2,7 @@ package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
 
 import java.awt.*;
@@ -55,7 +56,6 @@ public class Navigator extends Player {
         if (this.actionsLeft == 0 && !this.hasExtraPush) {
             return false;
         }
-        --this.actionsLeft;
 
         int deltaX = 0;
         int deltaY = 0;
@@ -95,6 +95,10 @@ public class Navigator extends Player {
 
     @Override
     public Player copy() {
-        return null; //TODO
+        Player player = new Navigator(CopyUtil.copy(this.name), new Point(position), null);
+        player.hand = this.hand;
+        player.actionsLeft = this.actionsLeft;
+        player.isAI = this.isAI;
+        return player;
     }
 }
