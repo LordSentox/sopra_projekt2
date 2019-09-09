@@ -60,18 +60,10 @@ public class Navigator extends Player {
         int deltaX = 0;
         int deltaY = 0;
         switch (direction) {
-            case UP:
-                deltaY = -1;
-                break;
-            case LEFT:
-                deltaX = -1;
-                break;
-            case DOWN:
-                deltaY = 1;
-                break;
-            case RIGHT:
-                deltaX = 1;
-                break;
+            case UP: deltaY = -1; break;
+            case LEFT: deltaX = -1; break;
+            case DOWN: deltaY = 1; break;
+            case RIGHT: deltaX = 1; break;
         }
 
         // Ist das Feld, auf das der Spieler bewegt werden soll ein Inselfeld?
