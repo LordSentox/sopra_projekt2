@@ -21,9 +21,9 @@ import static org.junit.Assert.*;
 public class CardStackTest {
     private CardStack<FloodCard> floodCardStack;
     private CardStack<ArtifactCard> artifactCardStack;
-    MapTile[][] tiles;
-    MapTile wirHabenLandGefunden;
-    List<ArtifactCard> hand;
+    private MapTile[][] tiles;
+    private MapTile wirHabenLandGefunden;
+    private List<ArtifactCard> hand;
 
     @Before
     public void setUp() {
@@ -44,11 +44,11 @@ public class CardStackTest {
         assertEquals(wirHabenLandGefunden, floodCardStack.draw(1, true).get(0).getTile());
 
         //Test draw artifactCard
-        hand.addAll(artifactCardStack.draw(1, false));
-        assertEquals(1, hand.size());
+        hand.addAll(artifactCardStack.draw(28, false));
+        assertEquals(28, hand.size());
 
         hand.addAll(artifactCardStack.draw(1, true));
-        assertEquals(1, hand.size());
+        assertEquals(28, hand.size());
 
     }
 

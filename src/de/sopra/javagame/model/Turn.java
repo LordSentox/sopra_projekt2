@@ -102,13 +102,14 @@ public class Turn implements Copyable<Turn> {
     }
 
 
-    private Turn(){}
+    private Turn() {}
 
 
     /**
      * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
+     *
      * @param difficulty Die Startschwierigkeit des Spiels
-     * @param tiles Die Map des Spiels
+     * @param tiles      Die Map des Spiels
      */
     public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles) {
         Turn turn = new Turn();
@@ -124,7 +125,8 @@ public class Turn implements Copyable<Turn> {
         for (int y = 0; y < tiles.length; y++) {
             for (int x = 0; x < tiles[y].length; x++) {
                 MapTile tile = tiles[y][x];
-                if (tile.getPlayerSpawn() != PlayerType.NONE) startPositions.put(tile.getPlayerSpawn(), new Point(x, y));
+                if (tile.getPlayerSpawn() != PlayerType.NONE)
+                    startPositions.put(tile.getPlayerSpawn(), new Point(x, y));
             }
         }
 
