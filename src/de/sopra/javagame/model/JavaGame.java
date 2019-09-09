@@ -1,11 +1,8 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 
-import java.lang.reflect.Array;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Stack;
 
@@ -52,10 +49,10 @@ public class JavaGame {
     /**
      * Startet ein neues JavaGame und gibt den ersten Zug zurück, der bearbeitet werden kann.
      *
-     * @param mapName Der Name der Karte, die geladen wurde
-     * @param tiles Die TileMap, welche als Spielfeld benutzt werden soll
+     * @param mapName    Der Name der Karte, die geladen wurde
+     * @param tiles      Die TileMap, welche als Spielfeld benutzt werden soll
      * @param difficulty Anfangsschwierigkeit, welche den anfänglichen Wasserpegel festlegt.
-     * @param players Die Spieler, die das Spiel spielen
+     * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
     public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players) {
@@ -73,7 +70,9 @@ public class JavaGame {
      */
     public Turn endTurn(Turn currentTurn) {
         this.undoTurns.push(currentTurn);
-        while (!redoTurns.empty()) { redoTurns.pop(); }
+        while (!redoTurns.empty()) {
+            redoTurns.pop();
+        }
 
         return currentTurn.copy();
     }

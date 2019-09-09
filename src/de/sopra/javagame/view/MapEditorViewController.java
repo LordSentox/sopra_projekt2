@@ -4,8 +4,8 @@ import javafx.stage.Stage;
 
 /**
  * GUI für den Mapeditor
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class MapEditorViewController extends AbstractViewController implements MapEditorViewAUI {
 

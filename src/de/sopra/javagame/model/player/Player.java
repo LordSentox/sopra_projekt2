@@ -1,7 +1,6 @@
 package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
 
 import java.awt.*;
@@ -9,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Max Bühmann, Melanie Arnds Player beschreibt die Basisfunktionen, die
- *         jede Spielfigur ausführen kann.
+ * @author Max Bühmann, Melanie Arnds
+ * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
 
 public abstract class Player implements Copyable<Player> {
@@ -84,7 +83,6 @@ public abstract class Player implements Copyable<Player> {
      *            abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
-
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {
         List<Point> legelMovement = legalMoves(specialActive);
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {
@@ -151,7 +149,6 @@ public abstract class Player implements Copyable<Player> {
      * @param position Koordinate des zu verändernden MapTiles
      * @return false, wenn Fehler eingetroffen, true sonst
      */
-
     public boolean drain(Point position) {
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
         if (mapTile.getState() == MapTileState.GONE || mapTile.getState() == MapTileState.DRY) {
@@ -170,7 +167,6 @@ public abstract class Player implements Copyable<Player> {
      *
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
-
     public ArtifactType collectArtifact() {
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
         ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
@@ -197,7 +193,6 @@ public abstract class Player implements Copyable<Player> {
      * @return das erstellte Listli, wenn Player exisitieren, denen Handkarten
      *         übergeben werden dürfen. Null, sonst.
      */
-
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList();
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];

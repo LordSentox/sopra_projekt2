@@ -12,7 +12,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * bietet Methoden zum aktualisieren der InGameView 
+ * bietet Methoden zum aktualisieren der InGameView
+ *
  * @author Hannah, Lisa
  */
 public interface InGameViewAUI {

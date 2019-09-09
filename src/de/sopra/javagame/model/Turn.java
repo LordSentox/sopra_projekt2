@@ -112,13 +112,14 @@ public class Turn implements Copyable<Turn> {
 
     private boolean gameWon;
 
-    private Turn(){}
+    private Turn() {}
 
 
     /**
      * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
+     *
      * @param difficulty Die Startschwierigkeit des Spiels
-     * @param tiles Die Map des Spiels
+     * @param tiles      Die Map des Spiels
      */
     public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles) {
         Turn turn = new Turn();
