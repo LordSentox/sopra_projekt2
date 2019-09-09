@@ -123,7 +123,7 @@ public class MapUtil {
             for (int x = 0; x < Math.min(numbers[y].length, map[y].length); ++x) {
                 String sign = map[y][x].trim();
                 if (!sign.equals("-")) {
-                    numbers[y][x] = Integer.parseUnsignedInt(sign);
+                    numbers[y][x] = Integer.parseUnsignedInt(sign) % 24;
                 }
             }
         }
