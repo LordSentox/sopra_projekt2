@@ -75,6 +75,15 @@ public class Turn implements Copyable<Turn> {
         return players;
     }
 
+    public Player getPlayer(PlayerType type) {
+        for (Player currentPlayer : getPlayers()) {
+            if (currentPlayer.getType() == type) {
+                return currentPlayer;
+            }
+        }
+        return null;
+    }
+
     public int getActivePlayer() {
         return activePlayer;
     }
@@ -220,5 +229,13 @@ public class Turn implements Copyable<Turn> {
 
     public void setGameWon(boolean gameWon) {
         this.gameWon = gameWon;
+    }
+
+    public void setState(TurnState state) {
+        this.state = state;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
     }
 }

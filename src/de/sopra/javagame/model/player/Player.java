@@ -43,7 +43,7 @@ public abstract class Player implements Copyable<Player> {
      * @return das erstellte Listli
      */
 
-    List<Point> legalMoves(boolean specialActive) {
+    public List<Point> legalMoves(boolean specialActive) {
         if (actionsLeft >= 1){
         List<Point> movement = new ArrayList();
         MapTile right = this.turn.getTiles()[position.y][position.x + 1];
@@ -77,7 +77,7 @@ public abstract class Player implements Copyable<Player> {
      * @return false, wenn es einen Fehler gab, true, sonst
      */
 
-    boolean move(Point destination, boolean costsAction, boolean specialActive) {
+    public boolean move(Point destination, boolean costsAction, boolean specialActive) {
         List<Point> legelMovement = legalMoves(specialActive);
         if (actionsLeft < 1 || !legelMovement.contains(destination)){
  
@@ -110,7 +110,7 @@ public abstract class Player implements Copyable<Player> {
      */
 
 
-    List<Point> drainablePositions() {
+    public List<Point> drainablePositions() {
         if (actionsLeft >= 1){
             List<Point> drainable = new ArrayList();
             MapTile right = this.turn.getTiles()[position.y][position.x + 1];
@@ -143,7 +143,7 @@ public abstract class Player implements Copyable<Player> {
      * @return false, wenn Fehler eingetroffen, true sonst
      */
 
-    boolean drain(Point position) {
+    public boolean drain(Point position) {
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
         if (mapTile.getState() == MapTileState.GONE || mapTile.getState() == MapTileState.DRY){
             return false;
@@ -164,7 +164,7 @@ public abstract class Player implements Copyable<Player> {
      */
 
 
-    ArtifactType collectArtifact() {
+    public ArtifactType collectArtifact() {
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
         ArtifactType hiddenArtifact = mapTile.getHiddenArtifact();
         int count = 0;
@@ -190,7 +190,7 @@ public abstract class Player implements Copyable<Player> {
      * @return das erstellte Listli, wenn Player exisitieren, denen Handkarten übergeben werden dürfen. Null, sonst.
      */
 
-    List<Player> legalReceivers() {
+    public List<Player> legalReceivers() {
         List<Player> receivers = new ArrayList();
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
         List<Player> players= turn.getPlayers();
@@ -202,7 +202,9 @@ public abstract class Player implements Copyable<Player> {
         return receivers;
     }
 
-
+    public void setPosition(Point position) {
+        this.position = position;
+    }
 
     public void setActionsLeft(int actionsLeft) {
         this.actionsLeft = actionsLeft;
