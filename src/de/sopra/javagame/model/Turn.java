@@ -143,40 +143,6 @@ public class Turn implements Copyable<Turn> {
         return turn;
     }
 
-
-    /**
-     * Methode um einen Spieler ohne Kosten von seinen Aktionspunkten zu bewegen
-     *
-     * @param direction (oben, unten, rechts, links) Richtung in die bewegt werden darf
-     * @param caster    Spieler welcher den anderen bewegt
-     * @param other     der zu bewegende Spieler
-     * @return gibt zurück, ob das Bewegen erfolgreich war
-     */
-    boolean forcePush(Direction direction, Player caster, Player other) {
-        if (!caster.canMoveOthers()) {
-            return false;
-        }
-
-        int deltaX;
-        int deltaY;
-        switch (direction) {
-            case UP:
-                deltaY = -1;
-                break;
-            case LEFT:
-                deltaX = -1;
-                break;
-            case DOWN:
-                deltaY = 1;
-                break;
-            case RIGHT:
-                deltaX = 1;
-                break;
-        }
-
-        return false;
-    }
-
     /**
      * Methode um Artefakkarten an andere Spieler zu übergeben
      *
@@ -196,7 +162,32 @@ public class Turn implements Copyable<Turn> {
     }
 
     public void nextPlayerActive() {
+        this.players.get(this.activePlayer).setActionsLeft(0);
         this.activePlayer = (this.activePlayer + 1) % this.players.size();
+        this.players.get(this.activePlayer).setActionsLeft(3);
+    }
+
+    /**
+     * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
+     * kein Inselfeld wird <code>null</code> übergeben.
+     *
+     * @param position Die Position, von der man das Tile wissen möchte.
+     * @return Tile an der Position
+     */
+    public MapTile getTile(Point position) {
+        return this.tiles[position.y][position.x];
+    }
+
+
+    /**
+     * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
+     * kein Inselfeld wird <code>null</code> übergeben.
+     *
+     *
+     * @return Tile an der Position
+     */
+    public MapTile getTile(int posX, int posY) {
+        return this.tiles[posY][posX];
     }
 
     @Override

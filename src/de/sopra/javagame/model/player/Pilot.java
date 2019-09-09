@@ -52,7 +52,7 @@ public class Pilot extends Player {
      * @return false, wenn es einen Fehler gab, true, sonst
      */
     @Override
-    public boolean move(Point destination, boolean costsAction) {
+    public boolean move(Point destination, boolean costsAction, boolean specialActive) {
         return false;
     }
 
