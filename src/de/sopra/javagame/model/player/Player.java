@@ -47,7 +47,7 @@ public abstract class Player implements Copyable<Player> {
      * @return das erstellte Listli
      */
 
-    List<Point> legalMoves(boolean specialActive) {
+    public List<Point> legalMoves(boolean specialActive) {
         if (actionsLeft >= 1) {
             List<Point> movement = new ArrayList<>();
             MapTile right = this.turn.getTiles()[position.y][position.x + 1];
@@ -85,7 +85,7 @@ public abstract class Player implements Copyable<Player> {
      * @return false, wenn es einen Fehler gab, true, sonst
      */
 
-    boolean move(Point destination, boolean costsAction, boolean specialActive) {
+    public boolean move(Point destination, boolean costsAction, boolean specialActive) {
         List<Point> legelMovement = legalMoves(specialActive);
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {
             return false;
@@ -119,7 +119,7 @@ public abstract class Player implements Copyable<Player> {
      * @return Listli
      */
 
-    List<Point> drainablePositions() {
+    public List<Point> drainablePositions() {
         if (actionsLeft >= 1) {
             List<Point> drainable = new ArrayList();
             MapTile right = this.turn.getTiles()[position.y][position.x + 1];
@@ -148,12 +148,11 @@ public abstract class Player implements Copyable<Player> {
      * drain wandelt den State des {@link MapTile} in DRY um.
      * {@link MapTileState}
      *
-     * @param position
-     *            Koordinate des zu verändernden MapTiles
+     * @param position Koordinate des zu verändernden MapTiles
      * @return false, wenn Fehler eingetroffen, true sonst
      */
 
-    boolean drain(Point position) {
+    public boolean drain(Point position) {
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
         if (mapTile.getState() == MapTileState.GONE || mapTile.getState() == MapTileState.DRY) {
             return false;
@@ -165,18 +164,16 @@ public abstract class Player implements Copyable<Player> {
     }
 
     /**
-     * collectArtifact prüft, ob und auf welchem Typ eines {@link MapTile} der
-     * Spieler steht. Es wird geprüft, ob der Spieler mindestens vier zum Typ
-     * passende Karten auf der Hand hat. Wenn ja, werden vier passende Karten
-     * abgeworfen.
+     * collectArtifact prüft, ob und auf welchem Typ eines {@link MapTile} der Spieler steht.
+     * Es wird geprüft, ob der Spieler mindestens vier zum Typ passende Karten auf der Hand hat.
+     * Wenn ja, werden vier passende Karten abgeworfen.
      *
-     * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde,
-     *         none, sonst
+     * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
 
-    ArtifactType collectArtifact() {
+    public ArtifactType collectArtifact() {
         MapTile mapTile = this.turn.getTiles()[position.y][position.x];
-        ArtifactType hiddenArtifact = mapTile.getHiddenArtifact();
+        ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
         int count = 0;
         for (ArtifactCard card : hand) {
             if (card.getType().toArtifactType() == hiddenArtifact) {
@@ -213,6 +210,9 @@ public abstract class Player implements Copyable<Player> {
         return receivers;
     }
 
+    public void setPosition(Point position) {
+        this.position = position;
+    }
     public void setActionsLeft(int actionsLeft) {
         this.actionsLeft = actionsLeft;
     }
