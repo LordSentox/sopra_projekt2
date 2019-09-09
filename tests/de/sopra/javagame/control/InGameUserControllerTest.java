@@ -6,7 +6,7 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -240,7 +240,7 @@ public class InGameUserControllerTest {
         explorer.getHand().add(sandCard);
         inGameCont.playSandbagCard(PlayerType.EXPLORER, 5, new Point(1, 1));
         //TODO prüfe ob dieser Test funktioniert
-        Assert.assertEquals("Die Karte hätte sich nicht ändern dürfen.",
+        Assert.assertArrayEquals("Die Karte hätte sich nicht ändern dürfen.",
                              testMap,
                              turn.getTiles());
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
