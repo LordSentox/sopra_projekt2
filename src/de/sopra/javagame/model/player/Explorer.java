@@ -1,13 +1,14 @@
 package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
  * Explorer implementiert die Spielfigur "Forscher".
@@ -36,48 +37,30 @@ public class Explorer extends Player {
      * @return das erstellte Listli
      */
     @Override
-    public List legalMoves(boolean specialActive) {
+    public List<Point> legalMoves(boolean specialActive) {
+        List<Point> moves = super.legalMoves(false);
         if (!specialActive)
-            return super.legalMoves(specialActive);
-        if (actionsLeft > 0) {
-            List<Point> movement = new ArrayList<>();
-            MapTile right = this.turn.getTiles()[position.y][position.x + 1];
-            if (right != null && right.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y, position.x + 1));
-            }
-            MapTile left = this.turn.getTiles()[position.y][position.x - 1];
-            if (left != null && left.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y, position.x - 1));
-            }
-            MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
-            if (upper != null && upper.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y - 1, position.x));
-            }
-            MapTile down = this.turn.getTiles()[position.y + 1][position.x];
-            if (down != null && down.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y + 1, position.x));
-            }
-            MapTile topLeft = this.turn.getTiles()[position.y - 1][position.x - 1];
-            if (topLeft != null && topLeft.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y - 1, position.x - 1));
-            }
-            MapTile topRight = this.turn.getTiles()[position.y - 1][position.x + 1];
-            if (topRight != null && topRight.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y - 1, position.x + 1));
-            }
-            MapTile bottomLeft = this.turn.getTiles()[position.y + 1][position.x - 1];
-            if (bottomLeft != null && bottomLeft.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y + 1, position.x - 1));
-            }
-            MapTile bottomRight = this.turn.getTiles()[position.y + 1][position.x + 1];
-            if (bottomRight != null && bottomRight.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y + 1, position.x + 1));
-            }
-            return movement;
-        } else {
+            return moves;
 
-            return null;
+        // Die Spezialbewegungen des Explorers sind aktiviert,
+        MapTile topLeft = this.turn.getTiles()[position.y - 1][position.x - 1];
+        if (topLeft != null && topLeft.getState() != GONE) {
+            moves.add(new Point(position.y - 1, position.x - 1));
         }
+        MapTile topRight = this.turn.getTiles()[position.y - 1][position.x + 1];
+        if (topRight != null && topRight.getState() != GONE) {
+            moves.add(new Point(position.y - 1, position.x + 1));
+        }
+        MapTile bottomLeft = this.turn.getTiles()[position.y + 1][position.x - 1];
+        if (bottomLeft != null && bottomLeft.getState() != GONE) {
+            moves.add(new Point(position.y + 1, position.x - 1));
+        }
+        MapTile bottomRight = this.turn.getTiles()[position.y + 1][position.x + 1];
+        if (bottomRight != null && bottomRight.getState() != GONE) {
+            moves.add(new Point(position.y + 1, position.x + 1));
+        }
+
+        return moves;
     }
 
     /**
@@ -86,46 +69,19 @@ public class Explorer extends Player {
      *
      * @return Listli
      */
-    public List drainablePositions() {
-        if (actionsLeft > 0) {
-            List<Point> drainable = new ArrayList<>();
-            MapTile right = this.turn.getTiles()[position.y][position.x + 1];
-            if (right != null && right.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y, position.x + 1));
-            }
-            MapTile left = this.turn.getTiles()[position.y][position.x - 1];
-            if (left != null && left.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y, position.x - 1));
-            }
-            MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
-            if (upper != null && upper.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y - 1, position.x));
-            }
-            MapTile down = this.turn.getTiles()[position.y + 1][position.x];
-            if (down != null && down.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y + 1, position.x));
-            }
-            MapTile topLeft = this.turn.getTiles()[position.y - 1][position.x - 1];
-            if (topLeft != null && topLeft.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y - 1, position.x - 1));
-            }
-            MapTile topRight = this.turn.getTiles()[position.y - 1][position.x + 1];
-            if (topRight != null && topRight.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y - 1, position.x + 1));
-            }
-            MapTile bottomLeft = this.turn.getTiles()[position.y + 1][position.x - 1];
-            if (bottomLeft != null && bottomLeft.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y + 1, position.x - 1));
-            }
-            MapTile bottomRight = this.turn.getTiles()[position.y + 1][position.x + 1];
-            if (bottomRight != null && bottomRight.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y + 1, position.x + 1));
-            }
-            return drainable;
-        } else {
+    public List<Point> drainablePositions() {
+        // Alle Positionen, zu denen sich der Forscher bewegen darf, darf er auch trockenlegen
+        List<Point> drainable = this.legalMoves(true);
 
-            return null;
-        }
+        // Das Feld unter sich darf er ebenfalls trockenlegen
+        drainable.add(this.position);
+
+        // Entferne alle Positionen, wo die Map eigentlich keine Felder hat, oder sie nicht mehr trockengelegt werden
+        // können
+        // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
+        drainable = drainable.stream().filter(point -> this.turn.getTile(point) != null && this.turn.getTile(point).getState() != GONE).collect(Collectors.toList());
+
+        return drainable;
     }
 
     @Override

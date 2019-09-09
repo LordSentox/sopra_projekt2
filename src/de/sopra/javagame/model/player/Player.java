@@ -6,6 +6,9 @@ import de.sopra.javagame.util.Direction;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
  * @author Max Bühmann, Melanie Arnds
@@ -47,29 +50,24 @@ public abstract class Player implements Copyable<Player> {
      */
 
     public List<Point> legalMoves(boolean specialActive) {
-        if (actionsLeft > 0) {
-            List<Point> movement = new ArrayList<>();
-            MapTile right = this.turn.getTiles()[position.y][position.x + 1];
-            if (right != null && right.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y, position.x + 1));
-            }
-            MapTile left = this.turn.getTiles()[position.y][position.x - 1];
-            if (left != null && left.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y, position.x - 1));
-            }
-            MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
-            if (upper != null && upper.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y - 1, position.x));
-            }
-            MapTile down = this.turn.getTiles()[position.y + 1][position.x];
-            if (down != null && down.getState() != MapTileState.GONE) {
-                movement.add(new Point(position.y + 1, position.x));
-            }
-            return movement;
-        } else {
-
-            return null;
+        List<Point> movement = new ArrayList<>();
+        MapTile right = this.turn.getTiles()[position.y][position.x + 1];
+        if (right != null && right.getState() != MapTileState.GONE) {
+            movement.add(new Point(position.y, position.x + 1));
         }
+        MapTile left = this.turn.getTiles()[position.y][position.x - 1];
+        if (left != null && left.getState() != MapTileState.GONE) {
+            movement.add(new Point(position.y, position.x - 1));
+        }
+        MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
+        if (upper != null && upper.getState() != MapTileState.GONE) {
+            movement.add(new Point(position.y - 1, position.x));
+        }
+        MapTile down = this.turn.getTiles()[position.y + 1][position.x];
+        if (down != null && down.getState() != MapTileState.GONE) {
+            movement.add(new Point(position.y + 1, position.x));
+        }
+        return movement;
     }
 
     /**
@@ -116,30 +114,19 @@ public abstract class Player implements Copyable<Player> {
      *
      * @return Listli
      */
-
     public List<Point> drainablePositions() {
-        if (actionsLeft > 0) {
-            List<Point> drainable = new ArrayList();
-            MapTile right = this.turn.getTiles()[position.y][position.x + 1];
-            if (right != null && right.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y, position.x + 1));
-            }
-            MapTile left = this.turn.getTiles()[position.y][position.x - 1];
-            if (left != null && left.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y, position.x - 1));
-            }
-            MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
-            if (upper != null && upper.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y - 1, position.x));
-            }
-            MapTile down = this.turn.getTiles()[position.y + 1][position.x];
-            if (down != null && down.getState() != MapTileState.GONE) {
-                drainable.add(new Point(position.y + 1, position.x));
-            }
-            return drainable;
-        } else {
-            return null;
-        }
+        // Alle Felder, zu denen sich der Spieler auf normalem Wege hinbewegen darf
+        List<Point> drainable = this.legalMoves(false);
+
+        // Das Feld unter sich darf er ebenfalls trockenlegen
+        drainable.add(this.position);
+
+        // Entferne alle Positionen, wo die Map eigentlich keine Felder hat, oder sie nicht mehr trockengelegt werden
+        // können
+        // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
+        drainable = drainable.stream().filter(point -> this.turn.getTile(point) != null && this.turn.getTile(point).getState() != GONE).collect(Collectors.toList());
+
+        return drainable;
     }
 
     /**
@@ -150,12 +137,19 @@ public abstract class Player implements Copyable<Player> {
      * @return false, wenn Fehler eingetroffen, true sonst
      */
     public boolean drain(Point position) {
-        MapTile mapTile = this.turn.getTiles()[position.y][position.x];
-        if (mapTile.getState() == MapTileState.GONE || mapTile.getState() == MapTileState.DRY) {
+        // Kann man sie trockenlegen und sind noch ausreichend Aktionen vorhanden?
+        if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
+            return false;
+        }
+
+        MapTile toDrain = this.turn.getTile(position);
+
+        // Muss überhaupt noch etwas getan werden?
+        if (toDrain.getState() == MapTileState.DRY) {
             return false;
         } else {
-            mapTile.drain();
-            actionsLeft -= 1;
+            toDrain.drain();
+            --actionsLeft;
             return true;
         }
     }
@@ -168,20 +162,31 @@ public abstract class Player implements Copyable<Player> {
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
     public ArtifactType collectArtifact() {
-        MapTile mapTile = this.turn.getTiles()[position.y][position.x];
+        MapTile mapTile = this.turn.getTile(this.position);
         ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
-        int count = 0;
-        for (ArtifactCard card : hand) {
-            if (card.getType().toArtifactType() == hiddenArtifact) {
-                count++;
-            }
 
+        // Abbrechen, falls hier gar kein Artefakt versteckt ist.
+        if (hiddenArtifact == ArtifactType.NONE) {
+            return ArtifactType.NONE;
         }
 
-        if (hiddenArtifact == ArtifactType.NONE || count < 4) {
+        // Finde wenn möglich vier passende Artefaktkarten, die man gegen das Artefakt eintauschen kann.
+        final int cardsNeeded = 4;
+        List<ArtifactCard> correspondingHandCards = new ArrayList<>();
+        for (ArtifactCard card : hand) {
+            if (card.getType().toArtifactType() == hiddenArtifact && correspondingHandCards.size() < cardsNeeded) {
+                correspondingHandCards.add(card);
+            }
+        }
 
+        // Überprüfe, ob das Artefakt geborgen werden kann
+        if (correspondingHandCards.size() != cardsNeeded) {
             return ArtifactType.NONE;
         } else {
+            // Lege die vier Karten auf den Ablagestapel
+            this.hand.removeAll(correspondingHandCards);
+            this.turn.getArtifactCardStack().discard(correspondingHandCards);
+
             return hiddenArtifact;
         }
     }
