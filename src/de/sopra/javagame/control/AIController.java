@@ -1,5 +1,7 @@
 package de.sopra.javagame.control;
 
+import java.util.*;
+
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 
@@ -25,5 +27,7 @@ public class AIController {
     public Player getActivePlayer() {
         return null; //TODO
     }
-
+    public List<Player> getAllPlayers(){
+        return null; //TODO
+    }
 }
