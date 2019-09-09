@@ -30,7 +30,6 @@ public class Courier extends Player {
      *
      * @return das Listli aller Spieler außer dem Boten selbst.
      */
-
     @Override
     public List<Player> legalReceivers() {
         return this.turn.getPlayers();
