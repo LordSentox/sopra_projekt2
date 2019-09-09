@@ -14,21 +14,21 @@ import java.awt.*;
 public class Engineer extends Player {
 
     private boolean hasExtraDrain;
-    
-    public Engineer (String name, Point position, Turn turn){
+
+    public Engineer(String name, Point position, Turn turn) {
         super(PlayerType.ENGINEER, name, turn);
         this.position = position;
         this.isAI = false;
         this.hasExtraDrain = false;
-    } 
-    
-    public Engineer (String name, Point position, Turn turn, boolean isAI){
+    }
+
+    public Engineer(String name, Point position, Turn turn, boolean isAI) {
         super(PlayerType.ENGINEER, name, turn);
         this.position = position;
         this.isAI = isAI;
         this.hasExtraDrain = false;
     }
-    
+
     /**
      * drain wandelt den State des {@link MapTile} in DRY um. {@link MapTileState}
      * Wenn der Engineer zweimal direkt aufeinander folgend drained, wird ihm nur eine Aktion dafür abgezogen.

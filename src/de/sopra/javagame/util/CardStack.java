@@ -26,7 +26,7 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
     public CardStack(Collection<T> cards) {
         drawStack = new Stack<>();
         drawStack.addAll(cards);
-        discardPile = Collections.emptyList();
+        discardPile = new ArrayList<>();
     }
 
     /**
@@ -37,7 +37,36 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
      * @return gibt eine Liste vom Kartentyp T zurück
      */
     public List<T> draw(int amount, boolean discard) {
-        return null;
+        List<T> drawn = new ArrayList<>();
+        if (drawStack.isEmpty() && discardPile.isEmpty()) return drawn;
+        for (int i = 0; i < amount; i++) {
+            if (drawStack.isEmpty()) {
+                shuffleBack();
+            }
+            drawn.add(drawStack.pop());
+        }
+        if (discard) {
+            discard(drawn);
+        }
+        return drawn;
+    }
+
+    /**
+     * draw nimmt die angegebene Anzahl Karten von oben vom Stack
+     *
+     * @param amount  Anzahl gewünschter Karten
+     * @return gibt eine Liste vom Kartentyp T zurück
+     */
+    public List<T> draw(int amount) {
+        List<T> drawn = new ArrayList<>();
+        if (drawStack.isEmpty() && discardPile.isEmpty()) return drawn;
+        for (int i = 0; i < amount; i++) {
+            if (drawStack.isEmpty()) {
+                shuffleBack();
+            }
+            drawn.add(drawStack.pop());
+        }
+        return drawn;
     }
 
     /**
@@ -79,6 +108,15 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
      */
     public void discard(T... card) {
         discardPile.addAll(Arrays.asList(card));
+    }
+
+    /**
+     * discard fügt eine beliebige Anzahl an Karten dem discardPile hinzu.
+     *
+     * @param card ist ein varargs mit beliebiger Anzahl an Karten vom Typ T.
+     */
+    public void discard(Collection<T> card) {
+        discardPile.addAll(card);
     }
 
     @Override

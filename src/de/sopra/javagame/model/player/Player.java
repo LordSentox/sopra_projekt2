@@ -12,15 +12,15 @@ import java.util.List;
  */
 
 public abstract class Player implements Copyable<Player> {
-    
+
     private final PlayerType type;
-    
+
     private final String name;
-    
+
     private final Turn turn;
-    
+
     protected Point position;
-   
+
     protected int actionsLeft;
 
     protected boolean isAI;

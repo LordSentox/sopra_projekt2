@@ -17,21 +17,21 @@ public class Pilot extends Player {
      * Der Pilot kann seine Spezialfähigkeit nur einmal pro Zug nutzen, also wird sie nach benutzen auf false gesetzt
      */
     private boolean hasSpecialMove;
-    
-    public Pilot (String name, Point position, Turn turn){
+
+    public Pilot(String name, Point position, Turn turn) {
         super(PlayerType.PILOT, name, turn);
         this.position = position;
         this.isAI = false;
         this.hasSpecialMove = false;
-    } 
-    
-    public Pilot (String name, Point position, Turn turn, boolean isAI){
+    }
+
+    public Pilot(String name, Point position, Turn turn, boolean isAI) {
         super(PlayerType.PILOT, name, turn);
         this.position = position;
         this.isAI = isAI;
         this.hasSpecialMove = false;
     }
-        
+
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der Spieler sich regelkonform hinbewegen darf.
      * Wenn specialActive, dann werden alle {@link MapTile} der Liste hinzugefügt, die nicht GONE sind
