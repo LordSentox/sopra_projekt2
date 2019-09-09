@@ -1,6 +1,7 @@
 package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.*;
+import de.sopra.javagame.util.Direction;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,18 +14,17 @@ import java.util.List;
 
 public abstract class Player implements Copyable<Player> {
     
-    private final PlayerType type;
+    protected final PlayerType type;
     
-    private final String name;
+    protected final String name;
     
-    private final Turn turn;
+    protected final Turn turn;
     
     protected Point position;
    
     protected int actionsLeft;
 
     protected boolean isAI;
-
 
     protected List<ArtifactCard> hand;
 
@@ -63,6 +63,10 @@ public abstract class Player implements Copyable<Player> {
      * @return false, wenn Spieler andere nicht bewegen kann, true, sonst.
      */
     public boolean canMoveOthers() {
+        return false;
+    }
+
+    public boolean forcePush(Direction direction, Player other) {
         return false;
     }
 
@@ -107,6 +111,10 @@ public abstract class Player implements Copyable<Player> {
         return null;
     }
 
+
+    public void setActionsLeft(int actionsLeft) {
+        this.actionsLeft = actionsLeft;
+    }
 
     public int getActionsLeft() {
         return actionsLeft;
