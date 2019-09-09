@@ -83,34 +83,49 @@ public class JavaGame {
      * @return Die berechneten Punkte
      */
     public int calculateScore() {
-        int playerOne = 0;
-        int turns = 1;
-        int extraPoints = 0;
-        double score = 0;
-        boolean finishedOneRound = false;
-        if (!getIsCheetah()) {
-            for (Turn currentTurn : undoTurns) {
-                if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
-                    turns++;
-                    finishedOneRound = true;
-                } else {
-                    if (currentTurn.getActivePlayer() != playerOne) {
-                        finishedOneRound = false;
-                    }
-                }
-            }
-            score = (1 / turns) * 100;
-            if (!undoTurns.isEmpty()){
-                for (ArtifactType cur : undoTurns.peek().getDiscoveredArtifacts()) {
-                    extraPoints += 100;
-                }
-                if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
-                    extraPoints += 1000;
-                }
-            }
-            score += extraPoints;
+        // Keine Punkte für Mogler
+        if (getIsCheetah()) {
+            return 0;
         }
+
+        double score = (1.0 / (double) this.numRounds()) * 100;
+
+        int extraPoints = 0;
+        if (!undoTurns.isEmpty()){
+            // Für jedes gefundene Artefakt gibt es 100 Extrapunkte
+            extraPoints += 100 * undoTurns.peek().getDiscoveredArtifacts().size();
+
+            // Extrapunkte, wenn das Spiel gewonnen wurde
+            if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
+                extraPoints += 1000;
+            }
+        }
+        score += extraPoints;
+
         return (int)score;
+    }
+
+    /**
+     * Zählt die im Spiel vorgekommenen Runden, also wie oft der erste Spieler bereits an der Reihe war, was zwar
+     * proportional, aber nicht direkt abhängig von der Anzahl der Turns ist.
+     *
+     * @return Anzahl der im Spiel gespielten Runden
+     */
+    public int numRounds() {
+        int playerOne = 0;
+        int rounds = 1;
+        boolean finishedOneRound = false;
+        for (Turn currentTurn : undoTurns) {
+            if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
+                rounds++;
+                finishedOneRound = true;
+            }
+            else if (currentTurn.getActivePlayer() != playerOne) {
+                finishedOneRound = false;
+            }
+        }
+
+        return rounds;
     }
 
     public Difficulty getDifficulty() {
