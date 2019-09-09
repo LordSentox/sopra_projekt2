@@ -9,7 +9,7 @@ import de.sopra.javagame.control.AIController;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class DecisionMaker {
+public class DecisionMaker implements AIController.AIProcessor {
 
     private Decision turnDecisionTower;
     private Decision discardDecisionTower;
@@ -37,6 +37,16 @@ public class DecisionMaker {
 
     Decision makeSpecialCardDecision(AIController control) {
         return specialCardDecisionTower.decide(control);
+    }
+
+    @Override
+    public void makeStep() {
+        //TODO
+    }
+
+    @Override
+    public String getTip() {
+        return null; //TODO
     }
 
 }
