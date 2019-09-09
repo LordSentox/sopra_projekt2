@@ -190,6 +190,9 @@ public class Turn implements Copyable<Turn> {
         turn.discoveredArtifacts = EnumSet.copyOf(this.discoveredArtifacts);
         turn.floodCardStack = this.floodCardStack.copy();
         turn.players = CopyUtil.copyAsList(this.players);
+        for(Player player : turn.players) {
+            player.setActiveTurn(turn);
+        }
         turn.state = this.state;
         turn.tiles = new MapTile[this.tiles.length][this.tiles[0].length];
         CopyUtil.copyArr(this.tiles, turn.tiles);
