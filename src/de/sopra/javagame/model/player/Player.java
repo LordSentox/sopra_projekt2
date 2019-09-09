@@ -42,8 +42,31 @@ public abstract class Player implements Copyable<Player> {
      * @param specialActive gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja, wird die Liste um zusätzlich erreichbare Punkte erweitert
      * @return das erstellte Listli
      */
-    public List<Point> legalMoves(boolean specialActive) {
+
+    List<Point> legalMoves(boolean specialActive) {
+        if (actionsLeft >= 1){
+        List<Point> movement = new ArrayList();
+        MapTile right = this.turn.getTiles()[position.y][position.x + 1];
+        if(right != null && right.getState() != MapTileState.GONE){
+            movement.add(new Point(position.y , position.x + 1));
+        }
+        MapTile left = this.turn.getTiles()[position.y][position.x - 1];
+        if(left != null && left.getState() != MapTileState.GONE){
+            movement.add(new Point(position.y , position.x - 1));
+        }
+        MapTile up = this.turn.getTiles()[position.y - 1][position.x];
+        if(up != null && up.getState() != MapTileState.GONE){
+            movement.add(new Point(position.y - 1 , position.x));
+        }
+        MapTile down = this.turn.getTiles()[position.y + 1][position.x];
+        if(down != null && down.getState() != MapTileState.GONE){
+            movement.add(new Point(position.y + 1 , position.x));
+        }
+        return movement;
+        }else{
+
         return null;
+        }
     }
 
     /**
@@ -53,8 +76,18 @@ public abstract class Player implements Copyable<Player> {
      * @param costsAction wenn false, wird keine Action abgezogen, wenn true, wird eine abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
-    public boolean move(Point destination, boolean costsAction) {
+
+    boolean move(Point destination, boolean costsAction, boolean specialActive) {
+        List<Point> legelMovement = legalMoves(specialActive);
+        if (actionsLeft < 1 || !legelMovement.contains(destination)){
+ 
         return false;
+        }else{
+            position = destination;
+            costsAction = true;
+            actionsLeft -= 1;
+            return true;
+        }
     }
 
     /**
@@ -76,9 +109,32 @@ public abstract class Player implements Copyable<Player> {
      * @return Listli
      */
 
-    public List<Point> drainablePositions() {
-        return null;
+
+    List<Point> drainablePositions() {
+        if (actionsLeft >= 1){
+            List<Point> drainable = new ArrayList();
+            MapTile right = this.turn.getTiles()[position.y][position.x + 1];
+            if(right != null && right.getState() != MapTileState.GONE){
+                drainable.add(new Point(position.y , position.x + 1));
+            }
+            MapTile left = this.turn.getTiles()[position.y][position.x - 1];
+            if(left != null && left.getState() != MapTileState.GONE){
+                drainable.add(new Point(position.y , position.x - 1));
+            }
+            MapTile up = this.turn.getTiles()[position.y - 1][position.x];
+            if(up != null && up.getState() != MapTileState.GONE){
+                drainable.add(new Point(position.y - 1 , position.x));
+            }
+            MapTile down = this.turn.getTiles()[position.y + 1][position.x];
+            if(down != null && down.getState() != MapTileState.GONE){
+                drainable.add(new Point(position.y + 1 , position.x));
+            }
+            return drainable;
+            }else{
+            return null;
+            }
     }
+
 
     /**
      * drain wandelt den State des {@link MapTile} in DRY um. {@link MapTileState}
@@ -86,9 +142,18 @@ public abstract class Player implements Copyable<Player> {
      * @param position Koordinate des zu verändernden MapTiles
      * @return false, wenn Fehler eingetroffen, true sonst
      */
-    public boolean drain(Point position) {
-        return false;
+
+    boolean drain(Point position) {
+        MapTile mapTile = this.turn.getTiles()[position.y][position.x];
+        if (mapTile.getState() == MapTileState.GONE || mapTile.getState() == MapTileState.DRY){
+            return false;
+        }else {
+            mapTile.drain();
+            return true;
+        }
     }
+        
+
 
     /**
      * collectArtifact prüft, ob und auf welchem Typ eines {@link MapTile} der Spieler steht.
@@ -98,18 +163,45 @@ public abstract class Player implements Copyable<Player> {
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
 
-    public ArtifactType collectArtifact() {
-        return null;
+
+    ArtifactType collectArtifact() {
+        MapTile mapTile = this.turn.getTiles()[position.y][position.x];
+        ArtifactType hiddenArtifact = mapTile.getHiddenArtifact();
+        int count = 0;
+        for (ArtifactCard card : hand){
+           if (card.getType().toArtifactType() == hiddenArtifact) {
+               count++;
+           }
+            
+        }
+        
+        if (hiddenArtifact == ArtifactType.NONE || count < 4){
+            
+            return ArtifactType.NONE;
+        }else{
+            return hiddenArtifact;
+        }
     }
+        
 
     /**
      * legalReceivers legt ein Listli von Player an, denen Handkarten regelkonform übergeben werden dürfen.
      *
      * @return das erstellte Listli, wenn Player exisitieren, denen Handkarten übergeben werden dürfen. Null, sonst.
      */
-    public List<Player> legalReceivers() {
-        return null;
+
+    List<Player> legalReceivers() {
+        List<Player> receivers = new ArrayList();
+        MapTile mapTile = this.turn.getTiles()[position.y][position.x];
+        List<Player> players= turn.getPlayers();
+        for ( Player player : players){
+            if (mapTile == this.turn.getTiles()[player.position.y][player.position.x] && player != this){
+                receivers.add(player);
+            }
+        }
+        return receivers;
     }
+
 
 
     public void setActionsLeft(int actionsLeft) {

@@ -107,7 +107,7 @@ public class InGameUserControllerTest {
     }
     @Test
     public void testPlayHelicopterCard() {
-
+        Turn currentTurn = javaGame.getPreviousTurn();
         //teste mit ungültigem Zielfeld(kein maptile)
         explorer.getHand().add(heliCard);
         inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Point (5,2), new Point(1,1), moveablePlayers);
@@ -194,9 +194,9 @@ public class InGameUserControllerTest {
         moveablePlayers.add(courier);
         inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, courier.getPosition(), heliPoint, moveablePlayers);
         Assert.assertFalse("Das Spiel sollte nicht geendet haben",
-                            javaGame.hasGameEnded());
+                            currentTurn.isGameEnded());
         Assert.assertFalse("Das Spiel hätte nicht gewonnen sein sollen",
-                            javaGame.isGameWon());
+                            currentTurn.isGameWon());
 
         //teste mit HeliCard auf HeliPlatz und alle Artefakte gefunden
         turn.getDiscoveredArtifacts().add(ArtifactType.FIRE);
@@ -222,9 +222,9 @@ public class InGameUserControllerTest {
         moveablePlayers.add(courier);
         inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, courier.getPosition(), heliPoint, moveablePlayers);
         Assert.assertTrue("Das Spiel sollte geendet haben",
-                            javaGame.hasGameEnded());
+                            currentTurn.isGameEnded());
         Assert.assertTrue("Das Spiel hätte gewonnen sein sollen",
-                            javaGame.isGameWon());
+                            currentTurn.isGameWon());
 
     }
 
