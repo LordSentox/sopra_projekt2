@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai1;
 
+import de.sopra.javagame.control.AIController;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +25,10 @@ public class Prioritizer {
 
     }
 
-    double getPriority(Action action) {
+    double getPriority(Action action, AIController control) {
         Optional<Priority> priority = priorities.stream()
-                .reduce((pr1, pr2) -> action1 -> pr1.getPriority(action1) + pr2.getPriority(action1));
-        return priority.map(value -> value.getPriority(action)).orElse(-1.0);
+                .reduce((pr1, pr2) -> (act,con) -> pr1.getPriority(act,con) + pr2.getPriority(act,con));
+        return priority.map(value -> value.getPriority(action,control)).orElse(-1.0);
     }
 
 }
