@@ -1,5 +1,6 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
@@ -51,5 +52,10 @@ public class AIController {
     
     public List<Point> getDrainablePositionsOneMoveAway(Point position, PlayerType playerType){
         return null; //TODO
+    }
+
+    public boolean anyPlayerHasCard(ArtifactCardType artifactCardType) {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

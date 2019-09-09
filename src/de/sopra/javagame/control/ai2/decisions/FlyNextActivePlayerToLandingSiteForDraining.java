@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
@@ -19,19 +20,18 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class MoveForDrainingNearbyLandingSite implements Decision {
+public class FlyNextActivePlayerToLandingSiteForDraining implements Decision {
 
-    /**
-     * Prüfe: ist der Spieler einen Schritt entfernt, um den Landeplatz trocken legen zu können
-     * kann der Spieler innerhalb seines Zuges trockenlegen
-     */
-    
     @Override
     public Decision decide(AIController control) {
+        if(!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)){
+            return null;
+        }
+        
         Player activePlayer = control.getActivePlayer();
         int leftActions = activePlayer.getActionsLeft();
         
-        if(leftActions<2){
+        if(leftActions!=1){
             return null;
         }
         
@@ -39,18 +39,16 @@ public class MoveForDrainingNearbyLandingSite implements Decision {
         MapTile landingSite = informationLandingSite.getRight();
         Point landingSitePosition = informationLandingSite.getLeft();
         
-        if(landingSite.getState().equals(MapTileState.FLOODED)){
+        if(!landingSite.getState().equals(MapTileState.FLOODED)){
+            return null;
+        }
                 
-            Point playerPosition = activePlayer.getPosition();
-            PlayerType playerType = activePlayer.getType();
-            List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
-                    
-            if(drainablePositionslist.contains(landingSitePosition)){
-                return this;
-            }
+        List<Point> directlyDrainablePositionsList = activePlayer.drainablePositions();
+        if(directlyDrainablePositionsList.contains(landingSitePosition)){
+            return null;
         }
         
-        return null;
+        return this;
     }
 
     @Override
