@@ -28,7 +28,7 @@ public class AIController {
          * Dieser Zug kann mehrere Aktionen verbrauchen und das Ausspielen von Spezialkarten beinhalten.
          * MakeStep kann ebenfalls zum Abwerfen von Karten verwendet werden.
          */
-        void makeStep();
+        void makeStep(AIController control);
 
         /**
          * Fordert einen Tipp von der KI an.
@@ -36,7 +36,7 @@ public class AIController {
          *
          * @return ein Tipp in Befehlsform
          */
-        String getTip();
+        String getTip(AIController control);
 
     }
 
@@ -44,6 +44,11 @@ public class AIController {
 
     public AIController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
+    }
+
+
+    public boolean isCurrentlyDiscarding() {
+        return false; //TODO
     }
 
     public Turn getActiveTurn() {
@@ -61,8 +66,8 @@ public class AIController {
     public Pair<Pair<Point, MapTile>, Pair<Point, MapTile>> getTile(ArtifactType artifactType) {
         return null; //TODO
     }
-    
-    public List<Pair<Point, MapTile>> getTemples(){
+
+    public List<Pair<Point, MapTile>> getTemples() {
         return null; //TODO
     }
 

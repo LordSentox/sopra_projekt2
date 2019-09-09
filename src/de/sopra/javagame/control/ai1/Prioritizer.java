@@ -32,12 +32,12 @@ public class Prioritizer implements AIController.AIProcessor {
     }
 
     @Override
-    public void makeStep() {
+    public void makeStep(AIController control) {
         //TODO
     }
 
     @Override
-    public String getTip() {
+    public String getTip(AIController control) {
         return null; //TODO
     }
 

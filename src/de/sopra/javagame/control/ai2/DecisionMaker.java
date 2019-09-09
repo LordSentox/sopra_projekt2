@@ -40,12 +40,21 @@ public class DecisionMaker implements AIController.AIProcessor {
     }
 
     @Override
-    public void makeStep() {
-        //TODO
+    public void makeStep(AIController control) {
+        if (control.isCurrentlyDiscarding()) {
+            Decision decision = makeDiscardDecision(control);
+            decision.act(control);
+        } else {
+            Decision turn = makeTurnDecision(control);
+            turn.act(control);
+            Decision special = makeSpecialCardDecision(control);
+            if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
+                special.act(control);
+        }
     }
 
     @Override
-    public String getTip() {
+    public String getTip(AIController control) {
         return null; //TODO
     }
 
