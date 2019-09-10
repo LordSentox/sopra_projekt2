@@ -46,7 +46,6 @@ public class Turn implements Copyable<Turn> {
      */
     private CardStack<FloodCard> floodCardStack;
 
-
     /**
      * Nachziehstapel mit den {@link ArtifactCard}
      */
@@ -66,6 +65,8 @@ public class Turn implements Copyable<Turn> {
 
     private boolean gameWon;
 
+    private Turn() {
+    }
 
     public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
@@ -112,9 +113,6 @@ public class Turn implements Copyable<Turn> {
         return waterLevel;
     }
 
-    private Turn() {}
-
-
     /**
      * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
      *
@@ -129,6 +127,18 @@ public class Turn implements Copyable<Turn> {
         turn.waterLevel = new WaterLevel(difficulty);
         turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
         turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
+
+        /* FIXME merged
+        Map<PlayerType, Point> startPositions = new EnumMap<>(PlayerType.class);
+
+        for (int y = 0; y < tiles.length; y++) {
+            for (int x = 0; x < tiles[y].length; x++) {
+                MapTile tile = tiles[y][x];
+                if (tile.getPlayerSpawn() != PlayerType.NONE)
+                    startPositions.put(tile.getPlayerSpawn(), new Point(x, y));
+            }
+        }
+        */
 
         turn.players = players.stream().map(pair -> {
             Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
@@ -193,7 +203,6 @@ public class Turn implements Copyable<Turn> {
      * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
      * kein Inselfeld wird <code>null</code> übergeben.
      *
-     *
      * @return Tile an der Position
      */
     public MapTile getTile(int posX, int posY) {
@@ -209,7 +218,7 @@ public class Turn implements Copyable<Turn> {
         turn.discoveredArtifacts = EnumSet.copyOf(this.discoveredArtifacts);
         turn.floodCardStack = this.floodCardStack.copy();
         turn.players = CopyUtil.copyAsList(this.players);
-        for(Player player : turn.players) {
+        for (Player player : turn.players) {
             player.setActiveTurn(turn);
         }
         turn.state = this.state;

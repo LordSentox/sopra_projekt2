@@ -43,9 +43,8 @@ public abstract class Player implements Copyable<Player> {
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der
      * Spieler sich regelkonform hinbewegen darf
      *
-     * @param specialActive
-     *            gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja,
-     *            wird die Liste um zusätzlich erreichbare Punkte erweitert
+     * @param specialActive gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja,
+     *                      wird die Liste um zusätzlich erreichbare Punkte erweitert
      * @return das erstellte Listli
      */
 
@@ -63,11 +62,9 @@ public abstract class Player implements Copyable<Player> {
      * move bewegt den Spieler zur angegebenen destination, zieht dabei eine
      * Aktion ab, wenn costsAction true ist
      *
-     * @param destination
-     *            Zielkoordinaten
-     * @param costsAction
-     *            wenn false, wird keine Action abgezogen, wenn true, wird eine
-     *            abgezogen
+     * @param destination Zielkoordinaten
+     * @param costsAction wenn false, wird keine Action abgezogen, wenn true, wird eine
+     *                    abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {
@@ -185,7 +182,7 @@ public abstract class Player implements Copyable<Player> {
      * regelkonform übergeben werden dürfen.
      *
      * @return das erstellte Listli, wenn Player exisitieren, denen Handkarten
-     *         übergeben werden dürfen. Null, sonst.
+     * übergeben werden dürfen. Null, sonst.
      */
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList();
@@ -202,6 +199,7 @@ public abstract class Player implements Copyable<Player> {
     public void setPosition(Point position) {
         this.position = position;
     }
+
     public void setActionsLeft(int actionsLeft) {
         this.actionsLeft = actionsLeft;
     }
