@@ -72,6 +72,14 @@ public abstract class Decision {
         return control.getActiveTurn();
     }
 
+    public boolean allTrue(boolean... booleans) {
+        if (booleans == null && booleans.length == 0)
+            return true;
+        for (boolean bool : booleans)
+            if (!bool) return false;
+        return true;
+    }
+
     public final void setControl(AIController control) {
         this.control = control;
     }
