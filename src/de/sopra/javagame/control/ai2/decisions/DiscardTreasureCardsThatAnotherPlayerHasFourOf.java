@@ -24,26 +24,28 @@ public class DiscardTreasureCardsThatAnotherPlayerHasFourOf extends Decision {
         for (ArtifactCard activeCard : activeHand) {
             if(activeCard.getType()==ArtifactCardType.SANDBAGS || activeCard.getType()==ArtifactCardType.HELICOPTER) {break;}
             for(Player player : allPlayers) {
-                List<ArtifactCard> hand = player.getHand();
-                if(hand.size()<4) {break;}
-                int water=0; 
-                int fire=0;
-                int earth=0;
-                int air=0;
-                for(ArtifactCard card: hand) { 
-                    if(card.getType()==ArtifactCardType.AIR) {
-                        air++;
-                    } else if(card.getType()==ArtifactCardType.EARTH) {
-                        earth++;
-                    } else if(card.getType()==ArtifactCardType.FIRE) {
-                        fire++;
-                    } else if(card.getType()==ArtifactCardType.WATER) {
-                        water++;
+                if(player!=activePlayer){
+                    List<ArtifactCard> hand = player.getHand();
+                    if(hand.size()<4) {break;}
+                    int water=0; 
+                    int fire=0;
+                    int earth=0;
+                    int air=0;
+                    for(ArtifactCard card: hand) { 
+                        if(card.getType()==ArtifactCardType.AIR) {
+                            air++;
+                        } else if(card.getType()==ArtifactCardType.EARTH) {
+                            earth++;
+                        } else if(card.getType()==ArtifactCardType.FIRE) {
+                            fire++;
+                        } else if(card.getType()==ArtifactCardType.WATER) {
+                            water++;
+                        }
+                        if(water >3&& activeCard.getType()==ArtifactCardType.WATER) {return this;}
+                        if(fire >3&& activeCard.getType()==ArtifactCardType.FIRE) {return this;}
+                        if(earth >3&& activeCard.getType()==ArtifactCardType.EARTH) {return this;}
+                        if(air >3&& activeCard.getType()==ArtifactCardType.AIR) {return this;}
                     }
-                    if(water >3&& activeCard.getType()==ArtifactCardType.WATER) {return this;}
-                    if(fire >3&& activeCard.getType()==ArtifactCardType.FIRE) {return this;}
-                    if(earth >3&& activeCard.getType()==ArtifactCardType.EARTH) {return this;}
-                    if(air >3&& activeCard.getType()==ArtifactCardType.AIR) {return this;}
                 }
             }                                            
        }
