@@ -1,12 +1,12 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import java.util.List;
-
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
+
+import java.util.List;
 
 /**
  * <h1>projekt2</h1>
@@ -15,30 +15,33 @@ import de.sopra.javagame.model.player.Player;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-public class UseSandbagInsteadOfDiscardingTreasureCard extends Decision{
+public class UseSandbagInsteadOfDiscardingTreasureCard extends Decision {
     @Override
     public Decision decide() {
-        if(control.anyTile(MapTileState.FLOODED)!=null) {
+        if (control.anyTile(MapTileState.FLOODED) != null) {
             Player activePlayer = control.getActivePlayer();
             List<ArtifactCard> activeHand = activePlayer.getHand();
-            boolean hasSand=false;
-            for(ArtifactCard sand: activeHand) { 
-                if(sand.getType()==ArtifactCardType.SANDBAGS){hasSand=true;}
-            }    
-            if(!hasSand){
+            boolean hasSand = false;
+            for (ArtifactCard sand : activeHand) {
+                if (sand.getType() == ArtifactCardType.SANDBAGS) {
+                    hasSand = true;
+                }
+            }
+            if (!hasSand) {
                 return null;
             }
-            for(ArtifactCard treasure: activeHand) {
-                if(treasure.getType()==ArtifactCardType.AIR||
-                   treasure.getType()==ArtifactCardType.EARTH||
-                   treasure.getType()==ArtifactCardType.WATER||
-                   treasure.getType()==ArtifactCardType.FIRE){
+            for (ArtifactCard treasure : activeHand) {
+                if (treasure.getType() == ArtifactCardType.AIR ||
+                        treasure.getType() == ArtifactCardType.EARTH ||
+                        treasure.getType() == ArtifactCardType.WATER ||
+                        treasure.getType() == ArtifactCardType.FIRE) {
                     return this;
                 }
             }
-        }    
+        }
         return null;
-    }    
+    }
+
     @Override
     public void act() {
         //TODO

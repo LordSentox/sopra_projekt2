@@ -6,6 +6,7 @@ import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 
 import java.util.List;
+
 /**
  * <h1>projekt2</h1>
  *

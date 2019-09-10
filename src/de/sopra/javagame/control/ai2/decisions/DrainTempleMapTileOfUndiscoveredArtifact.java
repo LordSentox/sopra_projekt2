@@ -19,22 +19,22 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class DrainTempleMapTileOfUndiscoveredArtifact extends Decision{
+public class DrainTempleMapTileOfUndiscoveredArtifact extends Decision {
 
     @Override
     public Decision decide() {
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         EnumSet<ArtifactType> discoveredArtifacts = turn().getDiscoveredArtifacts();
-               
-       for (int i=0; i<8; i++){
-            
+
+        for (int i = 0; i < 8; i++) {
+
             MapTile orphanedTemple = templeList.get(i).getRight();
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
-            
-            if(discoveredArtifacts.contains(templeType)){
+
+            if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-            if(orphanedTemple.getState() != MapTileState.FLOODED){
+            if (orphanedTemple.getState() != MapTileState.FLOODED) {
                 continue;
             }
             return this;
@@ -45,9 +45,8 @@ public class DrainTempleMapTileOfUndiscoveredArtifact extends Decision{
     @Override
     public void act() {
         // TODO Auto-generated method stub
-        
+
     }
-    
-    
+
 
 }

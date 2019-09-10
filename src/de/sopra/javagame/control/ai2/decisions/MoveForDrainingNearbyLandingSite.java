@@ -26,7 +26,7 @@ public class MoveForDrainingNearbyLandingSite extends Decision {
 
     @Override
     public Decision decide() {
-        
+
         if (player().getActionsLeft() < 2) {
             return null;
         }

@@ -25,7 +25,7 @@ public class UseSandbagToDrainLandingSite extends Decision {
         if (!control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
         }
-        
+
         if (player().getActionsLeft() != 0) {
             return null;
         }
@@ -33,7 +33,7 @@ public class UseSandbagToDrainLandingSite extends Decision {
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         MapTile landingSite = informationLandingSite.getRight();
 
-        if (landingSite.getState() != MapTileState.FLOODED){
+        if (landingSite.getState() != MapTileState.FLOODED) {
             return null;
         }
 

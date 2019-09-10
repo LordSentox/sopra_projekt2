@@ -13,7 +13,7 @@ public class TurnCaptureTreasure extends Decision {
 
     @Override
     public Decision decide() {
-       return null; //TODO
+        return null; //TODO
     }
 
     @Override
