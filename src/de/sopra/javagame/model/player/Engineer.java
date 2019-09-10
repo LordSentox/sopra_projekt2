@@ -37,7 +37,6 @@ public class Engineer extends Player {
      * @param position Koordinate des zu verändernden MapTiles
      * @return false, wenn Fehler eingetroffen, true sonst
      */
-
     @Override
     public boolean drain(Point position) {
         if (!hasExtraDrain) {
@@ -51,6 +50,16 @@ public class Engineer extends Player {
         } else {
             return super.drain(position);
         }
+    }
+
+    @Override
+    public boolean move(Point destination, boolean costsAction, boolean specialActive) {
+        boolean success = super.move(destination, costsAction, specialActive);
+        if (success) {
+            this.hasExtraDrain = false;
+        }
+
+        return success;
     }
 
     @Override
