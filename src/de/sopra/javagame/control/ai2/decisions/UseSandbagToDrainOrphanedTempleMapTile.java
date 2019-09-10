@@ -53,6 +53,8 @@ public class UseSandbagToDrainOrphanedTempleMapTile implements Decision{
             Player activePlayer = control.getActivePlayer();
             PlayerType activePlayerType = activePlayer.getType();
             
+            
+            
             if(!activePlayerType.equals(PlayerType.DIVER)
                     && !activePlayerType.equals(PlayerType.EXPLORER)
                     && !activePlayerType.equals(PlayerType.PILOT)){
@@ -62,7 +64,7 @@ public class UseSandbagToDrainOrphanedTempleMapTile implements Decision{
             List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
             
             if(!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)){
-                continue;
+                return this;
             }
             
             int leftActions = activePlayer.getActionsLeft();
