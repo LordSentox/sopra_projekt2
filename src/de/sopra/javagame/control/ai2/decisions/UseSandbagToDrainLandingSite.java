@@ -25,6 +25,10 @@ public class UseSandbagToDrainLandingSite extends Decision {
         if (!control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
         }
+        
+        if (player().getActionsLeft() != 0) {
+            return null;
+        }
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         MapTile landingSite = informationLandingSite.getRight();
@@ -38,7 +42,7 @@ public class UseSandbagToDrainLandingSite extends Decision {
          * nicht gezogen, wenn keine Flut-steigt-Karten mehr im Artefaktstapel sind
          * wäre zb 0% Wahrscheinlichkeit, zu versinken
          */
-        if (player().getActionsLeft() == 0) {
+        if (true) {
             //TODO
             return this;
         }
