@@ -51,6 +51,7 @@ public class TurnTest {
         Assert.assertEquals(TurnState.FLOOD, turn.getState());
         Assert.assertArrayEquals(this.testMap, turn.getTiles());
         Assert.assertEquals(0, turn.getWaterLevel().getLevel());
+        Assert.assertEquals(24, turn.getFloodCardStack().size());
 
         // Einen weiteren Turn mit den letzten beiden Klassen erstellen
         Turn turn2 = Turn.createInitialTurn(Difficulty.ELITE,
@@ -63,9 +64,32 @@ public class TurnTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void createInitialTurnIllegalPlayerType() {
-        Turn.createInitialTurn(Difficulty.LEGENDARY, Collections.singletonList(new Pair<>(PlayerType.NONE, true)), this.testMap);
+        Turn.createInitialTurn(Difficulty.LEGENDARY, Arrays.asList(new Pair<>(PlayerType.NONE, true), new Pair<>(PlayerType.NONE, true)), this.testMap);
     }
+    
+    @Test (expected = NullPointerException.class)
+    public void createInitialTurnNoDifficulty() {
+        Turn.createInitialTurn(null, Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
+                new Pair<>(PlayerType.NAVIGATOR, true),
+                new Pair<>(PlayerType.DIVER, false),
+                new Pair<>(PlayerType.COURIER, true)), this.testMap);
+    }
+    
+    @Test
+    public void getPlayer() {
+        Turn turn = Turn.createInitialTurn(Difficulty.NOVICE,
+                Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
+                        new Pair<>(PlayerType.NAVIGATOR, true),
+                        new Pair<>(PlayerType.DIVER, false),
+                        new Pair<>(PlayerType.COURIER, true)),
+                this.testMap);
 
+        Assert.assertEquals("", PlayerType.EXPLORER, turn.getPlayer(PlayerType.EXPLORER).getType());
+        Assert.assertNull("", turn.getPlayer(PlayerType.PILOT));
+        Assert.assertNull("", turn.getPlayer(null));
+        
+    }
+    
     @Test
     public void transferArtifactCard() {
         ArtifactCard fireCard = new ArtifactCard(ArtifactCardType.FIRE);
