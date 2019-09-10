@@ -21,7 +21,7 @@ public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
         List<ArtifactCard> activeHand = activePlayer.getHand();
         int count;
         Turn turn = control.getActiveTurn();
-        //List discardedStack = turn.getArtifactCardStack().
+        List<ArtifactCard> discardStack = turn.getArtifactCardStack().getDiscardPile();
         for (ArtifactCard activeCard : activeHand) {
             count = 0;
             for (ArtifactCard discarded : discardStack) {
