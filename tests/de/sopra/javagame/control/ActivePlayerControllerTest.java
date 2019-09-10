@@ -2,6 +2,9 @@ package de.sopra.javagame.control;
 
 import static org.junit.Assert.*;
 
+
+import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -143,8 +146,8 @@ public class ActivePlayerControllerTest {
             activePlayerController.showMovements(true);
         }
         fail("Not yet implemented");
-        
     }
+
 
     @Test
     public void testShowDrainOptions() {
