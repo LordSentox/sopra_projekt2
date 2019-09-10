@@ -43,7 +43,7 @@ public class UseSandbagToKeepFourTreasureCards extends Decision {
                 water++;
             }
         }
-        if(air==4||fire==4||earth==4||air==4){
+        if(air==4||fire==4||earth==4||water==4){
             return this;
         }    
         return null;
