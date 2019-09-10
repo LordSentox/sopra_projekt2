@@ -19,7 +19,7 @@ import de.sopra.javagame.util.Point;
  * @since 10.09.2019
  */
 
-public class FlyNextActivePlayerToOrphanedTempleMapForDraining extends Decision {
+public class FlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
 
     @Override
     public Decision decide() {

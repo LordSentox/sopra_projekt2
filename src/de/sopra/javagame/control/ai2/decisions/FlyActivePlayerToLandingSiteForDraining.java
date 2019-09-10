@@ -17,7 +17,7 @@ import de.sopra.javagame.util.Point;
  * @since 09.09.2019
  */
 
-public class FlyNextActivePlayerToLandingSiteForDraining extends Decision {
+public class FlyActivePlayerToLandingSiteForDraining extends Decision {
 
     @Override
     public Decision decide() {
