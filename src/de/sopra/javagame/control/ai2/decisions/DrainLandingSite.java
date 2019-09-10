@@ -27,8 +27,7 @@ public class DrainLandingSite extends Decision {
         MapTile landingSite = informationLandingSite.getRight();
         Point landingSitePosition = informationLandingSite.getLeft();
 
-        Player activePlayer = control.getActivePlayer();
-        List<Point> drainablePositionslist = activePlayer.drainablePositions();
+        List<Point> drainablePositionslist = player().drainablePositions();
 
         if (drainablePositionslist.contains(landingSitePosition)
                 && landingSite.getState().equals(MapTileState.FLOODED)) {
