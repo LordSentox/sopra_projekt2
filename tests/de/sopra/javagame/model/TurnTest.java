@@ -7,11 +7,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.print.attribute.standard.MediaSize;
-import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -42,7 +42,7 @@ public class TurnTest {
                         new Pair<>(PlayerType.COURIER, true)),
                 this.testMap);
 
-        Assert.assertEquals(0, turn.getActivePlayer());
+        Assert.assertEquals(0, turn.getActivePlayerIndex());
         Assert.assertEquals(28, turn.getArtifactCardStack().size());
         Assert.assertEquals("", turn.getDescription());
         Assert.assertEquals(new HashSet(), turn.getDiscoveredArtifacts());
@@ -179,7 +179,7 @@ public class TurnTest {
         Turn turnCopy = turn.copy();
 
         //teste ob alle Referenzen gleich
-        int activePlayerOriginal = turn.getActivePlayer();
+        int activePlayerOriginal = turn.getActivePlayerIndex();
         String descriptionOriginal = turn.getDescription();
         EnumSet<ArtifactType> discoveredArtifactsOriginal = turn.getDiscoveredArtifacts();
         List<Player> playersOriginal = turn.getPlayers();
@@ -187,7 +187,7 @@ public class TurnTest {
         MapTile[][] tilesOriginal = turn.getTiles();
 
         //inhaltliche Gleichheit
-        assertEquals("Kopie sollte gleichen aktiven Spieler halten", activePlayerOriginal, turnCopy.getActivePlayer());
+        assertEquals("Kopie sollte gleichen aktiven Spieler halten", activePlayerOriginal, turnCopy.getActivePlayerIndex());
         assertEquals("Kopie sollte gleiche Beschreibung halten", descriptionOriginal, turnCopy.getDescription());
         assertEquals("Kopie sollte gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, turnCopy.getDiscoveredArtifacts());
         for (int i = 0; i < turn.getPlayers().size(); i++) {
@@ -211,11 +211,11 @@ public class TurnTest {
 
         //teste ob Änderungen an Copy unabhängig vom Original sind
         turnCopy.nextPlayerActive();
-        turnCopy.changeDescription("Spieler " + turnCopy.getActivePlayer() + " ist an der Reihe. Ziehe Flutkarten.");
+        turnCopy.changeDescription("Spieler " + turnCopy.getActivePlayerIndex() + " ist an der Reihe. Ziehe Flutkarten.");
         turnCopy.getDiscoveredArtifacts().add(ArtifactType.FIRE);
         turnCopy.setState(TurnState.DRAW_ARTIFACT_CARD);
 
-        assertNotEquals("Kopie sollte nicht mehr gleichen aktiven Spieler halten", activePlayerOriginal, turnCopy.getActivePlayer());
+        assertNotEquals("Kopie sollte nicht mehr gleichen aktiven Spieler halten", activePlayerOriginal, turnCopy.getActivePlayerIndex());
         assertNotEquals("Kopie sollte nicht mehr gleiche Beschreibung halten", descriptionOriginal, turnCopy.getDescription());
         assertNotEquals("Kopie sollte nicht mehr gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, turnCopy.getDiscoveredArtifacts());
         for (int i = 0; i < turn.getPlayers().size(); i++) {

@@ -89,8 +89,12 @@ public class Turn implements Copyable<Turn> {
         return null;
     }
 
-    public int getActivePlayer() {
+    public int getActivePlayerIndex() {
         return activePlayer;
+    }
+
+    public Player getActivePlayer() {
+        return this.players.get(activePlayer);
     }
 
     public String getDescription() {
