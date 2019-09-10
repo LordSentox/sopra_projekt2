@@ -60,11 +60,6 @@ public class JavaGameTest {
         javaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void newGameEmptyMap() {
-        javaGame.newGame("emptyMap", new MapTile[12][12], Difficulty.NOVICE, players);
-    }
-    
     @Test (expected = NullPointerException.class)
     public void newGameNoMapName() {
         javaGame.newGame(null, testMap, Difficulty.NOVICE, players);
@@ -161,5 +156,8 @@ public class JavaGameTest {
         //teste ob Score für cheetah korrekt berechnet wird
         javaGame.markCheetah();
         Assert.assertEquals("", 0, javaGame.calculateScore());
+        
+        //teste für ganzes Spiel, ob Score korrekt berechnet wird
+        //TODO komplettes Spiel laden und dann damit testen!
     }
 }

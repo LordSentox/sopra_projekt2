@@ -127,12 +127,8 @@ public class Turn implements Copyable<Turn> {
         if (tiles == null) {
             throw new NullPointerException();
         } else {
-            if (tiles == new MapTile[12][12]) {
-                throw new IllegalArgumentException();
-            } else {
-                turn.tiles = tiles;
-                turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
-            }
+            turn.tiles = tiles;
+            turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
         }
         if (difficulty == null) {
             throw new NullPointerException();

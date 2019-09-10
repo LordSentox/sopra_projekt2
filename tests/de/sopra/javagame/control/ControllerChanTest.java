@@ -1,18 +1,14 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.TestDummy;
-import org.junit.After;
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * <h1>projekt2</h1>
- *
- * @author Julius Korweck
- * @version 05.09.2019
- * @since 05.09.2019
- */
+import de.sopra.javagame.TestDummy;
+
 public class ControllerChanTest {
+    
     private ControllerChan controllerChan;
     private boolean[][] testMap;
 
@@ -28,28 +24,40 @@ public class ControllerChanTest {
             }
         }
     }
-
-    @After
-    public void tearDown() {
+    
+    @Test
+    public void testStartNewGame() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void startNewGame() {
+    public void testLoadGame() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void loadGame() {
+    public void testSaveGame() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void saveGame() {
+    public void testReplayGame() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void replayGame() {
+    public void testContinueGame() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void continueGame() {
+    public void testGetCurrentTurn() {
+        fail("Not yet implemented");
     }
+
+    @Test
+    public void testEndTurn() {
+        fail("Not yet implemented");
+    }
+
 }

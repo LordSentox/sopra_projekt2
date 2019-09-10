@@ -3,6 +3,8 @@ package de.sopra.javagame.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.Assert;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -24,9 +26,7 @@ public class FloodCardTest {
     }
 
     @Test
-    public void testFlood() {
-        wannKommtDieFlut = new FloodCard(blubBlub);
-        
+    public void testFlood() {        
         wannKommtDieFlut.setTile(blubBlub);
         assertEquals(MapTileState.DRY, wannKommtDieFlut.getTile().getState());
 
@@ -49,4 +49,25 @@ public class FloodCardTest {
         wannKommtDieFlut.flood();
     }
 
+    @Test
+    public void testEquals() {
+        FloodCard newWannKommtDieFlut = new FloodCard(MapTile.fromNumber(4));
+        FloodCard sameNumberWannKommtDieFlut = new FloodCard(MapTile.fromNumber(5));
+        
+        boolean isEqual = wannKommtDieFlut.equals(wannKommtDieFlut);
+        Assert.assertTrue("", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(newWannKommtDieFlut);
+        Assert.assertFalse("", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(sameNumberWannKommtDieFlut);
+        Assert.assertTrue("", isEqual);
+        
+        isEqual = newWannKommtDieFlut.equals(wannKommtDieFlut);
+        Assert.assertFalse("", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(null);
+        Assert.assertFalse("", isEqual);
+        
+    }
 }
