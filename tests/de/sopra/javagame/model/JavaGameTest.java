@@ -61,6 +61,11 @@ public class JavaGameTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
+    public void newGameEmptyMap() {
+        javaGame.newGame("emptyMap", new MapTile[12][12], Difficulty.NOVICE, players);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
         javaGame.newGame(testMapString, testMap, Difficulty.NOVICE,
