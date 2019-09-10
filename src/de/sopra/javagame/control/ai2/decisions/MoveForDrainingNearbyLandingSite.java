@@ -27,10 +27,8 @@ public class MoveForDrainingNearbyLandingSite extends Decision {
 
     @Override
     public Decision decide() {
-        Player activePlayer = control.getActivePlayer();
-        int leftActions = activePlayer.getActionsLeft();
-
-        if (leftActions < 2) {
+        
+        if (player().getActionsLeft() < 2) {
             return null;
         }
 
@@ -38,10 +36,10 @@ public class MoveForDrainingNearbyLandingSite extends Decision {
         MapTile landingSite = informationLandingSite.getRight();
         Point landingSitePosition = informationLandingSite.getLeft();
 
-        if (landingSite.getState().equals(MapTileState.FLOODED)) {
+        if (landingSite.getState() == MapTileState.FLOODED) {
 
-            Point playerPosition = activePlayer.getPosition();
-            PlayerType playerType = activePlayer.getType();
+            Point playerPosition = player().getPosition();
+            PlayerType playerType = player().getType();
             List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
 
             if (drainablePositionslist.contains(landingSitePosition)) {
