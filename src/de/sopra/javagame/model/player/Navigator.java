@@ -2,9 +2,9 @@ package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
-
-import java.awt.*;
+import de.sopra.javagame.util.Point;
 
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -55,28 +55,19 @@ public class Navigator extends Player {
         if (this.actionsLeft == 0 && !this.hasExtraPush) {
             return false;
         }
-        --this.actionsLeft;
 
         int deltaX = 0;
         int deltaY = 0;
         switch (direction) {
-            case UP:
-                deltaY = -1;
-                break;
-            case LEFT:
-                deltaX = -1;
-                break;
-            case DOWN:
-                deltaY = 1;
-                break;
-            case RIGHT:
-                deltaX = 1;
-                break;
+            case UP: deltaY = -1; break;
+            case LEFT: deltaX = -1; break;
+            case DOWN: deltaY = 1; break;
+            case RIGHT: deltaX = 1; break;
         }
 
         // Ist das Feld, auf das der Spieler bewegt werden soll ein Inselfeld?
         Point newPosition = new Point(other.getPosition());
-        newPosition.translate(deltaX, deltaY);
+        newPosition.move(deltaX, deltaY);
         MapTile destinationTile = this.turn.getTile(newPosition);
         if (destinationTile == null || destinationTile.getState() == GONE) {
             return false;
@@ -88,13 +79,17 @@ public class Navigator extends Player {
                 this.hasExtraPush = true;
             }
 
-            other.getPosition().translate(deltaX, deltaY);
+            other.getPosition().move(deltaX, deltaY);
             return true;
         }
     }
 
     @Override
     public Player copy() {
-        return null; //TODO
+        Player player = new Navigator(CopyUtil.copy(this.name), new Point(position), null);
+        player.hand = this.hand;
+        player.actionsLeft = this.actionsLeft;
+        player.isAI = this.isAI;
+        return player;
     }
 }
