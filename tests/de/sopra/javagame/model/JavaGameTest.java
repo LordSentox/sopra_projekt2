@@ -47,13 +47,21 @@ public class JavaGameTest {
         Assert.assertEquals("", testMapString, javaGame.getMapName());
         Assert.assertEquals("", testMap, javaGame.getPreviousTurn().getTiles());
         Assert.assertEquals("", Difficulty.NOVICE, javaGame.getDifficulty());
-        Assert.assertEquals("", players, javaGame.getPreviousTurn().getPlayers());
+
+        Turn turn = javaGame.getPreviousTurn();
+
+        for(int i = 0; i< turn.getPlayers().size(); i++) {
+            Assert.assertEquals("Kopie sollte gleiche Spieler-Liste halten. Index " + i + " unterscheidet sich.",
+                    turn.getPlayers().get(i).getType(),
+                    turn.getPlayers().get(i).getType());
+        }
+        //Assert.assertEquals("", players, javaGame.getPreviousTurn().getPlayers());
 
     }
     @Test (expected = NullPointerException.class)
     public void newGameNoMap() {
         //teste Erstellen mit leerer Map
-        javaGame.newGame("", null, Difficulty.NOVICE, players);
+        javaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
     }
 
     @Test (expected = IllegalArgumentException.class)

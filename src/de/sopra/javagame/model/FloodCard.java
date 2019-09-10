@@ -1,9 +1,12 @@
 package de.sopra.javagame.model;
 
-import static de.sopra.javagame.model.MapTileState.GONE;
+import java.util.Objects;
+
+import static de.sopra.javagame.model.MapTileState.*;
 
 /**
- * Flutkarten können einen bestimmten Feldtyp fluten oder versenken, falls das Inselfeld schon überflutet war.
+ * Flutkarten können einen bestimmten Feldtyp fluten oder versenken, falls das
+ * Inselfeld schon überflutet war.
  */
 public class FloodCard implements Copyable<FloodCard> {
     /**
@@ -16,18 +19,25 @@ public class FloodCard implements Copyable<FloodCard> {
     }
 
     /**
-     * Ruft Methode {@link MapTile#flood()} auf.
-     * Diese setzt das der FloodCard entsprechende MapTile von DRY auf FLOODED oder von FLOODED auf GONE
+     * Ruft Methode {@link MapTile#flood()} auf. Diese setzt das der FloodCard
+     * entsprechende MapTile von DRY auf FLOODED oder von FLOODED auf GONE
      *
-     * @throws IllegalStateException wenn das Feld bereits versunken war.
-     *                               Die Karte hätte dann aus dem Stapel entfernt werden sollen.
+     * @throws IllegalStateException
+     *             wenn das Feld bereits versunken war. Die Karte hätte dann aus
+     *             dem Stapel entfernt werden sollen.
      */
     void flood() throws IllegalStateException {
-        // Überprüfe, ob das Feld bereits entfernt wurde. Diese Karte hätte dann nicht gespielt
+        // Überprüfe, ob das Feld bereits entfernt wurde. Diese Karte hätte dann
+        // nicht gespielt
         // werden können dürfen.
         if (this.tile.getState() == GONE) {
             throw new IllegalStateException();
+        } else if (this.tile.getState() == DRY) {
+            this.tile.setState(FLOODED);
+        } else {
+            this.tile.setState(GONE);
         }
+
     }
 
     public MapTile getTile() {
@@ -40,6 +50,21 @@ public class FloodCard implements Copyable<FloodCard> {
 
     @Override
     public FloodCard copy() {
-        return new FloodCard(tile);
+        return new FloodCard(tile.copy());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        FloodCard floodCard = (FloodCard) other;
+        return tile.equals(floodCard.tile);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tile);
     }
 }

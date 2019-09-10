@@ -4,6 +4,7 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,6 +64,11 @@ public class Turn implements Copyable<Turn> {
      */
     private TurnState state;
 
+    private boolean gameEnded;
+
+    private boolean gameWon;
+
+
     public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
     }
@@ -108,46 +114,63 @@ public class Turn implements Copyable<Turn> {
         return waterLevel;
     }
 
-    private boolean gameEnded;
-
-    private boolean gameWon;
-
-    private Turn(){}
+    private Turn() {}
 
 
     /**
      * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
+     *
      * @param difficulty Die Startschwierigkeit des Spiels
-     * @param tiles Die Map des Spiels
+     * @param tiles      Die Map des Spiels
      */
-    public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles) {
+    public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles) 
+        throws NullPointerException, IllegalArgumentException {
         Turn turn = new Turn();
         turn.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
         turn.description = "";
-        turn.tiles = tiles;
-        turn.waterLevel = new WaterLevel(difficulty);
-        turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
-        turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
-
-        turn.players = players.stream().map(pair -> {
-            Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
-            switch (pair.getLeft()) {
-                case COURIER:
-                    return new Courier("Hartmut Kurier", start, turn);
-                case DIVER:
-                    return new Diver("Hartmut im Spanienurlaub", start, turn);
-                case PILOT:
-                    return new Pilot("Hartmut auf dem Weg in den Urlaub", start, turn);
-                case NAVIGATOR:
-                    return new Navigator("Hartmut Verlaufen", start, turn);
-                case EXPLORER:
-                    return new Explorer("Hartmut im Dschungel", start, turn);
-                case ENGINEER:
-                    return new Engineer("Hartmut Auto Kaputt", start, turn);
-                default:
-                    throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
+        if (tiles == null) {
+            throw new NullPointerException();
+        } else {
+            if (tiles == new MapTile[12][12]) {
+                throw new IllegalArgumentException();
+            } else {
+                turn.tiles = tiles;                
+                turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
             }
-        }).collect(Collectors.toList());
+        }
+        if (difficulty == null) {
+            throw new NullPointerException();
+        } else {
+            turn.waterLevel = new WaterLevel(difficulty);            
+        }
+        turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
+        if (players == null) {
+            throw new NullPointerException();
+        } else {
+            if (players.isEmpty() || players.size() <2 || players.size() > 4) {
+                throw new IllegalArgumentException();
+            } else {
+                turn.players = players.stream().map(pair -> {
+                    Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
+                    switch (pair.getLeft()) {
+                    case COURIER:
+                        return new Courier("Hartmut Kurier", start, turn);
+                    case DIVER:
+                        return new Diver("Hartmut im Spanienurlaub", start, turn);
+                    case PILOT:
+                        return new Pilot("Hartmut auf dem Weg in den Urlaub", start, turn);
+                    case NAVIGATOR:
+                        return new Navigator("Hartmut Verlaufen", start, turn);
+                    case EXPLORER:
+                        return new Explorer("Hartmut im Dschungel", start, turn);
+                    case ENGINEER:
+                        return new Engineer("Hartmut Auto Kaputt", start, turn);
+                    default:
+                        throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
+                    }
+                }).collect(Collectors.toList());
+            }
+        }
         turn.state = TurnState.FLOOD;
         return turn;
     }

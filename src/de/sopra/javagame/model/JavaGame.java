@@ -1,11 +1,9 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStackUtil;
 import de.sopra.javagame.util.Pair;
 
-import java.lang.reflect.Array;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Stack;
 
@@ -52,16 +50,29 @@ public class JavaGame {
     /**
      * Startet ein neues JavaGame und gibt den ersten Zug zurück, der bearbeitet werden kann.
      *
-     * @param mapName Der Name der Karte, die geladen wurde
-     * @param tiles Die TileMap, welche als Spielfeld benutzt werden soll
+     * @param mapName    Der Name der Karte, die geladen wurde
+     * @param tiles      Die TileMap, welche als Spielfeld benutzt werden soll
      * @param difficulty Anfangsschwierigkeit, welche den anfänglichen Wasserpegel festlegt.
-     * @param players Die Spieler, die das Spiel spielen
+     * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players) {
+    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+        throws NullPointerException, IllegalArgumentException {
         // Erstellen des ersten Turns, der auf den undoTurns-Stapel abgelegt wird.
-        this.mapName = mapName;
-        this.difficulty = difficulty;
+        if (mapName == null) {
+            throw new NullPointerException();
+        } else {
+            if (mapName == "") {
+                throw new IllegalArgumentException();
+            } else {
+                this.mapName = mapName;
+            }
+        }
+        if (difficulty == null) {
+            throw new NullPointerException();
+        } else {
+            this.difficulty = difficulty;
+        }
         Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
 
         return endTurn(initialTurn);
@@ -73,7 +84,9 @@ public class JavaGame {
      */
     public Turn endTurn(Turn currentTurn) {
         this.undoTurns.push(currentTurn);
-        while (!redoTurns.empty()) { redoTurns.pop(); }
+        while (!redoTurns.empty()) {
+            redoTurns.pop();
+        }
 
         return currentTurn.copy();
     }
@@ -83,35 +96,50 @@ public class JavaGame {
      *
      * @return Die berechneten Punkte
      */
-    public double calculateScore() {
-        int playerOne = 0;
-        int turns = 0;
-        int extraPoints = 0;
-        double score = 0;
-        boolean finishedOneRound = false;
-        if (!getIsCheetah()) {
-            for (Turn currentTurn : undoTurns) {
-                if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
-                    turns++;
-                    finishedOneRound = true;
-                } else {
-                    if (currentTurn.getActivePlayer() != playerOne) {
-                        finishedOneRound = false;
-                    }
-                }
-            }
-            score = (1 / turns) * 100;
-            if (!undoTurns.isEmpty()){
-                for (ArtifactType cur : undoTurns.peek().getDiscoveredArtifacts()) {
-                    extraPoints += 100;
-                }
-                if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
-                    extraPoints += 1000;
-                }
-            }
-            score += extraPoints;
+    public int calculateScore() {
+        // Keine Punkte für Mogler
+        if (getIsCheetah()) {
+            return 0;
         }
-        return score;
+
+        double score = (1.0 / (double) this.numRounds()) * 100;
+
+        int extraPoints = 0;
+        if (!undoTurns.isEmpty()){
+            // Für jedes gefundene Artefakt gibt es 100 Extrapunkte
+            extraPoints += 100 * undoTurns.peek().getDiscoveredArtifacts().size();
+
+            // Extrapunkte, wenn das Spiel gewonnen wurde
+            if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
+                extraPoints += 1000;
+            }
+        }
+        score += extraPoints;
+
+        return (int)score;
+    }
+
+    /**
+     * Zählt die im Spiel vorgekommenen Runden, also wie oft der erste Spieler bereits an der Reihe war, was zwar
+     * proportional, aber nicht direkt abhängig von der Anzahl der Turns ist.
+     *
+     * @return Anzahl der im Spiel gespielten Runden
+     */
+    public int numRounds() {
+        int playerOne = 0;
+        int rounds = 0;
+        boolean finishedOneRound = false;
+        for (Turn currentTurn : undoTurns) {
+            if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
+                rounds++;
+                finishedOneRound = true;
+            }
+            else if (currentTurn.getActivePlayer() != playerOne) {
+                finishedOneRound = false;
+            }
+        }
+
+        return rounds;
     }
 
     public Difficulty getDifficulty() {
