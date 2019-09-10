@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 
 /**
@@ -10,15 +9,15 @@ import de.sopra.javagame.control.ai2.Decision;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class TurnCaptureTreasure implements Decision {
+public class TurnCaptureTreasure extends Decision {
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
        return null; //TODO
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
 
     }
 }

@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -19,7 +18,7 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class MoveForDrainingNearbyLandingSite implements Decision {
+public class MoveForDrainingNearbyLandingSite extends Decision {
 
     /**
      * Prüfe: ist der Spieler einen Schritt entfernt, um den Landeplatz trocken legen zu können
@@ -27,7 +26,7 @@ public class MoveForDrainingNearbyLandingSite implements Decision {
      */
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
         Player activePlayer = control.getActivePlayer();
         int leftActions = activePlayer.getActionsLeft();
 
@@ -54,7 +53,7 @@ public class MoveForDrainingNearbyLandingSite implements Decision {
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         // TODO Auto-generated method stub
 
     }

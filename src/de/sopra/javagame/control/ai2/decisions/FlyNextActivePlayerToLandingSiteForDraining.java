@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
@@ -20,10 +19,10 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class FlyNextActivePlayerToLandingSiteForDraining implements Decision {
+public class FlyNextActivePlayerToLandingSiteForDraining extends Decision {
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
         if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
             return null;
         }
@@ -52,7 +51,7 @@ public class FlyNextActivePlayerToLandingSiteForDraining implements Decision {
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         // TODO Auto-generated method stub
 
     }

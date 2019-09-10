@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -18,10 +17,10 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class DrainOrphanedTempleMapTiles implements Decision{
+public class DrainOrphanedTempleMapTiles extends Decision{
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
         
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         
@@ -56,7 +55,7 @@ public class DrainOrphanedTempleMapTiles implements Decision{
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         // TODO Auto-generated method stub
         
     }
