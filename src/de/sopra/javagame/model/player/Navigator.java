@@ -84,6 +84,24 @@ public class Navigator extends Player {
         }
     }
 
+    public boolean move(Point destination, boolean costsAction, boolean specialActive) {
+        boolean success = super.move(destination, costsAction, specialActive);
+        if (success) {
+            this.hasExtraPush = false;
+        }
+
+        return success;
+    }
+
+    public boolean drain(Point position) {
+        boolean success = super.drain(position);
+        if (success) {
+            this.hasExtraPush = false;
+        }
+
+        return success;
+    }
+
     @Override
     public Player copy() {
         Player player = new Navigator(CopyUtil.copy(this.name), new Point(position), null);
