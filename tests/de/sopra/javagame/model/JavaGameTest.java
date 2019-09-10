@@ -2,22 +2,18 @@ package de.sopra.javagame.model;
 
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ControllerChan;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class JavaGameTest {
 
@@ -131,7 +127,7 @@ public class JavaGameTest {
         Assert.assertEquals("", 1200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für cheetah korrekt berechnet wird
-        javaGame.setCheetah(true);
-        Assert.assertEquals("", 0.0, javaGame.calculateScore(), 0.0);
+        javaGame.markCheetah();
+        Assert.assertEquals("", 0, javaGame.calculateScore());
     }
 }

@@ -6,8 +6,6 @@ package de.sopra.javagame.view;
  * @author Hannah, Lisa
  */
 public interface MapEditorViewAUI {
-
-
     /**
      * zeigt dem Benutzer die übergebene Nachricht in dem dafür vorgesehenen Fenster
      *
@@ -18,9 +16,9 @@ public interface MapEditorViewAUI {
     /**
      * setzt die Karte auf eine vorher ausgewählte Karte, die in Form eines boolean Arryas übergeben wurde
      *
+     * @param mapName
      * @param tiles true: hier kann ein MapTile platziert werden
-     *              false: hier ist immer Wasser
      */
-    void setMap(boolean[][] tiles);
+    void setMap(String mapName, boolean[][] tiles);
 
 }

@@ -6,12 +6,13 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class InGameUserControllerTest {
     public void setUp() throws IOException {
         controllerChan = TestDummy.getDummyControllerChan();
         boolean [][] tiles = new boolean [12][12];
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
+        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
         testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair<>(PlayerType.COURIER, false),

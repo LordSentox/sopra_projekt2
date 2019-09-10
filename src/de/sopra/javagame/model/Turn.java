@@ -3,8 +3,6 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +46,6 @@ public class Turn implements Copyable<Turn> {
      */
     private CardStack<FloodCard> floodCardStack;
 
-
     /**
      * Nachziehstapel mit den {@link ArtifactCard}
      */
@@ -68,6 +65,8 @@ public class Turn implements Copyable<Turn> {
 
     private boolean gameWon;
 
+    private Turn() {
+    }
 
     public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
@@ -114,16 +113,13 @@ public class Turn implements Copyable<Turn> {
         return waterLevel;
     }
 
-    private Turn() {}
-
-
     /**
      * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
      *
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param tiles      Die Map des Spiels
      */
-    public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles) 
+    public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles)
         throws NullPointerException, IllegalArgumentException {
         Turn turn = new Turn();
         turn.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
@@ -134,14 +130,14 @@ public class Turn implements Copyable<Turn> {
             if (tiles == new MapTile[12][12]) {
                 throw new IllegalArgumentException();
             } else {
-                turn.tiles = tiles;                
+                turn.tiles = tiles;
                 turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
             }
         }
         if (difficulty == null) {
             throw new NullPointerException();
         } else {
-            turn.waterLevel = new WaterLevel(difficulty);            
+            turn.waterLevel = new WaterLevel(difficulty);
         }
         turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
         if (players == null) {
@@ -207,14 +203,13 @@ public class Turn implements Copyable<Turn> {
      * @return Tile an der Position
      */
     public MapTile getTile(Point position) {
-        return this.tiles[position.y][position.x];
+        return this.tiles[position.yPos][position.xPos];
     }
 
 
     /**
      * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
      * kein Inselfeld wird <code>null</code> übergeben.
-     *
      *
      * @return Tile an der Position
      */
@@ -231,7 +226,7 @@ public class Turn implements Copyable<Turn> {
         turn.discoveredArtifacts = EnumSet.copyOf(this.discoveredArtifacts);
         turn.floodCardStack = this.floodCardStack.copy();
         turn.players = CopyUtil.copyAsList(this.players);
-        for(Player player : turn.players) {
+        for (Player player : turn.players) {
             player.setActiveTurn(turn);
         }
         turn.state = this.state;

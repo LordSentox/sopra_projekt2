@@ -3,8 +3,8 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -94,21 +94,21 @@ public class Diver extends Player {
      * @param premise Die Prämisse, die auf dem Zielfeld erfüllt sein muss.
      */
     private void setTrueAroundWithTargetPremise(boolean[][] reachable, Point around, Function<MapTile, Boolean> premise) {
-        MapTile upper = this.turn.getTile(around.x, around.y - 1);
-        MapTile left = this.turn.getTile(around.x - 1, around.y);
-        MapTile down = this.turn.getTile(around.x, around.y + 1);
-        MapTile right = this.turn.getTile(around.x + 1, around.y);
+        MapTile upper = this.turn.getTile(around.xPos, around.yPos - 1);
+        MapTile left = this.turn.getTile(around.xPos - 1, around.yPos);
+        MapTile down = this.turn.getTile(around.xPos, around.yPos + 1);
+        MapTile right = this.turn.getTile(around.xPos + 1, around.yPos);
         if (premise.apply(upper)) {
-            reachable[around.y - 1][around.x] = true;
+            reachable[around.yPos - 1][around.xPos] = true;
         }
         if (left != null && left.getState() != DRY) {
-            reachable[around.y][around.x - 1] = true;
+            reachable[around.yPos][around.xPos - 1] = true;
         }
         if (down != null && down.getState() != DRY) {
-            reachable[around.y + 1][around.x] = true;
+            reachable[around.yPos + 1][around.xPos] = true;
         }
         if (right != null && right.getState() != DRY) {
-            reachable[around.y][around.x + 1] = true;
+            reachable[around.yPos][around.xPos + 1] = true;
         }
     }
 
@@ -122,20 +122,20 @@ public class Diver extends Player {
      */
     private boolean setTrueAround(boolean[][] reachable, Point around) {
         boolean somethingChanged = false;
-        if (!reachable[around.y - 1][around.x]) {
-            reachable[around.y - 1][around.x] = true;
+        if (!reachable[around.yPos - 1][around.xPos]) {
+            reachable[around.yPos - 1][around.xPos] = true;
             somethingChanged = true;
         }
-        if (!reachable[around.y][around.x - 1]) {
-            reachable[around.y][around.x - 1] = true;
+        if (!reachable[around.yPos][around.xPos - 1]) {
+            reachable[around.yPos][around.xPos - 1] = true;
             somethingChanged = true;
         }
-        if (!reachable[around.y + 1][around.x]) {
-            reachable[around.y + 1][around.x] = true;
+        if (!reachable[around.yPos + 1][around.xPos]) {
+            reachable[around.yPos + 1][around.xPos] = true;
             somethingChanged = true;
         }
-        if (!reachable[around.y][around.x + 1]) {
-            reachable[around.y][around.x + 1] = true;
+        if (!reachable[around.yPos][around.xPos + 1]) {
+            reachable[around.yPos][around.xPos + 1] = true;
             somethingChanged = true;
         }
 
