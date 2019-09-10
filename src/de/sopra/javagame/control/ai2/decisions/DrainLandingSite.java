@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -19,10 +18,10 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class DrainLandingSite implements Decision {
+public class DrainLandingSite extends Decision {
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         MapTile landingSite = informationLandingSite.getRight();
@@ -40,7 +39,7 @@ public class DrainLandingSite implements Decision {
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         //TODO
     }
 
