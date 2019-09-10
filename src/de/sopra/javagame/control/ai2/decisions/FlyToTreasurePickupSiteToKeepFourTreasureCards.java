@@ -14,16 +14,16 @@ import de.sopra.javagame.model.player.Player;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-public class UseSandbagToKeepFourTreasureCards extends Decision {
+public class FlyToTreasurePickupSiteToKeepFourTreasureCards extends Decision {
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
         List<ArtifactCard> activeHand = activePlayer.getHand();
-        boolean hasSand=false;
-        for(ArtifactCard sand: activeHand) { 
-            if(sand.getType()==ArtifactCardType.SANDBAGS){hasSand=true;}
+        boolean hasHeli=false;
+        for(ArtifactCard heli: activeHand) { 
+            if(heli.getType()==ArtifactCardType.HELICOPTER){hasHeli=true;}
         }    
-        if(!hasSand){
+        if(!hasHeli){
             return null;
         }
         int water=0; 
