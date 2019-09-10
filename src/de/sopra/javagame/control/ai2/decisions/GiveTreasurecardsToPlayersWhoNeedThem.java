@@ -45,13 +45,11 @@ public class GiveTreasurecardsToPlayersWhoNeedThem extends Decision {
                 water++;
             }
         }
+
         List<Player> allPlayers = control.getAllPlayers();
         List<PlayerType> receivers = activePlayer.legalReceivers();
-        for (Player player : allPlayers) {
-            if (!receivers.contains(player.getType())) {
-                allPlayers.remove(player);
-            }
-        }
+        allPlayers.removeIf(player -> !receivers.contains(player.getType()));
+
         for (Player player : allPlayers) {
             List<ArtifactCard> hand = player.getHand();
             int water2 = 0;
