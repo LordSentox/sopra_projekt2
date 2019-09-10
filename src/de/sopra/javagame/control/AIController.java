@@ -1,5 +1,7 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.control.ai.CardStackTracker;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
@@ -43,8 +45,22 @@ public class AIController {
 
     private ControllerChan controllerChan;
 
+    private CardStackTracker<ArtifactCard> artifactCardStackTracker;
+    private CardStackTracker<FloodCard> floodCardStackTracker;
+
     public AIController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
+        artifactCardStackTracker = new CardStackTracker<>();
+        floodCardStackTracker = new CardStackTracker<>();
+    }
+
+    /**
+     * Wird aufgerufen, wenn die Cardstack komplett neu erstellt werden
+     */
+    public void connectTrackers() {
+        Turn currentTurn = controllerChan.getCurrentTurn();
+        currentTurn.getArtifactCardStack().setObserver(artifactCardStackTracker);
+        currentTurn.getFloodCardStack().setObserver(floodCardStackTracker);
     }
 
     /**
@@ -145,9 +161,15 @@ public class AIController {
         // TODO Auto-generated method stub
         return false;
     }
-    
-    public MapTile anyTile(MapTileState state){
-        //TODO 
-        return null;
+
+    /**
+     * Berechnet ein beliebiges Tile im gegebenen Zustands
+     *
+     * @param state der Zustand
+     * @return ein beliebiges Tile im gegebenen Zustand
+     */
+    public MapTile anyTile(MapTileState state) {
+        return null; //TODO
     }
+
 }

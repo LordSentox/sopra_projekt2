@@ -47,7 +47,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     @Override
-    public void setMap(boolean[][] tiles) {
+    public void setMap(String mapName, boolean[][] tiles) {
 
     }
 }
