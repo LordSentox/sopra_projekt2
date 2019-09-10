@@ -7,14 +7,13 @@ import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+
 /**
- * 
  * @author Niklas Falke
  * @version 10.09.2019
  * @since 10.09.2019
- *
  */
-public class GiveTreasurecardsToPlayersWhoNeedThem extends Decision {
+public class MovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decision{
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
@@ -47,7 +46,7 @@ public class GiveTreasurecardsToPlayersWhoNeedThem extends Decision {
         List<Player> allPlayers = control.getAllPlayers();
         List<PlayerType> receivers = activePlayer.legalReceivers();
         for(Player player : allPlayers){
-            if(!receivers.contains(player.getType())) {
+            if(receivers.contains(player.getType())) {
                 allPlayers.remove(player);
             }
         }
