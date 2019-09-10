@@ -23,4 +23,17 @@ public class ArtifactCard implements Copyable<ArtifactCard> {
     public ArtifactCard copy() {
         return new ArtifactCard(type);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        ArtifactCard that = (ArtifactCard) other;
+        return type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return type.ordinal();
+    }
 }

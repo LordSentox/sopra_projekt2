@@ -28,6 +28,12 @@ public enum MapTileProperties {
     TIDAL_PALACE      ("Poseidons Palast", ArtifactType.WATER, 22),
     CAVE_OF_AMBERS    ("Höhle des Feuers", ArtifactType.FIRE, 23);
 
+    String name;
+    PlayerType spawn;
+    ArtifactType hidden;
+    int index;
+
+
     MapTileProperties(String name, int index) {
         this.name = name;
         this.spawn = PlayerType.NONE;
@@ -48,11 +54,6 @@ public enum MapTileProperties {
         this.hidden = hidden;
         this.index = index;
     }
-
-    String name;
-    PlayerType spawn;
-    ArtifactType hidden;
-    int index;
 
     public String getName() {
         return name;

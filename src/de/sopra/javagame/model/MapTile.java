@@ -99,4 +99,9 @@ public class MapTile implements Copyable<MapTile> {
         return Objects.equals(this.properties, tile.properties) &&
                 Objects.equals(this.state, tile.state);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.properties.getName(), this.properties.getHidden(), this.properties.getSpawn(), state);
+    }
 }

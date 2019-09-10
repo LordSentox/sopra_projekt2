@@ -1,11 +1,8 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 
-import java.lang.reflect.Array;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Stack;
 
@@ -52,10 +49,10 @@ public class JavaGame {
     /**
      * Startet ein neues JavaGame und gibt den ersten Zug zurück, der bearbeitet werden kann.
      *
-     * @param mapName Der Name der Karte, die geladen wurde
-     * @param tiles Die TileMap, welche als Spielfeld benutzt werden soll
+     * @param mapName    Der Name der Karte, die geladen wurde
+     * @param tiles      Die TileMap, welche als Spielfeld benutzt werden soll
      * @param difficulty Anfangsschwierigkeit, welche den anfänglichen Wasserpegel festlegt.
-     * @param players Die Spieler, die das Spiel spielen
+     * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
     public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players) {
@@ -73,7 +70,9 @@ public class JavaGame {
      */
     public Turn endTurn(Turn currentTurn) {
         this.undoTurns.push(currentTurn);
-        while (!redoTurns.empty()) { redoTurns.pop(); }
+        while (!redoTurns.empty()) {
+            redoTurns.pop();
+        }
 
         return currentTurn.copy();
     }
@@ -84,32 +83,49 @@ public class JavaGame {
      * @return Die berechneten Punkte
      */
     public int calculateScore() {
-        int playerOne = 0;
-        int turns = 0;
+        // Keine Punkte für Mogler
+        if (getIsCheetah()) {
+            return 0;
+        }
+
+        double score = (1.0 / (double) this.numRounds()) * 100;
+
         int extraPoints = 0;
-        double score = 0;
-        boolean finishedOneRound = false;
-        if (!getIsCheetah()) {
-            for (Turn currentTurn : undoTurns) {
-                if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
-                    turns++;
-                    finishedOneRound = true;
-                } else {
-                    if (currentTurn.getActivePlayer() != playerOne) {
-                        finishedOneRound = false;
-                    }
-                }
-            }
-            score = (1 / turns) * 100;
-            for (ArtifactType cur : undoTurns.peek().getDiscoveredArtifacts()) {
-                extraPoints += 100;
-            }
+        if (!undoTurns.isEmpty()){
+            // Für jedes gefundene Artefakt gibt es 100 Extrapunkte
+            extraPoints += 100 * undoTurns.peek().getDiscoveredArtifacts().size();
+
+            // Extrapunkte, wenn das Spiel gewonnen wurde
             if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
                 extraPoints += 1000;
             }
-            score += extraPoints;
         }
+        score += extraPoints;
+
         return (int)score;
+    }
+
+    /**
+     * Zählt die im Spiel vorgekommenen Runden, also wie oft der erste Spieler bereits an der Reihe war, was zwar
+     * proportional, aber nicht direkt abhängig von der Anzahl der Turns ist.
+     *
+     * @return Anzahl der im Spiel gespielten Runden
+     */
+    public int numRounds() {
+        int playerOne = 0;
+        int rounds = 1;
+        boolean finishedOneRound = false;
+        for (Turn currentTurn : undoTurns) {
+            if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
+                rounds++;
+                finishedOneRound = true;
+            }
+            else if (currentTurn.getActivePlayer() != playerOne) {
+                finishedOneRound = false;
+            }
+        }
+
+        return rounds;
     }
 
     public Difficulty getDifficulty() {
@@ -126,5 +142,9 @@ public class JavaGame {
 
     public Turn getPreviousTurn () {
         return undoTurns.peek();
+    }
+
+    public void setCheetah(boolean cheetah) {
+        this.cheetah = cheetah;
     }
 }

@@ -63,6 +63,11 @@ public class Turn implements Copyable<Turn> {
      */
     private TurnState state;
 
+    private boolean gameEnded;
+
+    private boolean gameWon;
+
+
     public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
     }
@@ -108,17 +113,14 @@ public class Turn implements Copyable<Turn> {
         return waterLevel;
     }
 
-    private boolean gameEnded;
-
-    private boolean gameWon;
-
-    private Turn(){}
+    private Turn() {}
 
 
     /**
      * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
+     *
      * @param difficulty Die Startschwierigkeit des Spiels
-     * @param tiles Die Map des Spiels
+     * @param tiles      Die Map des Spiels
      */
     public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles) {
         Turn turn = new Turn();
@@ -161,7 +163,7 @@ public class Turn implements Copyable<Turn> {
      * @return gibt zurück, ob das Übergeben erfolgreich war
      */
     boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
-        if (source.legalReceivers().contains(receiver)) {
+        if (source.legalReceivers().contains(receiver.getType())) {
             source.getHand().remove(card);
             receiver.getHand().add(card);
             return true;

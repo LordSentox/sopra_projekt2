@@ -20,21 +20,21 @@ public class Navigator extends Player {
      * er kann zwei spieler (auch zweimal den gleichen) pro aktion pushen
      */
     private boolean hasExtraPush;
-    
-    public Navigator (String name, Point position, Turn turn){
+
+    public Navigator(String name, Point position, Turn turn) {
         super(PlayerType.NAVIGATOR, name, turn);
         this.position = position;
         this.isAI = false;
         this.hasExtraPush = false;
-    } 
-    
-    public Navigator (String name, Point position, Turn turn, boolean isAI){
+    }
+
+    public Navigator(String name, Point position, Turn turn, boolean isAI) {
         super(PlayerType.NAVIGATOR, name, turn);
         this.position = position;
         this.isAI = isAI;
         this.hasExtraPush = false;
     }
-       
+
     /**
      * Der Navigator kann auch andere Spieler bewegen.
      */
@@ -60,18 +60,10 @@ public class Navigator extends Player {
         int deltaX = 0;
         int deltaY = 0;
         switch (direction) {
-            case UP:
-                deltaY = -1;
-                break;
-            case LEFT:
-                deltaX = -1;
-                break;
-            case DOWN:
-                deltaY = 1;
-                break;
-            case RIGHT:
-                deltaX = 1;
-                break;
+            case UP: deltaY = -1; break;
+            case LEFT: deltaX = -1; break;
+            case DOWN: deltaY = 1; break;
+            case RIGHT: deltaX = 1; break;
         }
 
         // Ist das Feld, auf das der Spieler bewegt werden soll ein Inselfeld?

@@ -48,9 +48,9 @@ public class InGameUserControllerTest {
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
         testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair(PlayerType.COURIER, false), 
-                                                                new Pair(PlayerType.EXPLORER, false), 
-                                                                new Pair(PlayerType.NAVIGATOR, false));
+        List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair<>(PlayerType.COURIER, false),
+                                                                new Pair<>(PlayerType.EXPLORER, false),
+                                                                new Pair<>(PlayerType.NAVIGATOR, false));
         controllerChan.startNewGame(tiles, players, Difficulty.NORMAL);
         mapController = controllerChan.getMapController();
         inGameCont = controllerChan.getInGameUserController();

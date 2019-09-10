@@ -1,5 +1,7 @@
 package de.sopra.javagame.model;
 
+import java.util.Objects;
+
 import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
@@ -41,5 +43,18 @@ public class FloodCard implements Copyable<FloodCard> {
     @Override
     public FloodCard copy() {
         return new FloodCard(tile);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        FloodCard floodCard = (FloodCard) other;
+        return tile.equals(floodCard.tile);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tile);
     }
 }

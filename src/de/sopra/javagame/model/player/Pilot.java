@@ -50,16 +50,17 @@ public class Pilot extends Player {
     public List<Point> legalMoves(boolean specialActive) {
         if (!specialActive)
             return super.legalMoves(specialActive);
+
         List<Point> movement = new ArrayList<>();
         MapTile[][] map = this.turn.getTiles();
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
                 if (map[x][y] != null && map[x][y].getState() != MapTileState.GONE) {
-                    Point point = new Point(x, y);
-                    movement.add(point);
+                    movement.add(new Point(x, y));
                 }
             }
         }
+
         return movement;
     }
 
