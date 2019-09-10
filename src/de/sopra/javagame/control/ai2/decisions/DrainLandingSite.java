@@ -7,8 +7,8 @@ import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 
-import java.awt.Point;
 import java.util.List;
 
 /**
@@ -20,28 +20,28 @@ import java.util.List;
  */
 
 public class DrainLandingSite implements Decision {
-    
+
     @Override
-    public Decision decide(AIController control){
-        
+    public Decision decide(AIController control) {
+
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         MapTile landingSite = informationLandingSite.getRight();
         Point landingSitePosition = informationLandingSite.getLeft();
-        
+
         Player activePlayer = control.getActivePlayer();
         List<Point> drainablePositionslist = activePlayer.drainablePositions();
-        
-        if (drainablePositionslist.contains(landingSitePosition) 
-                && landingSite.getState().equals(MapTileState.FLOODED)){
-            return this;           
-        }     
-                 
+
+        if (drainablePositionslist.contains(landingSitePosition)
+                && landingSite.getState().equals(MapTileState.FLOODED)) {
+            return this;
+        }
+
         return null;
     }
-    
+
     @Override
-    public void act(AIController control){
+    public void act(AIController control) {
         //TODO
     }
-    
+
 }
