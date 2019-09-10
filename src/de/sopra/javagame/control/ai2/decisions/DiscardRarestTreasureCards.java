@@ -1,12 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import java.util.Comparator;
-import java.util.List;
-
 import de.sopra.javagame.control.ai2.Decision;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.player.Player;
 
 /**
  * <h1>projekt2</h1>
