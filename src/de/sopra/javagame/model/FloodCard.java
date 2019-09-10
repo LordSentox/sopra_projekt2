@@ -42,7 +42,7 @@ public class FloodCard implements Copyable<FloodCard> {
 
     @Override
     public FloodCard copy() {
-        return new FloodCard(tile);
+        return new FloodCard(tile.copy());
     }
 
     @Override

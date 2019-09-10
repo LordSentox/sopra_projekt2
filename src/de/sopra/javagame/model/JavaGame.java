@@ -1,6 +1,7 @@
 package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStackUtil;
 import de.sopra.javagame.util.Pair;
 
 import java.util.List;
@@ -55,10 +56,23 @@ public class JavaGame {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players) {
+    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)  
+        throws NullPointerException, IllegalArgumentException {
         // Erstellen des ersten Turns, der auf den undoTurns-Stapel abgelegt wird.
-        this.mapName = mapName;
-        this.difficulty = difficulty;
+        if (mapName == null) {
+            throw new NullPointerException();
+        } else {
+            if (mapName == "") {
+                throw new IllegalArgumentException();
+            } else {
+                this.mapName = mapName;
+            }
+        }
+        if (difficulty == null) {
+            throw new NullPointerException();
+        } else {
+            this.difficulty = difficulty;            
+        }
         Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
 
         return endTurn(initialTurn);
