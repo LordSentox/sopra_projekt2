@@ -30,19 +30,16 @@ public class UseSandbagToDrainLandingSite extends Decision {
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         MapTile landingSite = informationLandingSite.getRight();
 
-        if (!landingSite.getState().equals(MapTileState.FLOODED)) {
+        if (landingSite.getState() != MapTileState.FLOODED){
             return null;
         }
-
-        Player activePlayer = control.getActivePlayer();
-        int leftActions = activePlayer.getActionsLeft();
 
         /* Wahrscheinlichkeit berechnen, dass Landeplatz versinken wird:
          * befindet sich der Landeplatz im Ablagestapel der Flutkarten, wird also
          * nicht gezogen, wenn keine Flut-steigt-Karten mehr im Artefaktstapel sind
          * wäre zb 0% Wahrscheinlichkeit, zu versinken
          */
-        if (leftActions == 0) {
+        if (player().getActionsLeft() == 0) {
             //TODO
             return this;
         }
