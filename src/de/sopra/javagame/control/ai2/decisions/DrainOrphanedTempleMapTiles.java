@@ -25,31 +25,52 @@ public class DrainOrphanedTempleMapTiles extends Decision{
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         
         for (int i=0; i<8; i++){
-            Point northernNeighbourPoint = Direction.UP.translate(templeList.get(i).getLeft());
+            
+            Point orphanedTemplePoint = templeList.get(i).getLeft();
+            MapTile orphanedTemple = templeList.get(i).getRight(); 
+            
+            if(orphanedTemple.getState() != MapTileState.FLOODED){
+                continue;
+            }
+            
+            Point northernNeighbourPoint = Direction.UP.translate(orphanedTemplePoint);
             MapTile northernNeighbour = control.getTile(northernNeighbourPoint);
-            Point easternNeighbourPoint = Direction.RIGHT.translate(templeList.get(i).getLeft());
+            
+            Point northEasternNeighbourPoint = Direction.UP.translate(Direction.RIGHT.translate(orphanedTemplePoint));
+            MapTile northEasternNeighbour = control.getTile(northEasternNeighbourPoint);
+            
+            Point easternNeighbourPoint = Direction.RIGHT.translate(orphanedTemplePoint);
             MapTile easternNeighbour = control.getTile(easternNeighbourPoint);
-            Point southernNeighbourPoint = Direction.DOWN.translate(templeList.get(i).getLeft());
+            
+            Point southEasternNeighbourPoint = Direction.DOWN.translate(Direction.RIGHT.translate(orphanedTemplePoint));
+            MapTile southEasternNeighbour = control.getTile(southEasternNeighbourPoint);
+            
+            Point southernNeighbourPoint = Direction.DOWN.translate(orphanedTemplePoint);
             MapTile southernNeighbour = control.getTile(southernNeighbourPoint);
-            Point westernNeighbourPoint = Direction.LEFT.translate(templeList.get(i).getLeft());
+            
+            Point southWesternNeighbourPoint = Direction.DOWN.translate(Direction.LEFT.translate(orphanedTemplePoint));
+            MapTile southWesternNeighbour = control.getTile(southWesternNeighbourPoint);
+            
+            Point westernNeighbourPoint = Direction.LEFT.translate(orphanedTemplePoint);
             MapTile westernNeighbour = control.getTile(westernNeighbourPoint);
             
-            if (!northernNeighbour.getState().equals(MapTileState.GONE)
-                    || !easternNeighbour.getState().equals(MapTileState.GONE)
-                    || !southernNeighbour.getState().equals(MapTileState.GONE)
-                    || !westernNeighbour.getState().equals(MapTileState.GONE) ){
-                continue;
-            }
+            Point northWesternNeighbourPoint = Direction.UP.translate(Direction.LEFT.translate(orphanedTemplePoint));
+            MapTile northWesternNeighbour = control.getTile(northWesternNeighbourPoint);
             
-            MapTile orphanedTemple = templeList.get(i).getRight();
-            
-            if(!orphanedTemple.getState().equals(MapTileState.FLOODED)){
+            if (!((northernNeighbour == null || northernNeighbour.getState() == MapTileState.GONE)
+                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == MapTileState.GONE)
+                    && (easternNeighbour == null || easternNeighbour.getState() == MapTileState.GONE)
+                    && (southEasternNeighbour == null || southEasternNeighbour.getState() == MapTileState.GONE)
+                    && (southernNeighbour == null || southernNeighbour.getState() == MapTileState.GONE)
+                    && (southWesternNeighbour == null || southWesternNeighbour.getState() == MapTileState.GONE)
+                    && (westernNeighbour == null || westernNeighbour.getState() == MapTileState.GONE)
+                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == MapTileState.GONE))){
                 continue;
-            }
+            }   
             
             return this;
-            
-        }   
+
+        }
         
         return null;
     }
