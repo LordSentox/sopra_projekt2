@@ -10,7 +10,13 @@ import de.sopra.javagame.model.player.Player;
 
 import java.util.EnumSet;
 import java.util.List;
-
+/**
+ * <h1>projekt2</h1>
+ *
+ * @author Niklas Falke
+ * @version 10.09.2019
+ * @since 10.09.2019
+ */
 public class DiscardTreasureCardOfWhichareTwoInDiscard implements Decision {
     @Override
     public Decision decide(AIController control) {
