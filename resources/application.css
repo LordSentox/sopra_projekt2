@@ -7,3 +7,7 @@
 .bg2 {
     -fx-background-color: "#ff0000";
 }
+
+.CardView {
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}

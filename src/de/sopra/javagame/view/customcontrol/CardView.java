@@ -13,6 +13,7 @@ public class CardView extends ImageView{
         this.frontImage = new Image(getClass().getResource("/textures/" + pack + "/" + frontImage).toExternalForm(), size, 0, true, true);
         this.backImage = new Image(getClass().getResource("/textures/" + pack + "/" + backImage).toExternalForm(), size, 0, true, true);
         this.showBackImage();
+        this.getStyleClass().add("CardView");
     }
     
     public void showFrontImage(){
