@@ -14,8 +14,22 @@ import java.util.List;
 public class DiscardTreasureCardOfWhichareTwoInDiscard implements Decision {
     @Override
     public Decision decide(AIController control) {
-         //TODO
-        
+        Player activePlayer = control.getActivePlayer();
+        List<ArtifactCard> activeHand = activePlayer.getHand();
+        int count;
+        Turn turn = control.getActiveTurn();
+        //List discardedStack = turn.getArtifactCardStack().
+        for (ArtifactCard activeCard : activeHand) {
+            count=0;
+            for(ArtifactCard discarded : discardStack) {
+                if(discarded.equals(activeCard)){
+                    count++;
+                }
+            }
+            if(count>1){
+                return this;
+            }
+        }
         return null;
     }
     
