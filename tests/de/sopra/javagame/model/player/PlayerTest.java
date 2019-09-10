@@ -55,7 +55,7 @@ public class PlayerTest {
         Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.y - 1, pilot.getPosition().y);
 
         // Der Spieler soll keine Aktionen mehr haben, damit extraPush auch notwendig ist
-        pilot.setActionsLeft(0);
+        navigator.setActionsLeft(0);
 
         // Der zweite muss auch noch gültig sein, denn es handelt sich um den extra-push
         oldPos = new Point(pilot.getPosition()); // Position des Piloten
