@@ -53,5 +53,6 @@
 
 .h-water {
     -fx-text-fill: #a00;
+    -fx-font-size: 3.5em !important;
     -fx-stroke: #a00;
 }
