@@ -1,8 +1,10 @@
 package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,14 +32,23 @@ public class Courier extends Player {
      *
      * @return das Listli aller Spieler außer dem Boten selbst.
      */
-
     @Override
-    public List<Player> legalReceivers() {
-        return null;
+    public List<PlayerType> legalReceivers() {
+        List<PlayerType> receivers = new ArrayList<>();
+        for(Player currentPlayer : turn.getPlayers()) {
+            if (currentPlayer.getType() != this.getType()) {
+                receivers.add(currentPlayer.getType());
+            }
+        }
+        return receivers;
     }
 
     @Override
     public Player copy() {
-        return null; //TODO
+        Player player = new Courier(CopyUtil.copy(this.name), new Point(position), null);
+        player.hand = this.hand;
+        player.actionsLeft = this.actionsLeft;
+        player.isAI = this.isAI;
+        return player;
     }
 }

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * <p>
  * Ein CardStack implementiert einen Zieh- sowie einen Ablagestapel eines Kartentyps.
  */
-public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> {
+public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> implements Copyable<CardStack<T>> {
 
     private Stack<T> drawStack;
 
@@ -43,7 +43,9 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
             if (drawStack.isEmpty()) {
                 shuffleBack();
             }
-            drawn.add(drawStack.pop());
+            T pop = drawStack.pop();
+            drawn.add(pop);
+            notifyRemove(this, pop, false);
         }
         if (discard) {
             discard(drawn);
@@ -54,19 +56,11 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
     /**
      * draw nimmt die angegebene Anzahl Karten von oben vom Stack
      *
-     * @param amount  Anzahl gewünschter Karten
+     * @param amount Anzahl gewünschter Karten
      * @return gibt eine Liste vom Kartentyp T zurück
      */
     public List<T> draw(int amount) {
-        List<T> drawn = new ArrayList<>();
-        if (drawStack.isEmpty() && discardPile.isEmpty()) return drawn;
-        for (int i = 0; i < amount; i++) {
-            if (drawStack.isEmpty()) {
-                shuffleBack();
-            }
-            drawn.add(drawStack.pop());
-        }
-        return drawn;
+        return draw(amount, false);
     }
 
     /**
@@ -84,14 +78,26 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
     }
 
     /**
+     * @return den aktuellen Discard Pile
+     */
+    public List<T> getDiscardPile() {
+        return discardPile;
+    }
+
+    /**
      * shuffleBack mischt den Ablagestapel durch und legt ihn auf den DrawStack, beide Stapel können auch leer sein kann, nicht beide gleichzeitig.
      */
     public void shuffleBack() {
         Collections.shuffle(discardPile);
         for (T element : discardPile) {
             drawStack.push(element);
+            notifyAdd(this, element, false);
         }
+        List<T> oldPile = discardPile;
         discardPile = new LinkedList<>();
+        for (T element : oldPile) {
+            notifyRemove(this, element, true);
+        }
     }
 
     /**
@@ -107,16 +113,19 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
      * @param card ist ein varargs mit beliebiger Anzahl an Karten vom Typ T.
      */
     public void discard(T... card) {
-        discardPile.addAll(Arrays.asList(card));
+        discard(Arrays.asList(card));
     }
 
     /**
      * discard fügt eine beliebige Anzahl an Karten dem discardPile hinzu.
      *
-     * @param card ist ein varargs mit beliebiger Anzahl an Karten vom Typ T.
+     * @param cards ist eine Collection mit beliebiger Anzahl an Karten vom Typ T.
      */
-    public void discard(Collection<T> card) {
-        discardPile.addAll(card);
+    public void discard(Collection<T> cards) {
+        for (T element : cards) {
+            discardPile.add(element);
+            notifyAdd(this, element, true);
+        }
     }
 
     @Override
@@ -124,6 +133,22 @@ public class CardStack<T extends Copyable<T>> implements Copyable<CardStack<T>> 
         CardStack<T> stack = new CardStack<>();
         stack.discardPile = CopyUtil.copyAsList(this.discardPile);
         stack.drawStack = CopyUtil.copy(this.drawStack, Collectors.toCollection(Stack::new));
+        stack.setObserver(this.getObserver());
         return stack;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        CardStack<?> stack = (CardStack<?>) other;
+        return drawStack.equals(stack.drawStack) &&
+                discardPile.containsAll(stack.discardPile) &&
+                stack.discardPile.containsAll(discardPile);
+    }
+
+    @Override
+    public int hashCode() {
+        return drawStack.hashCode() + 3 * new HashSet<>(discardPile).hashCode();
     }
 }

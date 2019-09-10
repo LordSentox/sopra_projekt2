@@ -1,5 +1,9 @@
 package de.sopra.javagame.model;
 
+import java.util.Objects;
+
+import static de.sopra.javagame.model.MapTileState.GONE;
+
 /**
  * Flutkarten können einen bestimmten Feldtyp fluten oder versenken, falls das Inselfeld schon überflutet war.
  */
@@ -21,6 +25,11 @@ public class FloodCard implements Copyable<FloodCard> {
      *                               Die Karte hätte dann aus dem Stapel entfernt werden sollen.
      */
     void flood() throws IllegalStateException {
+        // Überprüfe, ob das Feld bereits entfernt wurde. Diese Karte hätte dann nicht gespielt
+        // werden können dürfen.
+        if (this.tile.getState() == GONE) {
+            throw new IllegalStateException();
+        }
     }
 
     public MapTile getTile() {
@@ -34,5 +43,18 @@ public class FloodCard implements Copyable<FloodCard> {
     @Override
     public FloodCard copy() {
         return new FloodCard(tile);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        FloodCard floodCard = (FloodCard) other;
+        return floodCard.tile.equals(this.tile);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tile);
     }
 }

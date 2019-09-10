@@ -1,6 +1,5 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,13 +13,13 @@ public class MapTileTest {
 
     @Before
     public void setUp() {
-        this.dry = new MapTile("Ne Höhle", PlayerType.DIVER, ArtifactType.NONE);
+        this.dry = MapTile.fromNumber(2);
         this.dry.setState(MapTileState.DRY);
 
-        this.flooded = new MapTile("Nen Strand", PlayerType.ENGINEER, ArtifactType.NONE);
+        this.flooded = MapTile.fromNumber(1);
         this.flooded.setState(MapTileState.FLOODED);
 
-        this.gone = new MapTile("So'n Tempel", PlayerType.NONE, ArtifactType.EARTH);
+        this.gone = MapTile.fromNumber(3);
         this.gone.setState(MapTileState.GONE);
     }
 
@@ -52,10 +51,8 @@ public class MapTileTest {
     public void copyTest() {
         MapTile dryCopy = this.dry.copy();
         assertEquals(dryCopy.getState(), this.dry.getState()); //check copy
-        assertEquals(dryCopy.getName(), this.dry.getName());
-        assertFalse(dryCopy.getName() == this.dry.getName()); //check different instances
-        assertEquals(dryCopy.getHiddenArtifact(), this.dry.getHiddenArtifact());
-        assertEquals(dryCopy.getPlayerSpawn(), this.dry.getPlayerSpawn());
+        assertEquals(dryCopy.getProperties().getName(), this.dry.getProperties().getName());
+        assertSame(dryCopy.getProperties(), this.dry.getProperties());
         dryCopy.flood(); //change copy
         assertNotEquals(dryCopy.getState(), this.dry.getState()); //check independent instances
     }

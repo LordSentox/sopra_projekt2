@@ -1,6 +1,5 @@
 package de.sopra.javagame.util;
 
-import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Assert;
@@ -9,6 +8,8 @@ import org.junit.Test;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import static de.sopra.javagame.model.MapTileProperties.*;
 
 public class MapUtilTest {
 
@@ -84,14 +85,14 @@ public class MapUtilTest {
         MapTile[] nullRow = {null, null, null, null, null, null, null, null, null, null, null, null};
         MapTile[] thirdRow = {
                 null, null,
-                new MapTile("Medusas Palast", PlayerType.NONE, ArtifactType.WATER),
-                new MapTile("Poseidons Palast", PlayerType.NONE, ArtifactType.WATER),
-                new MapTile("Tempel der Sonne", PlayerType.NONE, ArtifactType.EARTH),
-                new MapTile("Höhle des Grauens", PlayerType.NONE, ArtifactType.NONE),
-                new MapTile("Brücke des Verderbens", PlayerType.NONE, ArtifactType.NONE),
-                new MapTile("Wald der Finsternis", PlayerType.NONE, ArtifactType.NONE),
-                new MapTile("Pfad der Einsamkeit", PlayerType.NONE, ArtifactType.NONE),
-                new MapTile("Wächter der Sterne", PlayerType.NONE, ArtifactType.NONE),
+                new MapTile(CORAL_PALACE),
+                new MapTile(TIDAL_PALACE),
+                new MapTile(TEMPLE_OF_THE_SUN),
+                new MapTile(PHANTOM_ROCK),
+                new MapTile(BREAKERS_BRIDGE),
+                new MapTile(TWIGHLIGHT_HORROW),
+                new MapTile(CRIMSON_FOREST),
+                new MapTile(OBSERVATORY),
                 null, null
         };
 

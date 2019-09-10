@@ -35,7 +35,9 @@ public class CopyUtil {
 
     public static <T extends Copyable<T>> void copyArr(T[] array, T[] target) {
         for (int i = 0; i < array.length; i++) {
-            target[i] = array[i].copy();
+            if (array[i] != null) {
+                target[i] = array[i].copy();
+            }
         }
     }
 

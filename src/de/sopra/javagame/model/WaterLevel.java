@@ -1,7 +1,8 @@
 package de.sopra.javagame.model;
 
 /**
- * enthält die Informationen wie hoch der aktuelle Wasserpegel ist und wie viele karten zu ziehen sind und die Information, ob das Spiel bereits verloren ist
+ * enthält die Informationen wie hoch der aktuelle Wasserpegel ist und wie viele
+ * karten zu ziehen sind und die Information, ob das Spiel bereits verloren ist
  *
  * @author Lisa, Hannah
  */
@@ -10,10 +11,10 @@ public class WaterLevel implements Copyable<WaterLevel> {
     /**
      * Hat am jeweiligen index die Anzahl der zu ziehenden Karten
      */
-    private static final int[] DRAW_AMOUNT_BY_LEVEL = new int[]{}; //TODO 
+    private static final int[] DRAW_AMOUNT_BY_LEVEL = new int[] { 2, 2, 3, 3, 3, 4, 4, 5, 5, 6 }; // TODO
     /**
-     * Index mit dem das Array ausgelesen wird
-     * Im Code, sollte dieser Wert von 0 bis 9 Zählen.
+     * Index mit dem das Array ausgelesen wird Im Code, sollte dieser Wert von 0
+     * bis 9 Zählen.
      */
     private int level;
 
@@ -33,17 +34,19 @@ public class WaterLevel implements Copyable<WaterLevel> {
      * erhöht das akutelle Wasserlevel um 1
      */
     void increment() {
-
+        if (!isGameLost()) {
+            level += 1;
+        }
     }
 
     /**
-     * Gibt zurück, ob das Spiel aufgrund des Wasserstandes bereits verloren ist (Level=9)
+     * Gibt zurück, ob das Spiel aufgrund des Wasserstandes bereits verloren ist
+     * (Level=9)
      *
-     * @return true: Level=9
-     * false: level<9
+     * @return true: Level=9 false: level<9
      */
     boolean isGameLost() {
-        return false;
+        return level == 9;
     }
 
     /**
@@ -52,7 +55,11 @@ public class WaterLevel implements Copyable<WaterLevel> {
      * @return Zahl der zu ziehenden Karten
      */
     int getDrawAmount() {
-        return 0;
+        if (!isGameLost()) {
+            return DRAW_AMOUNT_BY_LEVEL[level];
+        } else {
+            return 0;
+        }
     }
 
     @Override
