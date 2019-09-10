@@ -3,6 +3,7 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -143,5 +144,10 @@ public class AIController {
     public boolean anyPlayerHasCard(ArtifactCardType artifactCardType) {
         // TODO Auto-generated method stub
         return false;
+    }
+    
+    public MapTile anyTile(MapTileState state){
+        //TODO 
+        return null;
     }
 }
