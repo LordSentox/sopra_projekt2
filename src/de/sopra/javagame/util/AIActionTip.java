@@ -3,8 +3,6 @@ package de.sopra.javagame.util;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.PlayerType;
 
-import java.awt.*;
-
 /**
  * <h1>projekt2</h1>
  *
@@ -59,7 +57,7 @@ public enum AIActionTip {
             result = result.replace(DIRECTION, DIRECTION + ":" + direction.name());
         else result = result.replace(DIRECTION, "");
         if (point != null)
-            result = result.replace(POINT, POINT + ":" + point.x + "," + point.y);
+            result = result.replace(POINT, POINT + ":" + point.xPos + "," + point.yPos);
         else result = result.replace(POINT, "");
         if (player != PlayerType.NONE && player != null)
             result = result.replace(WHO, WHO + ":" + player.name());

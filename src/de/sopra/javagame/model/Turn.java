@@ -3,7 +3,6 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
-import java.awt.*;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,7 +65,8 @@ public class Turn implements Copyable<Turn> {
 
     private boolean gameWon;
 
-    private Turn(){}
+    private Turn() {
+    }
 
     public CardStack<ArtifactCard> getArtifactCardStack() {
         return artifactCardStack;
@@ -78,6 +78,15 @@ public class Turn implements Copyable<Turn> {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public Player getPlayer(PlayerType type) {
+        for (Player currentPlayer : getPlayers()) {
+            if (currentPlayer.getType() == type) {
+                return currentPlayer;
+            }
+        }
+        return null;
     }
 
     public int getActivePlayer() {
@@ -119,6 +128,18 @@ public class Turn implements Copyable<Turn> {
         turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
         turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
 
+        /* FIXME merged
+        Map<PlayerType, Point> startPositions = new EnumMap<>(PlayerType.class);
+
+        for (int y = 0; y < tiles.length; y++) {
+            for (int x = 0; x < tiles[y].length; x++) {
+                MapTile tile = tiles[y][x];
+                if (tile.getPlayerSpawn() != PlayerType.NONE)
+                    startPositions.put(tile.getPlayerSpawn(), new Point(x, y));
+            }
+        }
+        */
+
         turn.players = players.stream().map(pair -> {
             Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
             switch (pair.getLeft()) {
@@ -151,7 +172,7 @@ public class Turn implements Copyable<Turn> {
      * @return gibt zurück, ob das Übergeben erfolgreich war
      */
     boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
-        if (source.legalReceivers().contains(receiver)) {
+        if (source.legalReceivers().contains(receiver.getType())) {
             source.getHand().remove(card);
             receiver.getHand().add(card);
             return true;
@@ -174,14 +195,13 @@ public class Turn implements Copyable<Turn> {
      * @return Tile an der Position
      */
     public MapTile getTile(Point position) {
-        return this.tiles[position.y][position.x];
+        return this.tiles[position.yPos][position.xPos];
     }
 
 
     /**
      * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
      * kein Inselfeld wird <code>null</code> übergeben.
-     *
      *
      * @return Tile an der Position
      */
@@ -198,6 +218,9 @@ public class Turn implements Copyable<Turn> {
         turn.discoveredArtifacts = EnumSet.copyOf(this.discoveredArtifacts);
         turn.floodCardStack = this.floodCardStack.copy();
         turn.players = CopyUtil.copyAsList(this.players);
+        for (Player player : turn.players) {
+            player.setActiveTurn(turn);
+        }
         turn.state = this.state;
         turn.tiles = new MapTile[this.tiles.length][this.tiles[0].length];
         CopyUtil.copyArr(this.tiles, turn.tiles);
@@ -219,5 +242,13 @@ public class Turn implements Copyable<Turn> {
 
     public void setGameWon(boolean gameWon) {
         this.gameWon = gameWon;
+    }
+
+    public void setState(TurnState state) {
+        this.state = state;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
     }
 }

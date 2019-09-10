@@ -10,7 +10,6 @@ import de.sopra.javagame.model.player.Player;
  * WATERS_RISE ist eine Karte, deren Effekt sofort ausgeführt wird.
  */
 public enum ArtifactCardType {
-
     AIR(5, ArtifactType.AIR),
     EARTH(5, ArtifactType.EARTH),
     FIRE(5, ArtifactType.FIRE),

@@ -65,7 +65,7 @@ public class MapUtil {
 
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[y].length; ++x) {
-                if (tiles[y][x] != null && tiles[y][x].getPlayerSpawn() == player) {
+                if (tiles[y][x] != null && tiles[y][x].getProperties().getSpawn() == player) {
                     return new Point(x, y);
                 }
             }
