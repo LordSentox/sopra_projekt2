@@ -61,6 +61,31 @@ public class JavaGameTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
+    public void newGameEmptyMap() {
+        javaGame.newGame("emptyMap", new MapTile[12][12], Difficulty.NOVICE, players);
+    }
+    
+    @Test (expected = NullPointerException.class)
+    public void newGameNoMapName() {
+        javaGame.newGame(null, testMap, Difficulty.NOVICE, players);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void newGameEmptyMapName() {
+        javaGame.newGame("", testMap, Difficulty.NOVICE, players);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void newGameNoDifficulty() {
+        javaGame.newGame(testMapString, testMap, null, players);
+    }    
+
+    @Test (expected = NullPointerException.class)
+    public void newGameNoPlayers() {
+        javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
         javaGame.newGame(testMapString, testMap, Difficulty.NOVICE,
@@ -88,7 +113,14 @@ public class JavaGameTest {
                             javaGame.getPreviousTurn() == currentTurn);
         Assert.assertFalse("Der neu erstellte Turn hätte nicht gleich dem vorherigen sein dürfen",
                                 currentTurn == nextTurn);
-
+        
+        //teste ob korrekr redo Stapel zurückgesetzt wird
+        controllerChan.getGameFlowController().undo();
+        controllerChan.getGameFlowController().undo();
+        Assert.assertTrue("There should have been two redo turns", javaGame.canRedo());
+        currentTurn = controllerChan.getCurrentTurn();
+        javaGame.endTurn(currentTurn);
+        Assert.assertFalse("There should have been no redo turns", javaGame.canRedo());
     }
 
     @Test

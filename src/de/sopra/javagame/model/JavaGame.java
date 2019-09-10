@@ -158,6 +158,9 @@ public class JavaGame {
         return undoTurns.peek();
     }
 
+    public boolean canRedo() {
+        return !redoTurns.isEmpty();
+    }
     public void markCheetah() {
         this.cheetah = true;
     }
