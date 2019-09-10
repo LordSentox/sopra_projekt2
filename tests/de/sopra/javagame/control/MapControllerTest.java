@@ -7,7 +7,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -51,7 +55,7 @@ public class MapControllerTest {
     public void testGenerateMapToEditor() {
         //TODO generate Methode implementieren
         //TODO danach test anpassen
-        Assert.assertTrue(false);
+        Assert.fail();
 
 
     }
@@ -85,7 +89,7 @@ public class MapControllerTest {
     }
 
     @Test
-    public void testSaveMap() throws UnsupportedEncodingException, IOException {
+    public void testSaveMap() throws IOException {
 
         //teste saveMap mit unvollständiger Map
         mapController.saveMap(name, map);
@@ -132,7 +136,7 @@ public class MapControllerTest {
         }
         mapController.saveMap(name, map);
 
-        String content = new String(Files.readAllBytes(Paths.get(name + ".java")), "UTF-8");
+        String content = new String(Files.readAllBytes(Paths.get(name + ".java")), StandardCharsets.UTF_8);
         Assert.assertEquals(mapString, content);
 
         //teste mit korrekter map ohne Namen

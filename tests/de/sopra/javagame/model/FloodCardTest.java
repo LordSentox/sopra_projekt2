@@ -1,6 +1,5 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,13 +19,12 @@ public class FloodCardTest {
 
     @Before
     public void setup() {
-        blubBlub = new MapTile("blubBlub", PlayerType.NONE, ArtifactType.NONE);
+        blubBlub = MapTile.fromNumber(5);
         wannKommtDieFlut = new FloodCard(blubBlub);
     }
 
     @Test
     public void testFlood() {
-        blubBlub = new MapTile("blubBlub", PlayerType.NONE, ArtifactType.NONE);
         wannKommtDieFlut = new FloodCard(blubBlub);
         
         wannKommtDieFlut.setTile(blubBlub);
@@ -43,14 +41,12 @@ public class FloodCardTest {
     @Test(expected = IllegalStateException.class)
     public void testWrongFlood() {
 
-        blubBlub = new MapTile("blubBlub", PlayerType.NONE, ArtifactType.NONE);
         wannKommtDieFlut = new FloodCard(blubBlub);
         wannKommtDieFlut.flood();
         wannKommtDieFlut.flood();
 
         //Test
         wannKommtDieFlut.flood();
-
     }
 
 }

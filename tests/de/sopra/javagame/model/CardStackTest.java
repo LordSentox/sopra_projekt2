@@ -1,6 +1,5 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.CardStackUtil;
 import org.junit.Before;
@@ -21,13 +20,13 @@ import static org.junit.Assert.*;
 public class CardStackTest {
     private CardStack<FloodCard> floodCardStack;
     private CardStack<ArtifactCard> artifactCardStack;
-    MapTile[][] tiles;
-    MapTile wirHabenLandGefunden;
-    List<ArtifactCard> hand;
+    private MapTile[][] tiles;
+    private MapTile wirHabenLandGefunden;
+    private List<ArtifactCard> hand;
 
     @Before
     public void setUp() {
-        wirHabenLandGefunden = new MapTile("wirHabenLandGefunden", PlayerType.NONE, ArtifactType.NONE);
+        wirHabenLandGefunden = MapTile.fromNumber(20);
         tiles = new MapTile[1][1];
         tiles[0][0] = wirHabenLandGefunden;
 
@@ -44,11 +43,11 @@ public class CardStackTest {
         assertEquals(wirHabenLandGefunden, floodCardStack.draw(1, true).get(0).getTile());
 
         //Test draw artifactCard
-        hand.addAll(artifactCardStack.draw(1, false));
-        assertEquals(1, hand.size());
+        hand.addAll(artifactCardStack.draw(28, false));
+        assertEquals(28, hand.size());
 
         hand.addAll(artifactCardStack.draw(1, true));
-        assertEquals(1, hand.size());
+        assertEquals(28, hand.size());
 
     }
 
@@ -58,43 +57,16 @@ public class CardStackTest {
         CardStack<ArtifactCard> moppedStapel = CardStackUtil.createArtifactCardStack();
         CardStack<ArtifactCard> moppedStapel2 = CardStackUtil.createArtifactCardStack();
 
-        int countEquals = 0;
+        assertEquals("created stacks not equal", moppedStapel, moppedStapel2);
 
         for (int i = 0; i < 5; i++) {
             //moppedStapel.shuffleDrawStack();
             moppedStapel2.shuffleDrawStack();
-            //FIXME Vergleich mit equals nicht möglich
-            if (moppedStapel.equals(moppedStapel2)) {
-                countEquals++;
+            if (!moppedStapel.equals(moppedStapel2)) {
+                return;
             }
         }
-
-        assertTrue(countEquals <= 1);
-        //test floodCardStack shuffle mopped
-        tiles = new MapTile[1][2];
-        wirHabenLandGefunden = new MapTile("wirHabenLandGefunden", PlayerType.NONE, ArtifactType.NONE);
-        tiles[1][1] = wirHabenLandGefunden;
-        MapTile javaIstauchEineInsel = new MapTile("javaIstAuchEineInsel", PlayerType.NONE, ArtifactType.NONE);
-        tiles[1][2] = javaIstauchEineInsel;
-
-        floodCardStack = CardStackUtil.createFloodCardStack(tiles);
-        CardStack<FloodCard> floodMoppedStapel = CardStackUtil.createFloodCardStack(tiles);
-
-        int countEqualsForFloodCard = 0;
-
-        for (int i = 0; i < 5; i++) {
-            //moppedStapel.shuffleDrawStack();
-            floodCardStack.shuffleDrawStack();
-            //FIXME Vergleich mit equals nicht möglich
-            if (floodMoppedStapel.equals(floodCardStack)) {
-                countEqualsForFloodCard++;
-            }
-        }
-        //FIXME Anzahl der Tests (5 Versuche) zu gering für 3/2 Stand
-        //bei 5 maligem mischen mit 2 karten, sollte höchsten 3 mal die reihenfolge gleich sein
-        assertTrue(countEquals <= 3);
-
-
+        fail("Stack not shuffled");
     }
 
     @Test

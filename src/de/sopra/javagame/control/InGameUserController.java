@@ -1,8 +1,14 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
+import java.util.EnumSet;
 import java.util.List;
 
 public class InGameUserController {
@@ -25,7 +31,23 @@ public class InGameUserController {
      * @param players       die Spieler, welche transportiert werden sollen, darf nicht leer sein
      */
     public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Point flyFrom, Point flyTo, List<PlayerType> players) {
+        //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
+        MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
+        Point heliPoint = MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT);
+        Turn currentTurn = controllerChan.getJavaGame().getPreviousTurn();
+        EnumSet<ArtifactType> artifactsFound = currentTurn.getDiscoveredArtifacts();
+        boolean allOnHeliPoint = true;
+                for (Player currentPlayer : currentTurn.getPlayers()) {
+                    if (currentPlayer.getPosition() != heliPoint) {
+                        allOnHeliPoint = false;
+                }
 
+            if (artifactsFound.size() == 4 && !artifactsFound.contains(ArtifactType.NONE) && allOnHeliPoint) {
+                controllerChan.getCurrentTurn().setGameEnded(true);
+                controllerChan.getCurrentTurn().setGameWon(true);
+            }
+
+        }
     }
 
     /**

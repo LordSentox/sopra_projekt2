@@ -4,8 +4,8 @@ import javafx.stage.Stage;
 
 /**
  * GUI für den Mapeditor
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class MapEditorViewController extends AbstractViewController implements MapEditorViewAUI {
 
@@ -47,7 +47,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     @Override
-    public void setMap(boolean[][] tiles) {
+    public void setMap(String mapName, boolean[][] tiles) {
 
     }
 }
