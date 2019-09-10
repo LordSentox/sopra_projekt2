@@ -73,11 +73,14 @@ public class JavaGameTest {
     @Test
     public void endTurn() {
         Turn currentTurn = javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        Turn lastTurn = javaGame.getPreviousTurn();
         Turn nextTurn = javaGame.endTurn(currentTurn);
 
-        Assert.assertTrue("Das Java-Game hätte einen neuen Previous Turn haben sollen",
-                            javaGame.getPreviousTurn() == nextTurn);
+        //Assert.assertTrue("Das Java-Game hätte einen neuen currentTurn haben sollen",
+          //                  controllerChan.getCurrentTurn() == nextTurn);
         Assert.assertFalse("Das Java-Game hätte einen neuen Previous Turn haben sollen",
+                javaGame.getPreviousTurn() == lastTurn);
+        Assert.assertTrue("Das Java-Game hätte einen neuen Previous Turn haben sollen",
                             javaGame.getPreviousTurn() == currentTurn);
         Assert.assertFalse("Der neu erstellte Turn hätte nicht gleich dem vorherigen sein dürfen",
                                 currentTurn == nextTurn);
@@ -106,19 +109,21 @@ public class JavaGameTest {
         Turn turn = javaGame.newGame(mapString, testMap, Difficulty.NOVICE, players);
 
         //teste ob Anfangsscore korrekt berechnet wird
-        Assert.assertEquals("", 100, javaGame.calculateScore());
+        Assert.assertEquals("Score hätte gleich sein sollen", 100.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für 1 Artefakt korrekt berechnet wird
         turn.getDiscoveredArtifacts().add(ArtifactType.FIRE);
-        Assert.assertEquals("", 200, javaGame.calculateScore());
+        Turn nextTurn = javaGame.endTurn(turn);
+        Assert.assertEquals("", 200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für Game Won korrekt berechnet wird
-        turn.setGameWon(true);
-        turn.setGameEnded(true);
-        Assert.assertEquals("", 1200, javaGame.calculateScore());
+        nextTurn.setGameWon(true);
+        nextTurn.setGameEnded(true);
+        Turn secondNextTurn = javaGame.endTurn(nextTurn);
+        Assert.assertEquals("", 1200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für cheetah korrekt berechnet wird
         javaGame.setCheetah(true);
-        Assert.assertEquals("", 0, javaGame.calculateScore());
+        Assert.assertEquals("", 0.0, javaGame.calculateScore(), 0.0);
     }
 }

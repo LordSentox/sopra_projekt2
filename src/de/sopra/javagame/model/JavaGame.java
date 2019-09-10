@@ -83,9 +83,9 @@ public class JavaGame {
      *
      * @return Die berechneten Punkte
      */
-    public int calculateScore() {
+    public double calculateScore() {
         int playerOne = 0;
-        int turns = 1;
+        int turns = 0;
         int extraPoints = 0;
         double score = 0;
         boolean finishedOneRound = false;
@@ -111,7 +111,7 @@ public class JavaGame {
             }
             score += extraPoints;
         }
-        return (int)score;
+        return score;
     }
 
     public Difficulty getDifficulty() {
