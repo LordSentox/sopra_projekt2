@@ -9,8 +9,9 @@ public class TileView extends ImageView{
     private final Image dryImage, floodedImage, goneImage;
     
     public TileView(int id, String pack) {
-        this.dryImage = new Image(getClass().getResource("/textures/" + pack + "/island_" + (id < 9 ? "0"+id : ""+id) + ".png").toExternalForm(), 130, 130, true, true);
-        this.floodedImage = new Image(getClass().getResource("/textures/" + pack + "/floodedisland_" + (id < 9 ? "0"+id : ""+id) + ".png").toExternalForm(), 130, 130, true, true);
+        //System.out.println(id);
+        this.dryImage = new Image(getClass().getResource("/textures/" + pack + "/island_" + (id < 10 ? "0"+id : ""+id) + ".png").toExternalForm(), 130, 130, true, true);
+        this.floodedImage = new Image(getClass().getResource("/textures/" + pack + "/floodedisland_" + (id < 10 ? "0"+id : ""+id) + ".png").toExternalForm(), 130, 130, true, true);
         this.goneImage = new Image(getClass().getResource("/textures/" + pack + "/floodedisland_additional_3.png").toExternalForm(), 130, 130, true, true);
         this.setImage(dryImage);
     }

@@ -1,7 +1,7 @@
 /* JavaFX CSS - Leave this comment until you have at least created one rule which uses -fx-Property */
 
 .bg {
-    -fx-background-color: "#001d7a";
+    -fx-background-color: rgba(0, 29, 122, 0.4);
 }
 
 .bg2 {
@@ -9,5 +9,21 @@
 }
 
 .CardView {
-	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0.1, 0, 0);
+}
+
+.Artifact_Fire {
+	-fx-effect: dropshadow(three-pass-box, rgba(173,70,39,1), 10, 0.6, 0, 0);
+}
+
+.Artifact_Water {
+	-fx-effect: dropshadow(three-pass-box, rgba(42,77,77,1), 10, 0.6, 0, 0);
+}
+
+.Artifact_Earth {
+	-fx-effect: dropshadow(three-pass-box, rgba(91,71,83,1), 10, 0.6, 0, 0);
+}
+
+.Artifact_Air {
+	-fx-effect: dropshadow(three-pass-box, rgba(197,115,33,1), 10, 0.6, 0, 0);
 }
