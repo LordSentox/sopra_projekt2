@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
@@ -19,10 +18,10 @@ import de.sopra.javagame.util.Point;
  * @since 09.09.2019
  */
 
-public class UseSandbagToDrainLandingSite implements Decision {
+public class UseSandbagToDrainLandingSite extends Decision {
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
 
         if (!control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
@@ -51,7 +50,7 @@ public class UseSandbagToDrainLandingSite implements Decision {
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         // TODO Auto-generated method stub
 
     }
