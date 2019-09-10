@@ -75,7 +75,10 @@ public class JavaGame {
             this.difficulty = difficulty;
         }
         Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
-
+        if (initialTurn == null) {
+            return null;
+        }
+        
         return endTurn(initialTurn);
     }
 
