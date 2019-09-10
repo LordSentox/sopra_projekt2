@@ -144,7 +144,7 @@ public class JavaGame {
         return undoTurns.peek();
     }
 
-    public void setCheetah(boolean cheetah) {
-        this.cheetah = cheetah;
+    public void markCheetah() {
+        this.cheetah = true;
     }
 }
