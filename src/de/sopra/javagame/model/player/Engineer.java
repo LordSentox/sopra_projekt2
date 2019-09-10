@@ -4,9 +4,8 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
-import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 
 /**
  * Engineer implementiert die Spielfigur "Ingenieur".
@@ -38,13 +37,12 @@ public class Engineer extends Player {
      * @param position Koordinate des zu verändernden MapTiles
      * @return false, wenn Fehler eingetroffen, true sonst
      */
-
     @Override
     public boolean drain(Point position) {
         if (this.hasExtraDrain) {
             this.actionsLeft++;
         }
-        
+
         boolean drained = super.drain(position);
         if (!drained && this.hasExtraDrain) {
             this.actionsLeft--;
@@ -55,8 +53,18 @@ public class Engineer extends Player {
         else if (drained && !this.hasExtraDrain) {
             this.hasExtraDrain = true;
         }
-        
+
         return drained;
+    }
+
+    @Override
+    public boolean move(Point destination, boolean costsAction, boolean specialActive) {
+        boolean success = super.move(destination, costsAction, specialActive);
+        if (success) {
+            this.hasExtraDrain = false;
+        }
+
+        return success;
     }
 
     @Override

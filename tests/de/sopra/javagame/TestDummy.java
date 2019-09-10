@@ -81,7 +81,7 @@ public class TestDummy {
         }
 
         @Override
-        public void setMap(boolean[][] tiles) {
+        public void setMap(String mapName, boolean[][] tiles) {
             this.tiles = tiles;
         }
 

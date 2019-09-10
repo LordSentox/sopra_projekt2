@@ -2,8 +2,8 @@ package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,42 +43,28 @@ public abstract class Player implements Copyable<Player> {
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der
      * Spieler sich regelkonform hinbewegen darf
      *
-     * @param specialActive
-     *            gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja,
-     *            wird die Liste um zusätzlich erreichbare Punkte erweitert
+     * @param specialActive gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja,
+     *                      wird die Liste um zusätzlich erreichbare Punkte erweitert
      * @return das erstellte Listli
      */
 
     public List<Point> legalMoves(boolean specialActive) {
-        List<Point> movement = new ArrayList<>();
-        MapTile right = this.turn.getTiles()[position.y][position.x + 1];
-        if (right != null && right.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y, position.x + 1));
-        }
-        MapTile left = this.turn.getTiles()[position.y][position.x - 1];
-        if (left != null && left.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y, position.x - 1));
-        }
-        MapTile upper = this.turn.getTiles()[position.y - 1][position.x];
-        if (upper != null && upper.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y - 1, position.x));
-        }
-        MapTile down = this.turn.getTiles()[position.y + 1][position.x];
-        if (down != null && down.getState() != MapTileState.GONE) {
-            movement.add(new Point(position.y + 1, position.x));
-        }
-        return movement;
+        List<Point> moves = this.position.getNeighbours();
+        moves = moves.stream().filter(point -> {
+            MapTile tile = this.turn.getTile(point);
+            return tile != null && tile.getState() != GONE;
+        }).collect(Collectors.toList());
+
+        return moves;
     }
 
     /**
      * move bewegt den Spieler zur angegebenen destination, zieht dabei eine
      * Aktion ab, wenn costsAction true ist
      *
-     * @param destination
-     *            Zielkoordinaten
-     * @param costsAction
-     *            wenn false, wird keine Action abgezogen, wenn true, wird eine
-     *            abgezogen
+     * @param destination Zielkoordinaten
+     * @param costsAction wenn false, wird keine Action abgezogen, wenn true, wird eine
+     *                    abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {
@@ -200,14 +186,14 @@ public abstract class Player implements Copyable<Player> {
      * regelkonform übergeben werden dürfen.
      *
      * @return das erstellte Listli, wenn Player exisitieren, denen Handkarten
-     *         übergeben werden dürfen. Null, sonst.
+     * übergeben werden dürfen. Null, sonst.
      */
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList();
-        MapTile mapTile = this.turn.getTiles()[position.y][position.x];
+        MapTile mapTile = this.turn.getTiles()[position.yPos][position.xPos];
         List<Player> players = turn.getPlayers();
         for (Player player : players) {
-            if (mapTile == this.turn.getTiles()[player.position.y][player.position.x] && player != this) {
+            if (mapTile == this.turn.getTiles()[player.position.yPos][player.position.xPos] && player != this) {
                 receivers.add(player.getType());
             }
         }
@@ -217,6 +203,7 @@ public abstract class Player implements Copyable<Player> {
     public void setPosition(Point position) {
         this.position = position;
     }
+
     public void setActionsLeft(int actionsLeft) {
         this.actionsLeft = actionsLeft;
     }
