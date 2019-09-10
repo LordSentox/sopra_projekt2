@@ -6,8 +6,8 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 
-import java.awt.Point;
 import java.util.List;
 
 /**
