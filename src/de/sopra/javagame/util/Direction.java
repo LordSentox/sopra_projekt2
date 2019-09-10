@@ -1,7 +1,5 @@
 package de.sopra.javagame.util;
 
-import java.awt.*;
-
 /**
  * Die Richtungen, in die ein Spieler ohne besondere Bewegungsfähigkeiten bewegt werden kann.
  */
@@ -31,7 +29,7 @@ public enum Direction {
     }
 
     public Point translate(Point point) {
-        return new Point(point.x + xOffset, point.y + yOffset);
+        return new Point(point.xPos + xOffset, point.yPos + yOffset);
     }
 
 }

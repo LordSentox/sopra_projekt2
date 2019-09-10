@@ -8,8 +8,8 @@ import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 
-import java.awt.Point;
 import java.util.List;
 
 /**
@@ -24,37 +24,37 @@ public class FlyNextActivePlayerToLandingSiteForDraining implements Decision {
 
     @Override
     public Decision decide(AIController control) {
-        if(!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)){
+        if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
             return null;
         }
-        
+
         Player activePlayer = control.getActivePlayer();
         int leftActions = activePlayer.getActionsLeft();
-        
-        if(leftActions!=1){
+
+        if (leftActions != 1) {
             return null;
         }
-        
+
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         MapTile landingSite = informationLandingSite.getRight();
         Point landingSitePosition = informationLandingSite.getLeft();
-        
-        if(!landingSite.getState().equals(MapTileState.FLOODED)){
+
+        if (!landingSite.getState().equals(MapTileState.FLOODED)) {
             return null;
         }
-                
+
         List<Point> directlyDrainablePositionsList = activePlayer.drainablePositions();
-        if(directlyDrainablePositionsList.contains(landingSitePosition)){
+        if (directlyDrainablePositionsList.contains(landingSitePosition)) {
             return null;
         }
-        
+
         return this;
     }
 
     @Override
     public void act(AIController control) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

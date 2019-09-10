@@ -8,8 +8,8 @@ import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 
-import java.awt.Point;
 import java.util.EnumSet;
 
 /**
@@ -26,16 +26,16 @@ public class StayOnLandingSiteWaitingForDeparture implements Decision {
     public Decision decide(AIController control) {
         Turn turn = control.getActiveTurn();
         EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
-        
+
         Player activePlayer = control.getActivePlayer();
         Point playerPosition = activePlayer.getPosition();
-        
+
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
-        
-        if(discoveredArtifacts.size()==4 && landingSitePosition.equals(playerPosition)){
+
+        if (discoveredArtifacts.size() == 4 && landingSitePosition.equals(playerPosition)) {
             return this;
-            
+
         }
         return null;
     }
@@ -43,8 +43,8 @@ public class StayOnLandingSiteWaitingForDeparture implements Decision {
     @Override
     public void act(AIController control) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
 
 }

@@ -8,8 +8,8 @@ import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.AIActionTip;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 import java.util.List;
 
 /**
