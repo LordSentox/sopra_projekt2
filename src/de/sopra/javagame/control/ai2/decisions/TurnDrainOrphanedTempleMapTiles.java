@@ -1,7 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
-import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.Direction;
@@ -10,30 +9,23 @@ import de.sopra.javagame.util.Point;
 
 import java.util.List;
 
-
 /**
  * <h1>projekt2</h1>
  *
  * @author Melanie Arnds
- * @version 10.09.2019
- * @since 10.09.2019
+ * @version 09.09.2019
+ * @since 09.09.2019
  */
 
-public class FlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
+public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public Decision decide() {
-        if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
-            return null;
-        }
-
-        if (player().getActionsLeft() != 1) {
-            return null;
-        }
 
         List<Pair<Point, MapTile>> templeList = control.getTemples();
 
         for (int i = 0; i < 8; i++) {
+
             Point orphanedTemplePoint = templeList.get(i).getLeft();
             MapTile orphanedTemple = templeList.get(i).getRight();
 
@@ -77,7 +69,9 @@ public class FlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
             }
 
             return this;
+
         }
+
         return null;
     }
 

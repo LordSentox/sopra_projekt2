@@ -6,6 +6,9 @@ import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
 
+import java.util.Arrays;
+import java.util.function.Predicate;
+
 /**
  * <h1>Decision</h1>
  * Ist der Kern der entscheidungbasierten KI.
@@ -72,11 +75,35 @@ public abstract class Decision {
         return control.getActiveTurn();
     }
 
-    public boolean allTrue(boolean... booleans) {
-        if (booleans == null && booleans.length == 0)
+    public boolean hasValidActions(Integer... validActions) {
+        return Arrays.asList(validActions).contains(player().getActionsLeft());
+    }
+
+    public EnhancedPlayerHand playerHand() {
+        return EnhancedPlayerHand.ofPlayer(player());
+    }
+
+    public EnhancedPlayerHand hand(Player player) {
+        return EnhancedPlayerHand.ofPlayer(player);
+    }
+
+    public boolean all(Boolean... bools) {
+        return Arrays.asList(bools).stream().allMatch(Boolean::booleanValue);
+    }
+
+    public boolean none(Boolean... bools) {
+        return Arrays.asList(bools).stream().noneMatch(Boolean::booleanValue);
+    }
+
+    public boolean any(Boolean... bools) {
+        return Arrays.asList(bools).stream().anyMatch(Boolean::booleanValue);
+    }
+
+    public <T> boolean checkAll(Predicate<T> checker, T... objects) {
+        if (objects == null && objects.length == 0)
             return true;
-        for (boolean bool : booleans)
-            if (!bool) return false;
+        for (T object : objects)
+            if (object != null && !checker.test(object)) return false;
         return true;
     }
 

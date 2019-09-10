@@ -1,11 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.player.Player;
 
-import java.util.List;
+import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
  * <h1>projekt2</h1>
@@ -17,36 +14,22 @@ import java.util.List;
 public class DiscardSandbagRatherThanOneOfFourTreasureCards extends Decision {
     @Override
     public Decision decide() {
-        Player activePlayer = control.getActivePlayer();
-        List<ArtifactCard> activeHand = activePlayer.getHand();
-        boolean hasSand = false;
-        for (ArtifactCard sand : activeHand) {
-            if (sand.getType() == ArtifactCardType.SANDBAGS) {
-                hasSand = true;
-            }
-        }
-        if (!hasSand) {
+
+        if (!playerHand().hasCard(SANDBAGS)) {
             return null;
         }
-        int water = 0;
-        int fire = 0;
-        int earth = 0;
-        int air = 0;
-        for (ArtifactCard card : activeHand) {
-            if (card.getType() == ArtifactCardType.AIR) {
-                air++;
-            } else if (card.getType() == ArtifactCardType.EARTH) {
-                earth++;
-            } else if (card.getType() == ArtifactCardType.FIRE) {
-                fire++;
-            } else if (card.getType() == ArtifactCardType.WATER) {
-                water++;
-            }
-        }
-        if (air == 4 || fire == 4 || earth == 4 || water == 4) {
+
+        int water = playerHand().getAmount(WATER);
+        int fire = playerHand().getAmount(FIRE);
+        int earth = playerHand().getAmount(EARTH);
+        int air = playerHand().getAmount(AIR);
+
+        if (any(air == 4, fire == 4, earth == 4, water == 4)) {
             return this;
         }
+
         return null;
+
     }
 
     @Override

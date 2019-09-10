@@ -19,7 +19,7 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class DrainTempleMapTileOfUndiscoveredArtifact extends Decision {
+public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
 
     @Override
     public Decision decide() {

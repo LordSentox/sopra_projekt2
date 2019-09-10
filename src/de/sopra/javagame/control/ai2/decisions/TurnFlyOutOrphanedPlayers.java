@@ -17,7 +17,7 @@ import java.util.List;
  * @since 10.09.2019
  */
 
-public class FlyOutOrphanedPlayers extends Decision {
+public class TurnFlyOutOrphanedPlayers extends Decision {
 
     @Override
     public Decision decide() {

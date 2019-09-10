@@ -1,11 +1,15 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai2.EnhancedPlayerHand;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.Player;
 
+import java.util.EnumSet;
 import java.util.List;
+
+import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
  * <h1>projekt2</h1>
@@ -18,46 +22,24 @@ public class DiscardTreasureCardsThatAnotherPlayerHasFourOf extends Decision {
 
     @Override
     public Decision decide() {
-        Player activePlayer = control.getActivePlayer();
-        List<ArtifactCard> activeHand = activePlayer.getHand();
         List<Player> allPlayers = control.getAllPlayers();
-        for (ArtifactCard activeCard : activeHand) {
-            if (activeCard.getType() == ArtifactCardType.SANDBAGS || activeCard.getType() == ArtifactCardType.HELICOPTER) {
-                break;
-            }
+        allPlayers.removeIf(player -> player.getType() == player().getType());
+        EnumSet<ArtifactCardType> onlyTypes = EnumSet.complementOf(EnumSet.of(HELICOPTER, SANDBAGS, WATERS_RISE));
+        for (ArtifactCard activeCard : playerHand().getCards(onlyTypes)) {
             for (Player player : allPlayers) {
-                if (player != activePlayer) {
-                    List<ArtifactCard> hand = player.getHand();
-                    if (hand.size() < 4) {
-                        break;
-                    }
-                    int water = 0;
-                    int fire = 0;
-                    int earth = 0;
-                    int air = 0;
-                    for (ArtifactCard card : hand) {
-                        if (card.getType() == ArtifactCardType.AIR) {
-                            air++;
-                        } else if (card.getType() == ArtifactCardType.EARTH) {
-                            earth++;
-                        } else if (card.getType() == ArtifactCardType.FIRE) {
-                            fire++;
-                        } else if (card.getType() == ArtifactCardType.WATER) {
-                            water++;
-                        }
-                        if (water > 3 && activeCard.getType() == ArtifactCardType.WATER) {
-                            return this;
-                        }
-                        if (fire > 3 && activeCard.getType() == ArtifactCardType.FIRE) {
-                            return this;
-                        }
-                        if (earth > 3 && activeCard.getType() == ArtifactCardType.EARTH) {
-                            return this;
-                        }
-                        if (air > 3 && activeCard.getType() == ArtifactCardType.AIR) {
-                            return this;
-                        }
-                    }
+                EnhancedPlayerHand hand = hand(player);
+                if (hand.getCardsInHand() < 4) {
+                    break;
+                }
+                int water = hand.getAmount(WATER);
+                int fire = hand.getAmount(FIRE);
+                int earth = hand.getAmount(EARTH);
+                int air = hand.getAmount(AIR);
+                if (any(all(water > 3, activeCard.getType() == ArtifactCardType.WATER),
+                        all(fire > 3, activeCard.getType() == ArtifactCardType.FIRE),
+                        all(earth > 3, activeCard.getType() == ArtifactCardType.EARTH),
+                        all(air > 3, activeCard.getType() == ArtifactCardType.AIR))) {
+                    return this;
                 }
             }
         }

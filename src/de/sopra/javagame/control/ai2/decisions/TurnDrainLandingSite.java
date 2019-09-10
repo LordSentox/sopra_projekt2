@@ -17,7 +17,7 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class DrainLandingSite extends Decision {
+public class TurnDrainLandingSite extends Decision {
 
     @Override
     public Decision decide() {

@@ -3,7 +3,6 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.Turn;
-import de.sopra.javagame.model.player.Player;
 
 import java.util.List;
 
@@ -17,8 +16,7 @@ import java.util.List;
 public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
     @Override
     public Decision decide() {
-        Player activePlayer = control.getActivePlayer();
-        List<ArtifactCard> activeHand = activePlayer.getHand();
+        List<ArtifactCard> activeHand = player().getHand();
         int count;
         Turn turn = control.getActiveTurn();
         List<ArtifactCard> discardStack = turn.getArtifactCardStack().getDiscardPile();

@@ -15,7 +15,7 @@ import java.util.List;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-public class UseSandbagInsteadOfDiscardingTreasureCard extends Decision {
+public class DiscardUseSandbagInsteadOfDiscardingTreasureCard extends Decision {
     @Override
     public Decision decide() {
         if (control.anyTile(MapTileState.FLOODED) != null) {
