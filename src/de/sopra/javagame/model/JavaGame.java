@@ -1,5 +1,6 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 
@@ -48,6 +49,7 @@ public class JavaGame {
 
     /**
      * Startet ein neues JavaGame und gibt den ersten Zug zurück, der bearbeitet werden kann.
+     * Erfordert den Aufruf von {@link AIController#connectTrackers()} danach.
      *
      * @param mapName    Der Name der Karte, die geladen wurde
      * @param tiles      Die TileMap, welche als Spielfeld benutzt werden soll
@@ -91,7 +93,7 @@ public class JavaGame {
         double score = (1.0 / (double) this.numRounds()) * 100;
 
         int extraPoints = 0;
-        if (!undoTurns.isEmpty()){
+        if (!undoTurns.isEmpty()) {
             // Für jedes gefundene Artefakt gibt es 100 Extrapunkte
             extraPoints += 100 * undoTurns.peek().getDiscoveredArtifacts().size();
 
@@ -102,7 +104,7 @@ public class JavaGame {
         }
         score += extraPoints;
 
-        return (int)score;
+        return (int) score;
     }
 
     /**
@@ -119,8 +121,7 @@ public class JavaGame {
             if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
                 rounds++;
                 finishedOneRound = true;
-            }
-            else if (currentTurn.getActivePlayer() != playerOne) {
+            } else if (currentTurn.getActivePlayer() != playerOne) {
                 finishedOneRound = false;
             }
         }
@@ -140,11 +141,11 @@ public class JavaGame {
         return this.cheetah;
     }
 
-    public Turn getPreviousTurn () {
+    public Turn getPreviousTurn() {
         return undoTurns.peek();
     }
 
-    public void setCheetah(boolean cheetah) {
-        this.cheetah = cheetah;
+    public void markCheetah() {
+        this.cheetah = true;
     }
 }

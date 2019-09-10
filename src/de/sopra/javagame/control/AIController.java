@@ -1,9 +1,7 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.control.ai.CardStackTracker;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.AIActionTip;
@@ -42,10 +40,23 @@ public class AIController {
 
     private ControllerChan controllerChan;
 
+    private CardStackTracker<ArtifactCard> artifactCardStackTracker;
+    private CardStackTracker<FloodCard> floodCardStackTracker;
+
     public AIController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
+        artifactCardStackTracker = new CardStackTracker<>();
+        floodCardStackTracker = new CardStackTracker<>();
     }
 
+    /**
+     * Wird aufgerufen, wenn die Cardstack komplett neu erstellt werden
+     */
+    public void connectTrackers() {
+        Turn currentTurn = controllerChan.getCurrentTurn();
+        currentTurn.getArtifactCardStack().setObserver(artifactCardStackTracker);
+        currentTurn.getFloodCardStack().setObserver(floodCardStackTracker);
+    }
 
     public boolean isCurrentlyDiscarding() {
         return false; //TODO
