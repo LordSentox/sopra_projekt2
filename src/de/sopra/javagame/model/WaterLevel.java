@@ -12,6 +12,12 @@ public class WaterLevel implements Copyable<WaterLevel> {
      * Hat am jeweiligen index die Anzahl der zu ziehenden Karten
      */
     private static final int[] DRAW_AMOUNT_BY_LEVEL = new int[] { 2, 2, 3, 3, 3, 4, 4, 5, 5, 6 }; // TODO
+
+    /**
+     * Das maximale Wasserlevel
+     */
+    public static final int MAX_WATER_LEVEL = DRAW_AMOUNT_BY_LEVEL.length - 1;
+
     /**
      * Index mit dem das Array ausgelesen wird Im Code, sollte dieser Wert von 0
      * bis 9 Zählen.
