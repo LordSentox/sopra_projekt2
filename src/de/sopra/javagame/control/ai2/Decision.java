@@ -1,6 +1,10 @@
 package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Point;
 
 /**
  * <h1>Decision</h1>
@@ -51,6 +55,29 @@ public abstract class Decision {
                 //empty
             }
         };
+    }
+
+    public Point translate(Point point, Direction... directions) {
+        if (directions == null || directions.length == 0) return point;
+        for (Direction direction : directions)
+            point = direction.translate(point);
+        return point;
+    }
+
+    public Player player() {
+        return control.getActivePlayer();
+    }
+
+    public Turn turn() {
+        return control.getActiveTurn();
+    }
+
+    public boolean allTrue(boolean... booleans) {
+        if (booleans == null && booleans.length == 0)
+            return true;
+        for (boolean bool : booleans)
+            if (!bool) return false;
+        return true;
     }
 
     public final void setControl(AIController control) {

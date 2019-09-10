@@ -25,28 +25,54 @@ public class MoveToOrphanedTempleMapTileForDraining extends Decision {
     public Decision decide() {
 
         List<Pair<Point, MapTile>> templeList = control.getTemples();
-
-        for (int i = 0; i < 8; i++) {
-            Point northernNeighbourPoint = Direction.UP.translate(templeList.get(i).getLeft());
+        
+        for (int i=0; i<8; i++){
+            Point orphanedTemplePoint = templeList.get(i).getLeft();
+            
+            Point northernNeighbourPoint = Direction.UP.translate(orphanedTemplePoint);
             MapTile northernNeighbour = control.getTile(northernNeighbourPoint);
-            Point easternNeighbourPoint = Direction.RIGHT.translate(templeList.get(i).getLeft());
+            
+            Point northEasternNeighbourPoint = Direction.UP.translate(Direction.RIGHT.translate(orphanedTemplePoint));
+            MapTile northEasternNeighbour = control.getTile(northEasternNeighbourPoint);
+            
+            Point easternNeighbourPoint = Direction.RIGHT.translate(orphanedTemplePoint);
             MapTile easternNeighbour = control.getTile(easternNeighbourPoint);
-            Point southernNeighbourPoint = Direction.DOWN.translate(templeList.get(i).getLeft());
+            
+            Point southEasternNeighbourPoint = Direction.DOWN.translate(Direction.RIGHT.translate(orphanedTemplePoint));
+            MapTile southEasternNeighbour = control.getTile(southEasternNeighbourPoint);
+            
+            Point southernNeighbourPoint = Direction.DOWN.translate(orphanedTemplePoint);
             MapTile southernNeighbour = control.getTile(southernNeighbourPoint);
-            Point westernNeighbourPoint = Direction.LEFT.translate(templeList.get(i).getLeft());
+            
+            Point southWesternNeighbourPoint = Direction.DOWN.translate(Direction.LEFT.translate(orphanedTemplePoint));
+            MapTile southWesternNeighbour = control.getTile(southWesternNeighbourPoint);
+            
+            Point westernNeighbourPoint = Direction.LEFT.translate(orphanedTemplePoint);
             MapTile westernNeighbour = control.getTile(westernNeighbourPoint);
-
-            if (!northernNeighbour.getState().equals(MapTileState.GONE)
-                    || !easternNeighbour.getState().equals(MapTileState.GONE)
-                    || !southernNeighbour.getState().equals(MapTileState.GONE)
-                    || !westernNeighbour.getState().equals(MapTileState.GONE)) {
-                continue;
+            
+            Point northWesternNeighbourPoint = Direction.UP.translate(Direction.LEFT.translate(orphanedTemplePoint));
+            MapTile northWesternNeighbour = control.getTile(northWesternNeighbourPoint);
+            
+            boolean isOrphaned = false;
+            
+            if (northernNeighbour.getState().equals(MapTileState.GONE)
+                    && northEasternNeighbour.getState().equals(MapTileState.GONE)
+                    && easternNeighbour.getState().equals(MapTileState.GONE)
+                    && southEasternNeighbour.getState().equals(MapTileState.GONE)
+                    && southernNeighbour.getState().equals(MapTileState.GONE)
+                    && southWesternNeighbour.getState().equals(MapTileState.GONE)
+                    && westernNeighbour.getState().equals(MapTileState.GONE)){
+                isOrphaned = true;
+            }
+            else {
+                return null;
             }
 
             MapTile orphanedTemple = templeList.get(i).getRight();
-            Point orphanedTemplePoint = templeList.get(i).getLeft();
 
-            if (!orphanedTemple.getState().equals(MapTileState.FLOODED)) {
+            
+            
+            if(!orphanedTemple.getState().equals(MapTileState.FLOODED)){
                 continue;
             }
 
@@ -58,7 +84,22 @@ public class MoveToOrphanedTempleMapTileForDraining extends Decision {
                     && !activePlayerType.equals(PlayerType.PILOT)) {
                 continue;
             }
-
+            
+            if(activePlayerType.equals(PlayerType.EXPLORER)){
+                
+                if(!northEasternNeighbour.getState().equals(MapTileState.GONE)) continue;
+                
+                
+                if(!southEasternNeighbour.getState().equals(MapTileState.GONE)) continue;
+                
+                
+                if(!southWesternNeighbour.getState().equals(MapTileState.GONE)) continue;
+                
+                
+                if(!northWesternNeighbour.getState().equals(MapTileState.GONE)) continue;
+                
+            }
+            
             List<Point> inOneMovedrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
 
             if (!inOneMovedrainablePositionslist.contains(orphanedTemplePoint)) {
