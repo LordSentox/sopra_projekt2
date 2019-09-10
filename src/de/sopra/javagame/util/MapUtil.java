@@ -3,7 +3,6 @@ package de.sopra.javagame.util;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -65,7 +64,7 @@ public class MapUtil {
 
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[y].length; ++x) {
-                if (tiles[y][x] != null && tiles[y][x].getPlayerSpawn() == player) {
+                if (tiles[y][x] != null && tiles[y][x].getProperties().getSpawn() == player) {
                     return new Point(x, y);
                 }
             }
@@ -123,7 +122,7 @@ public class MapUtil {
             for (int x = 0; x < Math.min(numbers[y].length, map[y].length); ++x) {
                 String sign = map[y][x].trim();
                 if (!sign.equals("-")) {
-                    numbers[y][x] = Integer.parseUnsignedInt(sign);
+                    numbers[y][x] = Integer.parseUnsignedInt(sign) % 24;
                 }
             }
         }

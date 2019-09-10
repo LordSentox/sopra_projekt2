@@ -1,6 +1,5 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.CardStackUtil;
 import org.junit.Before;
@@ -27,7 +26,7 @@ public class CardStackTest {
 
     @Before
     public void setUp() {
-        wirHabenLandGefunden = new MapTile("wirHabenLandGefunden", PlayerType.NONE, ArtifactType.NONE);
+        wirHabenLandGefunden = MapTile.fromNumber(20);
         tiles = new MapTile[1][1];
         tiles[0][0] = wirHabenLandGefunden;
 

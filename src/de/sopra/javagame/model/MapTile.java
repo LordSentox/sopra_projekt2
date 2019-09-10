@@ -1,10 +1,10 @@
 package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CopyUtil;
 
 import java.util.Objects;
-import java.util.function.Function;
+
+import static de.sopra.javagame.model.MapTileState.*;
 
 /**
  * MapTile beschreibt die einzelnen Kacheln, die das Spielfeld bilden
@@ -12,20 +12,12 @@ import java.util.function.Function;
  * @author Hermann "Roxi" Bühmann, Melanie Arnds
  */
 public class MapTile implements Copyable<MapTile> {
-
-    private String name;
-
-    private PlayerType playerSpawn;
-
+    private MapTileProperties properties;
     private MapTileState state;
 
-    private ArtifactType hiddenArtifact;
-
-    public MapTile(String name, PlayerType playerSpawn, ArtifactType hiddenArtifact) {
-        this.name = name;
-        this.playerSpawn = playerSpawn;
-        this.state = MapTileState.DRY;
-        this.hiddenArtifact = hiddenArtifact;
+    public MapTile(MapTileProperties properties) {
+        this.properties = properties;
+        this.state = DRY;
     }
 
     /**
@@ -34,45 +26,18 @@ public class MapTile implements Copyable<MapTile> {
      * @param number Der Index des gesuchten MapTiles. Muss eine Zahl zwischen 0 und 23 sein
      */
     public static MapTile fromNumber(int number) {
-        if (number < 0 || number > 23) throw new IndexOutOfBoundsException();
-
-        Function<Integer, MapTile> function = num -> {
-            switch (num) {
-                case  0: return new MapTile("Höhle der Schatten", PlayerType.NONE, ArtifactType.FIRE);
-                case  1: return new MapTile("Landeplatz der Versager", PlayerType.PILOT, ArtifactType.NONE);
-                case  2: return new MapTile("Klippen der Verzweiflung", PlayerType.NONE, ArtifactType.NONE);
-                case  3: return new MapTile("Brücke des Verderbens", PlayerType.NONE, ArtifactType.NONE);
-                case  4: return new MapTile("Pfad der Einsamkeit", PlayerType.NONE, ArtifactType.NONE);
-                case  5: return new MapTile("Wald der Finsternis", PlayerType.NONE, ArtifactType.NONE);
-                case  6: return new MapTile("Wächter der Insel", PlayerType.NONE, ArtifactType.NONE);
-                case  7: return new MapTile("Sümpfe der Ruhe", PlayerType.NONE, ArtifactType.NONE);
-                case  8: return new MapTile("Wächter der Sterne", PlayerType.NONE, ArtifactType.NONE);
-                case  9: return new MapTile("Wüste der Entbehrung", PlayerType.NONE, ArtifactType.NONE);
-                case 10: return new MapTile("Lagune des Lebens", PlayerType.NONE, ArtifactType.NONE);
-                case 11: return new MapTile("Höhle des Grauens", PlayerType.NONE, ArtifactType.NONE);
-                case 12: return new MapTile("Tor des Lichtes", PlayerType.NAVIGATOR, ArtifactType.NONE);
-                case 13: return new MapTile("Tor der Dämmerung", PlayerType.DIVER, ArtifactType.NONE);
-                case 14: return new MapTile("Tor der Sehnsucht", PlayerType.ENGINEER, ArtifactType.NONE);
-                case 15: return new MapTile("Tor der Vergangenheit", PlayerType.EXPLORER, ArtifactType.NONE);
-                case 16: return new MapTile("Tor des Vergessens", PlayerType.COURIER, ArtifactType.NONE);
-                case 17: return new MapTile("Tempel des Mondes", PlayerType.NONE, ArtifactType.EARTH);
-                case 18: return new MapTile("Tempel der Sonne", PlayerType.NONE, ArtifactType.EARTH);
-                case 19: return new MapTile("Garten der Stille", PlayerType.NONE, ArtifactType.AIR);
-                case 20: return new MapTile("Garten des Windes", PlayerType.NONE, ArtifactType.AIR);
-                case 21: return new MapTile("Medusas Palast", PlayerType.NONE, ArtifactType.WATER);
-                case 22: return new MapTile("Poseidons Palast", PlayerType.NONE, ArtifactType.WATER);
-                case 23: return new MapTile("Höhle des Feuers", PlayerType.NONE, ArtifactType.FIRE);
-                default: return null;
-            }
-        };
-        return function.apply(number);
+        return new MapTile(MapTileProperties.getByIndex(number));
     }
 
     /**
-     * setzt den state des MapTile von FLOODER auf DRY
+     * setzt den state des MapTile von FLOODED auf DRY
      */
-    void drain() {
-
+    public void drain() {
+        // Ist die Insel bereits trocken oder ganz versunken passiert nichts, ansonsten wird sie
+        // trockengelegt
+        if (this.state == FLOODED) {
+            this.state = DRY;
+        }
     }
 
     /**
@@ -80,7 +45,16 @@ public class MapTile implements Copyable<MapTile> {
      *
      * @return false wenn Fehler, true, sonst
      */
-    boolean flood() {
+    public boolean flood() {
+        if (this.state == DRY) {
+            this.state = FLOODED;
+            return true;
+        }
+        if (this.state == FLOODED) {
+            this.state = GONE;
+            return true;
+        }
+
         return false;
     }
 
@@ -92,29 +66,25 @@ public class MapTile implements Copyable<MapTile> {
         this.state = state;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public boolean hasPlayerSpawn() {
-        return playerSpawn != PlayerType.NONE;
+        return properties.getSpawn() != PlayerType.NONE;
     }
 
     public boolean hasHiddenArtifact() {
-        return hiddenArtifact != ArtifactType.NONE;
+        return this.properties.getHidden() != ArtifactType.NONE;
     }
 
-    public ArtifactType getHiddenArtifact() {
-        return hiddenArtifact;
+    public int getTileIndex() {
+        return this.properties.getIndex();
     }
 
-    public PlayerType getPlayerSpawn() {
-        return playerSpawn;
+    public MapTileProperties getProperties() {
+        return this.properties;
     }
 
     @Override
     public MapTile copy() {
-        MapTile mapTile = new MapTile(CopyUtil.copy(this.name), playerSpawn, hiddenArtifact);
+        MapTile mapTile = new MapTile(this.properties);
         mapTile.state = this.state;
         return mapTile;
     }
@@ -126,14 +96,12 @@ public class MapTile implements Copyable<MapTile> {
         if (this.getClass() != other.getClass()) return false;
 
         MapTile tile = (MapTile) other;
-        return Objects.equals(this.name, tile.name) &&
-                this.hiddenArtifact == tile.hiddenArtifact &&
-                this.playerSpawn == tile.playerSpawn &&
-                this.state == tile.state;
+        return Objects.equals(this.properties, tile.properties) &&
+                Objects.equals(this.state, tile.state);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, hiddenArtifact, playerSpawn, state);
+        return Objects.hash(this.properties.getName(), this.properties.getHidden(), this.properties.getSpawn(), state);
     }
 }
