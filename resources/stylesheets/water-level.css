@@ -4,6 +4,7 @@
 
 .water-level {
     -fx-inner-radius: 100.0px !important;
+    -fx-background-image: url('/textures/kirschbaum.jpg');
 }
 
 .water-level-border-circle {
@@ -14,18 +15,17 @@
 
 
 .water-level-filler-cover {
-    -fx-fill: -fx-background;
+    -fx-fill: url('/textures/kirschbaum.jpg');
 }
 
 .water-level-container  {
     -fx-padding: 5.0;
-    -fx-background-color: -fx-background;
+    -fx-background-color: transparent;
 }
 
 .water-level-container > .water-level-label {
     -fx-font-weight: bold;
     -fx-font-size: 2.5em;
-    -fx-padding: 5.0;
 }
 
 .water-level-label-circle {

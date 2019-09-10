@@ -2,32 +2,23 @@ package de.sopra.javagame.view;
 
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.view.customcontrol.CardView;
 import de.sopra.javagame.view.customcontrol.MapPane;
-import de.sopra.javagame.view.customcontrol.TileView;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
+import de.sopra.javagame.view.customcontrol.WaterLevelView;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.EnumSet;
@@ -43,7 +34,9 @@ import java.util.stream.IntStream;
 public class InGameViewController extends AbstractViewController implements InGameViewAUI {
     
     @FXML MapPane mapPane;
-    
+
+    @FXML WaterLevelView waterLevelView;
+
     @FXML GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
     artifactCardDicardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
     @FXML Button endTurnButton;
@@ -54,7 +47,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
     
-    public void init() throws UnsupportedEncodingException, IOException {
+    public void init() throws IOException {
         //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentTurn().getTiles();
         
 //        /* TEMP */
@@ -66,7 +59,8 @@ public class InGameViewController extends AbstractViewController implements InGa
         
         MapTile[][] tiles = MapUtil.createMapFromNumbers(MapUtil.readNumberMapFromString(new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8")));
         initGridPane();
-        
+
+
         /* Island */
         /*IntStream.range(1, 8).forEach(y -> 
             IntStream.range(1, 11).forEach(x -> {
@@ -134,10 +128,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        
-        
-        
-        
+
         for(int i = 0; i < 5; i++) {
             CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png", PASSIVE_CARD_SIZE);
             v.showFrontImage();
@@ -156,7 +147,8 @@ public class InGameViewController extends AbstractViewController implements InGa
             handThreeCardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        
+
+
         
         
         for(int i = 0; i < 10; i+=2) {
@@ -183,7 +175,8 @@ public class InGameViewController extends AbstractViewController implements InGa
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        
+
+        refreshWaterLevel(4);
     }
     
     private void initGridPane() {
@@ -202,18 +195,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(i -> floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
          
     }
-    
-    
-    
-    private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
-        if (e.getButton() == MouseButton.PRIMARY)
-            v.showImage(MapTileState.FLOODED);
-        else if (e.getButton() == MouseButton.SECONDARY)
-            v.showImage(MapTileState.DRY);
-        else if (e.getButton() == MouseButton.MIDDLE)
-            v.showImage(MapTileState.GONE);
-    }
-    
+
     
 
     public void onShowMovementOptionsClicked() {
@@ -334,7 +316,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshWaterLevel(int level) {
-
+        waterLevelView.setProgress(level);
+        System.out.println("uwu");
     }
 
     @Override
