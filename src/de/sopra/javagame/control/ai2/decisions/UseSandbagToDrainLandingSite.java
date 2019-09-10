@@ -4,7 +4,6 @@ import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
