@@ -105,15 +105,15 @@ public abstract class Decision {
         return EnhancedPlayerHand.ofPlayer(player);
     }
 
-    public boolean all(Boolean... bools) {
+    protected boolean all(Boolean... bools) {
         return Arrays.stream(bools).allMatch(Boolean::booleanValue);
     }
 
-    public boolean none(Boolean... bools) {
+    protected boolean none(Boolean... bools) {
         return Arrays.stream(bools).noneMatch(Boolean::booleanValue);
     }
 
-    public boolean any(Boolean... bools) {
+    protected boolean any(Boolean... bools) {
         return Arrays.stream(bools).anyMatch(Boolean::booleanValue);
     }
 
