@@ -17,85 +17,105 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class PlayerTest {
+public class PlayerTest
+{
+
     MapTile[][] testMap;
 
     @Before
-    public void setUp() throws Exception {
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+    public void setUp() throws Exception
+    {
+        String testMapString = new String( Files.readAllBytes( Paths.get( "resources/full_maps/test.extmap" ) ), StandardCharsets.UTF_8 );
+        int[][] testMapNumbers = MapUtil.readNumberMapFromString( testMapString );
+        this.testMap = MapUtil.createMapFromNumbers( testMapNumbers );
     }
 
     @Test
-    public void legalMoves() {
-        fail("Not yet implemented");
+    public void legalMoves()
+    {
+        fail( "Not yet implemented" );
     }
 
     @Test
-    public void move() {
-        fail("Not yet implemented");
+    public void move()
+    {
+        fail( "Not yet implemented" );
     }
 
     @Test
-    public void canMoveOthers() {
-        fail("Not yet implemented");
+    public void canMoveOthers()
+    {
+        fail( "Not yet implemented" );
     }
 
     @Test
-    public void forcePush() {
-        Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
-                this.testMap);
+    public void forcePush()
+    {
+        Action action = Action.createInitialAction( Difficulty.NORMAL,
+                Arrays.asList( new Pair<>( PlayerType.PILOT, false ),
+                        new Pair<>( PlayerType.NAVIGATOR, false ) ),
+                this.testMap );
 
-        Player pilot = action.getPlayers().get(0);
-        Player navigator = action.getPlayers().get(1);
+        Player pilot = action.getPlayers().get( 0 );
+        Player navigator = action.getPlayers().get( 1 );
 
         // Teste einen gültigen force-push des Navigators auf ein Inselfeld der Karte
         action.nextPlayerActive();
-        Point oldPos = new Point(pilot.getPosition()); // Position des Piloten
-        assertTrue("Konnte einen Spieler nicht bewegen, obwohl der Zug legal ist", navigator.forcePush(Direction.UP, pilot));
-        assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.xPos, pilot.getPosition().xPos);
-        assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.yPos - 1, pilot.getPosition().yPos);
+        Point oldPos = new Point( pilot.getPosition() ); // Position des Piloten
+        assertTrue( "Konnte einen Spieler nicht bewegen, obwohl der Zug legal ist", navigator.forcePush( Direction.UP, pilot ) );
+        assertEquals( "Spieler wurde nicht wirklich bewegt", oldPos.xPos, pilot.getPosition().xPos );
+        assertEquals( "Spieler wurde nicht wirklich bewegt", oldPos.yPos - 1, pilot.getPosition().yPos );
 
         // Der Spieler soll keine Aktionen mehr haben, damit extraPush auch notwendig ist
-        navigator.setActionsLeft(0);
+        navigator.setActionsLeft( 0 );
 
         // Der zweite muss auch noch gültig sein, denn es handelt sich um den extra-push
-        oldPos = new Point(pilot.getPosition()); // Position des Piloten
-        assertTrue("Konnte einen Spieler nicht bewegen, obwohl der Zug legal ist", navigator.forcePush(Direction.RIGHT, pilot));
-        assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.xPos + 1, pilot.getPosition().xPos);
-        assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.yPos, pilot.getPosition().yPos);
+        oldPos = new Point( pilot.getPosition() ); // Position des Piloten
+        assertTrue( "Konnte einen Spieler nicht bewegen, obwohl der Zug legal ist", navigator.forcePush( Direction.RIGHT, pilot ) );
+        assertEquals( "Spieler wurde nicht wirklich bewegt", oldPos.xPos + 1, pilot.getPosition().xPos );
+        assertEquals( "Spieler wurde nicht wirklich bewegt", oldPos.yPos, pilot.getPosition().yPos );
 
         // Da der Spieler keine Aktionen mehr hat muss der dritte forcePush fehlschlagen
-        oldPos = new Point(pilot.getPosition());
-        assertFalse("Spieler wurde bewegt, obwohl der Navigator keine Aktion dafür hat", navigator.forcePush(Direction.RIGHT, pilot));
-        assertEquals("Spieler wurde bewegt, obwohl er nicht sollte", oldPos, pilot.getPosition());
+        oldPos = new Point( pilot.getPosition() );
+        assertFalse( "Spieler wurde bewegt, obwohl der Navigator keine Aktion dafür hat", navigator.forcePush( Direction.RIGHT, pilot ) );
+        assertEquals( "Spieler wurde bewegt, obwohl er nicht sollte", oldPos, pilot.getPosition() );
     }
 
     @Test
-    public void drainablePositions() {
-        fail("Not yet implemented");
+    public void drainablePositions()
+    {
+        fail( "Not yet implemented" );
     }
 
     @Test
-    public void drain() {
-        fail("Not yet implemented");
+    public void drain()
+    {
+        fail( "Not yet implemented" );
     }
 
     @Test
-    public void collectArtifact() {
-        fail("Not yet implemented");
+    public void collectArtifact()
+    {
+        fail( "Not yet implemented" );
     }
 
     @Test
-    public void legalReceivers() {
-        fail("Not yet implemented");
+    public void legalReceivers()
+    {
+        fail( "Not yet implemented" );
     }
 
     @Test
-    public void getType() {
-        fail("Not yet implemented");
+    public void getType()
+    {
+        fail( "Not yet implemented" );
     }
+
+    @Test
+    public void copyTest()
+    {
+        //TODO test all copy methods of ALL player types, testing each player is unnecessary
+        fail( "Not yet implemented" );
+    }
+
 }
