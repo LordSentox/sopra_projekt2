@@ -43,10 +43,10 @@ public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decisi
             int air2 = playerHand.getAmount(AIR);
 
             if (any(
-                    all(air > 0, air < air2, air2 < 4),
-                    all(earth > 0, earth < earth2, earth2 < 4),
-                    all(fire > 0, fire < fire2, fire2 < 4),
-                    all(water > 0, water < water2, water2 < 4)
+                    all(air > ZERO_CARDS, air < air2, air2 < FOUR_CARDS),
+                    all(earth > ZERO_CARDS, earth < earth2, earth2 < FOUR_CARDS),
+                    all(fire > ZERO_CARDS, fire < fire2, fire2 < FOUR_CARDS),
+                    all(water > ZERO_CARDS, water < water2, water2 < FOUR_CARDS)
             )) {
                 return this;
             }

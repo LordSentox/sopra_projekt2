@@ -14,7 +14,7 @@ public class TurnMoveOntoTreasureCollectionPointIfPlayerHasFour extends Decision
         ArtifactType type = tile().getProperties().getHidden();
         int amountOfType = playerHand().getAmount(type);
 
-        if (amountOfType == 4) {
+        if (amountOfType == FOUR_CARDS) {
             return this;
         }
         return null;

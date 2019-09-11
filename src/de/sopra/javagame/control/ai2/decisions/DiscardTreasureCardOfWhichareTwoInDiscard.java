@@ -26,7 +26,7 @@ public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
                     count++;
                 }
             }
-            if (count > 1) {
+            if (count > ONE_CARD) {
                 atomicBoolean.set(true);
             }
         });

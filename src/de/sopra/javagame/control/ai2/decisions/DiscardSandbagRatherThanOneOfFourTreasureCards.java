@@ -24,7 +24,7 @@ public class DiscardSandbagRatherThanOneOfFourTreasureCards extends Decision {
         int earth = playerHand().getAmount(EARTH);
         int air = playerHand().getAmount(AIR);
 
-        if (any(air == 4, fire == 4, earth == 4, water == 4)) {
+        if (any(air == FOUR_CARDS, fire == FOUR_CARDS, earth == FOUR_CARDS, water == FOUR_CARDS)) {
             return this;
         }
 

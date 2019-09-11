@@ -22,6 +22,12 @@ import java.util.function.Predicate;
  */
 public abstract class Decision {
 
+    protected final int ZERO_CARDS = 0;
+    protected final int ONE_CARD = 1;
+    protected final int TWO_CARDS = 2;
+    protected final int THREE_CARDS = 3;
+    protected final int FOUR_CARDS = 4;
+
     protected AIController control;
 
     /**

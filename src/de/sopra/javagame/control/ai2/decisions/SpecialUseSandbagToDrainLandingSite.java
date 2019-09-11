@@ -17,7 +17,7 @@ import de.sopra.javagame.util.Point;
  * @since 09.09.2019
  */
 
-public class TurnUseSandbagToDrainLandingSite extends Decision {
+public class SpecialUseSandbagToDrainLandingSite extends Decision {
 
     @Override
     public Decision decide() {
@@ -26,7 +26,7 @@ public class TurnUseSandbagToDrainLandingSite extends Decision {
             return null;
         }
 
-        if (player().getActionsLeft() != 0) {
+        if (!hasValidActions(0)) {
             return null;
         }
 
@@ -44,6 +44,8 @@ public class TurnUseSandbagToDrainLandingSite extends Decision {
          */
         if (true) {
             //TODO
+            //@see control.getFloodCardStackTracker()
+            //dort sind Methoden zum erhalten der gemerkten Karten oben auf dem Stapel
             return this;
         }
         return null;

@@ -14,7 +14,7 @@ public class TurnDrainTile extends Decision {
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
-        if (activePlayer.drainablePositions().size() > 0) {
+        if (!activePlayer.drainablePositions().isEmpty()) {
             return this;
         }
         return null;

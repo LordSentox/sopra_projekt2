@@ -20,11 +20,13 @@ import java.util.List;
  */
 public class TurnEndGame extends Decision {
 
+    private final int FOUR_ARTIFACTS = 4;
+
     @Override
     public Decision decide() {
         EnumSet<ArtifactType> discoveredArtifacts = turn().getDiscoveredArtifacts();
 
-        if (discoveredArtifacts.size() != 4) {
+        if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
             return null;
         }
 
