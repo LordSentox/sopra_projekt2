@@ -149,7 +149,8 @@ public class ControllerChanTest {
 
     @Test
     public void testReplayGame() {
-        //View-Only!
+        //View-Only! TODO view connection can be tested
+        fail("Not yet implemented");
     }
 
     @Test
