@@ -1,5 +1,6 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.control.ai.AIProcessor;
 import de.sopra.javagame.control.ai.CardStackTracker;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai.GameAI;
@@ -21,30 +22,6 @@ import java.util.function.Supplier;
  * @since 09.09.2019
  */
 public class AIController {
-
-    public interface AIProcessor {
-
-        /**
-         * Ermöglicht der KI die Vorbereitung der inneren Strukturen.
-         */
-        void init();
-
-        /**
-         * Fordert die KI auf, mit dem aktuellen Spieler einen automatischen Zug durchzuführen.
-         * Dieser Zug kann mehrere Aktionen verbrauchen und das Ausspielen von Spezialkarten beinhalten.
-         * MakeStep kann ebenfalls zum Abwerfen von Karten verwendet werden.
-         */
-        void makeStep(AIController control);
-
-        /**
-         * Fordert einen Tipp von der KI an.
-         * Der Tipp wird in Befehlsform definiert durch {@link AIActionTip} dargestellt.
-         *
-         * @return ein Tipp in Befehlsform
-         */
-        String getTip(AIController control);
-
-    }
 
     private ControllerChan controllerChan;
 
