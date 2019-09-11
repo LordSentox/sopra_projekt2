@@ -3,18 +3,13 @@ package de.sopra.javagame.view;
 import de.sopra.javagame.control.ControllerChan;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * Schnittstelle für alle Views und die Controller Schicht

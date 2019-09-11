@@ -1,13 +1,12 @@
 package de.sopra.javagame.application;
 
-import java.io.IOException;
-
 import de.sopra.javagame.view.GameWindow;
-import de.sopra.javagame.view.ViewState;
 import de.spaceparrots.translator.api.Translator;
 import de.spaceparrots.translator.core.Dictionary;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 
 public class Main extends Application {

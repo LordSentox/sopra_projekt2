@@ -1,19 +1,9 @@
 package de.sopra.javagame.view.customcontrol;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Optional;
-import java.util.stream.IntStream;
-
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Point;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -22,6 +12,15 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
 import static de.sopra.javagame.model.player.PlayerType.PlayerImage;
 
 public class MapPane extends GridPane {
