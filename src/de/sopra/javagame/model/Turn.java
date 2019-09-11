@@ -193,6 +193,7 @@ public class Turn implements Copyable<Turn> {
         this.players.get(this.activePlayer).setActionsLeft(0);
         this.activePlayer = (this.activePlayer + 1) % this.players.size();
         this.players.get(this.activePlayer).setActionsLeft(3);
+        this.players.get(this.activePlayer).onTurnStarted();
     }
 
     /**
