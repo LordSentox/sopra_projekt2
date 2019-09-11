@@ -47,7 +47,7 @@ public class MapCheckUtil {
             }
         }
 
-        return checkHasWaterEdge(blackWhiteTiles) && checkIsSingleIsland(blackWhiteTiles);
+        return checkMapValidity(blackWhiteTiles);
     }
 
     /**
