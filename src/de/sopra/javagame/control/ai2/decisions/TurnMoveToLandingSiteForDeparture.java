@@ -10,7 +10,6 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * <h1>projekt2</h1>
