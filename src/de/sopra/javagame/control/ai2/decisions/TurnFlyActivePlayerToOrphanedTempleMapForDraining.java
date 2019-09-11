@@ -27,28 +27,26 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
         if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
             return null;
         }
-
         if (!hasValidActions(1)) {
             return null;
         }
-
         List<Pair<Point, MapTile>> templeList = control.getTemples();
-
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
-
         for (Pair<Point, MapTile> temple : templeList) {
             Point orphanedTemplePoint = temple.getLeft();
-
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
-
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
-
             //wenn eins nicht GONE ist
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
+            return this;
+        }
+        return null;
+    }
 
+    //alte version
 //            if (!((northernNeighbour == null || northernNeighbour.getState() == MapTileState.GONE)
 //                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == MapTileState.GONE)
 //                    && (easternNeighbour == null || easternNeighbour.getState() == MapTileState.GONE)
@@ -59,11 +57,6 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 //                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == MapTileState.GONE))) {
 //                continue;
 //            }
-
-            return this;
-        }
-        return null;
-    }
 
     @Override
     public void act() {
