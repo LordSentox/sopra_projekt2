@@ -24,13 +24,17 @@ public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
     public Decision decide() {
         Turn turn = control.getActiveTurn();
         EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
+        
+        if (discoveredArtifacts.size() != 4){
+            return null;
+        }
 
         Point playerPosition = player().getPosition();
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
 
-        if (discoveredArtifacts.size() == 4 && landingSitePosition.equals(playerPosition)) {
+        if (landingSitePosition.equals(playerPosition)) {
             return this;
 
         }
