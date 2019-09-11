@@ -1,6 +1,6 @@
 package de.sopra.javagame.view.skin;
 
-import de.sopra.javagame.util.TextureLoader;
+import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;

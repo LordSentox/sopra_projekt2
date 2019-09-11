@@ -1,4 +1,4 @@
-package de.sopra.javagame.util;
+package de.sopra.javagame.view.textures;
 
 import java.io.IOException;
 import java.io.InputStream;

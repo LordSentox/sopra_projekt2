@@ -1,10 +1,10 @@
-package de.sopra.javagame.util;
+package de.sopra.javagame.view.textures;
 
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.ZipWrapper.ZipEntryList;
+import de.sopra.javagame.view.textures.ZipWrapper.ZipEntryList;
 import javafx.scene.image.Image;
 
 import java.io.File;
