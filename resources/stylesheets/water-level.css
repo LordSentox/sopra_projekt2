@@ -2,6 +2,10 @@
     -circle-color: #002eaa;
 }
 
+.water-level {
+    -fx-inner-radius: 100.0px !important;
+}
+
 .water-level-border-circle {
     -fx-fill: transparent;
     -fx-opacity: 0.8;

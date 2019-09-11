@@ -52,7 +52,7 @@ public class MapTileTest {
         MapTile dryCopy = this.dry.copy();
         assertEquals(dryCopy.getState(), this.dry.getState()); //check copy
         assertEquals(dryCopy.getProperties().getName(), this.dry.getProperties().getName());
-        assertSame(dryCopy.getProperties(), this.dry.getProperties());
+        assertSame(dryCopy.getProperties(), this.dry.getProperties()); //check different instances
         dryCopy.flood(); //change copy
         assertNotEquals(dryCopy.getState(), this.dry.getState()); //check independent instances
     }
