@@ -26,6 +26,7 @@ public class ControllerChan {
     private final HighScoresController highScoresController;
     private final MapController mapController;
 
+    private String gameName; 
     private InGameViewAUI inGameViewAUI;
 
     private JavaGame javaGame;
@@ -104,13 +105,13 @@ public class ControllerChan {
     }
 
     /**
-     * saveGame speichert das aktuell ausgeführte JavaGame in einer Datei
+     * saveGame speichert das aktuell ausgeführte JavaGame in einer Datei und gibt ihm einen Namen
      *
-     * @param file ist die Datei, in der gespeichert wird
+     * @param gameName ist der Name des Spiels, für das eine Datei angelegt werden soll
      */
 
-    public void saveGame(File file) {
-
+    public void saveGame(String gameName) {
+        this.gameName = gameName;
     }
 
     /**
@@ -133,5 +134,9 @@ public class ControllerChan {
 
     public void endTurn() {
         this.currentTurn = this.javaGame.endTurn(this.currentTurn);
+    }
+    
+    public String getGameName() {
+        return gameName;
     }
 }

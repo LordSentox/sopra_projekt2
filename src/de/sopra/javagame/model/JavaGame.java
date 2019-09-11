@@ -75,7 +75,10 @@ public class JavaGame {
             this.difficulty = difficulty;
         }
         Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
-
+        if (initialTurn == null) {
+            return null;
+        }
+        
         return endTurn(initialTurn);
     }
 
@@ -131,10 +134,10 @@ public class JavaGame {
         int rounds = 0;
         boolean finishedOneRound = false;
         for (Turn currentTurn : undoTurns) {
-            if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
+            if (!finishedOneRound && currentTurn.getActivePlayerIndex() == playerOne) {
                 rounds++;
                 finishedOneRound = true;
-            } else if (currentTurn.getActivePlayer() != playerOne) {
+            } else if (currentTurn.getActivePlayerIndex() != playerOne) {
                 finishedOneRound = false;
             }
         }
