@@ -41,7 +41,7 @@ public class JavaGame {
      */
     private Difficulty difficulty;
 
-    JavaGame() {
+    private JavaGame() {
         this.cheetah = false;
         this.redoTurns = new Stack<>();
         this.undoTurns = new Stack<>();
@@ -57,29 +57,31 @@ public class JavaGame {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
-        throws NullPointerException, IllegalArgumentException {
+    public static Pair<JavaGame, Turn> newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+            throws NullPointerException, IllegalArgumentException {
+        JavaGame game = new JavaGame();
+
         // Erstellen des ersten Turns, der auf den undoTurns-Stapel abgelegt wird.
         if (mapName == null) {
             throw new NullPointerException();
+        } else if (mapName.equals("")) {
+            throw new IllegalArgumentException();
         } else {
-            if (mapName == "") {
-                throw new IllegalArgumentException();
-            } else {
-                this.mapName = mapName;
-            }
+            game.mapName = mapName;
         }
+
         if (difficulty == null) {
             throw new NullPointerException();
         } else {
-            this.difficulty = difficulty;
+            game.difficulty = difficulty;
         }
+
         Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
         if (initialTurn == null) {
             return null;
         }
-        
-        return endTurn(initialTurn);
+
+        return new Pair<>(game, game.endTurn(initialTurn));
     }
 
     /**
@@ -105,21 +107,25 @@ public class JavaGame {
         if (getIsCheetah()) {
             return 0;
         }
+        double score;
+        if (undoTurns.peek().isGameWon()) {
+            score = (1.0 / (double) this.numRounds()) * 10000;
 
-        double score = (1.0 / (double) this.numRounds()) * 100;
-
+        } else {
+            score = this.numRounds()*100;
+        }
         int extraPoints = 0;
         if (!undoTurns.isEmpty()) {
             // Für jedes gefundene Artefakt gibt es 100 Extrapunkte
-            extraPoints += 100 * undoTurns.peek().getDiscoveredArtifacts().size();
+            extraPoints += 10000/this.numRounds() * undoTurns.peek().getDiscoveredArtifacts().size();
 
             // Extrapunkte, wenn das Spiel gewonnen wurde
             if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
-                extraPoints += 1000;
+                extraPoints += 100000;
             }
         }
+        score *= (getDifficulty().getInitialWaterLevel()+1);
         score += extraPoints;
-
         return (int) score;
     }
 
@@ -130,19 +136,16 @@ public class JavaGame {
      * @return Anzahl der im Spiel gespielten Runden
      */
     public int numRounds() {
-        int playerOne = 0;
-        int rounds = 0;
-        boolean finishedOneRound = false;
+        int currentPlayer = 0;
+        int turns = 1;
         for (Turn currentTurn : undoTurns) {
-            if (!finishedOneRound && currentTurn.getActivePlayerIndex() == playerOne) {
-                rounds++;
-                finishedOneRound = true;
-            } else if (currentTurn.getActivePlayerIndex() != playerOne) {
-                finishedOneRound = false;
+            if (currentTurn.getActivePlayerIndex() != currentPlayer) {
+                turns++;
+                currentPlayer = currentTurn.getActivePlayerIndex();
             }
         }
 
-        return rounds;
+        return turns;
     }
 
     public Difficulty getDifficulty() {
@@ -164,6 +167,12 @@ public class JavaGame {
     public boolean canRedo() {
         return !redoTurns.isEmpty();
     }
+
+    public boolean canUndo() {
+        final int INITIAL_TURN_SIZE = 1;
+        return undoTurns.size() == INITIAL_TURN_SIZE;
+    }
+
     public void markCheetah() {
         this.cheetah = true;
     }

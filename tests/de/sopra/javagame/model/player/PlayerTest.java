@@ -21,7 +21,7 @@ public class PlayerTest {
 
     @Before
     public void setUp() throws Exception {
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
+        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
     }
@@ -56,7 +56,7 @@ public class PlayerTest {
         Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.yPos - 1, pilot.getPosition().yPos);
 
         // Der Spieler soll keine Aktionen mehr haben, damit extraPush auch notwendig ist
-        pilot.setActionsLeft(0);
+        navigator.setActionsLeft(0);
 
         // Der zweite muss auch noch gültig sein, denn es handelt sich um den extra-push
         oldPos = new Point(pilot.getPosition()); // Position des Piloten

@@ -1,6 +1,15 @@
 package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Point;
+
+import java.util.Arrays;
+import java.util.function.Predicate;
 
 /**
  * <h1>Decision</h1>
@@ -11,46 +20,107 @@ import de.sopra.javagame.control.AIController;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public interface Decision {
+public abstract class Decision {
+
+    protected final int ZERO_CARDS = 0;
+    protected final int ONE_CARD = 1;
+    protected final int TWO_CARDS = 2;
+    protected final int THREE_CARDS = 3;
+    protected final int FOUR_CARDS = 4;
+
+    protected AIController control;
 
     /**
      * Entscheidet, ob die mit diesem Objekt verbundene Aktion ausgeführt werden soll, oder nicht.
      *
-     * @param control der AIController mit allen wichtigen Inhalten
      * @return sich selbst, wenn die Entscheidung positiv ausfiel, andernfalls <code>null</code>
      */
-    Decision decide(AIController control);
+    public abstract Decision decide();
 
     /**
      * Führt die Aktion aus.
-     * Soll nur nach getroffener Entscheidung durch {@link #decide(AIController)} geschehen.
-     *
-     * @param control der AIController mit allen wichtigen Inhalten
+     * Soll nur nach getroffener Entscheidung durch {@link #decide()} geschehen.
      */
-    void act(AIController control);
+    public abstract void act();
 
     /**
      * Baut aus zwei entscheidungsabhängigen Aktionen einen Turm.
-     * Das Argument wird zur priorisierten Aktion gegenüber der Aktuellen.
+     * Das Argument wird zur weniger priorisierten Aktion gegenüber der Aktuellen.
      *
-     * @param moreImportantDecision die Aktion, welche als wichtiger betrachtet wird, als die Aktuelle
-     * @return ein neues Decision Objekt, welches keine eigene Aktion enthält, aber mittels {@link #decide(AIController)} ein Objekt mit Aktion liefert
+     * @param lessImportantDecision die Aktion, welche als weniger wichtig betrachtet wird, als die Aktuelle
+     * @return ein neues Decision Objekt, welches keine eigene Aktion enthält,
+     * aber mittels {@link #decide()} ein Objekt mit Aktion liefert
      */
-    default Decision onTop(Decision moreImportantDecision) {
+    final Decision next(Decision lessImportantDecision) {
+        Decision self = this;
         return new Decision() {
             @Override
-            public Decision decide(AIController control) {
-                Decision decision = moreImportantDecision.decide(control);
+            public Decision decide() {
+                Decision decision = self.decide();
                 if (decision == null) {
-                    return decide(control);
+                    return lessImportantDecision.decide();
                 } else return decision;
             }
 
             @Override
-            public void act(AIController control) {
+            public void act() {
                 //empty
             }
         };
     }
 
+    public Point translate(Point point, Direction... directions) {
+        if (directions == null || directions.length == 0) return point;
+        for (Direction direction : directions)
+            point = direction.translate(point);
+        return point;
+    }
+
+    public Player player() {
+        return control.getActivePlayer();
+    }
+
+    public Turn turn() {
+        return control.getActiveTurn();
+    }
+
+    public MapTile tile() {
+        return turn().getTile(player().getPosition());
+    }
+
+    public boolean hasValidActions(Integer... validActions) {
+        return Arrays.asList(validActions).contains(player().getActionsLeft());
+    }
+
+    public EnhancedPlayerHand playerHand() {
+        return EnhancedPlayerHand.ofPlayer(player());
+    }
+
+    public EnhancedPlayerHand hand(Player player) {
+        return EnhancedPlayerHand.ofPlayer(player);
+    }
+
+    public boolean all(Boolean... bools) {
+        return Arrays.stream(bools).allMatch(Boolean::booleanValue);
+    }
+
+    public boolean none(Boolean... bools) {
+        return Arrays.stream(bools).noneMatch(Boolean::booleanValue);
+    }
+
+    public boolean any(Boolean... bools) {
+        return Arrays.stream(bools).anyMatch(Boolean::booleanValue);
+    }
+
+    public <T> boolean checkAll(Predicate<T> checker, T... objects) {
+        if (objects == null || objects.length == 0)
+            return true;
+        for (T object : objects)
+            if (object != null && !checker.test(object)) return false;
+        return true;
+    }
+
+    public final void setControl(AIController control) {
+        this.control = control;
+    }
 }

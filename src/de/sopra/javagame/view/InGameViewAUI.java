@@ -6,8 +6,8 @@ import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 import java.util.EnumSet;
 import java.util.List;
 

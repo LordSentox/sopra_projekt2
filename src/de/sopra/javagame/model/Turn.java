@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
  *
  * @author Lisa, Hannah
  */
+//FIXME Turn umbenennen zu Action --> Action bedeutet genau eine Aktion von dem Spiel, dem aktiven oder einem anderen Spieler
+//    --> dazu alle Aufrufe, die Turn beinhalten umbenennen
+
 public class Turn implements Copyable<Turn> {
 
     /**
@@ -127,46 +130,38 @@ public class Turn implements Copyable<Turn> {
         throws NullPointerException, IllegalArgumentException {
         Turn turn = new Turn();
         turn.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
-        turn.description = "";
-        if (tiles == null) {
+        turn.description = "Spielstart";
+        if (tiles == null || difficulty == null || players == null)
             throw new NullPointerException();
-        } else {
-            turn.tiles = tiles;
-            turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
-        }
-        if (difficulty == null) {
-            throw new NullPointerException();
-        } else {
-            turn.waterLevel = new WaterLevel(difficulty);
-        }
+
+        if (players.isEmpty() || players.size() <2 || players.size() > 4)
+            throw new IllegalArgumentException();
+
+        turn.tiles = tiles;
+        turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
+        turn.waterLevel = new WaterLevel(difficulty);
         turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
-        if (players == null) {
-            throw new NullPointerException();
-        } else {
-            if (players.isEmpty() || players.size() <2 || players.size() > 4) {
-                throw new IllegalArgumentException();
-            } else {
-                turn.players = players.stream().map(pair -> {
-                    Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
-                    switch (pair.getLeft()) {
-                    case COURIER:
-                        return new Courier("Hartmut Kurier", start, turn);
-                    case DIVER:
-                        return new Diver("Hartmut im Spanienurlaub", start, turn);
-                    case PILOT:
-                        return new Pilot("Hartmut auf dem Weg in den Urlaub", start, turn);
-                    case NAVIGATOR:
-                        return new Navigator("Hartmut Verlaufen", start, turn);
-                    case EXPLORER:
-                        return new Explorer("Hartmut im Dschungel", start, turn);
-                    case ENGINEER:
-                        return new Engineer("Hartmut Auto Kaputt", start, turn);
-                    default:
-                        throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
-                    }
-                }).collect(Collectors.toList());
+
+        turn.players = players.stream().map(pair -> {
+            Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
+            switch (pair.getLeft()) {
+            case COURIER:
+                return new Courier("Hartmut Kurier", start, turn);
+            case DIVER:
+                return new Diver("Hartmut im Spanienurlaub", start, turn);
+            case PILOT:
+                return new Pilot("Hartmut auf dem Weg in den Urlaub", start, turn);
+            case NAVIGATOR:
+                return new Navigator("Hartmut Verlaufen", start, turn);
+            case EXPLORER:
+                return new Explorer("Hartmut im Dschungel", start, turn);
+            case ENGINEER:
+                return new Engineer("Hartmut Auto Kaputt", start, turn);
+            default:
+                throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
             }
-        }
+        }).collect(Collectors.toList());
+
         turn.state = TurnState.FLOOD;
         return turn;
     }
@@ -179,7 +174,7 @@ public class Turn implements Copyable<Turn> {
      * @param receiver Spieler, der die Karte erhalten soll
      * @return gibt zurück, ob das Übergeben erfolgreich war
      */
-    boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
+    public boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
         if (source.legalReceivers().contains(receiver.getType())) {
             source.getHand().remove(card);
             receiver.getHand().add(card);
@@ -193,6 +188,7 @@ public class Turn implements Copyable<Turn> {
         this.players.get(this.activePlayer).setActionsLeft(0);
         this.activePlayer = (this.activePlayer + 1) % this.players.size();
         this.players.get(this.activePlayer).setActionsLeft(3);
+        this.players.get(this.activePlayer).onTurnStarted();
     }
 
     /**

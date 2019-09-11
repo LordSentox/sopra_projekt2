@@ -36,6 +36,10 @@ public class Pilot extends Player {
         this.hasSpecialMove = false;
     }
 
+    public void onTurnStarted() {
+        this.hasSpecialMove = true;
+    }
+
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der
      * Spieler sich regelkonform hinbewegen darf. Wenn specialActive, dann
@@ -77,8 +81,9 @@ public class Pilot extends Player {
      */
     @Override
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {
-        if (!specialActive)
+        if (!specialActive || !this.hasSpecialMove)
             return super.move(destination, costsAction, specialActive);
+
         List<Point> legelMovement = legalMoves(specialActive);
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {
             return false;
@@ -87,6 +92,8 @@ public class Pilot extends Player {
             if (costsAction) {
                 actionsLeft -= 1;
             }
+            this.hasSpecialMove = false;
+
             return true;
         }
     }

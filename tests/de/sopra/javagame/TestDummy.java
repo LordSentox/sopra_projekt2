@@ -5,11 +5,11 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.HashMap;

@@ -6,6 +6,7 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.TextureLoader;
 import de.sopra.javagame.view.customcontrol.*;
 import javafx.fxml.FXML;
@@ -16,7 +17,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
@@ -28,10 +28,11 @@ import java.util.stream.IntStream;
  * @author Lisa, Hannah
  */
 public class InGameViewController extends AbstractViewController implements InGameViewAUI {
-    
+
     @FXML MapPane mapPane;
 
-    @FXML WaterLevelView waterLevelView;
+    @FXML
+    WaterLevelView waterLevelView;
 
     @FXML GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
     artifactCardDicardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
@@ -43,7 +44,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     final int SPINNER_SIZE = 250;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
-    
+
     public void init() {
         //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentTurn().getTiles();
         
@@ -129,8 +130,8 @@ public class InGameViewController extends AbstractViewController implements InGa
         airArtefactImageView.getStyleClass().add("Artifact_Air");
         //airArtefactImageView.setEffect(DESATURATION);
 
-           
-        
+
+
         /* Cards */
         for(int i = 0; i < 9; i+=2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -138,6 +139,9 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
+
+
+
 
         for(int i = 0; i < 5; i++) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
@@ -158,8 +162,6 @@ public class InGameViewController extends AbstractViewController implements InGa
             GridPane.setConstraints(v, i, 0);
         }
 
-
-        
         
         for(int i = 0; i < 10; i+=2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -192,21 +194,20 @@ public class InGameViewController extends AbstractViewController implements InGa
     private void initGridPane() {
 //        IntStream.range(0, 21).forEach(i -> gridPane.getColumnConstraints().add(new ColumnConstraints(i%2==0 ? 5 : 130)));
 //        IntStream.range(0, 15).forEach(i -> gridPane.getRowConstraints().add(new RowConstraints(i%2==0 ? 5 : 130)));
-//        
+//
         IntStream.range(0, 9).forEach(i -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(i%2==0 ? ACTIVE_CARD_SIZE : 5)));
-        
+
         IntStream.range(0, 5).forEach(i -> handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE/2)));
         IntStream.range(0, 5).forEach(i -> handTwoCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE/2)));
         IntStream.range(0, 5).forEach(i -> handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE/2)));
-        
+
         IntStream.range(0, 28).forEach(i -> artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
         IntStream.range(0, 28).forEach(i -> artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
         IntStream.range(0, 24).forEach(i -> floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
         IntStream.range(0, 24).forEach(i -> floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-         
+
     }
 
-    
 
     public void onShowMovementOptionsClicked() {
 
@@ -268,6 +269,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     }
 
+    public void onPauseClicked() {
+
+    }
+
     public void onSettingsClicked() {
 
     }
@@ -306,7 +311,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshMovementOptions(List<Point> points) {
-        
+
     }
 
     @Override
@@ -384,8 +389,4 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void setIsReplayWindow(boolean replay) {
 
     }
-    
-    //Hilfsfunktionen
-    
-    
 }
