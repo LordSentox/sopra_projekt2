@@ -1,9 +1,21 @@
 package de.sopra.javagame.control;
-import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.*;
-import de.sopra.javagame.util.*;
+
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.model.player.Engineer;
+import de.sopra.javagame.model.player.Navigator;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.InGameViewAUI;
 
 import java.util.List;
+
+import static de.sopra.javagame.model.player.PlayerType.DIVER;
+import static de.sopra.javagame.model.player.PlayerType.PILOT;
 
 public class ActivePlayerController {
 
@@ -51,33 +63,33 @@ public class ActivePlayerController {
      */
     public void showSpecialAbility() {
         // TODO: ergänzen die Methode später.
+        // XXX: Nicht immer Spieler kopieren
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
-        if (player.getType() == PlayerType.PILOT) {
-            List<Point> movements = new Pilot(player.getName(), player.getPosition(), currentTurn).legalMoves(true);
-            controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-        } else if (player.getType() == PlayerType.COURIER) {
-            controllerChan.getInGameViewAUI()
-                    .showNotification("Courier darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
-            controllerChan.getInGameViewAUI().refreshCardsTransferable(true);
-        } else if (player.getType() == PlayerType.DIVER) {
-            List<Point> movements = new Diver(player.getName(), player.getPosition(), currentTurn).legalMoves(true);
-            controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-        } else if (player.getType() == PlayerType.EXPLORER) {
-            List<Point> movements = new Explorer(player.getName(), player.getPosition(), currentTurn).legalMoves(true);
-            List<Point> drainables = new Explorer(player.getName(), player.getPosition(), currentTurn)
-                    .drainablePositions();
-            controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-            controllerChan.getInGameViewAUI().refreshDrainOptions(drainables);
-        } else if (player.getType() == PlayerType.ENGINEER) {
-            controllerChan.getInGameViewAUI()
-                    .showNotification("Engineer darf gleichzeitig zwei InselFeldern trochen legen!");
-        } else if (player.getType() == PlayerType.NAVIGATOR) {
-            controllerChan.getInGameViewAUI().showNotification(
-                    "Navigator darf einen anderen Abenteurer um bis zu 2 oder 2 andere Abenteurer um jeweils 1 Inselfeld bewegen!");
+        InGameViewAUI aui = controllerChan.getInGameViewAUI();
 
+        if (player.getType() == PILOT || player.getType() == DIVER) {
+            List<Point> movements = player.legalMoves(true);
+            aui.refreshMovementOptions(movements);
         }
+        else if (player.getType() == PlayerType.COURIER) {
+            aui.refreshCardsTransferable(true);
+            aui.showNotification("Der Bote darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
+        }
+        else if (player.getType() == PlayerType.EXPLORER) {
+            List<Point> movements = player.legalMoves(true);
+            List<Point> drainables = player.drainablePositions();
 
+            aui.refreshMovementOptions(movements);
+            aui.refreshDrainOptions(drainables);
+            aui.showNotification("Der Abenteurer kann sich diagonal bewegen und diagonal Felder trockenlegen!");
+        }
+        else if (player.getType() == PlayerType.ENGINEER) {
+            aui.showNotification("Der Ingenieur darf gleichzeitig zwei Insel-Felder trocken legen!");
+        }
+        else if (player.getType() == PlayerType.NAVIGATOR) {
+            aui.showNotification("Navigator darf einen anderen Abenteurer um bis zu 2 oder 2 andere Abenteurer um jeweils 1 Inselfeld bewegen!");
+        }
     }
 
     /**
@@ -148,7 +160,6 @@ public class ActivePlayerController {
      */
     public void collectArtifact() {
         Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
         controllerChan.getInGameViewAUI().refreshArtifactsFound(currentTurn.getDiscoveredArtifacts());
         controllerChan.getInGameViewAUI().refreshArtifactStack(currentTurn.getArtifactCardStack());
 
@@ -168,42 +179,14 @@ public class ActivePlayerController {
     public void move(Point destination, boolean useSpecial) {
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
-        if (player.getType() == PlayerType.PILOT){
-            player = new Pilot(player.getName(), player.getPosition(), currentTurn);
-            if (player.move(destination, true, useSpecial)){
-                int actionsLeft = player.getActionsLeft();
-                controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
-                controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
-                }
-        }else if (player.getType() == PlayerType.DIVER){
-            player = new Diver(player.getName(), player.getPosition(), currentTurn);
-            if (player.move(destination, true, useSpecial)){
-                int actionsLeft = player.getActionsLeft();
-                controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
-                controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
-            }
-        }else if (player.getType() == PlayerType.NAVIGATOR){
-            player = new Navigator(player.getName(), player.getPosition(), currentTurn);
-            if (player.move(destination, true, useSpecial)){
-                int actionsLeft = player.getActionsLeft();
-                controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
-                controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
-            }
-        }else if (player.getType() == PlayerType.ENGINEER){
-            player = new Engineer(player.getName(), player.getPosition(), currentTurn);
-            if (player.move(destination, true, useSpecial)){
-                int actionsLeft = player.getActionsLeft();
-                controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
-                controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
-            }
-        }else {
-            if (player.move(destination, true, useSpecial)){
-                int actionsLeft = player.getActionsLeft();
-                controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
-                controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
-            }
-        }
+        int actionsLeft = player.getActionsLeft();
 
+        if (player.move(destination, true, useSpecial)) {
+            controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
+            controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
+
+            controllerChan.endTurn();
+        }
     }
 
     /**
@@ -266,7 +249,6 @@ public class ActivePlayerController {
      */
     public void showTip() {
         Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
         controllerChan.getJavaGame().markCheetah();
         // TODO: KI nach Möglichkeiten fragen
         // controllerChan.getAIController.getTip

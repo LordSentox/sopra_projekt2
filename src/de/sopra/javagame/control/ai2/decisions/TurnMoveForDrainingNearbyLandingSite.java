@@ -1,10 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
@@ -19,7 +17,7 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class MoveForDrainingNearbyLandingSite implements Decision {
+public class TurnMoveForDrainingNearbyLandingSite extends Decision {
 
     /**
      * Prüfe: ist der Spieler einen Schritt entfernt, um den Landeplatz trocken legen zu können
@@ -27,11 +25,9 @@ public class MoveForDrainingNearbyLandingSite implements Decision {
      */
 
     @Override
-    public Decision decide(AIController control) {
-        Player activePlayer = control.getActivePlayer();
-        int leftActions = activePlayer.getActionsLeft();
+    public Decision decide() {
 
-        if (leftActions < 2) {
+        if (player().getActionsLeft() < 2) {
             return null;
         }
 
@@ -39,10 +35,10 @@ public class MoveForDrainingNearbyLandingSite implements Decision {
         MapTile landingSite = informationLandingSite.getRight();
         Point landingSitePosition = informationLandingSite.getLeft();
 
-        if (landingSite.getState().equals(MapTileState.FLOODED)) {
+        if (landingSite.getState() == MapTileState.FLOODED) {
 
-            Point playerPosition = activePlayer.getPosition();
-            PlayerType playerType = activePlayer.getType();
+            Point playerPosition = player().getPosition();
+            PlayerType playerType = player().getType();
             List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
 
             if (drainablePositionslist.contains(landingSitePosition)) {
@@ -54,7 +50,7 @@ public class MoveForDrainingNearbyLandingSite implements Decision {
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         // TODO Auto-generated method stub
 
     }

@@ -56,8 +56,7 @@ public class JavaGameTest {
         //Assert.assertEquals("", players, javaGame.getPreviousTurn().getPlayers());
 
     }
-
-    @Test(expected = NullPointerException.class)
+    @Test (expected = NullPointerException.class)
     public void newGameNoMap() {
         //teste Erstellen mit leerer Map
         JavaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
@@ -126,21 +125,19 @@ public class JavaGameTest {
 
     @Test
     public void calculateScore() {
-        boolean[][] map = new boolean[12][12];
-        String name = "hallo";
-        String mapString = "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;1;1;1;1;1;1;1;1;1;1;-\n"
-                + "-;1;1;1;1;1;1;1;1;1;1;-\n"
-                + "-;1;1;1;1;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n";
+        String mapString = "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,1,1,1,1,1,1,1,1,1,1,-\n"
+                + "-,1,1,1,1,1,1,1,1,1,1,-\n"
+                + "-,1,1,1,1,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n";
         //controllerChan.startNewGame(map, players, Difficulty.NOVICE);
         //JavaGame javaGame = controllerChan.getJavaGame();
         Difficulty difficulty = Difficulty.NOVICE;
