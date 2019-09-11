@@ -69,7 +69,8 @@ public class Engineer extends Player {
 
     @Override
     public Player copy() {
-        Player player = new Engineer(CopyUtil.copy(this.name), new Point(position), null);
+        Engineer player = new Engineer(CopyUtil.copy(this.name), new Point(position), null);
+        player.hasExtraDrain = this.hasExtraDrain;
         player.hand = this.hand;
         player.actionsLeft = this.actionsLeft;
         player.isAI = this.isAI;

@@ -100,7 +100,8 @@ public class Pilot extends Player {
 
     @Override
     public Player copy() {
-        Player player = new Pilot(CopyUtil.copy(this.name), new Point(position), null);
+        Pilot player = new Pilot(CopyUtil.copy(this.name), new Point(position), null);
+        player.hasSpecialMove = this.hasSpecialMove;
         player.hand = this.hand;
         player.actionsLeft = this.actionsLeft;
         player.isAI = this.isAI;

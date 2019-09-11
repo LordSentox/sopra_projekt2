@@ -144,7 +144,7 @@ public class Diver extends Player {
 
     @Override
     public Player copy() {
-        Player player = new Diver(CopyUtil.copy(this.name), new Point(position), null);
+        Diver player = new Diver(CopyUtil.copy(this.name), new Point(position), null);
         player.hand = this.hand;
         player.actionsLeft = this.actionsLeft;
         player.isAI = this.isAI;

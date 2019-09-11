@@ -91,7 +91,8 @@ public class Navigator extends Player {
 
     @Override
     public Player copy() {
-        Player player = new Navigator(CopyUtil.copy(this.name), new Point(position), null);
+        Navigator player = new Navigator(CopyUtil.copy(this.name), new Point(position), null);
+        player.hasExtraPush = this.hasExtraPush;
         player.hand = this.hand;
         player.actionsLeft = this.actionsLeft;
         player.isAI = this.isAI;

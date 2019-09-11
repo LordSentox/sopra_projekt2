@@ -82,7 +82,7 @@ public class Explorer extends Player {
 
     @Override
     public Player copy() {
-        Player player = new Explorer(CopyUtil.copy(this.name), new Point(position), null);
+        Explorer player = new Explorer(CopyUtil.copy(this.name), new Point(position), null);
         player.hand = this.hand;
         player.actionsLeft = this.actionsLeft;
         player.isAI = this.isAI;

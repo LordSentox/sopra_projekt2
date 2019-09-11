@@ -45,7 +45,7 @@ public class Courier extends Player {
 
     @Override
     public Player copy() {
-        Player player = new Courier(CopyUtil.copy(this.name), new Point(position), null);
+        Courier player = new Courier(CopyUtil.copy(this.name), new Point(position), null);
         player.hand = this.hand;
         player.actionsLeft = this.actionsLeft;
         player.isAI = this.isAI;
