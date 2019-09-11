@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
-import static de.sopra.javagame.util.Direction.*;
 
 /**
  * <h1>projekt2</h1>
@@ -51,35 +50,12 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
                 return null;
             }
 
-            Point northernNeighbourPoint = translate(orphanedTemplePoint, UP);
-            MapTile northernNeighbour = control.getTile(northernNeighbourPoint);
+            List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
 
-            Point southernNeighbourPoint = translate(orphanedTemplePoint, DOWN);
-            MapTile southernNeighbour = control.getTile(southernNeighbourPoint);
-
-            Point northEasternNeighbourPoint = translate(northernNeighbourPoint, RIGHT);
-            MapTile northEasternNeighbour = control.getTile(northEasternNeighbourPoint);
-
-            Point easternNeighbourPoint = translate(orphanedTemplePoint, RIGHT);
-            MapTile easternNeighbour = control.getTile(easternNeighbourPoint);
-
-            Point southEasternNeighbourPoint = translate(southernNeighbourPoint, RIGHT);
-            MapTile southEasternNeighbour = control.getTile(southEasternNeighbourPoint);
-
-            Point southWesternNeighbourPoint = translate(southernNeighbourPoint, LEFT);
-            MapTile southWesternNeighbour = control.getTile(southWesternNeighbourPoint);
-
-            Point westernNeighbourPoint = translate(orphanedTemplePoint, LEFT);
-            MapTile westernNeighbour = control.getTile(westernNeighbourPoint);
-
-            Point northWesternNeighbourPoint = translate(northernNeighbourPoint, LEFT);
-            MapTile northWesternNeighbour = control.getTile(northWesternNeighbourPoint);
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
 
             //wenn eins nicht GONE ist
-            if (!checkAll(tile -> tile.getState() == GONE,
-                    northernNeighbour, easternNeighbour, southernNeighbour, westernNeighbour,
-                    northEasternNeighbour, northWesternNeighbour,
-                    southEasternNeighbour, southWesternNeighbour)) {
+            if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
 
