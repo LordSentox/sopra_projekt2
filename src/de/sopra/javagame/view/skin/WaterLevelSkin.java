@@ -39,10 +39,10 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
         this.fillerCircle.radiusProperty().bindBidirectional(indicator.innerCircleRadiusProperty());
         this.borderCircle.radiusProperty().bindBidirectional(indicator.innerCircleRadiusProperty());
         indicator.innerCircleRadiusProperty().addListener((o, oldVal, newVal) -> this.labelCircle.setRadius(newVal.doubleValue() / 3));
-        StackPane pane = new StackPane(fillerCircle);
-        Image img = new Image("/textures/water.jpg");
-        fillerCircle.setFill(new ImagePattern(img));
+        this.fillerCircle.setFill(new ImagePattern(new Image("/textures/water.jpg")));
 
+
+        StackPane pane = new StackPane(fillerCircle);
         this.indicator.progressProperty().addListener((o, oldVal, newVal) -> {
             this.setProgressLabel(newVal.intValue());
             this.cover.setHeight(coverPane.getHeight() * newVal.intValue() / (double) MAX_WATER_LEVEL);
