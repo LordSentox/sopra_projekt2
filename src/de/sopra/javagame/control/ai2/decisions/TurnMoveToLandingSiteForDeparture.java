@@ -4,6 +4,7 @@ import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
@@ -18,7 +19,7 @@ import java.util.EnumSet;
  * @since 09.09.2019
  */
 
-public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
+public class TurnMoveToLandingSiteForDeparture extends Decision  {
 
     @Override
     public Decision decide() {
@@ -28,24 +29,23 @@ public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
         if (discoveredArtifacts.size() != 4){
             return null;
         }
-
-        Point playerPosition = player().getPosition();
-
+        
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
-
-        if (landingSitePosition.equals(playerPosition)) {
+        
+        Player player = turn.getActivePlayer();
+        Point playerPosition = player.getPosition();
+        if (!landingSitePosition.equals(playerPosition)){
             return this;
-
         }
+        
         return null;
     }
 
     @Override
     public void act() {
         // TODO Auto-generated method stub
-
+        
     }
-
 
 }
