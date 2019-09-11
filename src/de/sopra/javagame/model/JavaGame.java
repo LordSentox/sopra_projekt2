@@ -124,7 +124,7 @@ public class JavaGame {
                 extraPoints += 100000;
             }
         }
-        score *= getDifficulty().getInitialWaterLevel();
+        score *= (getDifficulty().getInitialWaterLevel()+1);
         score += extraPoints;
         return (int) score;
     }
@@ -137,12 +137,10 @@ public class JavaGame {
      */
     public int numRounds() {
         int currentPlayer = 0;
-        int turns = 0;
-        boolean finishedOneRound = false;
+        int turns = 1;
         for (Turn currentTurn : undoTurns) {
-            if (!finishedOneRound && currentTurn.getActivePlayerIndex() != currentPlayer) {
+            if (currentTurn.getActivePlayerIndex() != currentPlayer) {
                 turns++;
-                finishedOneRound = true;
                 currentPlayer = currentTurn.getActivePlayerIndex();
             }
         }

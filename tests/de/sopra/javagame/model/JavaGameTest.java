@@ -28,10 +28,12 @@ public class JavaGameTest {
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
         int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        players =  new ArrayList<Pair<PlayerType, Boolean>>(){{add(new Pair<>(PlayerType.EXPLORER, false));
-                                 add(new Pair<>(PlayerType.NAVIGATOR, true));
-                                 add(new Pair<>(PlayerType.DIVER, false));
-                                 add(new Pair<>(PlayerType.COURIER, true));}};
+        players = new ArrayList<Pair<PlayerType, Boolean>>() {{
+            add(new Pair<>(PlayerType.EXPLORER, false));
+            add(new Pair<>(PlayerType.NAVIGATOR, true));
+            add(new Pair<>(PlayerType.DIVER, false));
+            add(new Pair<>(PlayerType.COURIER, true));
+        }};
     }
 
     @Test
@@ -46,7 +48,7 @@ public class JavaGameTest {
 
         Turn turn = javaGame.getPreviousTurn();
 
-        for(int i = 0; i< turn.getPlayers().size(); i++) {
+        for (int i = 0; i < turn.getPlayers().size(); i++) {
             Assert.assertEquals("Kopie sollte gleiche Spieler-Liste halten. Index " + i + " unterscheidet sich.",
                     turn.getPlayers().get(i).getType(),
                     turn.getPlayers().get(i).getType());
@@ -60,34 +62,34 @@ public class JavaGameTest {
         JavaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
     }
 
-    @Test (expected = NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void newGameNoMapName() {
         JavaGame.newGame(null, testMap, Difficulty.NOVICE, players);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void newGameEmptyMapName() {
         JavaGame.newGame("", testMap, Difficulty.NOVICE, players);
     }
 
-    @Test (expected = NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void newGameNoDifficulty() {
         JavaGame.newGame(testMapString, testMap, null, players);
-    }    
+    }
 
-    @Test (expected = NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void newGameNoPlayers() {
         JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, null);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
         JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE,
                 Arrays.asList());
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void newGameTooManyPlayers() {
         players.add(new Pair<>(PlayerType.PILOT, false));
         //teste Erstellen mit 5+ Spielern
@@ -104,14 +106,14 @@ public class JavaGameTest {
         Turn nextTurn = javaGame.endTurn(currentTurn);
 
         //Assert.assertTrue("Das Java-Game hätte einen neuen currentTurn haben sollen",
-          //                  controllerChan.getCurrentTurn() == nextTurn);
+        //                  controllerChan.getCurrentTurn() == nextTurn);
         Assert.assertFalse("Das Java-Game hätte einen neuen Previous Turn haben sollen",
                 javaGame.getPreviousTurn() == lastTurn);
         Assert.assertTrue("Das Java-Game hätte einen neuen Previous Turn haben sollen",
-                            javaGame.getPreviousTurn() == currentTurn);
+                javaGame.getPreviousTurn() == currentTurn);
         Assert.assertFalse("Der neu erstellte Turn hätte nicht gleich dem vorherigen sein dürfen",
-                                currentTurn == nextTurn);
-        
+                currentTurn == nextTurn);
+
         //teste ob korrekr redo Stapel zurückgesetzt wird
         controllerChan.getGameFlowController().undo();
         controllerChan.getGameFlowController().undo();
@@ -138,28 +140,50 @@ public class JavaGameTest {
                 + "-,-,-,-,-,-,-,-,-,-,-,-\n";
         //controllerChan.startNewGame(map, players, Difficulty.NOVICE);
         //JavaGame javaGame = controllerChan.getJavaGame();
-        Pair<JavaGame, Turn> newGame = JavaGame.newGame(mapString, testMap, Difficulty.NOVICE, players);
+        Difficulty difficulty = Difficulty.NOVICE;
+        int actualDifficulty = (difficulty.getInitialWaterLevel() + 1);
+        Pair<JavaGame, Turn> newGame = JavaGame.newGame(mapString, testMap, difficulty, players);
         JavaGame javaGame = newGame.getLeft();
         Turn turn = newGame.getRight();
+        int turnCount = 1;
 
         //teste ob Anfangsscore korrekt berechnet wird
-        Assert.assertEquals("Score hätte gleich sein sollen", 100.0, javaGame.calculateScore(), 0.0);
+        Assert.assertEquals("Score hätte gleich 100 sein sollen",
+                100.0 * turnCount * actualDifficulty,
+                javaGame.calculateScore(),
+                0.0);
+
 
         //teste ob Score für 1 Artefakt korrekt berechnet wird
         turn.getDiscoveredArtifacts().add(ArtifactType.FIRE);
         Turn nextTurn = javaGame.endTurn(turn);
-        Assert.assertEquals("Der score dieses Spiels hätte 200 sein müssen", 200.0, javaGame.calculateScore(), 0.0);
+
+        Assert.assertEquals("Der score dieses Spiels hätte 10.100 sein müssen",
+                100.0 * turnCount * actualDifficulty + 10000/turnCount/nextTurn.getDiscoveredArtifacts().size(),
+                javaGame.calculateScore(),
+                0.0);
+
 
         //teste ob Score für Game Won korrekt berechnet wird
-        nextTurn.setGameWon(true);
-        nextTurn.setGameEnded(true);
-        // Turn secondNextTurn = javaGame.endTurn(nextTurn);
-        Assert.assertEquals("Der score dieses Spiels hätte 1200 sein müssen", 1200.0, javaGame.calculateScore(), 0.0);
+        Turn secondNextTurn = javaGame.endTurn(nextTurn);
+
+        turn.getDiscoveredArtifacts().add(ArtifactType.WATER);
+        turn.getDiscoveredArtifacts().add(ArtifactType.EARTH);
+        turn.getDiscoveredArtifacts().add(ArtifactType.AIR);
+
+        secondNextTurn.setGameWon(true);
+        secondNextTurn.setGameEnded(true);
+        secondNextTurn = javaGame.endTurn(secondNextTurn);
+        Assert.assertEquals("Der score dieses Spiels hätte 120.000 sein müssen",
+                (1.0/turnCount * 10000.0 + (10000/turnCount * secondNextTurn.getDiscoveredArtifacts().size())*actualDifficulty) + 100000,
+                javaGame.calculateScore(),
+                0.0);
+
 
         //teste ob Score für cheetah korrekt berechnet wird
         javaGame.markCheetah();
         Assert.assertEquals("Der score dieses Spiels hätte 0 sein müssen", 0, javaGame.calculateScore());
-        
+
         //teste für ganzes Spiel, ob Score korrekt berechnet wird
         //TODO komplettes Spiel laden und dann damit testen!
     }
