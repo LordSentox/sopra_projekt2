@@ -85,12 +85,12 @@ public abstract class Decision {
         return control.getActivePlayer();
     }
 
-    protected Action turn() {
+    protected Action action() {
         return control.getCurrentAction();
     }
 
     protected MapTile tile() {
-        return turn().getTile(player().getPosition());
+        return action().getTile(player().getPosition());
     }
 
     protected boolean hasValidActions(Integer... validActions) {

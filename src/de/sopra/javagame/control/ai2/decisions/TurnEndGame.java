@@ -24,7 +24,7 @@ public class TurnEndGame extends Decision {
 
     @Override
     public Decision decide() {
-        EnumSet<ArtifactType> discoveredArtifacts = turn().getDiscoveredArtifacts();
+        EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
         if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
             return null;

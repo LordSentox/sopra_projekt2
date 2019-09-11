@@ -24,7 +24,7 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
     @Override
     public Decision decide() {
         List<Pair<Point, MapTile>> templeList = control.getTemples();
-        EnumSet<ArtifactType> discoveredArtifacts = turn().getDiscoveredArtifacts();
+        EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
         for (int i = 0; i < 8; i++) {
 
