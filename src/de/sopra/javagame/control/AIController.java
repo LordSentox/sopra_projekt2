@@ -54,10 +54,10 @@ public class AIController {
      * Das beinflusst das Tracking der Ziehstapel nicht, d.h. diese Methode darf auch im laufenden Spiel verwendet werden
      * und erfordert keinerlei Sicherheitsüberprüfung.
      *
-     * @param ai die KI per Auswahl als Enum
+     * @param gameAI die KI per Auswahl als Enum
      */
-    public void setAI(GameAI ai) {
-        processor = ai.get();
+    public void setAI(GameAI gameAI) {
+        processor = gameAI.get();
         processor.init();
     }
 
