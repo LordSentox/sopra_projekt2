@@ -72,7 +72,8 @@ public abstract class Player implements Copyable<Player> {
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {
             return false;
         } else {
-            position = destination;
+            this.setPosition(destination);
+           
             if (costsAction) {
                 actionsLeft -= 1;
             }
@@ -176,6 +177,7 @@ public abstract class Player implements Copyable<Player> {
             // Lege die vier Karten auf den Ablagestapel
             this.hand.removeAll(correspondingHandCards);
             this.turn.getArtifactCardStack().discard(correspondingHandCards);
+            this.turn.getDiscoveredArtifacts().add(hiddenArtifact);
 
             return hiddenArtifact;
         }
