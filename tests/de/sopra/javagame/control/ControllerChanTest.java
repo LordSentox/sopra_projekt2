@@ -1,9 +1,9 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import org.junit.Assert;
@@ -50,8 +50,8 @@ public class ControllerChanTest {
         players.add(new Pair<>(PlayerType.EXPLORER, true));
         controllerChan.startNewGame(testMap, players, Difficulty.NORMAL);
         Assert.assertNotNull("Es hätte ein Spiel erstellt werden sollen", controllerChan.getJavaGame());
-        Assert.assertNotNull("Es hätte einen Explorer geben sollen", controllerChan.getCurrentTurn().getPlayer(PlayerType.EXPLORER));
-        Assert.assertNotNull("Es hätte einen Courier geben sollen", controllerChan.getCurrentTurn().getPlayer(PlayerType.COURIER));
+        Assert.assertNotNull("Es hätte einen Explorer geben sollen", controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER));
+        Assert.assertNotNull("Es hätte einen Courier geben sollen", controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER));
 
         //teste wenn es schon ein Spiel gab
         JavaGame oldGame = controllerChan.getJavaGame();
@@ -109,8 +109,8 @@ public class ControllerChanTest {
                                     inGameView.getNotifications().contains("Die gewählte Datei ist nicht kompatibel oder fehlerhaft."));
 
         //teste mit beendetem
-        controllerChan.getCurrentTurn().setGameEnded(true);
-        controllerChan.endTurn();
+        controllerChan.getCurrentAction().setGameEnded(true);
+        controllerChan.finishAction();
         controllerChan.saveGame("mein beendetes Spiel");
         saveGame = new File (controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
         replayGame = new File (controllerChan.REPLAY_FOLDER + controllerChan.getGameName() + ".replay");
@@ -159,7 +159,7 @@ public class ControllerChanTest {
     }
 
     @Test
-    public void testEndTurn() {
+    public void testFinishAction() {
         //teste mit nicht beendetem Spiel
         List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
         players.add(new Pair<>(PlayerType.NAVIGATOR, true));
@@ -167,25 +167,25 @@ public class ControllerChanTest {
         players.add(new Pair<>(PlayerType.ENGINEER, true));
         controllerChan.startNewGame(testMap, players, Difficulty.LEGENDARY);
         JavaGame currentGame = controllerChan.getJavaGame();
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        controllerChan.endTurn();
+        Action currentAction = controllerChan.getCurrentAction();
+        controllerChan.finishAction();
 
         Assert.assertEquals("Das JavaGame sollte sich nicht ändern", currentGame, controllerChan.getJavaGame());
-        Assert.assertEquals("Der vorherige currentTurn sollte auf dem Undo-Stapel liegen",
-                                      currentTurn,
-                                      controllerChan.getJavaGame().getPreviousTurn());
+        Assert.assertEquals("Der vorherige currentAction sollte auf dem Undo-Stapel liegen",
+                currentAction,
+                                      controllerChan.getJavaGame().getPreviousAction());
         Assert.assertFalse("Der Redo-Stapel sollte leer sein", controllerChan.getJavaGame().canRedo());
 
         //teste mit beendetem Spiel
-        controllerChan.getCurrentTurn().setGameEnded(true);
-        currentTurn = controllerChan.getCurrentTurn();
-        controllerChan.endTurn();
+        controllerChan.getCurrentAction().setGameEnded(true);
+        currentAction = controllerChan.getCurrentAction();
+        controllerChan.finishAction();
 
-        Assert.assertEquals("Der vorherige currentTurn sollte auf dem Undo-Stapel liegen",
-                                         currentTurn,
-                                         controllerChan.getJavaGame().getPreviousTurn());
-        Assert.assertNull("Das Spiel ist vorbei. Es sollte keinen neuen neuen Turn mehr geben.",
-                                    controllerChan.getCurrentTurn());
+        Assert.assertEquals("Der vorherige currentAction sollte auf dem Undo-Stapel liegen",
+                currentAction,
+                                         controllerChan.getJavaGame().getPreviousAction());
+        Assert.assertNull("Das Spiel ist vorbei. Es sollte keinen neuen neuen Action mehr geben.",
+                                    controllerChan.getCurrentAction());
         Assert.assertFalse("Der Redo-Stapel sollte leer sein", controllerChan.getJavaGame().canRedo());
 
     }

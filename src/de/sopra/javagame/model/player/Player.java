@@ -21,7 +21,7 @@ public abstract class Player implements Copyable<Player> {
 
     protected final String name;
 
-    protected Turn turn;
+    protected Action action;
 
     protected Point position;
 
@@ -31,10 +31,10 @@ public abstract class Player implements Copyable<Player> {
 
     protected List<ArtifactCard> hand;
 
-    Player(PlayerType type, String name, Turn turn) {
+    Player(PlayerType type, String name, Action action) {
         this.type = type;
         this.name = name;
-        this.turn = turn;
+        this.action = action;
         this.actionsLeft = 0;
         this.hand = new ArrayList<>();
     }
@@ -53,7 +53,7 @@ public abstract class Player implements Copyable<Player> {
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> moves = this.position.getNeighbours();
         moves = moves.stream().filter(point -> {
-            MapTile tile = this.turn.getTile(point);
+            MapTile tile = this.action.getTile(point);
             return tile != null && tile.getState() != GONE;
         }).collect(Collectors.toList());
 
@@ -114,7 +114,7 @@ public abstract class Player implements Copyable<Player> {
         // Entferne alle Positionen, wo die Map eigentlich keine Felder hat, oder sie nicht mehr trockengelegt werden
         // können
         // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
-        drainable = drainable.stream().filter(point -> this.turn.getTile(point) != null && this.turn.getTile(point).getState() != GONE).collect(Collectors.toList());
+        drainable = drainable.stream().filter(point -> this.action.getTile(point) != null && this.action.getTile(point).getState() != GONE).collect(Collectors.toList());
 
         return drainable;
     }
@@ -132,7 +132,7 @@ public abstract class Player implements Copyable<Player> {
             return false;
         }
 
-        MapTile toDrain = this.turn.getTile(position);
+        MapTile toDrain = this.action.getTile(position);
 
         if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
             return false;
@@ -156,7 +156,7 @@ public abstract class Player implements Copyable<Player> {
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
     public ArtifactType collectArtifact() {
-        MapTile mapTile = this.turn.getTile(this.position);
+        MapTile mapTile = this.action.getTile(this.position);
         ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
 
         // Abbrechen, falls hier gar kein Artefakt versteckt ist.
@@ -179,8 +179,8 @@ public abstract class Player implements Copyable<Player> {
         } else {
             // Lege die vier Karten auf den Ablagestapel
             this.hand.removeAll(correspondingHandCards);
-            this.turn.getArtifactCardStack().discard(correspondingHandCards);
-            this.turn.getDiscoveredArtifacts().add(hiddenArtifact);
+            this.action.getArtifactCardStack().discard(correspondingHandCards);
+            this.action.getDiscoveredArtifacts().add(hiddenArtifact);
 
             return hiddenArtifact;
         }
@@ -195,10 +195,10 @@ public abstract class Player implements Copyable<Player> {
      */
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList<>();
-        MapTile mapTile = this.turn.getTiles()[position.yPos][position.xPos];
-        List<Player> players = turn.getPlayers();
+        MapTile mapTile = this.action.getTiles()[position.yPos][position.xPos];
+        List<Player> players = action.getPlayers();
         for (Player player : players) {
-            if (mapTile == this.turn.getTiles()[player.position.yPos][player.position.xPos] && player != this) {
+            if (mapTile == this.action.getTiles()[player.position.yPos][player.position.xPos] && player != this) {
                 receivers.add(player.getType());
             }
         }
@@ -233,11 +233,11 @@ public abstract class Player implements Copyable<Player> {
         return name;
     }
 
-    public Turn getTurn() {
-        return turn;
+    public Action getAction() {
+        return action;
     }
 
-    public void setActiveTurn(Turn turn) {
-        this.turn = turn;
+    public void setAction(Action action) {
+        this.action = action;
     }
 }

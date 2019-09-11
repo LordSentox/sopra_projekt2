@@ -1,9 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
@@ -23,8 +23,8 @@ public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
 
     @Override
     public Decision decide() {
-        Turn turn = control.getActiveTurn();
-        EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
+        Action action = control.getCurrentAction();
+        EnumSet<ArtifactType> discoveredArtifacts = action.getDiscoveredArtifacts();
 
         if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
             return null;

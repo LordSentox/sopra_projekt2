@@ -1,8 +1,8 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.HighScoresViewAUI;
@@ -31,7 +31,7 @@ public class ControllerChan {
     private InGameViewAUI inGameViewAUI;
 
     private JavaGame javaGame;
-    private Turn currentTurn;
+    private Action currentAction;
 
     public ControllerChan() {
         this.javaGame = null;
@@ -134,12 +134,12 @@ public class ControllerChan {
 
     }
 
-    public void endTurn() {
-        this.currentTurn = this.javaGame.endTurn(this.currentTurn);
+    public void finishAction() {
+        this.currentAction = this.javaGame.finishAction(this.currentAction);
     }
 
-    public Turn getCurrentTurn() {
-        return this.currentTurn;
+    public Action getCurrentAction() {
+        return this.currentAction;
     }
 
     public String getGameName() {

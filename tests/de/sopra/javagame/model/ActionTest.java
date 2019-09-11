@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
  * @version 05.09.2019
  * @since 05.09.2019
  */
-public class TurnTest {
+public class ActionTest {
     private MapTile[][] testMap;
 
     @Before
@@ -35,41 +35,41 @@ public class TurnTest {
     }
 
     @Test
-    public void createInitialTurn() {
-        Turn turn = Turn.createInitialTurn(Difficulty.NOVICE,
+    public void createInitialAction() {
+        Action action = Action.createInitialAction(Difficulty.NOVICE,
                 Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
                         new Pair<>(PlayerType.NAVIGATOR, true),
                         new Pair<>(PlayerType.DIVER, false),
                         new Pair<>(PlayerType.COURIER, true)),
                 this.testMap);
 
-        Assert.assertEquals(0, turn.getActivePlayerIndex());
-        Assert.assertEquals(28, turn.getArtifactCardStack().size());
-        Assert.assertEquals("", turn.getDescription());
-        Assert.assertEquals(new HashSet(), turn.getDiscoveredArtifacts());
-        Assert.assertEquals(4, turn.getPlayers().size());
-        Assert.assertEquals(TurnState.FLOOD, turn.getState());
-        Assert.assertArrayEquals(this.testMap, turn.getTiles());
-        Assert.assertEquals(0, turn.getWaterLevel().getLevel());
-        Assert.assertEquals(24, turn.getFloodCardStack().size());
+        Assert.assertEquals(0, action.getActivePlayerIndex());
+        Assert.assertEquals(28, action.getArtifactCardStack().size());
+        Assert.assertEquals("", action.getDescription());
+        Assert.assertEquals(new HashSet(), action.getDiscoveredArtifacts());
+        Assert.assertEquals(4, action.getPlayers().size());
+        Assert.assertEquals(TurnState.FLOOD, action.getState());
+        Assert.assertArrayEquals(this.testMap, action.getTiles());
+        Assert.assertEquals(0, action.getWaterLevel().getLevel());
+        Assert.assertEquals(24, action.getFloodCardStack().size());
 
-        // Einen weiteren Turn mit den letzten beiden Klassen erstellen
-        Turn turn2 = Turn.createInitialTurn(Difficulty.ELITE,
+        // Einen weiteren Action mit den letzten beiden Klassen erstellen
+        Action action2 = Action.createInitialAction(Difficulty.ELITE,
                 Arrays.asList(new Pair<>(PlayerType.PILOT, false),
                         new Pair<>(PlayerType.ENGINEER, false)),
                 this.testMap);
 
-        Assert.assertEquals(2, turn2.getPlayers().size());
+        Assert.assertEquals(2, action2.getPlayers().size());
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void createInitialTurnIllegalPlayerType() {
-        Turn.createInitialTurn(Difficulty.LEGENDARY, Arrays.asList(new Pair<>(PlayerType.NONE, true), new Pair<>(PlayerType.NONE, true)), this.testMap);
+    public void createInitialActionIllegalPlayerType() {
+        Action.createInitialAction(Difficulty.LEGENDARY, Arrays.asList(new Pair<>(PlayerType.NONE, true), new Pair<>(PlayerType.NONE, true)), this.testMap);
     }
     
     @Test (expected = NullPointerException.class)
-    public void createInitialTurnNoDifficulty() {
-        Turn.createInitialTurn(null, Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
+    public void createInitialActionNoDifficulty() {
+        Action.createInitialAction(null, Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
                 new Pair<>(PlayerType.NAVIGATOR, true),
                 new Pair<>(PlayerType.DIVER, false),
                 new Pair<>(PlayerType.COURIER, true)), this.testMap);
@@ -77,7 +77,7 @@ public class TurnTest {
     
     @Test
     public void getPlayer() {
-        Turn turn = Turn.createInitialTurn(Difficulty.NOVICE,
+        Action action = Action.createInitialAction(Difficulty.NOVICE,
                 Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
                         new Pair<>(PlayerType.NAVIGATOR, true),
                         new Pair<>(PlayerType.DIVER, false),
@@ -86,9 +86,9 @@ public class TurnTest {
 
         Assert.assertEquals("Der Spielertyp des geholten Spielers hätte Explorer sein müssen",
                                       PlayerType.EXPLORER,
-                                      turn.getPlayer(PlayerType.EXPLORER).getType());
-        Assert.assertNull("Es hätte keinen Pilot geben dürfen", turn.getPlayer(PlayerType.PILOT));
-        Assert.assertNull("Es hätte kein Spieler zurückgegeben werden dürfen", turn.getPlayer(null));
+                                      action.getPlayer(PlayerType.EXPLORER).getType());
+        Assert.assertNull("Es hätte keinen Pilot geben dürfen", action.getPlayer(PlayerType.PILOT));
+        Assert.assertNull("Es hätte kein Spieler zurückgegeben werden dürfen", action.getPlayer(null));
         
     }
     
@@ -101,19 +101,19 @@ public class TurnTest {
         ArtifactCard earthCard = new ArtifactCard(ArtifactCardType.EARTH);
         ArtifactCard earthCard2 = new ArtifactCard(ArtifactCardType.EARTH);
         ArtifactCard airCard = new ArtifactCard(ArtifactCardType.AIR);
-        Turn turn = Turn.createInitialTurn(Difficulty.NOVICE,
+        Action action = Action.createInitialAction(Difficulty.NOVICE,
                 Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
                         new Pair<>(PlayerType.NAVIGATOR, true),
                         new Pair<>(PlayerType.DIVER, false),
                         new Pair<>(PlayerType.COURIER, true)),
                 this.testMap);
-        Explorer explorer = (Explorer) turn.getPlayer(PlayerType.EXPLORER);
-        Navigator navigator = (Navigator) turn.getPlayer(PlayerType.NAVIGATOR);
+        Explorer explorer = (Explorer) action.getPlayer(PlayerType.EXPLORER);
+        Navigator navigator = (Navigator) action.getPlayer(PlayerType.NAVIGATOR);
         explorer.setPosition(MapUtil.getPlayerSpawnPoint(testMap, PlayerType.NAVIGATOR));
 
         //test mit beide stehen auf dem gleichen Feld, keine Hand zu voll
         explorer.getHand().add(fireCard);
-        boolean transferred = turn.transferArtifactCard(fireCard, explorer, navigator);
+        boolean transferred = action.transferArtifactCard(fireCard, explorer, navigator);
         assertTrue("Der Navigator sollte die Karte erhalten haben.",
                 navigator.getHand().contains(fireCard));
         assertFalse("Die Karte hätte von der Hand des Explorers verschwinden sollen.",
@@ -127,7 +127,7 @@ public class TurnTest {
         explorer.getHand().add(waterCard2);
         explorer.getHand().add(earthCard);
         explorer.getHand().add(airCard);
-        transferred = turn.transferArtifactCard(fireCard, navigator, explorer);
+        transferred = action.transferArtifactCard(fireCard, navigator, explorer);
         assertFalse("Die Karte hätte von der Hand des Navigators verschwinden sollen.",
                 navigator.getHand().contains(fireCard));
         assertTrue("Der Navigator sollte die Karte erhalten haben.",
@@ -136,9 +136,9 @@ public class TurnTest {
                 transferred);
 
         //test mit Bote
-        Courier courier = (Courier) turn.getPlayer(PlayerType.COURIER);
+        Courier courier = (Courier) action.getPlayer(PlayerType.COURIER);
         courier.getHand().add(earthCard2);
-        transferred = turn.transferArtifactCard(earthCard2, courier, navigator);
+        transferred = action.transferArtifactCard(earthCard2, courier, navigator);
         Assert.assertFalse("Die Karte hätte von der Hand des Boten verschwinden sollen.",
                 courier.getHand().contains(earthCard2));
         Assert.assertTrue("Der Navigator sollte die Karte erhalten haben.",
@@ -147,12 +147,12 @@ public class TurnTest {
                 transferred);
 
         //test ohne gleiches Feld und ohne Bote
-        Diver diver = (Diver) turn.getPlayer(PlayerType.DIVER);
+        Diver diver = (Diver) action.getPlayer(PlayerType.DIVER);
         explorer.getHand().clear();
         courier.getHand().clear();
         navigator.getHand().clear();
         diver.getHand().add(fireCard);
-        transferred = turn.transferArtifactCard(fireCard, diver, explorer);
+        transferred = action.transferArtifactCard(fireCard, diver, explorer);
         Assert.assertFalse("Der Forscher sollte die Karte nicht erhalten haben.",
                 explorer.getHand().contains(fireCard));
         Assert.assertTrue("Die Karte hätte nicht von der Hand des Tauchers verschwinden sollen.",
@@ -161,7 +161,7 @@ public class TurnTest {
                 transferred);
 
         //test ohne gleiches Feld und Bote ist reciever
-        transferred = turn.transferArtifactCard(fireCard, diver, courier);
+        transferred = action.transferArtifactCard(fireCard, diver, courier);
         assertFalse("Der Bote sollte die Karte nicht erhalten haben",
                 courier.getHand().contains(fireCard));
         assertTrue("Die Karte hätte nicht von der Hand des Tauchers verschwinden sollen.",
@@ -173,60 +173,60 @@ public class TurnTest {
 
     @Test
     public void copy() {
-        Turn turn = Turn.createInitialTurn(Difficulty.NOVICE,
+        Action action = Action.createInitialAction(Difficulty.NOVICE,
                 Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
                         new Pair<>(PlayerType.NAVIGATOR, true),
                         new Pair<>(PlayerType.DIVER, false),
                         new Pair<>(PlayerType.COURIER, true)),
                 this.testMap);
-        Turn turnCopy = turn.copy();
+        Action actionCopy = action.copy();
 
         //teste ob alle Referenzen gleich
-        int activePlayerOriginal = turn.getActivePlayerIndex();
-        String descriptionOriginal = turn.getDescription();
-        EnumSet<ArtifactType> discoveredArtifactsOriginal = turn.getDiscoveredArtifacts();
-        List<Player> playersOriginal = turn.getPlayers();
-        Enum<TurnState> stateOriginal = turn.getState();
-        MapTile[][] tilesOriginal = turn.getTiles();
+        int activePlayerOriginal = action.getActivePlayerIndex();
+        String descriptionOriginal = action.getDescription();
+        EnumSet<ArtifactType> discoveredArtifactsOriginal = action.getDiscoveredArtifacts();
+        List<Player> playersOriginal = action.getPlayers();
+        Enum<TurnState> stateOriginal = action.getState();
+        MapTile[][] tilesOriginal = action.getTiles();
 
         //inhaltliche Gleichheit
-        assertEquals("Kopie sollte gleichen aktiven Spieler halten", activePlayerOriginal, turnCopy.getActivePlayerIndex());
-        assertEquals("Kopie sollte gleiche Beschreibung halten", descriptionOriginal, turnCopy.getDescription());
-        assertEquals("Kopie sollte gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, turnCopy.getDiscoveredArtifacts());
-        for (int i = 0; i < turn.getPlayers().size(); i++) {
+        assertEquals("Kopie sollte gleichen aktiven Spieler halten", activePlayerOriginal, actionCopy.getActivePlayerIndex());
+        assertEquals("Kopie sollte gleiche Beschreibung halten", descriptionOriginal, actionCopy.getDescription());
+        assertEquals("Kopie sollte gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, actionCopy.getDiscoveredArtifacts());
+        for (int i = 0; i < action.getPlayers().size(); i++) {
             assertEquals("Kopie sollte gleiche Spieler-Liste halten. Index " + i + " unterscheidet sich.",
-                    turn.getPlayers().get(i).getType(),
-                    turn.getPlayers().get(i).getType());
+                    action.getPlayers().get(i).getType(),
+                    action.getPlayers().get(i).getType());
         }
-        assertEquals("Kopie sollte gleichen Status haben", stateOriginal, turnCopy.getState());
+        assertEquals("Kopie sollte gleichen Status haben", stateOriginal, actionCopy.getState());
         for (int i = 0; i < tilesOriginal.length; i++) {
             for (int j = 0; j < tilesOriginal[i].length; j++) {
-                assertEquals("Inhalt der Karte sollte gleich sein", tilesOriginal[i][j], turnCopy.getTiles()[i][j]);
+                assertEquals("Inhalt der Karte sollte gleich sein", tilesOriginal[i][j], actionCopy.getTiles()[i][j]);
             }
         }
 
         //Referenzen sollten andere sein
-        assertNotSame("Kopie sollte andere gleiche Beschreibung halten", descriptionOriginal, turnCopy.getDescription());
-        assertNotSame("Kopie sollte andere gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, turnCopy.getDiscoveredArtifacts());
-        assertNotSame("Kopie sollte andere gleich Liste enthalten", playersOriginal, turnCopy.getPlayers());
-        assertNotSame("Kopie sollte andere gleiche Karte halten", tilesOriginal, turnCopy.getTiles());
+        assertNotSame("Kopie sollte andere gleiche Beschreibung halten", descriptionOriginal, actionCopy.getDescription());
+        assertNotSame("Kopie sollte andere gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, actionCopy.getDiscoveredArtifacts());
+        assertNotSame("Kopie sollte andere gleich Liste enthalten", playersOriginal, actionCopy.getPlayers());
+        assertNotSame("Kopie sollte andere gleiche Karte halten", tilesOriginal, actionCopy.getTiles());
 
 
         //teste ob Änderungen an Copy unabhängig vom Original sind
-        turnCopy.nextPlayerActive();
-        turnCopy.changeDescription("Spieler " + turnCopy.getActivePlayerIndex() + " ist an der Reihe. Ziehe Flutkarten.");
-        turnCopy.getDiscoveredArtifacts().add(ArtifactType.FIRE);
-        turnCopy.setState(TurnState.DRAW_ARTIFACT_CARD);
+        actionCopy.nextPlayerActive();
+        actionCopy.changeDescription("Spieler " + actionCopy.getActivePlayerIndex() + " ist an der Reihe. Ziehe Flutkarten.");
+        actionCopy.getDiscoveredArtifacts().add(ArtifactType.FIRE);
+        actionCopy.setState(TurnState.DRAW_ARTIFACT_CARD);
 
-        assertNotEquals("Kopie sollte nicht mehr gleichen aktiven Spieler halten", activePlayerOriginal, turnCopy.getActivePlayerIndex());
-        assertNotEquals("Kopie sollte nicht mehr gleiche Beschreibung halten", descriptionOriginal, turnCopy.getDescription());
-        assertNotEquals("Kopie sollte nicht mehr gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, turnCopy.getDiscoveredArtifacts());
-        for (int i = 0; i < turn.getPlayers().size(); i++) {
+        assertNotEquals("Kopie sollte nicht mehr gleichen aktiven Spieler halten", activePlayerOriginal, actionCopy.getActivePlayerIndex());
+        assertNotEquals("Kopie sollte nicht mehr gleiche Beschreibung halten", descriptionOriginal, actionCopy.getDescription());
+        assertNotEquals("Kopie sollte nicht mehr gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, actionCopy.getDiscoveredArtifacts());
+        for (int i = 0; i < action.getPlayers().size(); i++) {
             assertEquals("Kopie sollte gleiche Spieler-Liste halten. Index " + i + " unterscheidet sich.",
-                    turn.getPlayers().get(i).getType(),
-                    turn.getPlayers().get(i).getType());
+                    action.getPlayers().get(i).getType(),
+                    action.getPlayers().get(i).getType());
         }
-        assertNotEquals("Kopie sollte nicht mehr gleichen Status haben", stateOriginal, turnCopy.getState());
-        assertEquals("Kopie sollte gleiche Karte halten", tilesOriginal, turnCopy.getTiles());
+        assertNotEquals("Kopie sollte nicht mehr gleichen Status haben", stateOriginal, actionCopy.getState());
+        assertEquals("Kopie sollte gleiche Karte halten", tilesOriginal, actionCopy.getTiles());
     }
 }

@@ -28,13 +28,13 @@ public class JavaGame {
      * Stack mit den Zügen, die rückgängig gemacht werden können. Der oberste Zug ist der zuletzt gemachte, der
      * abgeschlossen wurde.
      */
-    private Stack<Turn> undoTurns;
+    private Stack<Action> undoActions;
 
     /**
      * Stack mit den Zügen, die gesehen vom Zug, der gerade getätigt wird in der Zukunft liegen. Er ist leer, wenn das
      * Spiel gerade gespielt wird und kein Zug rückgängig gemacht wurde.
      */
-    private Stack<Turn> redoTurns;
+    private Stack<Action> redoActions;
 
     /**
      * Der Schwierigkeitsgrad mit dem das Spiel angefangen wurde. Bestimmt den Anfangswasserpegel.
@@ -43,8 +43,8 @@ public class JavaGame {
 
     private JavaGame() {
         this.cheetah = false;
-        this.redoTurns = new Stack<>();
-        this.undoTurns = new Stack<>();
+        this.redoActions = new Stack<>();
+        this.undoActions = new Stack<>();
     }
 
     /**
@@ -57,11 +57,11 @@ public class JavaGame {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public static Pair<JavaGame, Turn> newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+    public static Pair<JavaGame, Action> newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
             throws NullPointerException, IllegalArgumentException {
         JavaGame game = new JavaGame();
 
-        // Erstellen des ersten Turns, der auf den undoTurns-Stapel abgelegt wird.
+        // Erstellen des ersten Turns, der auf den undoActions-Stapel abgelegt wird.
         if (mapName == null) {
             throw new NullPointerException();
         } else if (mapName.equals("")) {
@@ -76,25 +76,25 @@ public class JavaGame {
             game.difficulty = difficulty;
         }
 
-        Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
-        if (initialTurn == null) {
+        Action initialAction = Action.createInitialAction(difficulty, players, tiles);
+        if (initialAction == null) {
             return null;
         }
 
-        return new Pair<>(game, game.endTurn(initialTurn));
+        return new Pair<>(game, game.finishAction(initialAction));
     }
 
     /**
-     * Bekommt den zuletzt getätigten Zug und erstellt einen neün, der für den nächsten Zug benutzt werden kann. Gab es
-     * noch spätere Züge, werden diese vom Stapel entfernt.
+     * Bekommt die zuletzt getätigte Aktion und erstellt eine neüe, die für den nächsten Zug benutzt werden kann. Gab es
+     * noch spätere Aktionen, werden diese vom Stapel entfernt.
      */
-    public Turn endTurn(Turn currentTurn) {
-        this.undoTurns.push(currentTurn);
-        while (!redoTurns.empty()) {
-            redoTurns.pop();
+    public Action finishAction(Action currentAction) {
+        this.undoActions.push(currentAction);
+        while (!redoActions.empty()) {
+            redoActions.pop();
         }
 
-        return currentTurn.copy();
+        return currentAction.copy();
     }
 
     /**
@@ -108,19 +108,19 @@ public class JavaGame {
             return 0;
         }
         double score;
-        if (undoTurns.peek().isGameWon()) {
-            score = (1.0 / (double) this.numRounds()) * 10000;
+        if (undoActions.peek().isGameWon()) {
+            score = (1.0 / (double) this.numTurns()) * 10000;
 
         } else {
-            score = this.numRounds() * 100;
+            score = this.numTurns() * 100;
         }
         int extraPoints = 0;
-        if (!undoTurns.isEmpty()) {
+        if (!undoActions.isEmpty()) {
             // Für jedes gefundene Artefakt gibt es 100 Extrapunkte
-            extraPoints += 10000 / this.numRounds() * undoTurns.peek().getDiscoveredArtifacts().size();
+            extraPoints += 10000 / this.numTurns() * undoActions.peek().getDiscoveredArtifacts().size();
 
             // Extrapunkte, wenn das Spiel gewonnen wurde
-            if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
+            if (undoActions.peek().isGameEnded() && undoActions.peek().isGameWon()) {
                 extraPoints += 100000;
             }
         }
@@ -130,18 +130,17 @@ public class JavaGame {
     }
 
     /**
-     * Zählt die im Spiel vorgekommenen Runden, also wie oft der erste Spieler bereits an der Reihe war, was zwar
-     * proportional, aber nicht direkt abhängig von der Anzahl der Turns ist.
+     * Zählt die im Spiel vorgekommenen Züge.
      *
-     * @return Anzahl der im Spiel gespielten Runden
+     * @return Anzahl der im Spiel gespielten Züge
      */
-    public int numRounds() {
+    public int numTurns() {
         int currentPlayer = 0;
         int turns = 1;
-        for (Turn currentTurn : undoTurns) {
-            if (currentTurn.getActivePlayerIndex() != currentPlayer) {
+        for (Action currentAction : undoActions) {
+            if (currentAction.getActivePlayerIndex() != currentPlayer) {
                 turns++;
-                currentPlayer = currentTurn.getActivePlayerIndex();
+                currentPlayer = currentAction.getActivePlayerIndex();
             }
         }
 
@@ -160,17 +159,17 @@ public class JavaGame {
         return this.cheetah;
     }
 
-    public Turn getPreviousTurn() {
-        return undoTurns.peek();
+    public Action getPreviousAction() {
+        return undoActions.peek();
     }
 
     public boolean canRedo() {
-        return !redoTurns.isEmpty();
+        return !redoActions.isEmpty();
     }
 
     public boolean canUndo() {
         final int INITIAL_TURN_SIZE = 1;
-        return undoTurns.size() == INITIAL_TURN_SIZE;
+        return undoActions.size() == INITIAL_TURN_SIZE;
     }
 
     public void markCheetah() {

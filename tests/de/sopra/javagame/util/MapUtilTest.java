@@ -5,7 +5,6 @@ import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 

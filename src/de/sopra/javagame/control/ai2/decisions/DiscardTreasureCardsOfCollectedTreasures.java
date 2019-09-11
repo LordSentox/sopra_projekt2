@@ -1,9 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 
 import java.util.EnumSet;
@@ -20,8 +20,8 @@ public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
 
     @Override
     public Decision decide() {
-        Turn turn = control.getActiveTurn();
-        EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
+        Action action = control.getCurrentAction();
+        EnumSet<ArtifactType> discoveredArtifacts = action.getDiscoveredArtifacts();
         Player activePlayer = control.getActivePlayer();
         List<ArtifactCard> hand = activePlayer.getHand();
         for (ArtifactCard card : hand) {

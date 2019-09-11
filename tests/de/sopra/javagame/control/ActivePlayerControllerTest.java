@@ -30,7 +30,7 @@ public class ActivePlayerControllerTest {
     private MapTile[][] testMap;
     private List moveablePlayers;
     private MapController mapController;
-    private Turn turn;
+    private Action action;
     private ArtifactCard fireCard;
     private ArtifactCard waterCard;
     private ArtifactCard earthCard;
@@ -53,7 +53,7 @@ public class ActivePlayerControllerTest {
         activePlayerController = controllerChan.getActivePlayerController();
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
         javaGame = controllerChan.getJavaGame();
-        turn = controllerChan.getCurrentTurn();
+        action = controllerChan.getCurrentAction();
         
         boolean [][] tiles = new boolean [12][12];
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
@@ -66,7 +66,7 @@ public class ActivePlayerControllerTest {
         controllerChan.startNewGame(tiles, players, Difficulty.NORMAL);
         mapController = controllerChan.getMapController();
         
-        artifactCardStack = turn.getArtifactCardStack();
+        artifactCardStack = action.getArtifactCardStack();
         List<ArtifactCard> cardList = artifactCardStack.draw(28, false);
         
         for (ArtifactCard cur : cardList){
@@ -94,10 +94,10 @@ public class ActivePlayerControllerTest {
             }
         }
         
-        pilot = new Pilot("pilot", new Point(4,2), turn);
-        courier = new Courier("courier", new Point(4, 2), turn);
-        explorer = new Explorer("explorer", new Point(5,2), turn);
-        navigator = new Navigator("navigator", new Point(4,2), turn);
+        pilot = new Pilot("pilot", new Point(4,2), action);
+        courier = new Courier("courier", new Point(4, 2), action);
+        explorer = new Explorer("explorer", new Point(5,2), action);
+        navigator = new Navigator("navigator", new Point(4,2), action);
         
         handCardsExpected = new ArrayList<ArtifactCard>();
         explorer.getHand().add(fireCard);
@@ -118,7 +118,7 @@ public class ActivePlayerControllerTest {
 
     @Test
     public void testShowMovements() {
-        int activePlayerNumber = turn.getActivePlayerIndex();
+        int activePlayerNumber = action.getActivePlayerIndex();
         Pair<PlayerType, Boolean> activeplayer = players.get(activePlayerNumber);
         
         //Optionen für Courier

@@ -40,19 +40,19 @@ public class JavaGameTest {
     @Test
     public void newGame() {
         //teste Erstellen vom Spiel mit korrekten Werten
-        Pair<JavaGame, Turn> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        Pair<JavaGame, Action> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
         JavaGame javaGame = newGame.getLeft();
 
         Assert.assertEquals("Das neue Spiel sollte den gleichen MapNamen beinhalten", testMapString, javaGame.getMapName());
-        Assert.assertEquals("Das neue Spiel sollte die gleiche Map beinhalten", testMap, javaGame.getPreviousTurn().getTiles());
+        Assert.assertEquals("Das neue Spiel sollte die gleiche Map beinhalten", testMap, javaGame.getPreviousAction().getTiles());
         Assert.assertEquals("Das neue Spiel sollte den gleichen Schwierigkeitsgrad haben ", Difficulty.NOVICE, javaGame.getDifficulty());
 
-        Turn turn = javaGame.getPreviousTurn();
+        Action action = javaGame.getPreviousAction();
 
-        for (int i = 0; i < turn.getPlayers().size(); i++) {
+        for (int i = 0; i < action.getPlayers().size(); i++) {
             Assert.assertEquals("Kopie sollte gleiche Spieler-Liste halten. Index " + i + " unterscheidet sich.",
-                    turn.getPlayers().get(i).getType(),
-                    turn.getPlayers().get(i).getType());
+                    action.getPlayers().get(i).getType(),
+                    action.getPlayers().get(i).getType());
         }
         //Assert.assertEquals("", players, javaGame.getPreviousTurn().getPlayers());
 
@@ -98,26 +98,26 @@ public class JavaGameTest {
     }
 
     @Test
-    public void endTurn() {
-        Pair<JavaGame, Turn> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+    public void finishAction() {
+        Pair<JavaGame, Action> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
         JavaGame javaGame = newGame.getLeft();
-        Turn currentTurn = newGame.getRight();
+        Action currentAction = newGame.getRight();
 
-        Turn lastTurn = javaGame.getPreviousTurn();
-        Turn nextTurn = javaGame.endTurn(currentTurn);
+        Action lastAction = javaGame.getPreviousAction();
+        Action nextAction = javaGame.finishAction(currentAction);
 
-        //Assert.assertTrue("Das Java-Game hätte einen neuen currentTurn haben sollen",
-        //                  controllerChan.getCurrentTurn() == nextTurn);
-        Assert.assertNotSame("Das Java-Game hätte einen neuen Previous Turn haben sollen", javaGame.getPreviousTurn(), lastTurn);
-        Assert.assertSame("Das Java-Game hätte einen neuen Previous Turn haben sollen", javaGame.getPreviousTurn(), currentTurn);
-        Assert.assertNotSame("Der neu erstellte Turn hätte nicht gleich dem vorherigen sein dürfen", currentTurn, nextTurn);
+        //Assert.assertTrue("Das Java-Game hätte einen neuen currentAction haben sollen",
+        //                  controllerChan.getCurrentAction() == nextAction);
+        Assert.assertNotSame("Das Java-Game hätte einen neuen Previous Action haben sollen", javaGame.getPreviousAction(), lastAction);
+        Assert.assertSame("Das Java-Game hätte einen neuen Previous Action haben sollen", javaGame.getPreviousAction(), currentAction);
+        Assert.assertNotSame("Der neu erstellte Action hätte nicht gleich dem vorherigen sein dürfen", currentAction, nextAction);
 
         //teste ob korrekr redo Stapel zurückgesetzt wird
         controllerChan.getGameFlowController().undo();
         controllerChan.getGameFlowController().undo();
         Assert.assertTrue("There should have been two redo turns", javaGame.canRedo());
-        currentTurn = controllerChan.getCurrentTurn();
-        javaGame.endTurn(currentTurn);
+        currentAction = controllerChan.getCurrentAction();
+        javaGame.finishAction(currentAction);
         Assert.assertFalse("There should have been no redo turns", javaGame.canRedo());
     }
 
@@ -140,9 +140,9 @@ public class JavaGameTest {
         //JavaGame javaGame = controllerChan.getJavaGame();
         Difficulty difficulty = Difficulty.NOVICE;
         int actualDifficulty = (difficulty.getInitialWaterLevel() + 1);
-        Pair<JavaGame, Turn> newGame = JavaGame.newGame(mapString, testMap, difficulty, players);
+        Pair<JavaGame, Action> newGame = JavaGame.newGame(mapString, testMap, difficulty, players);
         JavaGame javaGame = newGame.getLeft();
-        Turn turn = newGame.getRight();
+        Action action = newGame.getRight();
         int turnCount = 1;
 
         //teste ob Anfangsscore korrekt berechnet wird
@@ -153,27 +153,27 @@ public class JavaGameTest {
 
 
         //teste ob Score für 1 Artefakt korrekt berechnet wird
-        turn.getDiscoveredArtifacts().add(ArtifactType.FIRE);
-        Turn nextTurn = javaGame.endTurn(turn);
+        action.getDiscoveredArtifacts().add(ArtifactType.FIRE);
+        Action nextAction = javaGame.finishAction(action);
 
         Assert.assertEquals("Der score dieses Spiels hätte 10.100 sein müssen",
-                100.0 * turnCount * actualDifficulty + 10000 / turnCount / nextTurn.getDiscoveredArtifacts().size(),
+                100.0 * turnCount * actualDifficulty + 10000 / turnCount / nextAction.getDiscoveredArtifacts().size(),
                 javaGame.calculateScore(),
                 0.0);
 
 
         //teste ob Score für Game Won korrekt berechnet wird
-        Turn secondNextTurn = javaGame.endTurn(nextTurn);
+        Action secondNextAction = javaGame.finishAction(nextAction);
 
-        turn.getDiscoveredArtifacts().add(ArtifactType.WATER);
-        turn.getDiscoveredArtifacts().add(ArtifactType.EARTH);
-        turn.getDiscoveredArtifacts().add(ArtifactType.AIR);
+        action.getDiscoveredArtifacts().add(ArtifactType.WATER);
+        action.getDiscoveredArtifacts().add(ArtifactType.EARTH);
+        action.getDiscoveredArtifacts().add(ArtifactType.AIR);
 
-        secondNextTurn.setGameWon(true);
-        secondNextTurn.setGameEnded(true);
-        secondNextTurn = javaGame.endTurn(secondNextTurn);
+        secondNextAction.setGameWon(true);
+        secondNextAction.setGameEnded(true);
+        secondNextAction = javaGame.finishAction(secondNextAction);
         Assert.assertEquals("Der score dieses Spiels hätte 120.000 sein müssen",
-                (1.0/turnCount * 10000.0 + (10000/turnCount * secondNextTurn.getDiscoveredArtifacts().size())*actualDifficulty) + 100000,
+                (1.0/turnCount * 10000.0 + (10000/turnCount * secondNextAction.getDiscoveredArtifacts().size())*actualDifficulty) + 100000,
                 javaGame.calculateScore(),
                 0.0);
 

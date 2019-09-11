@@ -1,8 +1,8 @@
 package de.sopra.javagame.model.player;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Point;
 
@@ -16,15 +16,15 @@ public class Engineer extends Player {
 
     private boolean hasExtraDrain;
 
-    public Engineer(String name, Point position, Turn turn) {
-        super(PlayerType.ENGINEER, name, turn);
+    public Engineer(String name, Point position, Action action) {
+        super(PlayerType.ENGINEER, name, action);
         this.position = position;
         this.isAI = false;
         this.hasExtraDrain = false;
     }
 
-    public Engineer(String name, Point position, Turn turn, boolean isAI) {
-        super(PlayerType.ENGINEER, name, turn);
+    public Engineer(String name, Point position, Action action, boolean isAI) {
+        super(PlayerType.ENGINEER, name, action);
         this.position = position;
         this.isAI = isAI;
         this.hasExtraDrain = false;

@@ -1,8 +1,8 @@
 package de.sopra.javagame.model.player;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
@@ -40,16 +40,16 @@ public class PlayerTest {
 
     @Test
     public void forcePush() {
-        Turn turn = Turn.createInitialTurn(Difficulty.NORMAL,
+        Action action = Action.createInitialAction(Difficulty.NORMAL,
                 Arrays.asList(new Pair<>(PlayerType.PILOT, false),
                         new Pair<>(PlayerType.NAVIGATOR, false)),
                 this.testMap);
 
-        Player pilot = turn.getPlayers().get(0);
-        Player navigator = turn.getPlayers().get(1);
+        Player pilot = action.getPlayers().get(0);
+        Player navigator = action.getPlayers().get(1);
 
         // Teste einen gültigen force-push des Navigators auf ein Inselfeld der Karte
-        turn.nextPlayerActive();
+        action.nextPlayerActive();
         Point oldPos = new Point(pilot.getPosition()); // Position des Piloten
         Assert.assertTrue("Konnte einen Spieler nicht bewegen, obwohl der Zug legal ist", navigator.forcePush(Direction.UP, pilot));
         Assert.assertEquals("Spieler wurde nicht wirklich bewegt", oldPos.xPos, pilot.getPosition().xPos);

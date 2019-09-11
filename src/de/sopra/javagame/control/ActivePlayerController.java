@@ -1,9 +1,9 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
@@ -34,8 +34,8 @@ public class ActivePlayerController {
      *            Standardbewegungsmöglichkeiten angezeigt.
      */
     public void showMovements(boolean specialActive) {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
         List<Point> movements = player.legalMoves(specialActive);
         controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
 
@@ -46,8 +46,8 @@ public class ActivePlayerController {
      * können.
      */
     public void showDrainOptions() {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
         List<Point> drainable = player.drainablePositions();
         controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
      
@@ -63,8 +63,8 @@ public class ActivePlayerController {
     public void showSpecialAbility() {
         // TODO: ergänzen die Methode später.
         // XXX: Nicht immer Spieler kopieren
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
         InGameViewAUI aui = controllerChan.getInGameViewAUI();
 
         if (player.getType() == PILOT || player.getType() == DIVER) {
@@ -98,8 +98,8 @@ public class ActivePlayerController {
      * @see #showSpecialAbility
      */
     public void cancelSpecialAbility() {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
         List<Point> movements = player.legalMoves(false);
         List<Point> drainable = player.drainablePositions();
         controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
@@ -114,8 +114,8 @@ public class ActivePlayerController {
      *            Der Spieler, dem eine Karte gegeben werden soll.
      */
     public void showTransferable(PlayerType targetPlayer) {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
         controllerChan.getInGameViewAUI().refreshCardsTransferable(player.legalReceivers().contains(targetPlayer));
     }
 
@@ -129,11 +129,11 @@ public class ActivePlayerController {
      *            Der Spieler, dem die Karte gegeben werden soll
      */
     public void transferCard(int handCardIndex, PlayerType targetPlayer) {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
-        Player target = currentTurn.getPlayer(targetPlayer);
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
+        Player target = currentAction.getPlayer(targetPlayer);
         ArtifactCard card = player.getHand().get(handCardIndex);
-        if (currentTurn.transferArtifactCard(card, player, target)) {
+        if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
@@ -147,12 +147,12 @@ public class ActivePlayerController {
      * @see ArtifactCard
      */
     public void collectArtifact() {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
 
         if (player.collectArtifact() != ArtifactType.NONE) {
-            controllerChan.getInGameViewAUI().refreshArtifactsFound(currentTurn.getDiscoveredArtifacts());
-            controllerChan.getInGameViewAUI().refreshArtifactStack(currentTurn.getArtifactCardStack());
+            controllerChan.getInGameViewAUI().refreshArtifactsFound(currentAction.getDiscoveredArtifacts());
+            controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
         }
@@ -170,15 +170,15 @@ public class ActivePlayerController {
      *            sich auf das Feld zu bewegen
      */
     public void move(Point destination, boolean useSpecial) {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
         int actionsLeft = player.getActionsLeft();
 
         if (player.move(destination, true, useSpecial)) {
             controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
             controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
 
-            controllerChan.endTurn();
+            controllerChan.finishAction();
         }
     }
 
@@ -194,9 +194,9 @@ public class ActivePlayerController {
      * @see PlayerType
      */
     public void moveOther(Direction direction, PlayerType target) {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
-        Player forcePlayer = currentTurn.getPlayer(target);
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
+        Player forcePlayer = currentAction.getPlayer(target);
 
         if (player.canMoveOthers()) {
             player.forcePush(direction, forcePlayer);
@@ -214,11 +214,11 @@ public class ActivePlayerController {
      *            Die Positionen aller Felder die Trockengelegt werden sollen.
      */
     public void drain(Point... positions) {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getActivePlayer();
         for (Point point : positions){
             if (player.drain(point)){
-                controllerChan.getInGameViewAUI().refreshMapTile(point, currentTurn.getTile(point));
+                controllerChan.getInGameViewAUI().refreshMapTile(point, currentAction.getTile(point));
                 controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
                 controllerChan.getInGameViewAUI().refreshDrainOptions(player.drainablePositions());
             }
@@ -232,7 +232,7 @@ public class ActivePlayerController {
      * @see HighScore
      */
     public void showTip() {
-        Turn currentTurn = controllerChan.getCurrentTurn();
+        Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().markCheetah();
         // TODO: KI nach Möglichkeiten fragen
         // controllerChan.getAIController.getTip
@@ -245,8 +245,8 @@ public class ActivePlayerController {
      * Beendet den Zug und startet den nächsten Zug.
      */
     public void endTurn() {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        controllerChan.getJavaGame().endTurn(currentTurn);
+        Action currentAction = controllerChan.getCurrentAction();
+        controllerChan.getJavaGame().finishAction(currentAction);
 
     }
 }

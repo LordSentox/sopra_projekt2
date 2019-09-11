@@ -1,7 +1,7 @@
 package de.sopra.javagame.model.player;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
@@ -20,15 +20,15 @@ public class Navigator extends Player {
      */
     private boolean hasExtraPush;
 
-    public Navigator(String name, Point position, Turn turn) {
-        super(PlayerType.NAVIGATOR, name, turn);
+    public Navigator(String name, Point position, Action action) {
+        super(PlayerType.NAVIGATOR, name, action);
         this.position = position;
         this.isAI = false;
         this.hasExtraPush = false;
     }
 
-    public Navigator(String name, Point position, Turn turn, boolean isAI) {
-        super(PlayerType.NAVIGATOR, name, turn);
+    public Navigator(String name, Point position, Action action, boolean isAI) {
+        super(PlayerType.NAVIGATOR, name, action);
         this.position = position;
         this.isAI = isAI;
         this.hasExtraPush = false;
@@ -58,7 +58,7 @@ public class Navigator extends Player {
 
         // Ist das Feld, auf das der Spieler bewegt werden soll ein Inselfeld?
         Point newPosition = other.getPosition().add(direction);
-        MapTile destinationTile = this.turn.getTile(newPosition);
+        MapTile destinationTile = this.action.getTile(newPosition);
         if (destinationTile == null || destinationTile.getState() == GONE) {
             return false;
         }

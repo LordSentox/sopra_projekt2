@@ -65,9 +65,9 @@ public class AIController {
      * Wird aufgerufen, wenn die Cardstack komplett neu erstellt werden
      */
     public void connectTrackers() {
-        Turn currentTurn = controllerChan.getCurrentTurn();
-        currentTurn.getArtifactCardStack().setObserver(artifactCardStackTracker);
-        currentTurn.getFloodCardStack().setObserver(floodCardStackTracker);
+        Action currentAction = controllerChan.getCurrentAction();
+        currentAction.getArtifactCardStack().setObserver(artifactCardStackTracker);
+        currentAction.getFloodCardStack().setObserver(floodCardStackTracker);
     }
 
     /**
@@ -99,12 +99,12 @@ public class AIController {
     }
 
     /**
-     * Der aktive Zug, an welchem Änderung vorgenommen werden dürfen
+     * Der aktive Aktion, an welcher Änderungen vorgenommen werden dürfen
      *
-     * @return der aktuelle Zug
+     * @return Die aktuelle Aktion
      */
-    public Turn getActiveTurn() {
-        return controllerChan.getCurrentTurn();
+    public Action getCurrentAction() {
+        return controllerChan.getCurrentAction();
     }
 
     /**
@@ -157,16 +157,16 @@ public class AIController {
      * @return das MapTile zu einem Punkt
      */
     public MapTile getTile(Point point) {
-        return getActiveTurn().getTile(point);
+        return getCurrentAction().getTile(point);
     }
 
     /**
      * Eine Liste aller Spieler
      *
-     * @return die Liste der Spieler im aktuellen Zustand (Turn)
+     * @return die Liste der Spieler im aktuellen Zustand (Action)
      */
     public List<Player> getAllPlayers() {
-        return getActiveTurn().getPlayers();
+        return getCurrentAction().getPlayers();
     }
 
     /**
@@ -214,12 +214,12 @@ public class AIController {
 
     /**
      * Fordert die KI auf mit dem aktuellen Spieler einen Zug durchzuführen
-     * Der hierfür verwendete aktive Spieler ist der aktive Spieler im aktiven Zug {@link Turn#getActivePlayer()}
+     * Der hierfür verwendete aktive Spieler ist der aktive Spieler im aktiven Zug {@link Action#getActivePlayer()}
      *
-     * @see #getActiveTurn()
+     * @see #getCurrentAction()
      */
     public void makeStep() {
-        makeStep(() -> getActiveTurn().getActivePlayer());
+        makeStep(() -> getCurrentAction().getActivePlayer());
     }
 
     /**
@@ -237,12 +237,12 @@ public class AIController {
 
     /**
      * Fordert einen Tipp in textueller Befehlsform von der KI an.
-     * Der hierfür verwendete aktive Spieler ist der aktive Spieler im aktiven Zug {@link Turn#getActivePlayer()}
+     * Der hierfür verwendete aktive Spieler ist der aktive Spieler im aktiven Zug {@link Action#getActivePlayer()}
      *
-     * @see #getActiveTurn()
+     * @see #getCurrentAction()
      */
     public String getTip() {
-        return getTip(() -> getActiveTurn().getActivePlayer());
+        return getTip(() -> getCurrentAction().getActivePlayer());
     }
 
 }

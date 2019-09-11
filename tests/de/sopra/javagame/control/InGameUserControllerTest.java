@@ -26,7 +26,7 @@ public class InGameUserControllerTest {
     private InGameUserController inGameCont;
     private TestDummy.InGameView inGameView;
     private JavaGame javaGame;
-    private Turn turn;
+    private Action action;
     private ArtifactCard fireCard;
     private ArtifactCard waterCard;
     private ArtifactCard earthCard;
@@ -58,8 +58,8 @@ public class InGameUserControllerTest {
         inGameCont = controllerChan.getInGameUserController();
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
         javaGame = controllerChan.getJavaGame();
-        turn = controllerChan.getCurrentTurn();
-        artifactCardStack = turn.getArtifactCardStack();
+        action = controllerChan.getCurrentAction();
+        artifactCardStack = action.getArtifactCardStack();
         List<ArtifactCard> cardList = artifactCardStack.draw(28, false);
         
         for (ArtifactCard cur : cardList){
@@ -87,9 +87,9 @@ public class InGameUserControllerTest {
             }
         }
         
-        courier = new Courier("courier", new Point(4, 2), turn);
-        explorer = new Explorer("explorer", new Point(5,2), turn);
-        navigator = new Navigator("navigator", new Point(4,2), turn);
+        courier = new Courier("courier", new Point(4, 2), action);
+        explorer = new Explorer("explorer", new Point(5,2), action);
+        navigator = new Navigator("navigator", new Point(4,2), action);
         
         handCardsExpected = new ArrayList<>();
         explorer.getHand().add(fireCard);
@@ -109,7 +109,7 @@ public class InGameUserControllerTest {
     }
     @Test
     public void testPlayHelicopterCard() {
-        Turn currentTurn = javaGame.getPreviousTurn();
+        Action currentAction = javaGame.getPreviousAction();
         //teste mit ungültigem Zielfeld(kein maptile)
         explorer.getHand().add(heliCard);
         inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(new Point (5,2), new Point(1,1)), moveablePlayers);
@@ -182,7 +182,7 @@ public class InGameUserControllerTest {
 
         //teste mit HeliCard auf HeliPlatz und nicht alle Artefakte gefunden
         Point heliPoint = new Point(8, 4);
-        turn.getDiscoveredArtifacts().clear();
+        action.getDiscoveredArtifacts().clear();
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(navigator);
@@ -196,15 +196,15 @@ public class InGameUserControllerTest {
         moveablePlayers.add(courier);
         inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(courier.getPosition(), heliPoint), moveablePlayers);
         Assert.assertFalse("Das Spiel sollte nicht geendet haben",
-                            currentTurn.isGameEnded());
+                            currentAction.isGameEnded());
         Assert.assertFalse("Das Spiel hätte nicht gewonnen sein sollen",
-                            currentTurn.isGameWon());
+                            currentAction.isGameWon());
 
         //teste mit HeliCard auf HeliPlatz und alle Artefakte gefunden
-        turn.getDiscoveredArtifacts().add(ArtifactType.FIRE);
-        turn.getDiscoveredArtifacts().add(ArtifactType.WATER);
-        turn.getDiscoveredArtifacts().add(ArtifactType.EARTH);
-        turn.getDiscoveredArtifacts().add(ArtifactType.AIR);
+        action.getDiscoveredArtifacts().add(ArtifactType.FIRE);
+        action.getDiscoveredArtifacts().add(ArtifactType.WATER);
+        action.getDiscoveredArtifacts().add(ArtifactType.EARTH);
+        action.getDiscoveredArtifacts().add(ArtifactType.AIR);
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(navigator);
@@ -224,9 +224,9 @@ public class InGameUserControllerTest {
         moveablePlayers.add(courier);
         inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(courier.getPosition(), heliPoint), moveablePlayers);
         Assert.assertTrue("Das Spiel sollte geendet haben",
-                            currentTurn.isGameEnded());
+                            currentAction.isGameEnded());
         Assert.assertTrue("Das Spiel hätte gewonnen sein sollen",
-                            currentTurn.isGameWon());
+                            currentAction.isGameWon());
 
     }
 
@@ -244,7 +244,7 @@ public class InGameUserControllerTest {
         //TODO prüfe ob dieser Test funktioniert
         Assert.assertArrayEquals("Die Karte hätte sich nicht ändern dürfen.",
                              testMap,
-                             turn.getTiles());
+                             action.getTiles());
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                             explorer.getHand().contains(sandCard));
 

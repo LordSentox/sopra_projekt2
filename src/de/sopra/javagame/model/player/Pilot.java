@@ -1,8 +1,8 @@
 package de.sopra.javagame.model.player;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Point;
 
@@ -22,15 +22,15 @@ public class Pilot extends Player {
      */
     private boolean hasSpecialMove;
 
-    public Pilot(String name, Point position, Turn turn) {
-        super(PlayerType.PILOT, name, turn);
+    public Pilot(String name, Point position, Action action) {
+        super(PlayerType.PILOT, name, action);
         this.position = position;
         this.isAI = false;
         this.hasSpecialMove = false;
     }
 
-    public Pilot(String name, Point position, Turn turn, boolean isAI) {
-        super(PlayerType.PILOT, name, turn);
+    public Pilot(String name, Point position, Action action, boolean isAI) {
+        super(PlayerType.PILOT, name, action);
         this.position = position;
         this.isAI = isAI;
         this.hasSpecialMove = false;
@@ -56,7 +56,7 @@ public class Pilot extends Player {
             return super.legalMoves(specialActive);
 
         List<Point> movement = new ArrayList<>();
-        MapTile[][] map = this.turn.getTiles();
+        MapTile[][] map = this.action.getTiles();
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
                 if (map[x][y] != null && map[x][y].getState() != MapTileState.GONE) {

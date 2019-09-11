@@ -46,7 +46,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
 
     public void init() {
-        //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentTurn().getTiles();
+        //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentAction().getTiles();
         
 //        /* TEMP */
 //        MapTile[][] tiles = new MapTile[9][12];

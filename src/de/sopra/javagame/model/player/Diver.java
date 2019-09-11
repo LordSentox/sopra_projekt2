@@ -1,7 +1,7 @@
 package de.sopra.javagame.model.player;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Point;
 
@@ -18,14 +18,14 @@ import static de.sopra.javagame.model.MapTileState.DRY;
  */
 public class Diver extends Player {
 
-    public Diver(String name, Point position, Turn turn) {
-        super(PlayerType.DIVER, name, turn);
+    public Diver(String name, Point position, Action action) {
+        super(PlayerType.DIVER, name, action);
         this.position = position;
         this.isAI = false;
     }
 
-    public Diver(String name, Point position, Turn turn, boolean isAI) {
-        super(PlayerType.DIVER, name, turn);
+    public Diver(String name, Point position, Action action, boolean isAI) {
+        super(PlayerType.DIVER, name, action);
         this.position = position;
         this.isAI = isAI;
     }
@@ -48,7 +48,7 @@ public class Diver extends Player {
         List<Point> legalMoves = new ArrayList<>();
         for (int y = 0; y < reachable.length; ++y) {
             for (int x = 0; x < reachable[y].length; ++x) {
-                if (reachable[y][x] && this.turn.getTile(x, y) != null && this.turn.getTile(x, y).getState() == DRY) {
+                if (reachable[y][x] && this.action.getTile(x, y) != null && this.action.getTile(x, y).getState() == DRY) {
                     legalMoves.add(new Point(x, y));
                 }
             }
@@ -65,7 +65,7 @@ public class Diver extends Player {
      * @return Zweidimensionales Array, was über die Karte des Turns gelegt die vom Taucher erreichbaren Positionen anzeigt
      */
     private boolean[][] reachableDestinations() {
-        boolean[][] reachable = new boolean[this.turn.getTiles().length][12];
+        boolean[][] reachable = new boolean[this.action.getTiles().length][12];
         // Initialisieren der Wasserwege, sofern es welche gibt
         this.setTrueAroundWithTargetPremise(reachable, this.position, tile -> tile != null && tile.getState() != DRY);
         // Suche dynamisch heraus, welche Positionen der Taucher alles erreichen kann. Dies beinhaltet allerdings
@@ -75,7 +75,7 @@ public class Diver extends Player {
             somethingChanged = false;
             for (int y = 0; y < reachable.length; ++y) {
                 for (int x = 0; x < reachable[y].length; ++x) {
-                    if (reachable[y][x] && this.turn.getTile(x, y) != null && this.turn.getTile(x, y).getState() != DRY) {
+                    if (reachable[y][x] && this.action.getTile(x, y) != null && this.action.getTile(x, y).getState() != DRY) {
                         somethingChanged |= this.setTrueAround(reachable, new Point(x, y));
                     }
                 }
@@ -94,10 +94,10 @@ public class Diver extends Player {
      * @param premise Die Prämisse, die auf dem Zielfeld erfüllt sein muss.
      */
     private void setTrueAroundWithTargetPremise(boolean[][] reachable, Point around, Function<MapTile, Boolean> premise) {
-        MapTile upper = this.turn.getTile(around.xPos, around.yPos - 1);
-        MapTile left = this.turn.getTile(around.xPos - 1, around.yPos);
-        MapTile down = this.turn.getTile(around.xPos, around.yPos + 1);
-        MapTile right = this.turn.getTile(around.xPos + 1, around.yPos);
+        MapTile upper = this.action.getTile(around.xPos, around.yPos - 1);
+        MapTile left = this.action.getTile(around.xPos - 1, around.yPos);
+        MapTile down = this.action.getTile(around.xPos, around.yPos + 1);
+        MapTile right = this.action.getTile(around.xPos + 1, around.yPos);
         if (premise.apply(upper)) {
             reachable[around.yPos - 1][around.xPos] = true;
         }

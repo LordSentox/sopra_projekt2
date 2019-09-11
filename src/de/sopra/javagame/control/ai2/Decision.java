@@ -2,8 +2,8 @@ package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
@@ -85,8 +85,8 @@ public abstract class Decision {
         return control.getActivePlayer();
     }
 
-    protected Turn turn() {
-        return control.getActiveTurn();
+    protected Action turn() {
+        return control.getCurrentAction();
     }
 
     protected MapTile tile() {

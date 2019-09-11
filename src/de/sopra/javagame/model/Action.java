@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
  *
  * @author Lisa, Hannah
  */
-//FIXME Turn umbenennen zu Action --> Action bedeutet genau eine Aktion von dem Spiel, dem aktiven oder einem anderen Spieler
-//    --> dazu alle Aufrufe, die Turn beinhalten umbenennen
+//FIXME Action umbenennen zu Action --> Action bedeutet genau eine Aktion von dem Spiel, dem aktiven oder einem anderen Spieler
+//    --> dazu alle Aufrufe, die Action beinhalten umbenennen
 
-public class Turn implements Copyable<Turn> {
+public class Action implements Copyable<Action> {
 
     /**
      * Eine Menge aller Artefakte, die bereits gefunden wurden.
@@ -68,7 +68,7 @@ public class Turn implements Copyable<Turn> {
 
     private boolean gameWon;
 
-    private Turn() {
+    private Action() {
     }
 
     public CardStack<ArtifactCard> getArtifactCardStack() {
@@ -121,49 +121,49 @@ public class Turn implements Copyable<Turn> {
     }
 
     /**
-     * Erstellt einen neuen {@link Turn} als Anfangszustand des Spiels
+     * Erstellt einen neuen {@link Action} als Anfangszustand des Spiels
      *
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param tiles      Die Map des Spiels
      */
-    public static Turn createInitialTurn(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles)
+    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles)
         throws NullPointerException, IllegalArgumentException {
-        Turn turn = new Turn();
-        turn.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
-        turn.description = "Spielstart";
+        Action action = new Action();
+        action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
+        action.description = "Spielstart";
         if (tiles == null || difficulty == null || players == null)
             throw new NullPointerException();
 
         if (players.isEmpty() || players.size() <2 || players.size() > 4)
             throw new IllegalArgumentException();
 
-        turn.tiles = tiles;
-        turn.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
-        turn.waterLevel = new WaterLevel(difficulty);
-        turn.artifactCardStack = CardStackUtil.createArtifactCardStack();
+        action.tiles = tiles;
+        action.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
+        action.waterLevel = new WaterLevel(difficulty);
+        action.artifactCardStack = CardStackUtil.createArtifactCardStack();
 
-        turn.players = players.stream().map(pair -> {
+        action.players = players.stream().map(pair -> {
             Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
             switch (pair.getLeft()) {
             case COURIER:
-                return new Courier("Hartmut Kurier", start, turn);
+                return new Courier("Hartmut Kurier", start, action);
             case DIVER:
-                return new Diver("Hartmut im Spanienurlaub", start, turn);
+                return new Diver("Hartmut im Spanienurlaub", start, action);
             case PILOT:
-                return new Pilot("Hartmut auf dem Weg in den Urlaub", start, turn);
+                return new Pilot("Hartmut auf dem Weg in den Urlaub", start, action);
             case NAVIGATOR:
-                return new Navigator("Hartmut Verlaufen", start, turn);
+                return new Navigator("Hartmut Verlaufen", start, action);
             case EXPLORER:
-                return new Explorer("Hartmut im Dschungel", start, turn);
+                return new Explorer("Hartmut im Dschungel", start, action);
             case ENGINEER:
-                return new Engineer("Hartmut Auto Kaputt", start, turn);
+                return new Engineer("Hartmut Auto Kaputt", start, action);
             default:
                 throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
             }
         }).collect(Collectors.toList());
 
-        turn.state = TurnState.FLOOD;
-        return turn;
+        action.state = TurnState.FLOOD;
+        return action;
     }
 
     /**
@@ -214,22 +214,22 @@ public class Turn implements Copyable<Turn> {
     }
 
     @Override
-    public Turn copy() {
-        Turn turn = new Turn();
-        turn.activePlayer = this.activePlayer;
-        turn.artifactCardStack = this.artifactCardStack.copy();
-        turn.description = CopyUtil.copy(this.description);
-        turn.discoveredArtifacts = EnumSet.copyOf(this.discoveredArtifacts);
-        turn.floodCardStack = this.floodCardStack.copy();
-        turn.players = CopyUtil.copyAsList(this.players);
-        for (Player player : turn.players) {
-            player.setActiveTurn(turn);
+    public Action copy() {
+        Action action = new Action();
+        action.activePlayer = this.activePlayer;
+        action.artifactCardStack = this.artifactCardStack.copy();
+        action.description = CopyUtil.copy(this.description);
+        action.discoveredArtifacts = EnumSet.copyOf(this.discoveredArtifacts);
+        action.floodCardStack = this.floodCardStack.copy();
+        action.players = CopyUtil.copyAsList(this.players);
+        for (Player player : action.players) {
+            player.setAction(action);
         }
-        turn.state = this.state;
-        turn.tiles = new MapTile[this.tiles.length][this.tiles[0].length];
-        CopyUtil.copyArr(this.tiles, turn.tiles);
-        turn.waterLevel = this.waterLevel.copy();
-        return turn;
+        action.state = this.state;
+        action.tiles = new MapTile[this.tiles.length][this.tiles[0].length];
+        CopyUtil.copyArr(this.tiles, action.tiles);
+        action.waterLevel = this.waterLevel.copy();
+        return action;
     }
 
     public boolean isGameEnded() {
