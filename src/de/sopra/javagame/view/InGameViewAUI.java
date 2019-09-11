@@ -1,13 +1,9 @@
 package de.sopra.javagame.view;
 
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.util.*;
 
-import java.awt.*;
 import java.util.EnumSet;
 import java.util.List;
 

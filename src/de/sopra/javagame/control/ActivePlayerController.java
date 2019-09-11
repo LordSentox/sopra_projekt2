@@ -1,20 +1,9 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
-import de.sopra.javagame.model.player.Courier;
-import de.sopra.javagame.model.player.Diver;
-import de.sopra.javagame.model.player.Engineer;
-import de.sopra.javagame.model.player.Explorer;
-import de.sopra.javagame.model.player.Pilot;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Direction;
-import de.sopra.javagame.util.HighScore;
-import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.util.*;
 
-import java.awt.*;
 import java.util.List;
 
 public class ActivePlayerController {
@@ -37,9 +26,8 @@ public class ActivePlayerController {
     public void showMovements(boolean specialActive) {
         MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
-        int activeID = currentTurn.getActivePlayer();
-        Player player = currentTurn.getPlayers().get(activeID);
-        List<Point> movements = player.legalMoves(specialActive);
+        Player player = currentTurn.getActivePlayer();
+        List<de.sopra.javagame.util.Point> movements = player.legalMoves(specialActive);
         controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
 
     }
@@ -51,8 +39,7 @@ public class ActivePlayerController {
     public void showDrainOptions() {
         MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
-        int activeID = currentTurn.getActivePlayer();
-        Player player = currentTurn.getPlayers().get(activeID);
+        Player player = currentTurn.getActivePlayer();
         List<Point> drainable = player.drainablePositions();
         controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
      
@@ -69,8 +56,7 @@ public class ActivePlayerController {
         //TODO: ergänzen die Methode später.
         MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
-        int activeID = currentTurn.getActivePlayer();
-        Player player = currentTurn.getPlayers().get(activeID);
+        Player player = currentTurn.getActivePlayer();
         if (player.getType() == PlayerType.PILOT) {
             List<Point> movements = new Pilot(player.getName(), player.getPosition(), currentTurn).legalMoves(true);
             controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
@@ -114,8 +100,7 @@ public class ActivePlayerController {
     public void showTransferable(PlayerType targetPlayer) {
         MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
-        int activeID = currentTurn.getActivePlayer();
-        Player player = currentTurn.getPlayers().get(activeID);
+        Player player = currentTurn.getActivePlayer();
         
 
     }

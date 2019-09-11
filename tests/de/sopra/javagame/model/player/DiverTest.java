@@ -7,7 +7,12 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.fail;
+import org.junit.*;
+
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.util.*;
+
+import static org.junit.Assert.*;
 
 public class DiverTest {
     MapTile[][] testMap;

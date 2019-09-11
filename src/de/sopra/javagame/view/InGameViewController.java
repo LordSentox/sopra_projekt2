@@ -1,12 +1,10 @@
 package de.sopra.javagame.view;
 
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.*;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.EnumSet;
 import java.util.List;
 
