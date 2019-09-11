@@ -1,6 +1,7 @@
 package de.sopra.javagame.control.ai1;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.AIProcessor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Optional;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class Prioritizer implements AIController.AIProcessor {
+public class Prioritizer implements AIProcessor {
 
     private List<Priority> priorities;
 

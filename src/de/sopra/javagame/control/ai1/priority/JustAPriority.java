@@ -7,6 +7,6 @@ package de.sopra.javagame.control.ai1.priority;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class Priority1 {
+public class JustAPriority {
 
 }
