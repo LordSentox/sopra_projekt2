@@ -160,6 +160,7 @@ public class ControllerChanTest {
 
     @Test
     public void testEndTurn() {
+        //teste mit nicht beendetem Spiel
         List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
         players.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
         players.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
@@ -170,11 +171,23 @@ public class ControllerChanTest {
         controllerChan.endTurn();
 
         Assert.assertEquals("Das JavaGame sollte sich nicht ändern", currentGame, controllerChan.getJavaGame());
-        Assert.assertEquals("Der vorherige currentTurn sollte auf dem Undo-Stapel liegen", currentTurn, controllerChan.getJavaGame().getPreviousTurn());
+        Assert.assertEquals("Der vorherige currentTurn sollte auf dem Undo-Stapel liegen",
+                                      currentTurn,
+                                      controllerChan.getJavaGame().getPreviousTurn());
         Assert.assertFalse("Der Redo-Stapel sollte leer sein", controllerChan.getJavaGame().canRedo());
 
+        //teste mit beendetem Spiel
+        controllerChan.getCurrentTurn().setGameEnded(true);
+        currentTurn = controllerChan.getCurrentTurn();
+        controllerChan.endTurn();
 
-        fail("Not yet implemented");
+        Assert.assertEquals("Der vorherige currentTurn sollte auf dem Undo-Stapel liegen",
+                                         currentTurn,
+                                         controllerChan.getJavaGame().getPreviousTurn());
+        Assert.assertNull("Das Spiel ist vorbei. Es sollte keinen neuen neuen Turn mehr geben.",
+                                    controllerChan.getCurrentTurn());
+        Assert.assertFalse("Der Redo-Stapel sollte leer sein", controllerChan.getJavaGame().canRedo());
+
     }
 
 }
