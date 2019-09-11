@@ -13,7 +13,6 @@ import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
 import static de.sopra.javagame.util.Direction.*;
 
-
 /**
  * <h1>projekt2</h1>
  *
@@ -21,15 +20,16 @@ import static de.sopra.javagame.util.Direction.*;
  * @version 11.09.2019
  * @since 10.09.2019
  */
-public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
+public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public Decision decide() {
-        if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
+
+        if (!control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
         }
 
-        if (player().getActionsLeft() != 1) {
+        if (!hasValidActions(0)) {
             return null;
         }
 
@@ -40,7 +40,6 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 
         for (Pair<Point, MapTile> temple : templeList) {
             Point orphanedTemplePoint = temple.getLeft();
-            MapTile orphanedTemple = temple.getRight();
 
             Point northernNeighbourPoint = translate(orphanedTemplePoint, UP);
             MapTile northernNeighbour = control.getTile(northernNeighbourPoint);
@@ -74,6 +73,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
                 continue;
             }
 
+            //alte version
 //            if (!((northernNeighbour == null || northernNeighbour.getState() == MapTileState.GONE)
 //                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == MapTileState.GONE)
 //                    && (easternNeighbour == null || easternNeighbour.getState() == MapTileState.GONE)
@@ -86,7 +86,9 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 //            }
 
             return this;
+
         }
+
         return null;
     }
 

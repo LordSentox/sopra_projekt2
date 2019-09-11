@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai;
 
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.player.Player;
 
 import java.util.EnumSet;
@@ -9,8 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static de.sopra.javagame.model.ArtifactCardType.HELICOPTER;
-import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
+import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
  * <h1>Projekt2</h1>
@@ -48,8 +48,34 @@ public class EnhancedPlayerHand {
         return reduction.isPresent() ? reduction.get() : 0;
     }
 
-    public boolean hasCard(ArtifactCardType type) {
-        return getAmount(type) > 0;
+    public int getAmount(ArtifactType type) {
+        switch (type) {
+
+            case AIR:
+                return getAmount(AIR);
+            case EARTH:
+                return getAmount(EARTH);
+            case FIRE:
+                return getAmount(FIRE);
+            case WATER:
+                return getAmount(WATER);
+            default:
+                return 0;
+        }
+    }
+
+    public boolean hasCard(ArtifactCardType... types) {
+        for (ArtifactCardType type : types)
+            if (getAmount(type) == 0)
+                return false;
+        return true;
+    }
+
+    public boolean hasAnyCard(ArtifactCardType... types) {
+        for (ArtifactCardType type : types)
+            if (getAmount(type) > 0)
+                return true;
+        return true;
     }
 
     public boolean hasHelicopter() {
