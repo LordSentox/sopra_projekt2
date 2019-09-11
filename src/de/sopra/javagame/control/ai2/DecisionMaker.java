@@ -28,28 +28,31 @@ public class DecisionMaker implements AIController.AIProcessor {
     }
 
     Decision makeTurnDecision(AIController control) {
-        return turnDecisionTower.decide(control);
+        turnDecisionTower.setControl(control);
+        return turnDecisionTower.decide();
     }
 
     Decision makeDiscardDecision(AIController control) {
-        return discardDecisionTower.decide(control);
+        discardDecisionTower.setControl(control);
+        return discardDecisionTower.decide();
     }
 
     Decision makeSpecialCardDecision(AIController control) {
-        return specialCardDecisionTower.decide(control);
+        specialCardDecisionTower.setControl(control);
+        return specialCardDecisionTower.decide();
     }
 
     @Override
     public void makeStep(AIController control) {
         if (control.isCurrentlyDiscarding()) {
             Decision decision = makeDiscardDecision(control);
-            decision.act(control);
+            decision.act();
         } else {
             Decision turn = makeTurnDecision(control);
-            turn.act(control);
+            turn.act();
             Decision special = makeSpecialCardDecision(control);
             if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
-                special.act(control);
+                special.act();
         }
     }
 
