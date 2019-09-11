@@ -19,9 +19,6 @@ public @interface DoAfter {
 
     Class<? extends Decision> value();
 
+    DecisionResult[] act();
+
 }
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2019
- *
- ***********************************************************************************************/

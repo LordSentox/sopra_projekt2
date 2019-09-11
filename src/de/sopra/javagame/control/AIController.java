@@ -1,12 +1,9 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.control.ai.CardStackTracker;
+import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.control.ai.GameAI;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.AIActionTip;
@@ -14,6 +11,7 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * <h1>projekt2</h1>
@@ -25,6 +23,11 @@ import java.util.List;
 public class AIController {
 
     public interface AIProcessor {
+
+        /**
+         * Ermöglicht der KI die Vorbereitung der inneren Strukturen.
+         */
+        void init();
 
         /**
          * Fordert die KI auf, mit dem aktuellen Spieler einen automatischen Zug durchzuführen.
@@ -45,13 +48,40 @@ public class AIController {
 
     private ControllerChan controllerChan;
 
+    private AIProcessor processor;
+
     private CardStackTracker<ArtifactCard> artifactCardStackTracker;
     private CardStackTracker<FloodCard> floodCardStackTracker;
+
+    private Supplier<Player> activePlayerSupplier;
 
     public AIController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
         artifactCardStackTracker = new CardStackTracker<>();
         floodCardStackTracker = new CardStackTracker<>();
+        processor = null;
+    }
+
+    /**
+     * Ob eine KI eingesetzt wurde oder nicht.
+     * Wenn keine KI eingesetzt wurde, werden einige Methoden des {@link AIController} nicht korrekt funktionieren
+     *
+     * @return <code>false</code> falls die KI noch nicht gesetzt wurde
+     */
+    public boolean hasAI() {
+        return processor != null;
+    }
+
+    /**
+     * Setzt und überschreibt die aktuell gewählte KI.
+     * Das beinflusst das Tracking der Ziehstapel nicht, d.h. diese Methode darf auch im laufenden Spiel verwendet werden
+     * und erfordert keinerlei Sicherheitsüberprüfung.
+     *
+     * @param ai die KI per Auswahl als Enum
+     */
+    public void setAI(GameAI ai) {
+        processor = ai.get();
+        processor.init();
     }
 
     /**
@@ -64,9 +94,28 @@ public class AIController {
     }
 
     /**
+     * Der aktive Tracker des Artifaktkartenstapels
+     *
+     * @return den aktiven Tracker des Artifaktkartenstapels
+     */
+    public CardStackTracker<ArtifactCard> getArtifactCardStackTracker() {
+        return artifactCardStackTracker;
+    }
+
+    /**
+     * Der aktive Tracker des Flutkartenstapels
+     *
+     * @return den aktiven Tracker des Flutkartenstapels
+     */
+    public CardStackTracker<FloodCard> getFloodCardStackTracker() {
+        return floodCardStackTracker;
+    }
+
+    /**
      * Ob der aktive Spieler Karten abwerfen muss
      *
      * @return <code>true</code> wenn der Spieler Karten abwerfen muss, sonst <code>false</code>
+     * @see #getActivePlayer()
      */
     public boolean isCurrentlyDiscarding() {
         return false; //TODO
@@ -82,12 +131,16 @@ public class AIController {
     }
 
     /**
-     * Der aktive Spieler, für welchen die KI berechnen soll
+     * Der aktive Spieler, für welchen die KI berechnen soll.
+     * Über einen Supplier ist dieser austauschbar,
+     * damit auch Schritte für Spieler berechnet werden können, die aktuell nicht am Zug sind.
+     * Die Anzahl an möglichen Aktionen sollte jedoch darüber konsistent bleiben,
+     * d.h. ist der Spieler nicht am Zug, hat er auch keine freien Aktionen.
      *
-     * @return der aktive Spieler
+     * @return der für die KI aktive Spieler
      */
     public Player getActivePlayer() {
-        return null; //TODO
+        return activePlayerSupplier.get();
     }
 
     /**
@@ -127,16 +180,16 @@ public class AIController {
      * @return das MapTile zu einem Punkt
      */
     public MapTile getTile(Point point) {
-        return null; //TODO
+        return getActiveTurn().getTile(point);
     }
 
     /**
-     * Eine Liste aller aktiven Spieler
+     * Eine Liste aller Spieler
      *
-     * @return die Liste der aktiven Spieler im aktuellen Zustand
+     * @return die Liste der Spieler im aktuellen Zustand (Turn)
      */
     public List<Player> getAllPlayers() {
-        return null; //TODO
+        return getActiveTurn().getPlayers();
     }
 
     /**
@@ -158,8 +211,7 @@ public class AIController {
      * @return <code>true</code> wenn ein beliebiger Spieler mindestens eine solche Karte in der Hand hält
      */
     public boolean anyPlayerHasCard(ArtifactCardType artifactCardType) {
-        // TODO Auto-generated method stub
-        return false;
+        return getAllPlayers().stream().anyMatch(player -> EnhancedPlayerHand.ofPlayer(player).hasCard(artifactCardType));
     }
 
     /**
@@ -170,6 +222,50 @@ public class AIController {
      */
     public MapTile anyTile(MapTileState state) {
         return null; //TODO
+    }
+
+    /**
+     * Fordert die KI auf mit dem aktuellen Spieler einen Zug durchzuführen
+     *
+     * @param player der supplier für den für die KI aktiven Spieler,
+     *               beinhaltet den Spieler, welche die Aktion durchführen soll
+     */
+    public void makeStep(Supplier<Player> player) {
+        this.activePlayerSupplier = player;
+        processor.makeStep(this);
+    }
+
+    /**
+     * Fordert die KI auf mit dem aktuellen Spieler einen Zug durchzuführen
+     * Der hierfür verwendete aktive Spieler ist der aktive Spieler im aktiven Zug {@link Turn#getActivePlayer()}
+     *
+     * @see #getActiveTurn()
+     */
+    public void makeStep() {
+        makeStep(() -> getActiveTurn().getActivePlayer());
+    }
+
+    /**
+     * Fordert einen Tipp in textueller Befehlsform von der KI an.
+     *
+     * @param player der supplier für den für die KI aktiven Spieler,
+     *               beinhaltet den Spieler, welche die Aktion durchführen soll
+     * @return ein Tipp in textueller Befehlsform
+     * @see AIActionTip
+     */
+    public String getTip(Supplier<Player> player) {
+        this.activePlayerSupplier = player;
+        return processor.getTip(this);
+    }
+
+    /**
+     * Fordert einen Tipp in textueller Befehlsform von der KI an.
+     * Der hierfür verwendete aktive Spieler ist der aktive Spieler im aktiven Zug {@link Turn#getActivePlayer()}
+     *
+     * @see #getActiveTurn()
+     */
+    public String getTip() {
+        return getTip(() -> getActiveTurn().getActivePlayer());
     }
 
 }

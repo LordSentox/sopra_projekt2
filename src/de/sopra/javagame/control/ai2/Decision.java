@@ -39,19 +39,20 @@ public abstract class Decision {
 
     /**
      * Baut aus zwei entscheidungsabhängigen Aktionen einen Turm.
-     * Das Argument wird zur priorisierten Aktion gegenüber der Aktuellen.
+     * Das Argument wird zur weniger priorisierten Aktion gegenüber der Aktuellen.
      *
-     * @param moreImportantDecision die Aktion, welche als wichtiger betrachtet wird, als die Aktuelle
+     * @param lessImportantDecision die Aktion, welche als weniger wichtig betrachtet wird, als die Aktuelle
      * @return ein neues Decision Objekt, welches keine eigene Aktion enthält,
      * aber mittels {@link #decide()} ein Objekt mit Aktion liefert
      */
-    public final Decision onTop(Decision moreImportantDecision) {
+    final Decision next(Decision lessImportantDecision) {
+        Decision self = this;
         return new Decision() {
             @Override
             public Decision decide() {
-                Decision decision = moreImportantDecision.decide();
+                Decision decision = self.decide();
                 if (decision == null) {
-                    return decide();
+                    return lessImportantDecision.decide();
                 } else return decision;
             }
 
