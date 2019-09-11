@@ -60,7 +60,7 @@ public class ClassUtil {
      * @throws ClassNotFoundException
      */
     private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        List<Class> classes = new ArrayList<Class>();
+        List<Class> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
         }

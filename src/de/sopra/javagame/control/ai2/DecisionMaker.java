@@ -41,7 +41,7 @@ public class DecisionMaker implements AIProcessor {
 
             //Alle für diesen Tower relevanten Decisions herausfiltern
             List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions = decisionClasses.stream()
-                    .filter(pair -> Arrays.asList(pair.getLeft()).contains(decisionType))
+                    .filter(pair -> Collections.singletonList(pair.getLeft()).contains(decisionType))
                     .collect(Collectors.toList());
 
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander

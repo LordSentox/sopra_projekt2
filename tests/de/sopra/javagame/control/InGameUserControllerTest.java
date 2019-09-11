@@ -38,6 +38,7 @@ public class InGameUserControllerTest {
     private Navigator navigator;
     private CardStack<ArtifactCard> artifactCardStack;
     private List<ArtifactCard> handCardsExpected;
+    //FIXME untypisierte liste. im Laufe der tests werden Player und PlayerType Objekte in die Liste eingefuegt
     private List moveablePlayers;
     private int[][] testMapNumbers;
     private MapTile[][] testMap;
@@ -46,7 +47,7 @@ public class InGameUserControllerTest {
     public void setUp() throws IOException {
         controllerChan = TestDummy.getDummyControllerChan();
         boolean [][] tiles = new boolean [12][12];
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
+        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair<>(PlayerType.COURIER, false),
@@ -90,7 +91,7 @@ public class InGameUserControllerTest {
         explorer = new Explorer("explorer", new Point(5,2), turn);
         navigator = new Navigator("navigator", new Point(4,2), turn);
         
-        handCardsExpected = new ArrayList<ArtifactCard>();
+        handCardsExpected = new ArrayList<>();
         explorer.getHand().add(fireCard);
         handCardsExpected.add(fireCard);
         explorer.getHand().add(waterCard);

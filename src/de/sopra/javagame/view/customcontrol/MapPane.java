@@ -4,7 +4,8 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Point;
-import javafx.scene.image.Image;
+import de.sopra.javagame.util.TextureLoader;
+import de.sopra.javagame.util.TextureLoader.PlayerTexture;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -14,33 +15,34 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import static de.sopra.javagame.model.player.PlayerType.PlayerImage;
 
 public class MapPane extends GridPane {
     //Dieses pane ist besser als alle anderen
     
     private final StackPane[][] map;
+
+    private static final int TILE_SIZE = 130;
     
-    public MapPane() throws UnsupportedEncodingException, IOException {
+    public MapPane() throws IOException {
         super();
         map = new StackPane[7][10];
+
+        IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
+        IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         
-        IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : 130)));
-        IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : 130)));
-        
-        MapTile[][] tiles = MapUtil.createMapFromNumbers(MapUtil.readNumberMapFromString(new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8)));
+        MapTile[][] tiles = MapUtil.createMapFromNumbers(MapUtil.readNumberMapFromString(new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8)));
         
         for (int y = 1; y < map.length + 1; y++) {
             for (int x = 1; x < map[y - 1].length + 1; x++) {
                 if(tiles[y][x] != null) {
-                    TileView v = new TileView(tiles[y][x].getTileIndex(), "default");
+                    TileView v = new TileView(tiles[y][x].getTileIndex(), TILE_SIZE);
+                    v.setPreserveRatio(true);
                     StackPane pane = new StackPane();
                     map[y - 1][x - 1] = pane;
                     pane.getChildren().add(v);
@@ -49,7 +51,10 @@ public class MapPane extends GridPane {
                     final int newX = x, newY = y;
                     pane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onTileClicked(event, v, newX, newY));
                 }else{
-                    ImageView v = new ImageView(new Image(getClass().getResource("/textures/default/island_additional_2.png").toExternalForm(), 130, 130, true, true));
+                    ImageView v = new ImageView(TextureLoader.getSea1());
+                    v.setPreserveRatio(true);
+                    v.setFitWidth(TILE_SIZE);
+                    v.setFitHeight(TILE_SIZE);
                     StackPane pane = new StackPane();
                     map[y - 1][x - 1] = pane;
                     pane.getChildren().add(v);
@@ -85,13 +90,16 @@ public class MapPane extends GridPane {
             Point pos = playerPos.get();
             removePlayer(pos.xPos, pos.yPos, type);
         }
-        pane.getChildren().add(new ImageView(type.getImage(100, 100, true, true)));
+        ImageView view = new ImageView(TextureLoader.getPlayerTexture(type));
+        view.setPreserveRatio(true);
+        view.setFitHeight(110);
+        pane.getChildren().add(view);
     }
     
     public void removePlayer(int x, int y, PlayerType type) {
        playerOnTile(x, y, type).ifPresent(getMapStackPane(x, y).getChildren()::remove);
     }
-    
+
     /**
      * Gibt die ImageView zurück, die den gegebenen PlayerType enthhält, falls dieser auf diesem Feld existiert
      * @param x die x Position
@@ -103,7 +111,7 @@ public class MapPane extends GridPane {
         return getMapStackPane(x, y).getChildren().stream()
             .filter(child -> child instanceof ImageView)
             .map(child -> (ImageView) child)
-            .filter(child -> child.getImage() instanceof PlayerImage && ((PlayerImage) child.getImage()).getPlayer() == type)
+            .filter(child -> child.getImage() instanceof PlayerTexture && ((PlayerTexture) child.getImage()).getPlayer() == type)
             .findFirst();
     }
 

@@ -106,15 +106,15 @@ public abstract class Decision {
     }
 
     protected boolean all(Boolean... bools) {
-        return Arrays.asList(bools).stream().allMatch(Boolean::booleanValue);
+        return Arrays.stream(bools).allMatch(Boolean::booleanValue);
     }
 
     protected boolean none(Boolean... bools) {
-        return Arrays.asList(bools).stream().noneMatch(Boolean::booleanValue);
+        return Arrays.stream(bools).noneMatch(Boolean::booleanValue);
     }
 
     protected boolean any(Boolean... bools) {
-        return Arrays.asList(bools).stream().anyMatch(Boolean::booleanValue);
+        return Arrays.stream(bools).anyMatch(Boolean::booleanValue);
     }
 
     protected <T> boolean checkAll(Predicate<T> checker, Collection<T> objects) {

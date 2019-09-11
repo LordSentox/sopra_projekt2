@@ -107,7 +107,7 @@ public class JavaGame {
         if (getIsCheetah()) {
             return 0;
         }
-        double score = 0.0;
+        double score;
         if (undoTurns.peek().isGameWon()) {
             score = (1.0 / (double) this.numRounds()) * 10000;
 

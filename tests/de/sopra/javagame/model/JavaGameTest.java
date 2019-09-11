@@ -9,10 +9,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class JavaGameTest {
@@ -25,7 +26,7 @@ public class JavaGameTest {
     @Before
     public void setUp() throws Exception {
         controllerChan = TestDummy.getDummyControllerChan();
-        testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
+        testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         players = new ArrayList<Pair<PlayerType, Boolean>>() {{
@@ -86,7 +87,7 @@ public class JavaGameTest {
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
         JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE,
-                Arrays.asList());
+                Collections.emptyList());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -107,12 +108,9 @@ public class JavaGameTest {
 
         //Assert.assertTrue("Das Java-Game hätte einen neuen currentTurn haben sollen",
         //                  controllerChan.getCurrentTurn() == nextTurn);
-        Assert.assertFalse("Das Java-Game hätte einen neuen Previous Turn haben sollen",
-                javaGame.getPreviousTurn() == lastTurn);
-        Assert.assertTrue("Das Java-Game hätte einen neuen Previous Turn haben sollen",
-                javaGame.getPreviousTurn() == currentTurn);
-        Assert.assertFalse("Der neu erstellte Turn hätte nicht gleich dem vorherigen sein dürfen",
-                currentTurn == nextTurn);
+        Assert.assertNotSame("Das Java-Game hätte einen neuen Previous Turn haben sollen", javaGame.getPreviousTurn(), lastTurn);
+        Assert.assertSame("Das Java-Game hätte einen neuen Previous Turn haben sollen", javaGame.getPreviousTurn(), currentTurn);
+        Assert.assertNotSame("Der neu erstellte Turn hätte nicht gleich dem vorherigen sein dürfen", currentTurn, nextTurn);
 
         //teste ob korrekr redo Stapel zurückgesetzt wird
         controllerChan.getGameFlowController().undo();
@@ -159,7 +157,7 @@ public class JavaGameTest {
         Turn nextTurn = javaGame.endTurn(turn);
 
         Assert.assertEquals("Der score dieses Spiels hätte 10.100 sein müssen",
-                100.0 * turnCount * actualDifficulty + 10000/turnCount/nextTurn.getDiscoveredArtifacts().size(),
+                100.0 * turnCount * actualDifficulty + 10000 / turnCount / nextTurn.getDiscoveredArtifacts().size(),
                 javaGame.calculateScore(),
                 0.0);
 

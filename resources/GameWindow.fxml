@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import de.sopra.javagame.view.customcontrol.MapPane?>
+<?import de.sopra.javagame.view.customcontrol.WaterLevelView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1200.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.InGameViewController">
    <children>
    		<ImageView fx:id="mainPane"/>
@@ -59,7 +56,8 @@
    		
    		<GridPane fx:id="floodCardDiscardGridPane" layoutX="200" layoutY="960.0"/>
    		
-   		
+   		<WaterLevelView fx:id="waterLevelView" layoutX="370" layoutY="850"/>
+
    		<Button fx:id="artifactCardDrawStackButton" prefHeight="120.0" prefWidth="110.0" layoutX="40.0" layoutY="815.0" visible="false" disable="true" onAction="#onArtifactCardDrawStackClicked"/>
    		<Button fx:id="artifactCardDiscarStaclButton" prefHeight="120.0" prefWidth="110.0" layoutX="40.0" layoutY="1015.0" visible="false" onAction="#onArtifactCardDiscardStackClicked"/>
    		<Button fx:id="floodCardDrawStackButton" prefHeight="120.0" prefWidth="110.0" layoutX="300.0" layoutY="815.0" visible="false" disable="true" onAction="#onFloodCardDrawStackClicked"/>

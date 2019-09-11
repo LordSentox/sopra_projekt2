@@ -1,6 +1,8 @@
 package de.sopra.javagame.view.customcontrol;
 
+import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.util.TextureLoader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -8,12 +10,15 @@ public class TileView extends ImageView{
     
     private final Image dryImage, floodedImage, goneImage;
     
-    public TileView(int id, String pack) {
+    public TileView(int id, int size) {
         //System.out.println(id);
-        this.dryImage = new Image(getClass().getResource("/textures/" + pack + "/island_" + (id < 10 ? "0"+id : ""+id) + ".png").toExternalForm(), 130, 130, true, true);
-        this.floodedImage = new Image(getClass().getResource("/textures/" + pack + "/floodedisland_" + (id < 10 ? "0"+id : ""+id) + ".png").toExternalForm(), 130, 130, true, true);
-        this.goneImage = new Image(getClass().getResource("/textures/" + pack + "/floodedisland_additional_3.png").toExternalForm(), 130, 130, true, true);
+        this.dryImage = TextureLoader.getTileTextureDry(MapTileProperties.getByIndex(id));
+        this.floodedImage = TextureLoader.getTileTextureFlooded(MapTileProperties.getByIndex(id));
+        this.goneImage = TextureLoader.getGone();
         this.setImage(dryImage);
+        setPreserveRatio(true);
+        setFitHeight(size);
+        setFitWidth(size);
     }
     
     public void showImage(MapTileState mapTileState){
