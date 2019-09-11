@@ -4,6 +4,7 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -102,8 +103,6 @@ public class MapUtil {
      * @return Die Nummern, die einzelnen Tiles entsprechen, bzw. -1, wo Wasser ist.
      */
     public static int[][] readNumberMapFromString(String toParse) {
-        // FIXME: Um die Map muss noch eine null-Zeile hinzugefügt werden
-
         // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
         String[] lines = toParse.split("\n");
         String[][] map = new String[lines.length][];
@@ -112,8 +111,12 @@ public class MapUtil {
             map[i] = split;
         }
 
+        // Set the width of the map to the maximum width present in the map and two for the buffer zone
+        // FIXME: Ask if this works as I expect
+        int mapWidth = Arrays.stream(map).max(Comparator.comparing(row -> row.length)).get().length + 2;
+
         // Erstelle eine leere Map
-        int[][] numbers = new int[12][12];
+        int[][] numbers = new int[map.length + 2][mapWidth];
         for (int[] line : numbers) {
             Arrays.fill(line, -1);
         }
@@ -124,7 +127,8 @@ public class MapUtil {
             for (int x = 0; x < Math.min(numbers[y].length, map[y].length); ++x) {
                 String sign = map[y][x].trim();
                 if (!sign.equals("-")) {
-                    numbers[y][x] = Integer.parseUnsignedInt(sign) % 24;
+                    // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
+                    numbers[y+1][x+1] = Integer.parseUnsignedInt(sign) % 24;
                 }
             }
         }
