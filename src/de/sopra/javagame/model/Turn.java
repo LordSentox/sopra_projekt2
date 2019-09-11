@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
  *
  * @author Lisa, Hannah
  */
+//FIXME Turn umbenennen zu Action --> Action bedeutet genau eine Aktion von dem Spiel, dem aktiven oder einem anderen Spieler
+//    --> dazu alle Aufrufe, die Turn beinhalten umbenennen
+
 public class Turn implements Copyable<Turn> {
 
     /**
