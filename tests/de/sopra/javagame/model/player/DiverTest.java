@@ -46,7 +46,7 @@ public class DiverTest {
         }
         
         
-        Turn turnnull = Turn.createInitialTurn(Difficulty.NORMAL, Arrays.asList(new Pair<>(PlayerType.DIVER, false), new Pair<>(PlayerType.COURIER, false)), this.testMaps);
+        Turn turnnull = Turn.createInitialTurn(Difficulty.NORMAL, Arrays.asList(new Pair<>(PlayerType.DIVER, false), new Pair<>(PlayerType.COURIER, false)), this.testMapNull);
         Player diverb = turnnull.getPlayers().get(0);
         Player courierb = turnnull.getPlayers().get(1);
         List<Point> testLegelMovesWithSpecialb = diver.legalMoves(true);

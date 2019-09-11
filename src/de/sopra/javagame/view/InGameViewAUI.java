@@ -4,6 +4,14 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.FloodCard;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.Point;
+
 import java.util.EnumSet;
 import java.util.List;
 

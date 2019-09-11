@@ -24,10 +24,9 @@ public class ActivePlayerController {
      *            Standardbewegungsmöglichkeiten angezeigt.
      */
     public void showMovements(boolean specialActive) {
-        MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
-        Player player = currentTurn.getActivePlayer();
-        List<de.sopra.javagame.util.Point> movements = player.legalMoves(specialActive);
+        Player player = currentTurn.getActivePlayer();      
+        List<Point> movements = player.legalMoves(specialActive);
         controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
 
     }
@@ -37,7 +36,6 @@ public class ActivePlayerController {
      * können.
      */
     public void showDrainOptions() {
-        MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
         List<Point> drainable = player.drainablePositions();
@@ -54,7 +52,6 @@ public class ActivePlayerController {
      */
     public void showSpecialAbility() {
         //TODO: ergänzen die Methode später.
-        MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
         if (player.getType() == PlayerType.PILOT) {
@@ -62,6 +59,7 @@ public class ActivePlayerController {
             controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
         } else if (player.getType() == PlayerType.COURIER){
             controllerChan.getInGameViewAUI().showNotification("Courier darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
+            controllerChan.getInGameViewAUI().refreshCardsTransferable(true);
         } else if (player.getType() == PlayerType.DIVER){
             List<Point> movements = new Diver(player.getName(), player.getPosition() , currentTurn).legalMoves(true);
             controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
@@ -87,6 +85,12 @@ public class ActivePlayerController {
      * @see #showSpecialAbility
      */
     public void cancelSpecialAbility() {
+        Turn currentTurn = controllerChan.getCurrentTurn();
+        Player player = currentTurn.getActivePlayer();
+        List<Point> movements = player.legalMoves(false);
+        List<Point> drainable = player.drainablePositions();
+        controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
+        controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
 
     }
 
@@ -101,7 +105,11 @@ public class ActivePlayerController {
         MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
-        
+        if (player.getType() == PlayerType.COURIER){
+            controllerChan.getInGameViewAUI().refreshCardsTransferable(true);
+        }else {
+//            if(player.getPosition() == )
+        }
 
     }
 
