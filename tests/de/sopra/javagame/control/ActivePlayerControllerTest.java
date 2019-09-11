@@ -1,8 +1,13 @@
 package de.sopra.javagame.control;
 
-import static org.junit.Assert.*;
-
-
+import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,27 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-
-import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
-import de.sopra.javagame.model.player.Courier;
-import de.sopra.javagame.model.player.Explorer;
-import de.sopra.javagame.model.player.Navigator;
-import de.sopra.javagame.model.player.Pilot;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
-
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
 public class ActivePlayerControllerTest {
     
@@ -133,7 +118,7 @@ public class ActivePlayerControllerTest {
 
     @Test
     public void testShowMovements() {
-        int activePlayerNumber = turn.getActivePlayer();
+        int activePlayerNumber = turn.getActivePlayerIndex();
         Pair<PlayerType, Boolean> activeplayer = players.get(activePlayerNumber);
         
         //Optionen für Courier
