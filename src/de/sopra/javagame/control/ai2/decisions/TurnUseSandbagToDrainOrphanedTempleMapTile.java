@@ -18,7 +18,7 @@ import java.util.List;
  * @since 10.09.2019
  */
 
-public class UseSandbagToDrainOrphanedTempleMapTile extends Decision {
+public class TurnUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public Decision decide() {

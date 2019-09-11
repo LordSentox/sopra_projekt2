@@ -11,7 +11,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-public class FlyToTreasurePickupSiteToKeepFourTreasureCards extends Decision {
+public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decision {
     @Override
     public Decision decide() {
         if (!playerHand().hasHelicopter()) {

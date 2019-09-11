@@ -18,7 +18,7 @@ import java.util.EnumSet;
  * @since 09.09.2019
  */
 
-public class StayOnLandingSiteWaitingForDeparture extends Decision {
+public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
 
     @Override
     public Decision decide() {

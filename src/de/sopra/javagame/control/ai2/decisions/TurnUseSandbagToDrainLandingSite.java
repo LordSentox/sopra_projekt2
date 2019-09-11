@@ -17,7 +17,7 @@ import de.sopra.javagame.util.Point;
  * @since 09.09.2019
  */
 
-public class UseSandbagToDrainLandingSite extends Decision {
+public class TurnUseSandbagToDrainLandingSite extends Decision {
 
     @Override
     public Decision decide() {

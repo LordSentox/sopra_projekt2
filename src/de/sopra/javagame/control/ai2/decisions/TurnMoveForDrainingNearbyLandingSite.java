@@ -17,7 +17,7 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-public class MoveForDrainingNearbyLandingSite extends Decision {
+public class TurnMoveForDrainingNearbyLandingSite extends Decision {
 
     /**
      * Prüfe: ist der Spieler einen Schritt entfernt, um den Landeplatz trocken legen zu können

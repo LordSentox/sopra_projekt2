@@ -13,7 +13,7 @@ import java.util.List;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-public class MoveOntoTreasureCollectionPointIfPlayerHasFour extends Decision {
+public class TurnMoveOntoTreasureCollectionPointIfPlayerHasFour extends Decision {
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();

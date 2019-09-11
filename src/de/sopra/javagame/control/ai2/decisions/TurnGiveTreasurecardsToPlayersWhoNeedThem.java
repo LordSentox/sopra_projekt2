@@ -14,7 +14,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-public class GiveTreasurecardsToPlayersWhoNeedThem extends Decision {
+public class TurnGiveTreasurecardsToPlayersWhoNeedThem extends Decision {
     @Override
     public Decision decide() {
 
