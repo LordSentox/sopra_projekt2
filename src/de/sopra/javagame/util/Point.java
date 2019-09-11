@@ -52,6 +52,10 @@ public class Point {
         return new Point(this.xPos + toAdd.xPos, this.yPos + toAdd.yPos);
     }
 
+    public Point add(Direction direction) {
+        return direction.translate(this);
+    }
+
     /**
      * Eine Liste mit den Punkten links, rechts, unten und oben vom Punkt
      *

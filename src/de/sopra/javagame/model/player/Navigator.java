@@ -56,32 +56,19 @@ public class Navigator extends Player {
             return false;
         }
 
-        int deltaX = 0;
-        int deltaY = 0;
-        switch (direction) {
-            case UP: deltaY = -1; break;
-            case LEFT: deltaX = -1; break;
-            case DOWN: deltaY = 1; break;
-            case RIGHT: deltaX = 1; break;
-        }
-
         // Ist das Feld, auf das der Spieler bewegt werden soll ein Inselfeld?
-        Point newPosition = new Point(other.getPosition());
-        newPosition.move(deltaX, deltaY);
+        Point newPosition = other.getPosition().add(direction);
         MapTile destinationTile = this.turn.getTile(newPosition);
         if (destinationTile == null || destinationTile.getState() == GONE) {
             return false;
-        } else {
-            if (this.hasExtraPush) {
-                this.hasExtraPush = false;
-            } else {
-                --this.actionsLeft;
-                this.hasExtraPush = true;
-            }
-
-            other.getPosition().move(deltaX, deltaY);
-            return true;
         }
+
+        if (this.hasExtraPush)
+            --this.actionsLeft;
+        this.hasExtraPush = !this.hasExtraPush;
+
+        other.getPosition().setLocation(newPosition);
+        return true;
     }
 
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {

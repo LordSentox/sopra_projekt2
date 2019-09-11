@@ -1,18 +1,21 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.TestDummy;
-import org.junit.After;
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * <h1>projekt2</h1>
- *
- * @author Julius Korweck
- * @version 05.09.2019
- * @since 05.09.2019
- */
+import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.util.*;
+import org.junit.Assert;
+
 public class ControllerChanTest {
+    
     private ControllerChan controllerChan;
     private boolean[][] testMap;
 
@@ -28,28 +31,87 @@ public class ControllerChanTest {
             }
         }
     }
-
-    @After
-    public void tearDown() {
+    
+    @Test
+    public void testStartNewGame() {
+        List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.COURIER, true));
+        
+        //teste mit zu wenigen Spielern
+        controllerChan.startNewGame(testMap, players, Difficulty.NOVICE);
+        Assert.assertNull("", controllerChan.getJavaGame());
+        
+        //teste mit 2 Spielern
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, true));
+        controllerChan.startNewGame(testMap, players, Difficulty.NORMAL);
+        Assert.assertNotNull("", controllerChan.getJavaGame());
+        
+        //teste wenn es schon ein Spiel gab
+        JavaGame oldGame = controllerChan.getJavaGame();
+        boolean[][] testMapNewGame = new boolean[12][12];
+        List<Pair<PlayerType, Boolean>> playersNewGame = new ArrayList<>();
+        playersNewGame.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
+        playersNewGame.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
+        playersNewGame.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, true));
+        controllerChan.startNewGame(testMapNewGame, playersNewGame, Difficulty.ELITE);
+        Assert.assertNotNull("", controllerChan.getJavaGame());
+        Assert.assertNotEquals("", oldGame, controllerChan.getJavaGame());
+        
+        //prüfe ob altes Spiel gespeichert
+        File saveGame = new File(controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
+        Assert.assertTrue("", saveGame.exists());
+        
+        ControllerChan newControllerChan = TestDummy.getDummyControllerChan();
+        newControllerChan.loadGame(saveGame);
+        JavaGame loadedGame = newControllerChan.getJavaGame();
+        Assert.assertEquals("",  oldGame, loadedGame);
+        
     }
 
     @Test
-    public void startNewGame() {
+    public void testLoadSaveGame() {
+        List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, true));
+        controllerChan.startNewGame(testMap, players, Difficulty.NORMAL);
+        JavaGame oldGame = controllerChan.getJavaGame();
+        
+        controllerChan.saveGame("mein erstes Spiel");
+        File saveGame = new File(controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
+        Assert.assertTrue("", saveGame.exists());
+        
+        
+        ControllerChan newControllerChan = TestDummy.getDummyControllerChan();
+        newControllerChan.loadGame(saveGame);
+        JavaGame loadedGame = newControllerChan.getJavaGame();
+        Assert.assertEquals("",  oldGame, loadedGame);
+        Assert.assertEquals("",  "mein erstes Spiel", newControllerChan.getGameName());
+        
+        
+        
+        
+        fail("Not yet implemented");
     }
 
     @Test
-    public void loadGame() {
+    public void testReplayGame() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void saveGame() {
+    public void testContinueGame() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void replayGame() {
+    public void testGetCurrentTurn() {
+        fail("Not yet implemented");
     }
 
     @Test
-    public void continueGame() {
+    public void testEndTurn() {
+        fail("Not yet implemented");
     }
+
 }
