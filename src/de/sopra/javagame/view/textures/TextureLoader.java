@@ -102,29 +102,7 @@ public class TextureLoader {
             for (ZipEntry playerEntry : players) {
                 String name = playerEntry.getName();
                 String textureName = name.substring(name.lastIndexOf("/") + 1);
-                PlayerType type;
-                switch (textureName) {
-                    case "diver.png":
-                        type = PlayerType.DIVER;
-                        break;
-                    case "engineer.png":
-                        type = PlayerType.ENGINEER;
-                        break;
-                    case "explorer.png":
-                        type = PlayerType.EXPLORER;
-                        break;
-                    case "courier.png":
-                        type = PlayerType.COURIER;
-                        break;
-                    case "navigator.png":
-                        type = PlayerType.NAVIGATOR;
-                        break;
-                    case "pilot.png":
-                        type = PlayerType.PILOT;
-                        break;
-                    default:
-                        type = PlayerType.NONE;
-                }
+                PlayerType type = PlayerType.valueOf(textureName.substring(0, textureName.length() - 4).toUpperCase());
                 PLAYER_TEXTURES.put(type, new PlayerTexture(players.inputStreamByName(textureName), type));
             }
 
