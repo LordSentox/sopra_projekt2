@@ -20,6 +20,7 @@ public class ControllerChanTest {
 
     private ControllerChan controllerChan;
     private boolean[][] testMap;
+    private TestDummy.InGameView inGameView;
 
     @Before
     public void setUp() {
@@ -32,6 +33,8 @@ public class ControllerChanTest {
                 testMap[y][x] = x >= 2 && x < 8 && y >= 2 && y < 6;
             }
         }
+
+        inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
     }
 
     @Test
@@ -76,7 +79,6 @@ public class ControllerChanTest {
 
     @Test
     public void testLoadSaveGame() {
-        TestDummy.InGameView inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
         //teste mit korrekten Daten
         List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
         players.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
@@ -106,8 +108,8 @@ public class ControllerChanTest {
         Assert.assertTrue("Es hätte eine Meldung an den Benutzer ausgegeben werden sollen",
                                     inGameView.getNotifications().contains("Die gewählte Datei ist nicht kompatibel oder fehlerhaft."));
 
+        //teste mit beendetem
         controllerChan.getCurrentTurn().setGameEnded(true);
-        controllerChan.getCurrentTurn().setGameWon(true);
         controllerChan.endTurn();
         controllerChan.saveGame("mein beendetes Spiel");
         saveGame = new File (controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
@@ -147,32 +149,31 @@ public class ControllerChanTest {
 
     @Test
     public void testReplayGame() {
-        List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
-        players.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
-        players.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
-        players.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, true));
-        controllerChan.startNewGame(testMap, players, Difficulty.NORMAL);
-        JavaGame oldGame = controllerChan.getJavaGame();
-        controllerChan.saveGame("mein erstes Spiel");
-        File saveGame = new File(controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
-
-
-
-        fail("Not yet implemented");
+        //View-Only!
     }
 
     @Test
     public void testContinueGame() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testGetCurrentTurn() {
+        //TODO was soll hier eigentlich passieren und gibt es etwas nicht view-only testbares?
         fail("Not yet implemented");
     }
 
     @Test
     public void testEndTurn() {
+        List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, true));
+        controllerChan.startNewGame(testMap, players, Difficulty.LEGENDARY);
+        JavaGame currentGame = controllerChan.getJavaGame();
+        Turn currentTurn = controllerChan.getCurrentTurn();
+        controllerChan.endTurn();
+
+        Assert.assertEquals("Das JavaGame sollte sich nicht ändern", currentGame, controllerChan.getJavaGame());
+        Assert.assertEquals("Der vorherige currentTurn sollte auf dem Undo-Stapel liegen", currentTurn, controllerChan.getJavaGame().getPreviousTurn());
+        Assert.assertFalse("Der Redo-Stapel sollte leer sein", controllerChan.getJavaGame().canRedo());
+
+
         fail("Not yet implemented");
     }
 

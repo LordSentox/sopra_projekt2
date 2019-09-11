@@ -128,14 +128,14 @@ public class ControllerChan {
 
     }
 
+    public void endTurn() {
+        this.currentTurn = this.javaGame.endTurn(this.currentTurn);
+    }
+
     public Turn getCurrentTurn() {
         return this.currentTurn;
     }
 
-    public void endTurn() {
-        this.currentTurn = this.javaGame.endTurn(this.currentTurn);
-    }
-    
     public String getGameName() {
         return gameName;
     }
