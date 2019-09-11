@@ -107,24 +107,24 @@ public class JavaGame {
         if (getIsCheetah()) {
             return 0;
         }
-        double score = 0.0;
+        double score;
         if (undoTurns.peek().isGameWon()) {
             score = (1.0 / (double) this.numRounds()) * 10000;
 
         } else {
-            score = this.numRounds()*100;
+            score = this.numRounds() * 100;
         }
         int extraPoints = 0;
         if (!undoTurns.isEmpty()) {
             // Für jedes gefundene Artefakt gibt es 100 Extrapunkte
-            extraPoints += 10000/this.numRounds() * undoTurns.peek().getDiscoveredArtifacts().size();
+            extraPoints += 10000 / this.numRounds() * undoTurns.peek().getDiscoveredArtifacts().size();
 
             // Extrapunkte, wenn das Spiel gewonnen wurde
             if (undoTurns.peek().isGameEnded() && undoTurns.peek().isGameWon()) {
                 extraPoints += 100000;
             }
         }
-        score *= (getDifficulty().getInitialWaterLevel()+1);
+        score *= (getDifficulty().getInitialWaterLevel() + 1);
         score += extraPoints;
         return (int) score;
     }
@@ -176,4 +176,5 @@ public class JavaGame {
     public void markCheetah() {
         this.cheetah = true;
     }
+
 }

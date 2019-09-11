@@ -45,7 +45,7 @@ public class EnhancedPlayerHand {
         Optional<Integer> reduction = hand.stream()
                 .map(card -> card.getType() == type ? 1 : 0)
                 .reduce(Integer::sum);
-        return reduction.isPresent() ? reduction.get() : 0;
+        return reduction.orElse(0);
     }
 
     public int getAmount(ArtifactType type) {

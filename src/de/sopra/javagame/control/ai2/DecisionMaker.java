@@ -1,6 +1,7 @@
 package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.AIProcessor;
 import de.sopra.javagame.control.ai.ClassUtil;
 import de.sopra.javagame.util.Pair;
 
@@ -16,7 +17,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.*;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class DecisionMaker implements AIController.AIProcessor {
+public class DecisionMaker implements AIProcessor {
 
     private List<Pair<DoAfter, Class<? extends Decision>>> decisionClasses;
 
@@ -40,7 +41,7 @@ public class DecisionMaker implements AIController.AIProcessor {
 
             //Alle für diesen Tower relevanten Decisions herausfiltern
             List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions = decisionClasses.stream()
-                    .filter(pair -> Arrays.asList(pair.getLeft()).contains(decisionType))
+                    .filter(pair -> Collections.singletonList(pair.getLeft()).contains(decisionType))
                     .collect(Collectors.toList());
 
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander

@@ -3,13 +3,19 @@ package de.sopra.javagame.view;
 import de.sopra.javagame.control.ControllerChan;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Schnittstelle für alle Views und die Controller Schicht
@@ -21,7 +27,7 @@ public class GameWindow {
     private ControllerChan controllerChan;
 
     private Stage fullScreenStage;
-    
+
 
     private List<AbstractViewController> views;
 
@@ -47,7 +53,22 @@ public class GameWindow {
         fullScreenStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         fullScreenStage.setFullScreen(true);
         fullScreenStage.show();
-        
+
+        fullScreenStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.isAltDown() && event.getCode() == KeyCode.C) {
+                TextInputDialog dialog = new TextInputDialog("");
+                dialog.setContentText("Command:");
+                dialog.setTitle(null);
+                dialog.setHeaderText(null);
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.initOwner(fullScreenStage);
+                dialog.initStyle(StageStyle.UTILITY);
+                Optional<String> result = dialog.showAndWait();
+                System.out.println(result.get());
+                //TODO replace sout with Commands call
+            }
+        });
+
         inGameViewController.init();
 
     }
