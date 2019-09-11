@@ -14,6 +14,8 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 import org.junit.Assert;
 
+import javax.swing.text.TabExpander;
+
 public class ControllerChanTest {
 
     private ControllerChan controllerChan;
@@ -39,12 +41,14 @@ public class ControllerChanTest {
 
         //teste mit zu wenigen Spielern
         controllerChan.startNewGame(testMap, players, Difficulty.NOVICE);
-        Assert.assertNull("", controllerChan.getJavaGame());
+        Assert.assertNull("Es hätte kein Spiel erstellt werden dürfen", controllerChan.getJavaGame());
 
         //teste mit 2 Spielern
         players.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, true));
         controllerChan.startNewGame(testMap, players, Difficulty.NORMAL);
-        Assert.assertNotNull("", controllerChan.getJavaGame());
+        Assert.assertNotNull("Es hätte ein Spiel erstellt werden sollen", controllerChan.getJavaGame());
+        Assert.assertNotNull("Es hätte einen Explorer geben sollen", controllerChan.getCurrentTurn().getPlayer(PlayerType.EXPLORER));
+        Assert.assertNotNull("Es hätte einen Courier geben sollen", controllerChan.getCurrentTurn().getPlayer(PlayerType.COURIER));
 
         //teste wenn es schon ein Spiel gab
         JavaGame oldGame = controllerChan.getJavaGame();
@@ -54,22 +58,26 @@ public class ControllerChanTest {
         playersNewGame.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
         playersNewGame.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, true));
         controllerChan.startNewGame(testMapNewGame, playersNewGame, Difficulty.ELITE);
-        Assert.assertNotNull("", controllerChan.getJavaGame());
-        Assert.assertNotEquals("", oldGame, controllerChan.getJavaGame());
+        Assert.assertNotNull("Es hätte ein neues Spiel erstellt werden sollen", controllerChan.getJavaGame());
+        Assert.assertNotEquals("Das alte Spiel hätte nicht mehr in ControllerChan sein sollen",
+                                        oldGame,
+                                        controllerChan.getJavaGame());
 
         //prüfe ob altes Spiel gespeichert
         File saveGame = new File(controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
-        Assert.assertTrue("", saveGame.exists());
+        Assert.assertTrue("Das alte Spiel hätte nicht gelöscht sondern gespeichert werden sollen", saveGame.exists());
 
         ControllerChan newControllerChan = TestDummy.getDummyControllerChan();
         newControllerChan.loadGame(saveGame);
         JavaGame loadedGame = newControllerChan.getJavaGame();
-        Assert.assertEquals("",  oldGame, loadedGame);
+        Assert.assertEquals("Das geladene Spiel hätte dem vorher noch aktiven alten Spiel entsprechen sollen",  oldGame, loadedGame);
 
     }
 
     @Test
     public void testLoadSaveGame() {
+        TestDummy.InGameView inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
+        //teste mit korrekten Daten
         List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
         players.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
         players.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
@@ -79,23 +87,77 @@ public class ControllerChanTest {
 
         controllerChan.saveGame("mein erstes Spiel");
         File saveGame = new File(controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
-        Assert.assertTrue("", saveGame.exists());
-
+        Assert.assertTrue("Das Spiel hätte unter dem Pfad "
+                                    +  controllerChan.SAVE_GAME_FOLDER
+                                    + controllerChan.getGameName()
+                                    + " gespeichert werden sollen",
+                                    saveGame.exists());
 
         ControllerChan newControllerChan = TestDummy.getDummyControllerChan();
         newControllerChan.loadGame(saveGame);
         JavaGame loadedGame = newControllerChan.getJavaGame();
-        Assert.assertEquals("",  oldGame, loadedGame);
-        Assert.assertEquals("",  "mein erstes Spiel", newControllerChan.getGameName());
+        Assert.assertEquals("Das geladene Spiel sollte dem vorher gespeicherten entsprechen!",  oldGame, loadedGame);
+        Assert.assertEquals("Der Name des geladenen und gesetzten Spiels sollte dem gespeicherten entsprechen!",
+                            "mein erstes Spiel",
+                                     newControllerChan.getGameName());
+        File replayGame = new File(controllerChan.REPLAY_FOLDER + controllerChan.getGameName() + ".replay");
+        newControllerChan = TestDummy.getDummyControllerChan();
+        newControllerChan.loadGame(replayGame);
+        Assert.assertTrue("Es hätte eine Meldung an den Benutzer ausgegeben werden sollen",
+                                    inGameView.getNotifications().contains("Die gewählte Datei ist nicht kompatibel oder fehlerhaft."));
+
+        controllerChan.getCurrentTurn().setGameEnded(true);
+        controllerChan.getCurrentTurn().setGameWon(true);
+        controllerChan.endTurn();
+        controllerChan.saveGame("mein beendetes Spiel");
+        saveGame = new File (controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
+        replayGame = new File (controllerChan.REPLAY_FOLDER + controllerChan.getGameName() + ".replay");
+        newControllerChan = TestDummy.getDummyControllerChan();
+        newControllerChan.loadGame(saveGame);
+        JavaGame savedGame = newControllerChan.getJavaGame();
+        newControllerChan.loadGame(replayGame);
+        Assert.assertEquals("Gespeichertes Spiel in SaveGames und Replys sollte gleich sein",
+                                      savedGame,
+                                      newControllerChan.getJavaGame());
+        Assert.assertTrue("Im Replay muss alles auf dem Redo-Stack sein", newControllerChan.getJavaGame().canRedo());
+        Assert.assertFalse("Für das Replay muss beim Laden der undo-Stack geleert werden", newControllerChan.getJavaGame().canUndo());
+
+        //teste mit leerem JavaGame
+        controllerChan = TestDummy.getDummyControllerChan();
+        controllerChan.saveGame("nullGame");
 
 
+        //teste mit leerem namen
+        controllerChan.startNewGame(testMap, players, Difficulty.NORMAL);
+        controllerChan.saveGame("");
+        Assert.assertTrue("Es hätte eine Meldung an den Benutzer ausgegeben werden sollen",
+                                   inGameView.getNotifications().contains("Das Spiel muss einen Namen haben!"));
 
+        saveGame = new File(controllerChan.SAVE_GAME_FOLDER + "" + ".save");
+        controllerChan.loadGame(saveGame);
+        Assert.assertTrue("Es hätte eine Meldung an den Benutzer ausgegeben werden sollen",
+                                    inGameView.getNotifications().contains("Es muss ein Spiel ausgewählt sein"));
 
-        fail("Not yet implemented");
+        saveGame = new File (controllerChan.SAVE_GAME_FOLDER + "noGame" + ".save");
+        controllerChan.loadGame(saveGame);
+        Assert.assertTrue("Es hätte eine Meldung an den Benutzer ausgegeben werden sollen",
+                                    inGameView.getNotifications().contains("Die gewählte Datei ist nicht kompatibel oder fehlerhaft."));
+
     }
 
     @Test
     public void testReplayGame() {
+        List<Pair<PlayerType, Boolean>> players = new ArrayList<>();
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, true));
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
+        players.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, true));
+        controllerChan.startNewGame(testMap, players, Difficulty.NORMAL);
+        JavaGame oldGame = controllerChan.getJavaGame();
+        controllerChan.saveGame("mein erstes Spiel");
+        File saveGame = new File(controllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
+
+
+
         fail("Not yet implemented");
     }
 

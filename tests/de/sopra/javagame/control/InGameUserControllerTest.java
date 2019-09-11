@@ -252,9 +252,9 @@ public class InGameUserControllerTest {
         inGameCont.playSandbagCard(PlayerType.EXPLORER, 5, new Point(9,5));
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                             explorer.getHand().contains(sandCard));
-        Assert.assertEquals("",
-                             testMap[8][5].getState(),
-                             MapTileState.DRY);
+        Assert.assertEquals("Das MapTile hätte trocken sein sollen",
+                             MapTileState.DRY,
+                             testMap[8][5].getState());
 
         //teste mit ungültigem Zielfeld(versunkenes maptile)
         explorer.getHand().add(sandCard);
@@ -263,7 +263,7 @@ public class InGameUserControllerTest {
         inGameCont.playSandbagCard(PlayerType.EXPLORER, 5, new Point(9,5));
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                             explorer.getHand().contains(sandCard));
-        Assert.assertEquals("",
+        Assert.assertEquals("Das MapTile hätte versunken sein sollen",
                              testMap[8][5].getState(),
                              MapTileState.GONE);
 
@@ -273,7 +273,7 @@ public class InGameUserControllerTest {
         inGameCont.playSandbagCard(PlayerType.EXPLORER, 1, new Point(5,2));
         Assert.assertTrue("Das Feld hätte nicht trockengelegt werden dürfen", 
                           inGameView.getNotifications().contains("Du hattest keine Sandsack Karte!"));
-        Assert.assertEquals("",
+        Assert.assertEquals("Das Feld sollte weiterhin geflutet sein",
                              testMap[8][5].getState(),
                              MapTileState.FLOODED);
 
@@ -281,9 +281,9 @@ public class InGameUserControllerTest {
         //teste mit gültigen Daten und einem Spieler (Sandcard wurde abgewofen)
         explorer.getHand().add(sandCard);
         inGameCont.playSandbagCard(PlayerType.EXPLORER, 5, new Point(5,8));
-        Assert.assertFalse("",
+        Assert.assertFalse("Die Sandsackkarte hätte von der Hand verschwinden müssen",
                             explorer.getHand().contains(sandCard));
-        Assert.assertEquals("",
+        Assert.assertEquals("Das Feld sollte jetzt trockengelegt sein",
                              testMap[8][5].getState(),
                              MapTileState.DRY);
 

@@ -164,6 +164,12 @@ public class JavaGame {
     public boolean canRedo() {
         return !redoTurns.isEmpty();
     }
+
+    public boolean canUndo () {
+        final int INITIAL_TURN_SIZE = 1;
+        return undoTurns.size() == INITIAL_TURN_SIZE;
+    }
+
     public void markCheetah() {
         this.cheetah = true;
     }
