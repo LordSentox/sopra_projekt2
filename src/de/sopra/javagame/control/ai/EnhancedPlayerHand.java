@@ -1,4 +1,4 @@
-package de.sopra.javagame.control.ai2;
+package de.sopra.javagame.control.ai;
 
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;

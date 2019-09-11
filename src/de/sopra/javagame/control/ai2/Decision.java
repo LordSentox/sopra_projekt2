@@ -1,6 +1,8 @@
 package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.util.Direction;
@@ -75,6 +77,10 @@ public abstract class Decision {
         return control.getActiveTurn();
     }
 
+    public MapTile tile() {
+        return turn().getTile(player().getPosition());
+    }
+
     public boolean hasValidActions(Integer... validActions) {
         return Arrays.asList(validActions).contains(player().getActionsLeft());
     }
@@ -100,7 +106,7 @@ public abstract class Decision {
     }
 
     public <T> boolean checkAll(Predicate<T> checker, T... objects) {
-        if (objects == null && objects.length == 0)
+        if (objects == null || objects.length == 0)
             return true;
         for (T object : objects)
             if (object != null && !checker.test(object)) return false;
