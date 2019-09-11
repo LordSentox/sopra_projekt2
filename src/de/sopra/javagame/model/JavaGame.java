@@ -41,7 +41,7 @@ public class JavaGame {
      */
     private Difficulty difficulty;
 
-    JavaGame() {
+    private JavaGame() {
         this.cheetah = false;
         this.redoTurns = new Stack<>();
         this.undoTurns = new Stack<>();
@@ -57,29 +57,31 @@ public class JavaGame {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+    public static Pair<JavaGame, Turn> newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
         throws NullPointerException, IllegalArgumentException {
+        JavaGame game = new JavaGame();
+
         // Erstellen des ersten Turns, der auf den undoTurns-Stapel abgelegt wird.
         if (mapName == null) {
             throw new NullPointerException();
+        } else if (mapName.equals("")) {
+            throw new IllegalArgumentException();
         } else {
-            if (mapName == "") {
-                throw new IllegalArgumentException();
-            } else {
-                this.mapName = mapName;
-            }
+                game.mapName = mapName;
         }
+
         if (difficulty == null) {
             throw new NullPointerException();
         } else {
-            this.difficulty = difficulty;
+            game.difficulty = difficulty;
         }
+
         Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
         if (initialTurn == null) {
             return null;
         }
         
-        return endTurn(initialTurn);
+        return new Pair<>(game, game.endTurn(initialTurn));
     }
 
     /**

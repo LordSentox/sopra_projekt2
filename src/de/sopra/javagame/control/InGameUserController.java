@@ -6,6 +6,7 @@ import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.EnumSet;
@@ -23,14 +24,12 @@ public class InGameUserController {
      * Spielt eine Helikopterkarte in der aktuellen Situation im Spiel mit den gegebenen Funktionen.
      * Dabei werden alle Spieler in der Liste von der Start-Position an die gegebene Ziel-Position bewegt
      * und die Karte aus der Hand des sourcePlayer entfernt.
-     *
-     * @param sourcePlayer  der Spieler, welcher die Karte ausspielt, darf nicht <code>null</code> sein
+     *  @param sourcePlayer  der Spieler, welcher die Karte ausspielt, darf nicht <code>null</code> sein
      * @param handCardIndex die Position der Karte in der Hand des sourcePlayer
-     * @param flyFrom       die Start-Position des Helikopters
-     * @param flyTo         die Ziel-Position des Helikopters
+     * @param flightRoute   Der Startpunkt und der Endpunkt, welche die Route beschreibt, die die Spieler fliegen sollen
      * @param players       die Spieler, welche transportiert werden sollen, darf nicht leer sein
      */
-    public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Point flyFrom, Point flyTo, List<PlayerType> players) {
+    public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players) {
         //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
         MapTile[][] map = controllerChan.getCurrentTurn().getTiles();
         Point heliPoint = MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT);

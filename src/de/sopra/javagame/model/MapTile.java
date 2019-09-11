@@ -28,7 +28,7 @@ public class MapTile implements Copyable<MapTile> {
     public static MapTile fromNumber(int number) {
         return new MapTile(MapTileProperties.getByIndex(number));
     }
-
+    
     /**
      * setzt den state des MapTile von FLOODED auf DRY
      */
