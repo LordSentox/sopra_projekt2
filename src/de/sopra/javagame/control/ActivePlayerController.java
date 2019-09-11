@@ -1,22 +1,7 @@
 package de.sopra.javagame.control;
-
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.Turn;
-import de.sopra.javagame.model.player.Courier;
-import de.sopra.javagame.model.player.Diver;
-import de.sopra.javagame.model.player.Engineer;
-import de.sopra.javagame.model.player.Explorer;
-import de.sopra.javagame.model.player.Navigator;
-import de.sopra.javagame.model.player.Pilot;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Direction;
-import de.sopra.javagame.util.HighScore;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.util.*;
 
 import java.util.List;
 
@@ -54,7 +39,7 @@ public class ActivePlayerController {
         Player player = currentTurn.getActivePlayer();
         List<Point> drainable = player.drainablePositions();
         controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
-
+     
     }
 
     /**

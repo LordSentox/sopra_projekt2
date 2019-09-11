@@ -22,7 +22,9 @@ public abstract class CardStackObservable<T extends Copyable<T>> {
     }
 
     public final void callNotify(CardStack<T> cardStack, CardStackChange<T> change) {
-        this.observer.update(cardStack, change);
+        if (this.observer != null) {
+            this.observer.update(cardStack, change);
+        }
     }
 
     public final void notifyRemove(CardStack<T> cardStack, T element, boolean discardStack) {

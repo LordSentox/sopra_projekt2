@@ -1,5 +1,9 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.util.*;
+
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.FloodCard;

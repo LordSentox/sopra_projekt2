@@ -39,6 +39,8 @@ public abstract class Player implements Copyable<Player> {
         this.hand = new ArrayList<>();
     }
 
+    public void onTurnStarted() {}
+
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der
      * Spieler sich regelkonform hinbewegen darf
@@ -237,5 +239,4 @@ public abstract class Player implements Copyable<Player> {
     public void setActiveTurn(Turn turn) {
         this.turn = turn;
     }
-
 }

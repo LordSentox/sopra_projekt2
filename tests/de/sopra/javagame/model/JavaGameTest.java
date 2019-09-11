@@ -18,7 +18,6 @@ import java.util.List;
 public class JavaGameTest {
 
     private ControllerChan controllerChan;
-    private JavaGame javaGame;
     private MapTile[][] testMap;
     private String testMapString;
     private List<Pair<PlayerType, Boolean>> players;
@@ -26,7 +25,6 @@ public class JavaGameTest {
     @Before
     public void setUp() throws Exception {
         controllerChan = TestDummy.getDummyControllerChan();
-        javaGame = new JavaGame();
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
         int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
@@ -39,10 +37,12 @@ public class JavaGameTest {
     @Test
     public void newGame() {
         //teste Erstellen vom Spiel mit korrekten Werten
-        javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
-        Assert.assertEquals("", testMapString, javaGame.getMapName());
-        Assert.assertEquals("", testMap, javaGame.getPreviousTurn().getTiles());
-        Assert.assertEquals("", Difficulty.NOVICE, javaGame.getDifficulty());
+        Pair<JavaGame, Turn> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        JavaGame javaGame = newGame.getLeft();
+
+        Assert.assertEquals("Das neue Spiel sollte den gleichen MapNamen beinhalten", testMapString, javaGame.getMapName());
+        Assert.assertEquals("Das neue Spiel sollte die gleiche Map beinhalten", testMap, javaGame.getPreviousTurn().getTiles());
+        Assert.assertEquals("Das neue Spiel sollte den gleichen Schwierigkeitsgrad haben ", Difficulty.NOVICE, javaGame.getDifficulty());
 
         Turn turn = javaGame.getPreviousTurn();
 
@@ -57,33 +57,33 @@ public class JavaGameTest {
     @Test (expected = NullPointerException.class)
     public void newGameNoMap() {
         //teste Erstellen mit leerer Map
-        javaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
+        JavaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
     }
 
     @Test (expected = NullPointerException.class)
     public void newGameNoMapName() {
-        javaGame.newGame(null, testMap, Difficulty.NOVICE, players);
+        JavaGame.newGame(null, testMap, Difficulty.NOVICE, players);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void newGameEmptyMapName() {
-        javaGame.newGame("", testMap, Difficulty.NOVICE, players);
+        JavaGame.newGame("", testMap, Difficulty.NOVICE, players);
     }
 
     @Test (expected = NullPointerException.class)
     public void newGameNoDifficulty() {
-        javaGame.newGame(testMapString, testMap, null, players);
+        JavaGame.newGame(testMapString, testMap, null, players);
     }    
 
     @Test (expected = NullPointerException.class)
     public void newGameNoPlayers() {
-        javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, null);
+        JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, null);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
-        javaGame.newGame(testMapString, testMap, Difficulty.NOVICE,
+        JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE,
                 Arrays.asList());
     }
 
@@ -91,12 +91,15 @@ public class JavaGameTest {
     public void newGameTooManyPlayers() {
         players.add(new Pair<>(PlayerType.PILOT, false));
         //teste Erstellen mit 5+ Spielern
-        javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
     }
 
     @Test
     public void endTurn() {
-        Turn currentTurn = javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        Pair<JavaGame, Turn> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        JavaGame javaGame = newGame.getLeft();
+        Turn currentTurn = newGame.getRight();
+
         Turn lastTurn = javaGame.getPreviousTurn();
         Turn nextTurn = javaGame.endTurn(currentTurn);
 
@@ -137,7 +140,9 @@ public class JavaGameTest {
                 + "-;-;-;-;-;-;-;-;-;-;-;-\n";
         //controllerChan.startNewGame(map, players, Difficulty.NOVICE);
         //JavaGame javaGame = controllerChan.getJavaGame();
-        Turn turn = javaGame.newGame(mapString, testMap, Difficulty.NOVICE, players);
+        Pair<JavaGame, Turn> newGame = JavaGame.newGame(mapString, testMap, Difficulty.NOVICE, players);
+        JavaGame javaGame = newGame.getLeft();
+        Turn turn = newGame.getRight();
 
         //teste ob Anfangsscore korrekt berechnet wird
         Assert.assertEquals("Score hätte gleich sein sollen", 100.0, javaGame.calculateScore(), 0.0);
@@ -145,17 +150,17 @@ public class JavaGameTest {
         //teste ob Score für 1 Artefakt korrekt berechnet wird
         turn.getDiscoveredArtifacts().add(ArtifactType.FIRE);
         Turn nextTurn = javaGame.endTurn(turn);
-        Assert.assertEquals("", 200.0, javaGame.calculateScore(), 0.0);
+        Assert.assertEquals("Der score dieses Spiels hätte 200 sein müssen", 200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für Game Won korrekt berechnet wird
         nextTurn.setGameWon(true);
         nextTurn.setGameEnded(true);
         Turn secondNextTurn = javaGame.endTurn(nextTurn);
-        Assert.assertEquals("", 1200.0, javaGame.calculateScore(), 0.0);
+        Assert.assertEquals("Der score dieses Spiels hätte 1200 sein müssen", 1200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für cheetah korrekt berechnet wird
         javaGame.markCheetah();
-        Assert.assertEquals("", 0, javaGame.calculateScore());
+        Assert.assertEquals("Der score dieses Spiels hätte 0 sein müssen", 0, javaGame.calculateScore());
         
         //teste für ganzes Spiel, ob Score korrekt berechnet wird
         //TODO komplettes Spiel laden und dann damit testen!

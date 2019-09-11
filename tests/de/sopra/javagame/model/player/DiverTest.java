@@ -7,19 +7,12 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.Turn;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.util.*;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class DiverTest {
     MapTile[][] testMap;
