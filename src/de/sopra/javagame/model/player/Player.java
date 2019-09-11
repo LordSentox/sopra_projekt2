@@ -69,6 +69,7 @@ public abstract class Player implements Copyable<Player> {
      *                    abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
+    // FIXME: Warum brauchen wir costsAction?!? Ist es nicht immer true?
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {
         List<Point> legelMovement = legalMoves(specialActive);
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {

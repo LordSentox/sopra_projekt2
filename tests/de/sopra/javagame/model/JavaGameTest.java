@@ -123,21 +123,19 @@ public class JavaGameTest {
 
     @Test
     public void calculateScore() {
-        boolean [][] map = new boolean[12][12];
-        String name = "hallo";
-        String mapString = "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;1;1;1;1;1;1;1;1;1;1;-\n"
-                + "-;1;1;1;1;1;1;1;1;1;1;-\n"
-                + "-;1;1;1;1;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n";
+        String mapString = "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,1,1,1,1,1,1,1,1,1,1,-\n"
+                + "-,1,1,1,1,1,1,1,1,1,1,-\n"
+                + "-,1,1,1,1,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n";
         //controllerChan.startNewGame(map, players, Difficulty.NOVICE);
         //JavaGame javaGame = controllerChan.getJavaGame();
         Pair<JavaGame, Turn> newGame = JavaGame.newGame(mapString, testMap, Difficulty.NOVICE, players);
@@ -155,7 +153,7 @@ public class JavaGameTest {
         //teste ob Score für Game Won korrekt berechnet wird
         nextTurn.setGameWon(true);
         nextTurn.setGameEnded(true);
-        Turn secondNextTurn = javaGame.endTurn(nextTurn);
+        // Turn secondNextTurn = javaGame.endTurn(nextTurn);
         Assert.assertEquals("Der score dieses Spiels hätte 1200 sein müssen", 1200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für cheetah korrekt berechnet wird
