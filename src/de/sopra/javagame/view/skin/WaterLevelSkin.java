@@ -19,7 +19,7 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
     private final FillProgressIndicator indicator;
     private final StackPane container = new StackPane();
     private final Label levelLabel = new Label();
-    private final Rectangle cover = new Rectangle();
+    private final Rectangle cover = new Rectangle(container.getWidth(), container.getHeight());
     private final Circle borderCircle = new Circle();
     private final Circle fillerCircle = new Circle();
     private final Circle labelCircle = new Circle();
@@ -47,14 +47,18 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
         AnchorPane.setLeftAnchor(this.cover, 0.0D);
         AnchorPane.setRightAnchor(this.cover, 0.0D);
 
-        coverPane.getChildren().add(this.cover);
+        StackPane pane = new StackPane(fillerCircle);
         this.indicator.progressProperty().addListener((o, oldVal, newVal) -> {
             this.setProgressLabel(newVal.intValue());
-            this.cover.setHeight(coverPane.getHeight() * ((double) MAX_WATER_LEVEL - newVal.intValue()) / (double) MAX_WATER_LEVEL);
+            this.cover.setHeight(coverPane.getHeight() * newVal.intValue() / (double) MAX_WATER_LEVEL);
+            this.cover.setTranslateY(coverPane.getHeight() - coverPane.getHeight() * newVal.intValue() / (double) MAX_WATER_LEVEL);
         });
+
+        pane.setClip(cover);
+
         coverPane.heightProperty().addListener((o, oldVal, newVal) -> this.cover.setHeight((double)newVal.intValue() * ((double) MAX_WATER_LEVEL - newVal.intValue()) / MAX_WATER_LEVEL));
         this.initLabel(indicator.getProgress());
-        this.container.getChildren().addAll(this.fillerCircle, coverPane, this.borderCircle, this.labelCircle, this.levelLabel);
+        this.container.getChildren().addAll(coverPane, pane, this.borderCircle, this.labelCircle, this.levelLabel);
         updateRadii();
     }
 
