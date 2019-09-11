@@ -1,7 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.Decision;
-import de.sopra.javagame.control.ai2.EnhancedPlayerHand;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.Player;
