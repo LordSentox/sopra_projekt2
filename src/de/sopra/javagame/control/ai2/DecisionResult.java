@@ -11,6 +11,6 @@ public enum DecisionResult {
 
     DISCARD,
     TURN_ACTION,
-    PLAY_SPECIAL_CARD;
+    PLAY_SPECIAL_CARD
 
 }

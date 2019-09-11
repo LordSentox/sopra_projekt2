@@ -2,7 +2,6 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -11,7 +10,6 @@ import java.util.stream.Collectors;
 
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
-import static de.sopra.javagame.util.Direction.*;
 
 /**
  * <h1>projekt2</h1>
@@ -33,41 +31,13 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
         for (Pair<Point, MapTile> temple : templeList) {
 
             Point orphanedTemplePoint = temple.getLeft();
-            MapTile orphanedTemple = temple.getRight();
 
-            if (orphanedTemple.getState() != MapTileState.FLOODED) {
-                continue;
-            }
+            List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
 
-            Point northernNeighbourPoint = translate(orphanedTemplePoint, UP);
-            MapTile northernNeighbour = control.getTile(northernNeighbourPoint);
-
-            Point southernNeighbourPoint = translate(orphanedTemplePoint, DOWN);
-            MapTile southernNeighbour = control.getTile(southernNeighbourPoint);
-
-            Point northEasternNeighbourPoint = translate(northernNeighbourPoint, RIGHT);
-            MapTile northEasternNeighbour = control.getTile(northEasternNeighbourPoint);
-
-            Point easternNeighbourPoint = translate(orphanedTemplePoint, RIGHT);
-            MapTile easternNeighbour = control.getTile(easternNeighbourPoint);
-
-            Point southEasternNeighbourPoint = translate(southernNeighbourPoint, RIGHT);
-            MapTile southEasternNeighbour = control.getTile(southEasternNeighbourPoint);
-
-            Point southWesternNeighbourPoint = translate(southernNeighbourPoint, LEFT);
-            MapTile southWesternNeighbour = control.getTile(southWesternNeighbourPoint);
-
-            Point westernNeighbourPoint = translate(orphanedTemplePoint, LEFT);
-            MapTile westernNeighbour = control.getTile(westernNeighbourPoint);
-
-            Point northWesternNeighbourPoint = translate(northernNeighbourPoint, LEFT);
-            MapTile northWesternNeighbour = control.getTile(northWesternNeighbourPoint);
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
 
             //wenn eins nicht GONE ist
-            if (!checkAll(tile -> tile.getState() == GONE,
-                    northernNeighbour, easternNeighbour, southernNeighbour, westernNeighbour,
-                    northEasternNeighbour, northWesternNeighbour,
-                    southEasternNeighbour, southWesternNeighbour)) {
+            if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
 
