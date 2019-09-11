@@ -3,7 +3,6 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
@@ -19,37 +18,37 @@ import java.util.List;
  * @version 11.09.2019
  * @since 11.09.2019
  */
-
 public class TurnEndGame extends Decision {
+
+    private final int FOUR_ARTIFACTS = 4;
 
     @Override
     public Decision decide() {
-        Turn turn = control.getActiveTurn();
-        EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
-        
-        if (discoveredArtifacts.size() != 4){
+        EnumSet<ArtifactType> discoveredArtifacts = turn().getDiscoveredArtifacts();
+
+        if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
             return null;
         }
-        
+
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
-        
-        List<Player> allPlayers = turn.getPlayers();
-        
-        for (Player player: allPlayers){
+
+        List<Player> allPlayers = control.getAllPlayers();
+
+        for (Player player : allPlayers) {
             Point playerPosition = player.getPosition();
-            if (!playerPosition.equals(landingSitePosition)){
+            if (!playerPosition.equals(landingSitePosition)) {
                 return null;
             }
         }
-        
+
         return this;
     }
 
     @Override
     public void act() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

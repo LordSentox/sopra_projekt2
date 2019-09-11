@@ -28,7 +28,7 @@ public class DiscardTreasureCardsThatAnotherPlayerHasFourOf extends Decision {
         for (ArtifactCard activeCard : playerHand().getCards(onlyTypes)) {
             for (Player player : allPlayers) {
                 EnhancedPlayerHand hand = hand(player);
-                if (hand.getCardsInHand() < 4) {
+                if (hand.getCardsInHand() < FOUR_CARDS) {
                     break;
                 }
                 int water = hand.getAmount(WATER);

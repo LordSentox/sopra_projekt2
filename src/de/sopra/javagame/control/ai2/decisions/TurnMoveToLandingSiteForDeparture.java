@@ -19,33 +19,35 @@ import java.util.EnumSet;
  * @since 09.09.2019
  */
 
-public class TurnMoveToLandingSiteForDeparture extends Decision  {
+public class TurnMoveToLandingSiteForDeparture extends Decision {
+
+    private final int FOUR_ARTIFACTS = 4;
 
     @Override
     public Decision decide() {
         Turn turn = control.getActiveTurn();
         EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
-        
-        if (discoveredArtifacts.size() != 4){
+
+        if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
             return null;
         }
-        
+
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
-        
+
         Player player = turn.getActivePlayer();
         Point playerPosition = player.getPosition();
-        if (!landingSitePosition.equals(playerPosition)){
+        if (!landingSitePosition.equals(playerPosition)) {
             return this;
         }
-        
+
         return null;
     }
 
     @Override
     public void act() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

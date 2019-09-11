@@ -2,36 +2,35 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.Turn;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <h1>projekt2</h1>
  *
- * @author Niklas Falke
- * @version 10.09.2019
+ * @author Niklas Falke, Julius Korweck
+ * @version 11.09.2019
  * @since 10.09.2019
  */
 public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
     @Override
     public Decision decide() {
-        List<ArtifactCard> activeHand = player().getHand();
-        int count;
-        Turn turn = control.getActiveTurn();
-        List<ArtifactCard> discardStack = turn.getArtifactCardStack().getDiscardPile();
-        for (ArtifactCard activeCard : activeHand) {
-            count = 0;
+        Collection<ArtifactCard> discardStack = control.getArtifactCardStackTracker().getDiscardPile();
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        playerHand().getCards().forEach(activeCard ->
+        {
+            int count = 0;
             for (ArtifactCard discarded : discardStack) {
-                if (discarded.equals(activeCard)) {
+                if (discarded.getType() == activeCard.getType()) {
                     count++;
                 }
             }
-            if (count > 1) {
-                return this;
+            if (count > ONE_CARD) {
+                atomicBoolean.set(true);
             }
-        }
-        return null;
+        });
+        return atomicBoolean.get() ? this : null;
     }
 
     @Override

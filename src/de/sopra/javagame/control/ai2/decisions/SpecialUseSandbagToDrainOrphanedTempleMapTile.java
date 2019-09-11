@@ -1,8 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -18,12 +18,20 @@ import static de.sopra.javagame.util.Direction.*;
  *
  * @author Melanie Arnds, Julius Korweck
  * @version 11.09.2019
- * @since 09.09.2019
+ * @since 10.09.2019
  */
-public class TurnDrainOrphanedTempleMapTiles extends Decision {
+public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public Decision decide() {
+
+        if (!control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
+            return null;
+        }
+
+        if (!hasValidActions(0)) {
+            return null;
+        }
 
         List<Pair<Point, MapTile>> templeList = control.getTemples();
 
@@ -31,13 +39,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
         for (Pair<Point, MapTile> temple : templeList) {
-
             Point orphanedTemplePoint = temple.getLeft();
-            MapTile orphanedTemple = temple.getRight();
-
-            if (orphanedTemple.getState() != MapTileState.FLOODED) {
-                continue;
-            }
 
             Point northernNeighbourPoint = translate(orphanedTemplePoint, UP);
             MapTile northernNeighbour = control.getTile(northernNeighbourPoint);
@@ -71,15 +73,15 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
                 continue;
             }
 
-            //old way of if above
-//            if (!((northernNeighbour == null || northernNeighbour.getState() == GONE)
-//                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == GONE)
-//                    && (easternNeighbour == null || easternNeighbour.getState() == GONE)
-//                    && (southEasternNeighbour == null || southEasternNeighbour.getState() == GONE)
-//                    && (southernNeighbour == null || southernNeighbour.getState() == GONE)
-//                    && (southWesternNeighbour == null || southWesternNeighbour.getState() == GONE)
-//                    && (westernNeighbour == null || westernNeighbour.getState() == GONE)
-//                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == GONE))) {
+            //alte version
+//            if (!((northernNeighbour == null || northernNeighbour.getState() == MapTileState.GONE)
+//                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == MapTileState.GONE)
+//                    && (easternNeighbour == null || easternNeighbour.getState() == MapTileState.GONE)
+//                    && (southEasternNeighbour == null || southEasternNeighbour.getState() == MapTileState.GONE)
+//                    && (southernNeighbour == null || southernNeighbour.getState() == MapTileState.GONE)
+//                    && (southWesternNeighbour == null || southWesternNeighbour.getState() == MapTileState.GONE)
+//                    && (westernNeighbour == null || westernNeighbour.getState() == MapTileState.GONE)
+//                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == MapTileState.GONE))) {
 //                continue;
 //            }
 

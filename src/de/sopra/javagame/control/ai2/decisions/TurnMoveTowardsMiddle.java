@@ -14,7 +14,8 @@ public class TurnMoveTowardsMiddle extends Decision {
     @Override
     public Decision decide() {
         Point position = control.getActivePlayer().getPosition();
-        if( position.xPos !=6 || position.yPos!=6) {
+        //FIXME calculation of middle is not precise
+        if (any(position.xPos != 6, position.yPos != 6)) {
             return this;
         }
         return null;

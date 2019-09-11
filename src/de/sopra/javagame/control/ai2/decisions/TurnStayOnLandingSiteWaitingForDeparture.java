@@ -13,19 +13,20 @@ import java.util.EnumSet;
 /**
  * <h1>projekt2</h1>
  *
- * @author Melanie Arnds
- * @version 09.09.2019
+ * @author Melanie Arnds, Julius Korweck
+ * @version 11.09.2019
  * @since 09.09.2019
  */
-
 public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
+
+    private final int FOUR_ARTIFACTS = 4;
 
     @Override
     public Decision decide() {
         Turn turn = control.getActiveTurn();
         EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
-        
-        if (discoveredArtifacts.size() != 4){
+
+        if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
             return null;
         }
 

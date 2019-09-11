@@ -12,7 +12,7 @@ import de.sopra.javagame.control.ai2.Decision;
 public class DiscardRarestTreasureCards extends Decision {
     @Override
     public Decision decide() {
-        return this;
+        return null; //TODO
     }
 
     @Override

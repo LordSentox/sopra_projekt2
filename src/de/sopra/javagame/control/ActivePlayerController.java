@@ -1,10 +1,9 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
-import de.sopra.javagame.model.player.Engineer;
-import de.sopra.javagame.model.player.Navigator;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
@@ -73,7 +72,6 @@ public class ActivePlayerController {
             aui.refreshMovementOptions(movements);
         }
         else if (player.getType() == PlayerType.COURIER) {
-            aui.refreshCardsTransferable(true);
             aui.showNotification("Der Bote darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
         }
         else if (player.getType() == PlayerType.EXPLORER) {
@@ -106,7 +104,6 @@ public class ActivePlayerController {
         List<Point> drainable = player.drainablePositions();
         controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
         controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-
     }
 
     /**
@@ -119,17 +116,7 @@ public class ActivePlayerController {
     public void showTransferable(PlayerType targetPlayer) {
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
-        if (player.getType() == PlayerType.COURIER) {
-            controllerChan.getInGameViewAUI().refreshCardsTransferable(true);
-        } else {
-            Player target = currentTurn.getPlayer(targetPlayer);
-            if (player.getPosition() == target.getPosition()) {
-                controllerChan.getInGameViewAUI().refreshCardsTransferable(true);
-            } else {
-                controllerChan.getInGameViewAUI().refreshCardsTransferable(false);
-            }
-        }
-
+        controllerChan.getInGameViewAUI().refreshCardsTransferable(player.legalReceivers().contains(targetPlayer));
     }
 
     /**
@@ -149,6 +136,7 @@ public class ActivePlayerController {
         if (currentTurn.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
+            controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
         }
     }
 
@@ -160,9 +148,14 @@ public class ActivePlayerController {
      */
     public void collectArtifact() {
         Turn currentTurn = controllerChan.getCurrentTurn();
-        controllerChan.getInGameViewAUI().refreshArtifactsFound(currentTurn.getDiscoveredArtifacts());
-        controllerChan.getInGameViewAUI().refreshArtifactStack(currentTurn.getArtifactCardStack());
+        Player player = currentTurn.getActivePlayer();
 
+        if (player.collectArtifact() != ArtifactType.NONE) {
+            controllerChan.getInGameViewAUI().refreshArtifactsFound(currentTurn.getDiscoveredArtifacts());
+            controllerChan.getInGameViewAUI().refreshArtifactStack(currentTurn.getArtifactCardStack());
+            controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
+            controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+        }
     }
 
     /**
@@ -182,8 +175,8 @@ public class ActivePlayerController {
         int actionsLeft = player.getActionsLeft();
 
         if (player.move(destination, true, useSpecial)) {
-            controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
             controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
+            controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
 
             controllerChan.endTurn();
         }
@@ -204,40 +197,31 @@ public class ActivePlayerController {
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
         Player forcePlayer = currentTurn.getPlayer(target);
-        if (player.getType() == PlayerType.NAVIGATOR) {
-            player = new Navigator(player.getName(), player.getPosition(), currentTurn);
+
+        if (player.canMoveOthers()) {
             player.forcePush(direction, forcePlayer);
             Point position = forcePlayer.getPosition();
-            controllerChan.getInGameViewAUI().refreshPlayerPosition(position, target);
-            int actionsLeft = player.getActionsLeft();
-            controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
-        }
 
+            controllerChan.getInGameViewAUI().refreshPlayerPosition(position, target);
+            controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+        }
     }
 
     /**
      * Legt alle Felder trocken an den gegebenen Positionen.
      *
-     * @param position
+     * @param positions
      *            Die Positionen aller Felder die Trockengelegt werden sollen.
      */
-    public void drain(Point... position) {
+    public void drain(Point... positions) {
         Turn currentTurn = controllerChan.getCurrentTurn();
         Player player = currentTurn.getActivePlayer();
-        for (Point point : position){
-            if(player.getType() != PlayerType.ENGINEER) {
-                if (player.drain(point)){
+        for (Point point : positions){
+            if (player.drain(point)){
                 controllerChan.getInGameViewAUI().refreshMapTile(point, currentTurn.getTile(point));
                 controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
-                }
-            }else {
-                player = new Engineer(player.getName(), player.getPosition(), currentTurn);
-                if (player.drain(point)){
-                    controllerChan.getInGameViewAUI().refreshMapTile(point, currentTurn.getTile(point));
-                    controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
-                }
+                controllerChan.getInGameViewAUI().refreshDrainOptions(player.drainablePositions());
             }
-       
          }
     }
 
