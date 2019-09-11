@@ -1,12 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.player.Player;
 
-import java.util.List;
+import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
 
 /**
  * <h1>projekt2</h1>
@@ -19,24 +16,8 @@ public class DiscardUseSandbagInsteadOfDiscardingTreasureCard extends Decision {
     @Override
     public Decision decide() {
         if (control.anyTile(MapTileState.FLOODED) != null) {
-            Player activePlayer = control.getActivePlayer();
-            List<ArtifactCard> activeHand = activePlayer.getHand();
-            boolean hasSand = false;
-            for (ArtifactCard sand : activeHand) {
-                if (sand.getType() == ArtifactCardType.SANDBAGS) {
-                    hasSand = true;
-                }
-            }
-            if (!hasSand) {
-                return null;
-            }
-            for (ArtifactCard treasure : activeHand) {
-                if (treasure.getType() == ArtifactCardType.AIR ||
-                        treasure.getType() == ArtifactCardType.EARTH ||
-                        treasure.getType() == ArtifactCardType.WATER ||
-                        treasure.getType() == ArtifactCardType.FIRE) {
-                    return this;
-                }
+            if (playerHand().hasCard(SANDBAGS)) {
+                return this;
             }
         }
         return null;

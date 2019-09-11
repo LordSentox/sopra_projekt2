@@ -16,7 +16,6 @@ import java.util.List;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-
 public class TurnDrainLandingSite extends Decision {
 
     @Override
@@ -26,9 +25,9 @@ public class TurnDrainLandingSite extends Decision {
         MapTile landingSite = informationLandingSite.getRight();
         Point landingSitePosition = informationLandingSite.getLeft();
 
-        List<Point> drainablePositionslist = player().drainablePositions();
+        List<Point> drainablePositions = player().drainablePositions();
 
-        if (drainablePositionslist.contains(landingSitePosition)
+        if (drainablePositions.contains(landingSitePosition)
                 && landingSite.getState().equals(MapTileState.FLOODED)) {
             return this;
         }
