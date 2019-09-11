@@ -18,17 +18,17 @@ public class TurnMoveToCollectTreasureWithThreeCards extends Decision {
     public Decision decide() {
         EnhancedPlayerHand hand = playerHand();
         MapTile tile = tile();
-        if((hand.getAmount(ArtifactCardType.EARTH)>2 && tile.getProperties().getHidden() == ArtifactType.EARTH)||
-           (hand.getAmount(ArtifactCardType.FIRE)>2 && tile.getProperties().getHidden() == ArtifactType.FIRE)||
-           (hand.getAmount(ArtifactCardType.AIR)>2 && tile.getProperties().getHidden() == ArtifactType.AIR)||
-           (hand.getAmount(ArtifactCardType.WATER)>2 && tile.getProperties().getHidden() == ArtifactType.WATER)){
+        if ((hand.getAmount(ArtifactCardType.EARTH) > TWO_CARDS && tile.getProperties().getHidden() == ArtifactType.EARTH) ||
+                (hand.getAmount(ArtifactCardType.FIRE) > TWO_CARDS && tile.getProperties().getHidden() == ArtifactType.FIRE) ||
+                (hand.getAmount(ArtifactCardType.AIR) > TWO_CARDS && tile.getProperties().getHidden() == ArtifactType.AIR) ||
+                (hand.getAmount(ArtifactCardType.WATER) > TWO_CARDS && tile.getProperties().getHidden() == ArtifactType.WATER)) {
             return this;
         }
         return null;
     }
-    
+
     @Override
     public void act() {
         //TODO
-    } 
+    }
 }

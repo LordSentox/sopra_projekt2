@@ -2,6 +2,10 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.util.Point;
+
+import java.util.List;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -10,22 +14,26 @@ import de.sopra.javagame.model.player.Player;
  * @since 11.09.2019
  */
 public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
+
+    private final int TWO_POSITIONS = 2;
+
     @Override
     public Decision decide() {
-        if(!hasValidActions(3)) {
+        if (!hasValidActions(3)) {
             return null;
         }
         Player activePlayer = control.getActivePlayer();
-        if(!(activePlayer.drainablePositions().size()<2)) {
+        if (!(activePlayer.drainablePositions().size() < TWO_POSITIONS)) {
             return null;
         }
-            if(control.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
-               activePlayer.getType()).size()>1){
-                return this;
-            }
+        List<Point> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(
+                activePlayer.getPosition(), activePlayer.getType());
+        if (!drainablePositionsOneMoveAway.isEmpty()) {
+            return this;
+        }
         return null;
     }
-    
+
     @Override
     public void act() {
         //TODO

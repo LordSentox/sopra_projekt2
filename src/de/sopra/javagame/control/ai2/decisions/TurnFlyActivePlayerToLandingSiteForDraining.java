@@ -25,7 +25,7 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
             return null;
         }
 
-        if (player().getActionsLeft() != 1) {
+        if (!hasValidActions(1)) {
             return null;
         }
 

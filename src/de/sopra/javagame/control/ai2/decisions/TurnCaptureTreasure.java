@@ -18,10 +18,10 @@ public class TurnCaptureTreasure extends Decision {
     @Override
     public Decision decide() {
         EnhancedPlayerHand hand = playerHand();
-        if (any(all(hand.getAmount(FIRE) > 3, tile().getProperties().getHidden() == ArtifactType.FIRE),
-                all(hand.getAmount(EARTH) > 3, tile().getProperties().getHidden() == ArtifactType.EARTH),
-                all(hand.getAmount(WATER) > 3, tile().getProperties().getHidden() == ArtifactType.WATER),
-                all(hand.getAmount(AIR) > 3, tile().getProperties().getHidden() == ArtifactType.AIR))) {
+        if (any(all(hand.getAmount(FIRE) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.FIRE),
+                all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
+                all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
+                all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))) {
             return this;
         }
         return null;

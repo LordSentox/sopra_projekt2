@@ -14,14 +14,11 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-public class TurnGiveTreasurecardsToPlayersWhoNeedThem extends Decision {
+public class TurnGiveTreasureCardsToPlayersWhoNeedThem extends Decision {
     @Override
     public Decision decide() {
 
-        if (any(playerHand().hasCard(WATER),
-                playerHand().hasCard(FIRE),
-                playerHand().hasCard(EARTH),
-                playerHand().hasCard(AIR))) {
+        if (!playerHand().hasAnyCard(WATER, FIRE, EARTH, AIR)) {
             return null;
         }
 
@@ -40,13 +37,13 @@ public class TurnGiveTreasurecardsToPlayersWhoNeedThem extends Decision {
             int fire2 = hand.getAmount(FIRE);
             int earth2 = hand.getAmount(EARTH);
             int air2 = hand.getAmount(AIR);
-            if (air > 0 && air < air2 && air2 < 4) {
-                return this;
-            } else if (earth > 0 && earth < earth2 && earth2 < 4) {
-                return this;
-            } else if (fire > 0 && fire < fire2 && fire2 < 4) {
-                return this;
-            } else if (water > 0 && water < water2 && water2 < 4) {
+
+            if (any(
+                    all(air > ZERO_CARDS, air < air2, air2 < FOUR_CARDS),
+                    all(earth > ZERO_CARDS, earth < earth2, earth2 < FOUR_CARDS),
+                    all(fire > ZERO_CARDS, fire < fire2, fire2 < FOUR_CARDS),
+                    all(water > ZERO_CARDS, water < water2, water2 < FOUR_CARDS)
+            )) {
                 return this;
             }
         }

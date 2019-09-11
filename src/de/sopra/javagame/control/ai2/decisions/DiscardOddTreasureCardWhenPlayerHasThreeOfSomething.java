@@ -20,8 +20,8 @@ public class DiscardOddTreasureCardWhenPlayerHasThreeOfSomething extends Decisio
         int fire = activeHand.getAmount(FIRE);
         int earth = activeHand.getAmount(EARTH);
         int air = activeHand.getAmount(AIR);
-        if (any(air == 3, earth == 3, fire == 3, water == 3)) {
-            if (any(air <= 2, earth <= 2, fire <= 2, water <= 2)) {
+        if (any(air == THREE_CARDS, earth == THREE_CARDS, fire == THREE_CARDS, water == THREE_CARDS)) {
+            if (any(air <= TWO_CARDS, earth <= TWO_CARDS, fire <= TWO_CARDS, water <= TWO_CARDS)) {
                 return this;
             }
         }
