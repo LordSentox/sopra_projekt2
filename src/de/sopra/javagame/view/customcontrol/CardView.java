@@ -3,17 +3,19 @@ package de.sopra.javagame.view.customcontrol;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class CardView extends ImageView{
+public class CardView extends ImageView {
     
     private final Image frontImage, backImage;
     private boolean frontShown = false;
-    
-    
-    public CardView(String pack, String frontImage, String backImage, int size){
-        this.frontImage = new Image(getClass().getResource("/textures/" + pack + "/" + frontImage).toExternalForm(), size, 0, true, true);
-        this.backImage = new Image(getClass().getResource("/textures/" + pack + "/" + backImage).toExternalForm(), size, 0, true, true);
+
+
+    protected CardView(Image frontImage, Image backImage, int size){
+        this.frontImage = frontImage;
+        this.backImage = backImage;
         this.showBackImage();
         this.getStyleClass().add("CardView");
+        setPreserveRatio(true);
+        setFitWidth(size);
     }
     
     public void showFrontImage(){

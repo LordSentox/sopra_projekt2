@@ -1,5 +1,6 @@
 package de.sopra.javagame.view.skin;
 
+import de.sopra.javagame.util.TextureLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
@@ -40,7 +41,7 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
         this.borderCircle.radiusProperty().bindBidirectional(indicator.innerCircleRadiusProperty());
         indicator.innerCircleRadiusProperty().addListener((o, oldVal, newVal) -> this.labelCircle.setRadius(newVal.doubleValue() / 3));
 
-        Image img = new Image("/textures/water.jpg");
+        Image img = TextureLoader.getWater();
         fillerCircle.setFill(new ImagePattern(img));
         AnchorPane.setTopAnchor(this.cover, 0.0D);
         AnchorPane.setLeftAnchor(this.cover, 0.0D);

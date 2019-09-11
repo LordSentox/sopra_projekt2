@@ -1,28 +1,27 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.TextureLoader;
+import de.sopra.javagame.view.customcontrol.ArtifactCardView;
 import de.sopra.javagame.view.customcontrol.CardView;
+import de.sopra.javagame.view.customcontrol.FloodCardView;
 import de.sopra.javagame.view.customcontrol.MapPane;
-import de.sopra.javagame.view.customcontrol.TileView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.EnumSet;
@@ -46,10 +45,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
     private static final int ACTIVE_CARD_SIZE = 150;
     private static final int PASSIVE_CARD_SIZE = 110;
+    final int SPINNER_SIZE = 250;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
     
-    public void init() throws UnsupportedEncodingException, IOException {
+    public void init() throws IOException {
         //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentTurn().getTiles();
         
 //        /* TEMP */
@@ -57,7 +57,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 //        IntStream.range(0, 24).forEach(i -> tiles[i/10 +1][i%10 +1] = MapTile.fromNumber(i));
 //        IntStream.range(0, 9).forEach(i -> { IntStream.range(0, 12).forEach(j -> System.out.print(tiles[i][j])); System.out.println();});
         /* END TEMP */ 
-        mainPane.setImage(new Image(getClass().getResource("/textures/kirschbaum.jpg").toExternalForm(), 1920, 1200, false, true));
+        mainPane.setImage(TextureLoader.getBackground());
         
         MapTile[][] tiles = MapUtil.createMapFromNumbers(MapUtil.readNumberMapFromString(new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8")));
         initGridPane();
@@ -78,44 +78,75 @@ public class InGameViewController extends AbstractViewController implements InGa
                 }
             }));
         */
-        activePlayerTypeImageView.setImage(new Image(getClass().getResource("/textures/default/diver.png").toExternalForm(), ACTIVE_CARD_SIZE, 0, true, true));
+        activePlayerTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.DIVER));
+        activePlayerTypeImageView.setPreserveRatio(true);
+        activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
+        activePlayerTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         activePlayerTypeImageView.setVisible(true);
         
-        playerOneTypeImageView.setImage(new Image(getClass().getResource("/textures/default/pilot.png").toExternalForm(), PASSIVE_CARD_SIZE, 0, true, true));
+        playerOneTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.PILOT));
+        playerOneTypeImageView.setPreserveRatio(true);
+        playerOneTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
+        playerOneTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setVisible(true);
         
-        playerTwoTypeImageView.setImage(new Image(getClass().getResource("/textures/default/explorer.png").toExternalForm(), PASSIVE_CARD_SIZE, 0, true, true));
+        playerTwoTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.EXPLORER));
+        playerTwoTypeImageView.setPreserveRatio(true);
+        playerTwoTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
+        playerTwoTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerTwoTypeImageView.setVisible(true);
         
-        playerThreeTypeImageView.setImage(new Image(getClass().getResource("/textures/default/engineer.png").toExternalForm(), PASSIVE_CARD_SIZE, 0, true, true));
+        playerThreeTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.ENGINEER));
+        playerThreeTypeImageView.setPreserveRatio(true);
+        playerThreeTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
+        playerThreeTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerThreeTypeImageView.setVisible(true);
         
-        turnSpinnerWithoutMarkerImageView.setImage(new Image(getClass().getResource("/textures/default/turnSpinnerWithoutMarker.png").toExternalForm(), 250, 0, true, true));
+        turnSpinnerWithoutMarkerImageView.setImage(TextureLoader.getTurnSpinner());
+        turnSpinnerWithoutMarkerImageView.setPreserveRatio(true);
+
+        turnSpinnerWithoutMarkerImageView.setFitWidth(SPINNER_SIZE);
+        turnSpinnerWithoutMarkerImageView.setFitHeight(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setVisible(true);
         turnSpinnerWithoutMarkerImageView.setRotate(72.0);
         turnSpinnerWithoutMarkerImageView.getStyleClass().add("Artifact_Fire");
         //TODO Bild um 72 Grad drehen
-        markerForSpinnerImageView.setImage(new Image(getClass().getResource("/textures/default/markerForSpinner.png").toExternalForm(), 250, 0, true, true));
+        markerForSpinnerImageView.setImage(TextureLoader.getSpinnerMarker());
+        markerForSpinnerImageView.setPreserveRatio(true);
+        markerForSpinnerImageView.setFitWidth(SPINNER_SIZE);
+        markerForSpinnerImageView.setFitHeight(SPINNER_SIZE);
         markerForSpinnerImageView.setVisible(true);
         
         
         
-        fireArtefactImageView.setImage(new Image(getClass().getResource("/textures/default/artefact_02_default.png").toExternalForm(), ARTIFACT_SIZE, 0, true, true));
+        fireArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.FIRE));
+        fireArtefactImageView.setPreserveRatio(true);
+        fireArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        //fireArtefactImageView.setFitHeight(ARTIFACT_SIZE);
         fireArtefactImageView.setVisible(true);
         fireArtefactImageView.getStyleClass().add("Artifact_Fire");
         //fireArtefactImageView.setEffect(DESATURATION);
         
-        waterArtefactImageView.setImage(new Image(getClass().getResource("/textures/default/artefact_01_default.png").toExternalForm(), ARTIFACT_SIZE, 0, true, true));
+        waterArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.WATER));
+        waterArtefactImageView.setPreserveRatio(true);
+        waterArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        //waterArtefactImageView.setFitHeight(ARTIFACT_SIZE);
         waterArtefactImageView.setVisible(true);
         waterArtefactImageView.getStyleClass().add("Artifact_Water");
         //waterArtefactImageView.setEffect(DESATURATION);
         
-        earthArtefactImageView.setImage(new Image(getClass().getResource("/textures/default/artefact_03_default.png").toExternalForm(), ARTIFACT_SIZE, 0, true, true));
+        earthArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.EARTH));
+        earthArtefactImageView.setPreserveRatio(true);
+        earthArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        //earthArtefactImageView.setFitHeight(ARTIFACT_SIZE);
         earthArtefactImageView.setVisible(true);
         earthArtefactImageView.getStyleClass().add("Artifact_Earth");
         //earthArtefactImageView.setEffect(DESATURATION);
         
-        airArtefactImageView.setImage(new Image(getClass().getResource("/textures/default/artefact_04_default.png").toExternalForm(), ARTIFACT_SIZE, 0, true, true));
+        airArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.AIR));
+        airArtefactImageView.setPreserveRatio(true);
+        airArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        //airArtefactImageView.setFitHeight(ARTIFACT_SIZE);
         airArtefactImageView.setVisible(true);
         airArtefactImageView.getStyleClass().add("Artifact_Air");
         //airArtefactImageView.setEffect(DESATURATION);
@@ -124,29 +155,26 @@ public class InGameViewController extends AbstractViewController implements InGa
         
         /* Cards */
         for(int i = 0; i < 9; i+=2) {
-            CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png", ACTIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showFrontImage();
             cardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        
-        
-        
-        
+
         for(int i = 0; i < 5; i++) {
-            CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png", PASSIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
             v.showFrontImage();
             handOneCardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
         for(int i = 0; i < 5; i++) {
-            CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png", PASSIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
             v.showFrontImage();
             handTwoCardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
         for(int i = 0; i < 5; i++) {
-            CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png", PASSIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
             v.showFrontImage();
             handThreeCardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
@@ -155,25 +183,25 @@ public class InGameViewController extends AbstractViewController implements InGa
         
         
         for(int i = 0; i < 10; i+=2) {
-            CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png", ACTIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showBackImage();
             artifactCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
         for(int i = 0; i < 10; i+=2) {
-            CardView v = new CardView("default", "artefact_0" + (new Random().nextInt(7)+1) + ".png", "artefact_back.png", ACTIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showFrontImage();
             artifactCardDicardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
         for(int i = 0; i < 10; i+=2) {
-            CardView v = new CardView("default", "floodcard_0" + (new Random().nextInt(7)+1) + ".png", "floodcard_back.png", ACTIVE_CARD_SIZE);
+            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showBackImage();
             floodCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
         for(int i = 0; i < 10; i+=2) {
-            CardView v = new CardView("default", "floodcard_0" + (new Random().nextInt(7)+1) + ".png", "floodcard_back.png", ACTIVE_CARD_SIZE);
+            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
@@ -197,18 +225,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(i -> floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
          
     }
-    
-    
-    
-    private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
-        if (e.getButton() == MouseButton.PRIMARY)
-            v.showImage(MapTileState.FLOODED);
-        else if (e.getButton() == MouseButton.SECONDARY)
-            v.showImage(MapTileState.DRY);
-        else if (e.getButton() == MouseButton.MIDDLE)
-            v.showImage(MapTileState.GONE);
-    }
-    
     
 
     public void onShowMovementOptionsClicked() {
