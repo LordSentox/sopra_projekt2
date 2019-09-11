@@ -1,11 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
@@ -19,31 +17,32 @@ import de.sopra.javagame.util.Point;
  * @since 09.09.2019
  */
 
-public class UseSandbagToDrainLandingSite implements Decision {
+public class TurnUseSandbagToDrainLandingSite extends Decision {
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
 
         if (!control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
+            return null;
+        }
+
+        if (player().getActionsLeft() != 0) {
             return null;
         }
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         MapTile landingSite = informationLandingSite.getRight();
 
-        if (!landingSite.getState().equals(MapTileState.FLOODED)) {
+        if (landingSite.getState() != MapTileState.FLOODED) {
             return null;
         }
-
-        Player activePlayer = control.getActivePlayer();
-        int leftActions = activePlayer.getActionsLeft();
 
         /* Wahrscheinlichkeit berechnen, dass Landeplatz versinken wird:
          * befindet sich der Landeplatz im Ablagestapel der Flutkarten, wird also
          * nicht gezogen, wenn keine Flut-steigt-Karten mehr im Artefaktstapel sind
          * wäre zb 0% Wahrscheinlichkeit, zu versinken
          */
-        if (leftActions == 0) {
+        if (true) {
             //TODO
             return this;
         }
@@ -51,7 +50,7 @@ public class UseSandbagToDrainLandingSite implements Decision {
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         // TODO Auto-generated method stub
 
     }

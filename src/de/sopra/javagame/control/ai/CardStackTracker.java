@@ -28,17 +28,17 @@ public final class CardStackTracker<T extends Copyable<T>> implements CardStackO
         knowTopCards = new LinkedList<>();
     }
 
-    public void draw(T item) {
+    private void draw(T item) {
         drawStack.remove(item);
         knowTopCards.remove(item);
     }
 
-    public void back(T item) {
+    private void back(T item) {
         drawStack.add(item);
         knowTopCards.add(item);
     }
 
-    public void discard(T item) {
+    private void discard(T item) {
         discardPile.add(item);
     }
 
