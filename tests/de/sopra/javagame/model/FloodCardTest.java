@@ -54,19 +54,19 @@ public class FloodCardTest {
         FloodCard sameNumberWannKommtDieFlut = new FloodCard(MapTile.fromNumber(5));
         
         boolean isEqual = wannKommtDieFlut.equals(wannKommtDieFlut);
-        Assert.assertTrue("", isEqual);
+        Assert.assertTrue("Equals sollte bei ein und derselben Karte true ausgeben", isEqual);
         
         isEqual = wannKommtDieFlut.equals(newWannKommtDieFlut);
-        Assert.assertFalse("", isEqual);
+        Assert.assertFalse("Equals sollte nicht bei verschiedenen Karten mit verschiedenen Nummern true ausgeben", isEqual);
         
         isEqual = wannKommtDieFlut.equals(sameNumberWannKommtDieFlut);
-        Assert.assertTrue("", isEqual);
+        Assert.assertTrue("Equals sollte bei einer Karte und einer anderen mit gleicher Nummer true ausgeben", isEqual);
         
         isEqual = newWannKommtDieFlut.equals(wannKommtDieFlut);
-        Assert.assertFalse("", isEqual);
+        Assert.assertFalse("Equals sollte nicht bei verschiedenen Karten mit verschiedenen Nummern true ausgeben", isEqual);
         
         isEqual = wannKommtDieFlut.equals(null);
-        Assert.assertFalse("", isEqual);
+        Assert.assertFalse("Equals sollte bei Vergleich mit null false sein", isEqual);
         
     }
 }

@@ -83,9 +83,11 @@ public class TurnTest {
                         new Pair<>(PlayerType.COURIER, true)),
                 this.testMap);
 
-        Assert.assertEquals("", PlayerType.EXPLORER, turn.getPlayer(PlayerType.EXPLORER).getType());
-        Assert.assertNull("", turn.getPlayer(PlayerType.PILOT));
-        Assert.assertNull("", turn.getPlayer(null));
+        Assert.assertEquals("Der Spielertyp des geholten Spielers hätte Explorer sein müssen",
+                                      PlayerType.EXPLORER,
+                                      turn.getPlayer(PlayerType.EXPLORER).getType());
+        Assert.assertNull("Es hätte keinen Pilot geben dürfen", turn.getPlayer(PlayerType.PILOT));
+        Assert.assertNull("Es hätte kein Spieler zurückgegeben werden dürfen", turn.getPlayer(null));
         
     }
     

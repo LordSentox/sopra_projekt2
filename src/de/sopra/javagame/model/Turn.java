@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
  *
  * @author Lisa, Hannah
  */
+//FIXME Turn umbenennen zu Action --> Action bedeutet genau eine Aktion von dem Spiel, dem aktiven oder einem anderen Spieler
+//    --> dazu alle Aufrufe, die Turn beinhalten umbenennen
+
 public class Turn implements Copyable<Turn> {
 
     /**
@@ -171,7 +174,7 @@ public class Turn implements Copyable<Turn> {
      * @param receiver Spieler, der die Karte erhalten soll
      * @return gibt zurück, ob das Übergeben erfolgreich war
      */
-    boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
+    public boolean transferArtifactCard(ArtifactCard card, Player source, Player receiver) {
         if (source.legalReceivers().contains(receiver.getType())) {
             source.getHand().remove(card);
             receiver.getHand().add(card);

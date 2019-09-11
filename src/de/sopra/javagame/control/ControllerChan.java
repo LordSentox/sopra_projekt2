@@ -113,7 +113,7 @@ public class ControllerChan {
     /**
      * saveGame speichert das aktuell ausgeführte JavaGame in einer Datei und gibt ihm einen Namen
      *
-     * @param file ist die Datei, in der gespeichert wird
+     * @param gameName ist der Name des Spiels, für das eine Datei angelegt werden soll
      */
 
     public void saveGame(String gameName) {
@@ -134,12 +134,12 @@ public class ControllerChan {
 
     }
 
-    public Turn getCurrentTurn() {
-        return this.currentTurn;
-    }
-
     public void endTurn() {
         this.currentTurn = this.javaGame.endTurn(this.currentTurn);
+    }
+
+    public Turn getCurrentTurn() {
+        return this.currentTurn;
     }
 
     public String getGameName() {
