@@ -57,12 +57,28 @@ public class JavaGame {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players) {
+    public Turn newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+        throws NullPointerException, IllegalArgumentException {
         // Erstellen des ersten Turns, der auf den undoTurns-Stapel abgelegt wird.
-        this.mapName = mapName;
-        this.difficulty = difficulty;
+        if (mapName == null) {
+            throw new NullPointerException();
+        } else {
+            if (mapName == "") {
+                throw new IllegalArgumentException();
+            } else {
+                this.mapName = mapName;
+            }
+        }
+        if (difficulty == null) {
+            throw new NullPointerException();
+        } else {
+            this.difficulty = difficulty;
+        }
         Turn initialTurn = Turn.createInitialTurn(difficulty, players, tiles);
-
+        if (initialTurn == null) {
+            return null;
+        }
+        
         return endTurn(initialTurn);
     }
 
@@ -115,7 +131,7 @@ public class JavaGame {
      */
     public int numRounds() {
         int playerOne = 0;
-        int rounds = 1;
+        int rounds = 0;
         boolean finishedOneRound = false;
         for (Turn currentTurn : undoTurns) {
             if (!finishedOneRound && currentTurn.getActivePlayer() == playerOne) {
@@ -145,6 +161,9 @@ public class JavaGame {
         return undoTurns.peek();
     }
 
+    public boolean canRedo() {
+        return !redoTurns.isEmpty();
+    }
     public void markCheetah() {
         this.cheetah = true;
     }

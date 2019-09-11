@@ -130,6 +130,10 @@ public abstract class Player implements Copyable<Player> {
 
         MapTile toDrain = this.turn.getTile(position);
 
+        if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
+            return false;
+        }
+        
         // Muss überhaupt noch etwas getan werden?
         if (toDrain.getState() == MapTileState.DRY) {
             return false;

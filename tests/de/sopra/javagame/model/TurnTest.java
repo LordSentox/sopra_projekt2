@@ -3,12 +3,16 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.print.attribute.standard.MediaSize;
+import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -38,14 +42,15 @@ public class TurnTest {
                         new Pair<>(PlayerType.COURIER, true)),
                 this.testMap);
 
-        assertEquals(0, turn.getActivePlayer());
-        assertEquals(28, turn.getArtifactCardStack().size());
-        assertEquals("", turn.getDescription());
-        assertEquals(new HashSet(), turn.getDiscoveredArtifacts());
-        assertEquals(4, turn.getPlayers().size());
-        assertEquals(TurnState.FLOOD, turn.getState());
-        assertArrayEquals(this.testMap, turn.getTiles());
-        assertEquals(0, turn.getWaterLevel().getLevel());
+        Assert.assertEquals(0, turn.getActivePlayer());
+        Assert.assertEquals(28, turn.getArtifactCardStack().size());
+        Assert.assertEquals("", turn.getDescription());
+        Assert.assertEquals(new HashSet(), turn.getDiscoveredArtifacts());
+        Assert.assertEquals(4, turn.getPlayers().size());
+        Assert.assertEquals(TurnState.FLOOD, turn.getState());
+        Assert.assertArrayEquals(this.testMap, turn.getTiles());
+        Assert.assertEquals(0, turn.getWaterLevel().getLevel());
+        Assert.assertEquals(24, turn.getFloodCardStack().size());
 
         // Einen weiteren Turn mit den letzten beiden Klassen erstellen
         Turn turn2 = Turn.createInitialTurn(Difficulty.ELITE,
@@ -53,14 +58,37 @@ public class TurnTest {
                         new Pair<>(PlayerType.ENGINEER, false)),
                 this.testMap);
 
-        assertEquals(2, turn2.getPlayers().size());
+        Assert.assertEquals(2, turn2.getPlayers().size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test (expected = IllegalArgumentException.class)
     public void createInitialTurnIllegalPlayerType() {
-        Turn.createInitialTurn(Difficulty.LEGENDARY, Collections.singletonList(new Pair<>(PlayerType.NONE, true)), this.testMap);
+        Turn.createInitialTurn(Difficulty.LEGENDARY, Arrays.asList(new Pair<>(PlayerType.NONE, true), new Pair<>(PlayerType.NONE, true)), this.testMap);
     }
+    
+    @Test (expected = NullPointerException.class)
+    public void createInitialTurnNoDifficulty() {
+        Turn.createInitialTurn(null, Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
+                new Pair<>(PlayerType.NAVIGATOR, true),
+                new Pair<>(PlayerType.DIVER, false),
+                new Pair<>(PlayerType.COURIER, true)), this.testMap);
+    }
+    
+    @Test
+    public void getPlayer() {
+        Turn turn = Turn.createInitialTurn(Difficulty.NOVICE,
+                Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
+                        new Pair<>(PlayerType.NAVIGATOR, true),
+                        new Pair<>(PlayerType.DIVER, false),
+                        new Pair<>(PlayerType.COURIER, true)),
+                this.testMap);
 
+        Assert.assertEquals("", PlayerType.EXPLORER, turn.getPlayer(PlayerType.EXPLORER).getType());
+        Assert.assertNull("", turn.getPlayer(PlayerType.PILOT));
+        Assert.assertNull("", turn.getPlayer(null));
+        
+    }
+    
     @Test
     public void transferArtifactCard() {
         ArtifactCard fireCard = new ArtifactCard(ArtifactCardType.FIRE);
@@ -108,11 +136,11 @@ public class TurnTest {
         Courier courier = (Courier) turn.getPlayer(PlayerType.COURIER);
         courier.getHand().add(earthCard2);
         transferred = turn.transferArtifactCard(earthCard2, courier, navigator);
-        assertFalse("Die Karte hätte von der Hand des Boten verschwinden sollen.",
+        Assert.assertFalse("Die Karte hätte von der Hand des Boten verschwinden sollen.",
                 courier.getHand().contains(earthCard2));
-        assertTrue("Der Navigator sollte die Karte erhalten haben.",
+        Assert.assertTrue("Der Navigator sollte die Karte erhalten haben.",
                 navigator.getHand().contains(earthCard2));
-        assertTrue("Die Karte hätte übergeben werden müssen.",
+        Assert.assertTrue("Die Karte hätte übergeben werden müssen.",
                 transferred);
 
         //test ohne gleiches Feld und ohne Bote
@@ -122,11 +150,11 @@ public class TurnTest {
         navigator.getHand().clear();
         diver.getHand().add(fireCard);
         transferred = turn.transferArtifactCard(fireCard, diver, explorer);
-        assertFalse("Der Forscher sollte die Karte nicht erhalten haben.",
+        Assert.assertFalse("Der Forscher sollte die Karte nicht erhalten haben.",
                 explorer.getHand().contains(fireCard));
-        assertTrue("Die Karte hätte nicht von der Hand des Tauchers verschwinden sollen.",
+        Assert.assertTrue("Die Karte hätte nicht von der Hand des Tauchers verschwinden sollen.",
                 diver.getHand().contains(fireCard));
-        assertFalse("Die Karte hätte nicht übergeben werden dürfen.",
+        Assert.assertFalse("Die Karte hätte nicht übergeben werden dürfen.",
                 transferred);
 
         //test ohne gleiches Feld und Bote ist reciever

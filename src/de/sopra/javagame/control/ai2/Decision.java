@@ -1,7 +1,6 @@
 package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
-import de.sopra.javagame.model.JavaGame;
 
 /**
  * <h1>Decision</h1>
@@ -35,7 +34,7 @@ public interface Decision {
      * Das Argument wird zur priorisierten Aktion gegenüber der Aktuellen.
      *
      * @param moreImportantDecision die Aktion, welche als wichtiger betrachtet wird, als die Aktuelle
-     * @return ein neues Decision Objekt, welches keine eigene Aktion enthält, aber mittels {@link #decide(JavaGame)} ein Objekt mit Aktion liefert
+     * @return ein neues Decision Objekt, welches keine eigene Aktion enthält, aber mittels {@link #decide(AIController)} ein Objekt mit Aktion liefert
      */
     default Decision onTop(Decision moreImportantDecision) {
         return new Decision() {

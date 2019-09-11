@@ -66,6 +66,7 @@ public class MapTile implements Copyable<MapTile> {
         this.state = state;
     }
 
+    //TODO check if needed
     public boolean hasPlayerSpawn() {
         return properties.getSpawn() != PlayerType.NONE;
     }
