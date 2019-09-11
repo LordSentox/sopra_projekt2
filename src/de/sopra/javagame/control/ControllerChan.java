@@ -25,8 +25,9 @@ public class ControllerChan {
     private final InGameUserController inGameUserController;
     private final HighScoresController highScoresController;
     private final MapController mapController;
+    private final AIController aiController;
 
-    private String gameName; 
+    private String gameName;
     private InGameViewAUI inGameViewAUI;
 
     private JavaGame javaGame;
@@ -39,6 +40,7 @@ public class ControllerChan {
         this.inGameUserController = new InGameUserController(this);
         this.highScoresController = new HighScoresController(this);
         this.mapController = new MapController(this);
+        this.aiController = new AIController(this); //setAI um die AI festzulegen
     }
 
     public void setMapEditorViewAUI(MapEditorViewAUI mapEditorViewAUI) {
@@ -75,6 +77,10 @@ public class ControllerChan {
 
     public MapController getMapController() {
         return mapController;
+    }
+
+    public AIController getAiController() {
+        return aiController;
     }
 
     public JavaGame getJavaGame() {
@@ -135,7 +141,7 @@ public class ControllerChan {
     public void endTurn() {
         this.currentTurn = this.javaGame.endTurn(this.currentTurn);
     }
-    
+
     public String getGameName() {
         return gameName;
     }

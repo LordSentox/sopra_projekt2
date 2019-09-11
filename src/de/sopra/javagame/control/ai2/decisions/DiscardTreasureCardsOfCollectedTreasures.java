@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactType;
@@ -17,10 +16,10 @@ import java.util.List;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public class DiscardTreasureCardsOfCollectedTreasures implements Decision {
+public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
 
     @Override
-    public Decision decide(AIController control) {
+    public Decision decide() {
         Turn turn = control.getActiveTurn();
         EnumSet<ArtifactType> discoveredArtifacts = turn.getDiscoveredArtifacts();
         Player activePlayer = control.getActivePlayer();
@@ -34,7 +33,7 @@ public class DiscardTreasureCardsOfCollectedTreasures implements Decision {
     }
 
     @Override
-    public void act(AIController control) {
+    public void act() {
         //TODO
     }
 
