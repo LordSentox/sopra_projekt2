@@ -111,7 +111,7 @@ public class InGameUserControllerTest {
         Turn currentTurn = javaGame.getPreviousTurn();
         //teste mit ungültigem Zielfeld(kein maptile)
         explorer.getHand().add(heliCard);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Point (5,2), new Point(1,1), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(new Point (5,2), new Point(1,1)), moveablePlayers);
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                           explorer.getHand().contains(heliCard));
         Assert.assertEquals("Die Spieler hätten nicht bewegt werden dürfen",
@@ -124,7 +124,7 @@ public class InGameUserControllerTest {
         //teste mit ungültigem Zielfeld(versunkenes maptile)
         testMap[9][5].flood();
         testMap[9][5].flood();
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, navigator.getPosition(), new Point(5,9), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(navigator.getPosition(), new Point(5,9)), moveablePlayers);
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                            explorer.getHand().contains(heliCard));
         Assert.assertEquals("Die Spieler hätten nicht bewegt werden dürfen",
@@ -136,7 +136,7 @@ public class InGameUserControllerTest {
 
         //teste ohne helicard
         explorer.getHand().remove(heliCard);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 1, navigator.getPosition(), new Point(1,9), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 1, new Pair<>(navigator.getPosition(), new Point(1,9)), moveablePlayers);
         Assert.assertTrue("Die Spieler hätten nicht bewegt werden dürfen", 
                           inGameView.getNotifications().contains("Du hattest keine Helikopter Karte!"));
         
@@ -145,7 +145,7 @@ public class InGameUserControllerTest {
         navigator.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(explorer);
-        inGameCont.playHelicopterCard(PlayerType.NAVIGATOR, 1, explorer.getPosition(), new Point(5,9), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.NAVIGATOR, 1, new Pair<>(explorer.getPosition(), new Point(5,9)), moveablePlayers);
         Assert.assertFalse("Die Karte hätte gespielt werden müssen.",
                             navigator.getHand().contains(heliCard));
         Assert.assertEquals("Der Spieler hätte bewegt werden müssen",
@@ -157,7 +157,7 @@ public class InGameUserControllerTest {
         moveablePlayers.clear();
         moveablePlayers.add(navigator);
         moveablePlayers.add(courier);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, navigator.getPosition(), new Point(5,8), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(navigator.getPosition(), new Point(5,8)), moveablePlayers);
         Assert.assertFalse("Die Karte hätte gespielt werden müssen.",
                 explorer.getHand().contains(heliCard));
         Assert.assertEquals("Die Spieler hätten bewegt werden müssen",
@@ -169,7 +169,7 @@ public class InGameUserControllerTest {
 
         //teste mit Start = Ziel
         explorer.getHand().add(heliCard);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, navigator.getPosition(), navigator.getPosition(), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(navigator.getPosition(), navigator.getPosition()), moveablePlayers);
         Assert.assertFalse("Die Karte hätte gespielt werden müssen.",
                 explorer.getHand().contains(heliCard));
         Assert.assertEquals("Die Spieler hätten bewegt werden müssen",
@@ -185,15 +185,15 @@ public class InGameUserControllerTest {
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(navigator);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, navigator.getPosition(), heliPoint, moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(navigator.getPosition(), heliPoint), moveablePlayers);
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(explorer);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, explorer.getPosition(), heliPoint, moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(explorer.getPosition(), heliPoint), moveablePlayers);
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(courier);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, courier.getPosition(), heliPoint, moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(courier.getPosition(), heliPoint), moveablePlayers);
         Assert.assertFalse("Das Spiel sollte nicht geendet haben",
                             currentTurn.isGameEnded());
         Assert.assertFalse("Das Spiel hätte nicht gewonnen sein sollen",
@@ -207,21 +207,21 @@ public class InGameUserControllerTest {
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(navigator);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, navigator.getPosition(), heliPoint, moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(navigator.getPosition(), heliPoint), moveablePlayers);
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(explorer);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, explorer.getPosition(), heliPoint, moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(explorer.getPosition(), heliPoint), moveablePlayers);
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(courier);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, courier.getPosition(), heliPoint, moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(courier.getPosition(), heliPoint), moveablePlayers);
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(explorer);
         moveablePlayers.add(navigator);
         moveablePlayers.add(courier);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, courier.getPosition(), heliPoint, moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(courier.getPosition(), heliPoint), moveablePlayers);
         Assert.assertTrue("Das Spiel sollte geendet haben",
                             currentTurn.isGameEnded());
         Assert.assertTrue("Das Spiel hätte gewonnen sein sollen",
@@ -234,7 +234,7 @@ public class InGameUserControllerTest {
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(explorer);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, explorer.getPosition(), new Point(4,2), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 5, new Pair<>(explorer.getPosition(), new Point(4,2)), moveablePlayers);
 
 
         //teste mit ungültigem Zielfeld(kein maptile)
