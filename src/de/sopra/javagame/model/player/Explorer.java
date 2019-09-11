@@ -3,8 +3,9 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,22 +43,17 @@ public class Explorer extends Player {
         if (!specialActive)
             return moves;
 
-        // Die Spezialbewegungen des Explorers sind aktiviert,
-        MapTile topLeft = this.turn.getTiles()[position.y - 1][position.x - 1];
-        if (topLeft != null && topLeft.getState() != GONE) {
-            moves.add(new Point(position.y - 1, position.x - 1));
-        }
-        MapTile topRight = this.turn.getTiles()[position.y - 1][position.x + 1];
-        if (topRight != null && topRight.getState() != GONE) {
-            moves.add(new Point(position.y - 1, position.x + 1));
-        }
-        MapTile bottomLeft = this.turn.getTiles()[position.y + 1][position.x - 1];
-        if (bottomLeft != null && bottomLeft.getState() != GONE) {
-            moves.add(new Point(position.y + 1, position.x - 1));
-        }
-        MapTile bottomRight = this.turn.getTiles()[position.y + 1][position.x + 1];
-        if (bottomRight != null && bottomRight.getState() != GONE) {
-            moves.add(new Point(position.y + 1, position.x + 1));
+        // Diagonale Bewegungen
+        List<Point> additional = Arrays.asList(new Point(this.position.add(-1, -1)),
+                new Point(this.position.add(-1, 1)),
+                new Point(this.position.add(1, 1)),
+                new Point(this.position.add(1, -1)));
+
+        for (Point point : additional) {
+            MapTile tile = this.turn.getTile(point);
+            if (tile != null && tile.getState() != GONE) {
+                moves.add(point);
+            }
         }
 
         return moves;

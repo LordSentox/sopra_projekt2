@@ -1,16 +1,136 @@
 package de.sopra.javagame.util;
 
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 
-import java.awt.*;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Enthält Helferfunktionen für Kartenerstellung und Kartenmanipulation
  */
 public class MapUtil {
+    public static boolean checkMapValidity(MapTile[][] tiles) {
+        // Wenn die Map null ist, oder eine Zeile nicht initialisiert wurde, muss die Karte verworfen werden
+        if (tiles == null || Arrays.stream(tiles).anyMatch(Objects::isNull)) {
+            return false;
+        }
+
+        // Array, um sicherzustellen, dass jedes MapTile genau einmal benutzt wird
+        Set<MapTileProperties> tilesUsed = new HashSet<>();
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[y].length; ++x) {
+                // Stelle sicher, dass höchstens ein Feld eine bestimmte MapTile hält
+                if (tilesUsed.contains(tiles[y][x].getProperties())) {
+                    return false;
+                }
+
+                tilesUsed.add(tiles[y][x].getProperties());
+            }
+        }
+
+        // Stelle sicher, dass mindestens ein Feld eine bestimmte MapTile hält
+        if (tilesUsed.size() == MapTileProperties.values().length) {
+            return false;
+        }
+
+        // Generiere eine "Schwarz-Weiß"-Karte, und überprüfe, ob diese zusammenhängend ist.
+        boolean[][] blackWhiteTiles = new boolean[tiles.length][];
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[y].length; ++x) {
+                blackWhiteTiles[y][x] = tiles[y][x] != null;
+            }
+        }
+
+        return checkHasWaterEdge(blackWhiteTiles) && checkIsSingleIsland(blackWhiteTiles);
+    }
+
+    public static boolean checkMapValidity(boolean[][] tiles) {
+        // Wenn die Map null ist, oder eine Zeile nicht initialisiert wurde, muss die Karte verworfen werden
+        if (tiles == null || Arrays.stream(tiles).anyMatch(Objects::isNull)) {
+            return false;
+        }
+
+        // Überprüfe, ob die Map die richtige Anzahl an tiles hat
+        int numIslandTiles = 0;
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[x].length; ++x) {
+                if (tiles[y][x])
+                    ++numIslandTiles;
+            }
+        }
+
+        if (numIslandTiles != MapTileProperties.values().length)
+            return false;
+
+        return checkHasWaterEdge(tiles) && checkIsSingleIsland(tiles);
+    }
+
+    static boolean checkHasWaterEdge(boolean[][] tiles) {
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[y].length; ++x) {
+                // Die erste und letzte Zeile von tiles darf nur Wasser enthalten
+                if (y == 0 && tiles[y][x]) return false;
+                else if (y == tiles.length - 1 && tiles[y][x]) return false;
+                // Das erste und das letzte Element muss Wasser sein
+                else if (tiles[y][0] || tiles[y][tiles[y].length - 1]){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    static boolean checkIsSingleIsland(boolean[][] tiles) {
+        // Lege zu füllenden Array an, bei dem nur ein MapTile von tiles auf true gesetzt wird.
+        // Dieses muss zwingend als Vorbedingung gesetzt worden sein
+        boolean startingTileSet = false;
+        boolean[][] reachedTiles = new boolean[tiles.length][];
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[y].length; ++x) {
+                if (tiles[y][x] && !startingTileSet) {
+                    reachedTiles[y][x] = true;
+                    startingTileSet = true;
+                } else {
+                    reachedTiles[y][x] = false;
+                }
+            }
+        }
+
+        // Versuche vom startingTileSet alle anderen Tiles zu erreichen. Der Array wird dynamisch gefüllt.
+        // Sobald in einer Iteration keine Änderung mehr gemacht werden, wird abgebrochen.
+        boolean somethingChanged = false;
+        do {
+            for (int y = 0; y < reachedTiles.length; ++y) {
+                for (int x = 0; x < reachedTiles[y].length; ++x) {
+                    // Wenn das Tile erreicht wurde, schaue in alle vier Richtungen, ob noch ein Tile erreicht
+                    // werden kann. Ist dieses auch ein Insel-Tile kann es dann auch erreicht werden.
+                    if (reachedTiles[y][x]) {
+                        Point reachedPoint = new Point(x, y);
+                        for (Point neighbour : reachedPoint.getNeighbours()) {
+                            if (!reachedTiles[neighbour.yPos][neighbour.xPos] && tiles[neighbour.yPos][neighbour.xPos]) {
+                                reachedTiles[neighbour.yPos][neighbour.xPos] = true;
+                                somethingChanged = true;
+                            }
+                        }
+                    }
+                }
+            }
+        } while(somethingChanged);
+
+        // In beiden Arrays muss nun das gleiche enthalten sein, wenn alle Punkte auf der Insel erreicht werden konnten
+        for (int y = 0; y < tiles.length; ++y) {
+            for (int x = 0; x < tiles[y].length; ++x) {
+                if (reachedTiles[y][x] != tiles[y][x]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Füllt die einfache Karte, die nur die Inselform enthält mit zufällig ausgewählten MapTiles und gibt die so
      * entstandene, spielbare Karte zurück.
@@ -103,6 +223,8 @@ public class MapUtil {
      * @return Die Nummern, die einzelnen Tiles entsprechen, bzw. -1, wo Wasser ist.
      */
     public static int[][] readNumberMapFromString(String toParse) {
+        // FIXME: Um die Map muss noch eine null-Zeile hinzugefügt werden
+
         // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
         String[] lines = toParse.split("\n");
         String[][] map = new String[lines.length][];

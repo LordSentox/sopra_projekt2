@@ -2,8 +2,8 @@ package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -50,7 +50,7 @@ public class FloodCard implements Copyable<FloodCard> {
 
     @Override
     public FloodCard copy() {
-        return new FloodCard(tile);
+        return new FloodCard(tile.copy());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class FloodCard implements Copyable<FloodCard> {
         if (other == null || getClass() != other.getClass())
             return false;
         FloodCard floodCard = (FloodCard) other;
-        return tile.equals(floodCard.tile);
+        return floodCard.tile.equals(this.tile);
     }
 
     @Override

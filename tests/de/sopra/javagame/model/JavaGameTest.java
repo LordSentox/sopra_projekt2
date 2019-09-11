@@ -2,22 +2,18 @@ package de.sopra.javagame.model;
 
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ControllerChan;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class JavaGameTest {
 
@@ -34,7 +30,7 @@ public class JavaGameTest {
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
         int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        players =  new ArrayList(){{add(new Pair<>(PlayerType.EXPLORER, false));
+        players =  new ArrayList<Pair<PlayerType, Boolean>>(){{add(new Pair<>(PlayerType.EXPLORER, false));
                                  add(new Pair<>(PlayerType.NAVIGATOR, true));
                                  add(new Pair<>(PlayerType.DIVER, false));
                                  add(new Pair<>(PlayerType.COURIER, true));}};
@@ -47,13 +43,41 @@ public class JavaGameTest {
         Assert.assertEquals("", testMapString, javaGame.getMapName());
         Assert.assertEquals("", testMap, javaGame.getPreviousTurn().getTiles());
         Assert.assertEquals("", Difficulty.NOVICE, javaGame.getDifficulty());
-        Assert.assertEquals("", players, javaGame.getPreviousTurn().getPlayers());
+
+        Turn turn = javaGame.getPreviousTurn();
+
+        for(int i = 0; i< turn.getPlayers().size(); i++) {
+            Assert.assertEquals("Kopie sollte gleiche Spieler-Liste halten. Index " + i + " unterscheidet sich.",
+                    turn.getPlayers().get(i).getType(),
+                    turn.getPlayers().get(i).getType());
+        }
+        //Assert.assertEquals("", players, javaGame.getPreviousTurn().getPlayers());
 
     }
     @Test (expected = NullPointerException.class)
     public void newGameNoMap() {
         //teste Erstellen mit leerer Map
-        javaGame.newGame("", null, Difficulty.NOVICE, players);
+        javaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void newGameNoMapName() {
+        javaGame.newGame(null, testMap, Difficulty.NOVICE, players);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void newGameEmptyMapName() {
+        javaGame.newGame("", testMap, Difficulty.NOVICE, players);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void newGameNoDifficulty() {
+        javaGame.newGame(testMapString, testMap, null, players);
+    }    
+
+    @Test (expected = NullPointerException.class)
+    public void newGameNoPlayers() {
+        javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, null);
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -73,15 +97,25 @@ public class JavaGameTest {
     @Test
     public void endTurn() {
         Turn currentTurn = javaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        Turn lastTurn = javaGame.getPreviousTurn();
         Turn nextTurn = javaGame.endTurn(currentTurn);
 
-        Assert.assertTrue("Das Java-Game hätte einen neuen Previous Turn haben sollen",
-                            javaGame.getPreviousTurn() == nextTurn);
+        //Assert.assertTrue("Das Java-Game hätte einen neuen currentTurn haben sollen",
+          //                  controllerChan.getCurrentTurn() == nextTurn);
         Assert.assertFalse("Das Java-Game hätte einen neuen Previous Turn haben sollen",
+                javaGame.getPreviousTurn() == lastTurn);
+        Assert.assertTrue("Das Java-Game hätte einen neuen Previous Turn haben sollen",
                             javaGame.getPreviousTurn() == currentTurn);
         Assert.assertFalse("Der neu erstellte Turn hätte nicht gleich dem vorherigen sein dürfen",
                                 currentTurn == nextTurn);
-
+        
+        //teste ob korrekr redo Stapel zurückgesetzt wird
+        controllerChan.getGameFlowController().undo();
+        controllerChan.getGameFlowController().undo();
+        Assert.assertTrue("There should have been two redo turns", javaGame.canRedo());
+        currentTurn = controllerChan.getCurrentTurn();
+        javaGame.endTurn(currentTurn);
+        Assert.assertFalse("There should have been no redo turns", javaGame.canRedo());
     }
 
     @Test
@@ -106,19 +140,24 @@ public class JavaGameTest {
         Turn turn = javaGame.newGame(mapString, testMap, Difficulty.NOVICE, players);
 
         //teste ob Anfangsscore korrekt berechnet wird
-        Assert.assertEquals("", 100, javaGame.calculateScore());
+        Assert.assertEquals("Score hätte gleich sein sollen", 100.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für 1 Artefakt korrekt berechnet wird
         turn.getDiscoveredArtifacts().add(ArtifactType.FIRE);
-        Assert.assertEquals("", 200, javaGame.calculateScore());
+        Turn nextTurn = javaGame.endTurn(turn);
+        Assert.assertEquals("", 200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für Game Won korrekt berechnet wird
-        turn.setGameWon(true);
-        turn.setGameEnded(true);
-        Assert.assertEquals("", 1200, javaGame.calculateScore());
+        nextTurn.setGameWon(true);
+        nextTurn.setGameEnded(true);
+        Turn secondNextTurn = javaGame.endTurn(nextTurn);
+        Assert.assertEquals("", 1200.0, javaGame.calculateScore(), 0.0);
 
         //teste ob Score für cheetah korrekt berechnet wird
-        javaGame.setCheetah(true);
+        javaGame.markCheetah();
         Assert.assertEquals("", 0, javaGame.calculateScore());
+        
+        //teste für ganzes Spiel, ob Score korrekt berechnet wird
+        //TODO komplettes Spiel laden und dann damit testen!
     }
 }

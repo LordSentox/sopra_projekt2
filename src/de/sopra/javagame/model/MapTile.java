@@ -66,6 +66,7 @@ public class MapTile implements Copyable<MapTile> {
         this.state = state;
     }
 
+    //TODO check if needed
     public boolean hasPlayerSpawn() {
         return properties.getSpawn() != PlayerType.NONE;
     }
@@ -96,8 +97,8 @@ public class MapTile implements Copyable<MapTile> {
         if (this.getClass() != other.getClass()) return false;
 
         MapTile tile = (MapTile) other;
-        return Objects.equals(this.properties, tile.properties) &&
-                Objects.equals(this.state, tile.state);
+        return this.properties == tile.properties &&
+                this.state == tile.state;
     }
 
     @Override

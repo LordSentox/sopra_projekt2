@@ -25,23 +25,28 @@ public class WaterLevelTest {
     @Test
     public void getDrawAmountTest() {
         Assert.assertEquals("Incorrect amount of cards drawn", 2, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         Assert.assertEquals("Incorrect amount of cards drawn", 3, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         Assert.assertEquals("Incorrect amount of cards drawn", 4, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         Assert.assertEquals("Incorrect amount of cards drawn", 5, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
-        Assert.assertEquals("Incorrect amount of cards drawn", 5, waterLevel.getDrawAmount());
+        Assert.assertEquals("Incorrect amount of cards drawn", 0, waterLevel.getDrawAmount());
+        Assert.assertTrue("Game should have been lost due to waterLevel", waterLevel.isGameLost());
     }
 
     @Test

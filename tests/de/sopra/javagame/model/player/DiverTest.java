@@ -2,33 +2,23 @@ package de.sopra.javagame.model.player;
 
 import static org.junit.Assert.*;
 
-import java.awt.Point;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.Turn;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
+import static org.junit.Assert.fail;
 
 public class DiverTest {
     MapTile[][] testMap;
-    MapTile[][] testMaps;
+    MapTile[][] testMapNull;
 
     @Before
     public void setUp() throws Exception {
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), "UTF-8");
         int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        this.testMaps = new MapTile[12][];
+        this.testMapNull = new MapTile[12][];
     }
 
     @Test
@@ -39,13 +29,15 @@ public class DiverTest {
         List<Point> testLegelMovesWithSpecial = diver.legalMoves(true);
         List<Point> testLegelMovesWithoutSpecial = diver.legalMoves(false);
         for (Point target : testLegelMovesWithSpecial){
-            Assert.assertTrue(turn.getTile(target.x, target.y).getState() == MapTileState.DRY);
-            Assert.assertFalse(turn.getTile(target.x, target.y) == null);
+            MapTile tile = turn.getTile(target);
+            Assert.assertNotNull(tile);
+            Assert.assertEquals(tile.getState(), MapTileState.DRY);
         }
         
         for (Point target : testLegelMovesWithoutSpecial){
-            Assert.assertTrue(turn.getTile(target).getState() == MapTileState.DRY);
-            Assert.assertFalse(turn.getTile(target) == null);
+            MapTile tile = turn.getTile(target);
+            Assert.assertNotNull(tile);
+            Assert.assertEquals(tile.getState(), MapTileState.DRY);
         }
         
         
