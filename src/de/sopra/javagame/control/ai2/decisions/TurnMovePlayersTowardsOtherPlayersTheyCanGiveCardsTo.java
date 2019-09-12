@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 
@@ -16,16 +17,12 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @since 10.09.2019
  */
 @DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveOntoTreasureCollectionPointIfPlayerHasFour.class)
+@PreCondition( allTrue= Condition.PLAYER_HAS_ANY_ARTIFACT_CARD)
 public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decision {
     @Override
     public Decision decide() {
 
         EnhancedPlayerHand hand = playerHand();
-
-        if (!hand.hasAnyCard(AIR, EARTH, FIRE, WATER)) {
-            return null;
-        }
-
         int water = hand.getAmount(WATER);
         int fire = hand.getAmount(FIRE);
         int earth = hand.getAmount(EARTH);

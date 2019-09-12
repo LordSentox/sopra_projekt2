@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 
 @DoAfter(act = DecisionResult.TURN_ACTION, value = TurnStayOnLandingSiteWaitingForDeparture.class)
+@PreCondition( allTrue= {Condition.GAME_LANDING_SIDE_IN_DANGER,Condition.PLAYER_HAS_MORE_THAN_1_ACTION_LEFT})
 public class TurnMoveForDrainingNearbyLandingSite extends Decision {
 
     /**

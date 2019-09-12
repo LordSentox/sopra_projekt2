@@ -2,14 +2,12 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
-import java.util.EnumSet;
 
 /**
  * <h1>projekt2</h1>
@@ -20,19 +18,13 @@ import java.util.EnumSet;
  */
 
 @DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainLandingSite.class)
+@PreCondition( allTrue= Condition.GAME_HAS_ALL_ARTIFACTS)
 public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
 
-    private final int FOUR_ARTIFACTS = 4;
-
+ 
     @Override
     public Decision decide() {
-        Action action = control.getCurrentAction();
-        EnumSet<ArtifactType> discoveredArtifacts = action.getDiscoveredArtifacts();
-
-        if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
-            return null;
-        }
-
+       
         Point playerPosition = player().getPosition();
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);

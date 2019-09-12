@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
@@ -26,14 +27,12 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @since 10.09.2019
  */
 @DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainTempleMapTileOfUndiscoveredArtifact.class)
+@PreCondition( allFalse= Condition.PLAYER_NO_ACTION_LEFT)
 public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
 
     @Override
     public Decision decide() {
         if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
-            return null;
-        }
-        if (!hasValidActions(1)) {
             return null;
         }
         Point activePlayerPosition = player().getPosition();
