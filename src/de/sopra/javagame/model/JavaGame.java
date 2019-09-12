@@ -93,6 +93,9 @@ public class JavaGame {
         while (!redoActions.empty()) {
             redoActions.pop();
         }
+        if (currentAction.isGameEnded() || currentAction.isGameWon() || currentAction.getWaterLevel().isGameLost()){
+         return null;
+        }
 
         return currentAction.copy();
     }
