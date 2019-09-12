@@ -27,11 +27,13 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
         EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
         for (int i = 0; i < 8; i++) {
+            
+            if(hasValidActions(0)){
+                return null;
+            }
 
             MapTile orphanedTemple = templeList.get(i).getRight();
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
-
-            //TODO Spieler muss den Tempel auch trocknen können
 
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
