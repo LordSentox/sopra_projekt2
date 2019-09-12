@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
@@ -17,6 +19,7 @@ import java.util.List;
  * @since 10.09.2019
  */
 
+@DoAfter(act = DecisionResult.PLAY_SPECIAL_CARD, value = SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile.class)
 public class SpecialFlyOutOrphanedPlayers extends Decision {
 
     @Override
