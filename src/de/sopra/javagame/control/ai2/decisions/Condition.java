@@ -113,6 +113,12 @@ public enum Condition implements ICondition {
         public boolean isTrue(Decision decision) {
             return decision.player().getActionsLeft() > 1;
         }
+    },
+    PLAYER_NO_ACTION_LEFT {
+        @Override
+        public boolean isTrue(Decision decision) {
+            return decision.player().getActionsLeft() == 0;
+        }
     }
 
 }
