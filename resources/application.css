@@ -38,3 +38,7 @@
 	-fx-background-color: "#FF0000";
 	-jfx-button-type: RAISED;
 }
+
+.circlePopUp {
+	-fx-background-color: transparent;
+}

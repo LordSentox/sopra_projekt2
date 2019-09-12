@@ -57,6 +57,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         /* END TEMP */ 
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
+        mapPane.setIngameViewController(this);
         initGridPane();
 
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.DIVER));
@@ -217,7 +218,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         turnSpinnerWithoutMarkerImageView.setRotate(turnSpinnerCount);
     }
     public void onShowMovementOptionsClicked() {
-
+        System.out.println("juch, ich bin der bewegungsindikator");
     }
 
     public void onShowDrainOptionsClicked() {
@@ -233,7 +234,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPlayerSelected() {
-
+        
     }
 
     public void onTransferCardClicked(int cardIndex) {

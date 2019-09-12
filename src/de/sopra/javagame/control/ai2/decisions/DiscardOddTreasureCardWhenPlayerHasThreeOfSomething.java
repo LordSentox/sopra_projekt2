@@ -1,8 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai2.DoAfter;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
@@ -12,6 +13,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 10.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = DISCARD, value = DiscardUseSandbagToKeepFourTreasureCards.class)
 public class DiscardOddTreasureCardWhenPlayerHasThreeOfSomething extends Decision {
     @Override
     public Decision decide() {
