@@ -1,11 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -67,14 +64,14 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
             }
             return this;
         }
-        
+
         return null;
     }
 
     @Override
     public void act() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

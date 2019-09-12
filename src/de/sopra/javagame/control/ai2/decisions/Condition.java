@@ -13,14 +13,14 @@ import java.util.EnumSet;
  */
 public enum Condition implements ICondition {
 
-    PLAYER_HAS_ANY_ARTIFACT_CARD{
+    PLAYER_HAS_ANY_ARTIFACT_CARD {
         @Override
         public boolean isTrue(Decision decision) {
             EnumSet<ArtifactType> discoveredArtifacts = decision.action().getDiscoveredArtifacts();
             return discoveredArtifacts.size() == 4;
         }
     },
-    GAME_HAS_ALL_ARTIFACTS{
+    GAME_HAS_ALL_ARTIFACTS {
         @Override
         public boolean isTrue(Decision decision) {
             return false;

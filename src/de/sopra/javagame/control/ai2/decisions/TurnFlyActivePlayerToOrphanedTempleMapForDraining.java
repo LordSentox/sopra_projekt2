@@ -44,8 +44,8 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
 
-          //prüfe, ob Player auf betroffenem Tempel steht
-            if(orphanedTemplePoint.equals(activePlayerPosition)){
+            //prüfe, ob Player auf betroffenem Tempel steht
+            if (orphanedTemplePoint.equals(activePlayerPosition)) {
                 return null;
             }
 
@@ -71,7 +71,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
                     all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
                     all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
                     all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))
-                    && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)){
+                    && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
                 return null;
             }
 

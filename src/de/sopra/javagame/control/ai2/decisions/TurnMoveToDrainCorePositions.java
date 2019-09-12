@@ -13,9 +13,9 @@ public class TurnMoveToDrainCorePositions extends Decision {
         //TODO
         return null;
     }
-    
+
     @Override
     public void act() {
         //TODO
-    } 
+    }
 }
