@@ -44,6 +44,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     final int SPINNER_SIZE = 250;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
+    
+    private static double turnSpinnerCount;
 
     public void init() {
         //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentAction().getTiles();
@@ -86,8 +88,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         turnSpinnerWithoutMarkerImageView.setFitWidth(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setFitHeight(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setVisible(true);
-        //Bild um 72 Grad drehen
-        turnSpinnerWithoutMarkerImageView.setRotate(72.0);
         turnSpinnerWithoutMarkerImageView.getStyleClass().add("CardView");
         markerForSpinnerImageView.setImage(TextureLoader.getSpinnerMarker());
         
@@ -210,7 +210,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     }
 
-
+    public void rotateTurnSpinner(){
+      //Bild um 72 Grad drehen
+        turnSpinnerCount += 72.0;
+        turnSpinnerCount %= 360;
+        turnSpinnerWithoutMarkerImageView.setRotate(turnSpinnerCount);
+    }
     public void onShowMovementOptionsClicked() {
 
     }
@@ -272,7 +277,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPauseClicked() {
-
+        rotateTurnSpinner();
     }
 
     public void onSettingsClicked() {
