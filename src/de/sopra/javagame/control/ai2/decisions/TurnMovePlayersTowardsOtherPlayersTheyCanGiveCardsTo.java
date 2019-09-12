@@ -1,6 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 
@@ -13,6 +15,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 11.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveOntoTreasureCollectionPointIfPlayerHasFour.class)
 public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decision {
     @Override
     public Decision decide() {

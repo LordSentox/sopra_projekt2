@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
@@ -16,6 +18,7 @@ import java.util.List;
  * @since 09.09.2019
  */
 
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnStayOnLandingSiteWaitingForDeparture.class)
 public class TurnMoveForDrainingNearbyLandingSite extends Decision {
 
     /**

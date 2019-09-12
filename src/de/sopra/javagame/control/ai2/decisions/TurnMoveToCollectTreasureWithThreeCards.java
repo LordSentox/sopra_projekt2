@@ -1,6 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
@@ -12,6 +14,7 @@ import de.sopra.javagame.model.MapTile;
  * @version 10.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainTile.class)
 public class TurnMoveToCollectTreasureWithThreeCards extends Decision {
     @Override
     public Decision decide() {

@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
@@ -16,6 +18,8 @@ import java.util.EnumSet;
  * @version 11.09.2019
  * @since 09.09.2019
  */
+
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainLandingSite.class)
 public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
 
     private final int FOUR_ARTIFACTS = 4;

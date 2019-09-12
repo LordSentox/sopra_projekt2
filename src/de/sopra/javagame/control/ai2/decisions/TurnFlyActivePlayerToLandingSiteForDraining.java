@@ -1,6 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
@@ -20,6 +22,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @since 09.09.2019
  */
 
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveForDrainingNearbyLandingSite.class)
 public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
 
     @Override
