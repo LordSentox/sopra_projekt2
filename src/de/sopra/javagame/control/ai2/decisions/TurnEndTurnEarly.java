@@ -12,9 +12,9 @@ import de.sopra.javagame.control.ai2.Decision;
 public class TurnEndTurnEarly extends Decision {
     @Override
     public Decision decide() {
-        return null; //TODO
+        return this;
     }
-
+    
     @Override
     public void act() {
         //TODO
