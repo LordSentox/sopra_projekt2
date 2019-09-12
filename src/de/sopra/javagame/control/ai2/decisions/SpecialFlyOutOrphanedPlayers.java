@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -20,6 +21,10 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
 
     @Override
     public Decision decide() {
+        
+        if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
+            return null;
+        }
         List<Player> allPlayers = control.getAllPlayers();
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
