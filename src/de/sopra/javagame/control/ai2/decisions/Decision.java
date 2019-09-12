@@ -59,12 +59,16 @@ public abstract class Decision {
      * aber mittels {@link #decide()} ein Objekt mit Aktion liefert
      */
     public final Decision next(Decision lessImportantDecision) {
-        Decision self = this;
+        Decision self = this; //um Zugriff auf decide von this in decide von neuer Decision zu haben
         return new Decision() {
             @Override
             public Decision decide() {
+                //Wenn die PreCondition nicht erfüllt, darf die decide Methode nicht verwendet werden
                 Decision decision = self.matchPreCondition() ? self.decide() : null;
                 if (decision == null) {
+                    //mögliche getroffene Conditions sollen nicht neu getroffen werden (Effizienz)
+                    lessImportantDecision.conditions = self.conditions;
+                    //Auch hier: Wenn die PreCondition nicht erfüllt, darf die decide Methode nicht verwendet werden
                     return lessImportantDecision.matchPreCondition() ? lessImportantDecision.decide() : null;
                 } else return decision;
             }
