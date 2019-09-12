@@ -4,8 +4,11 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import de.sopra.javagame.view.textures.TextureLoader.PlayerTexture;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -13,6 +16,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import jfxtras.labs.scene.control.radialmenu.RadialMenu;
+import jfxtras.labs.scene.control.radialmenu.RadialMenuItem;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -28,9 +33,11 @@ public class MapPane extends GridPane {
     private final StackPane[][] map;
 
     private static final int TILE_SIZE = 130;
+    private InGameViewController inGameViewController;
     
-    public MapPane() throws IOException {
+    public MapPane(InGameViewController inGameViewController) throws IOException {
         super();
+        this.inGameViewController = inGameViewController;
         map = new StackPane[7][10];
 
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
@@ -67,8 +74,8 @@ public class MapPane extends GridPane {
 
     private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
         if (e.getButton() == MouseButton.PRIMARY){
-            map[y][x].getChildren().add(new ActionPicker());
-            putPlayer(x, y, PlayerType.DIVER);
+            ActionPicker ap = new ActionPicker(v, e.getButton(), this);
+            
         }
             
         else if (e.getButton() == MouseButton.SECONDARY)
@@ -126,5 +133,10 @@ public class MapPane extends GridPane {
             }
         }
         return Optional.empty();
+    }
+    
+    public InGameViewController getInGameViewController() {
+        return this.inGameViewController;
+        
     }
 }
