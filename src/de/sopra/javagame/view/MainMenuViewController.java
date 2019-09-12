@@ -17,7 +17,6 @@ public class MainMenuViewController extends AbstractViewController {
     @FXML JFXButton settingsButton, closeButton, startGameButton, loadGameButton, mapEditorButton, highscoreButton;
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
-        System.out.println("bin im menuC");
     }
     public void onSettingsClicked() {
         this.getGameWindow().setState(ViewState.SETTINGS);

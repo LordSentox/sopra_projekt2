@@ -3,6 +3,7 @@ package de.sopra.javagame.view;
 public enum ViewState {
     MENU,
     SETTINGS,
+    IN_GAME_SETTINGS,
     IN_GAME,
     MAP_EDITOR,
     GAME_PREPARATIONS,
@@ -24,6 +25,8 @@ public enum ViewState {
         case MENU:
             return false;
         case SETTINGS:
+            return false;
+        case IN_GAME_SETTINGS:
             return false;
         default: 
             return false;

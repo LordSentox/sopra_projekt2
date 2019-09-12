@@ -212,7 +212,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void rotateTurnSpinner(){
       //Bild um 72 Grad drehen
-        turnSpinnerCount += 72.0;
+        turnSpinnerCount -= 72.0;
         turnSpinnerCount %= 360;
         turnSpinnerWithoutMarkerImageView.setRotate(turnSpinnerCount);
     }
@@ -277,11 +277,13 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPauseClicked() {
+        //TEMP
         rotateTurnSpinner();
+        //END TEMP
     }
 
     public void onSettingsClicked() {
-        this.getGameWindow().setState(ViewState.SETTINGS);
+        this.getGameWindow().setState(ViewState.IN_GAME_SETTINGS);
     }
     
     public void onArtifactCardDiscardStackClicked(){

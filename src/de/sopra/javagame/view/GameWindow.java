@@ -47,6 +47,7 @@ public class GameWindow {
 //        initHighScore();
         initInGame();
 //        initMapEditor();
+        initInGameSettings();
         initSettings();
         
         mainStage.setResizable(false);
@@ -113,6 +114,18 @@ public class GameWindow {
         settingsViewController.setScene(mainMenuScene);
         settingsViewController.init();
         views.put(ViewState.SETTINGS, settingsViewController);
+    }
+    
+    private void initInGameSettings() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InGameSettings.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        InGameSettingsViewController InGameSettingsViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
+        InGameSettingsViewController.setGameWindow(this);
+        InGameSettingsViewController.setScene(mainMenuScene);
+        InGameSettingsViewController.init();
+        views.put(ViewState.IN_GAME_SETTINGS, InGameSettingsViewController);
     }
     //TODO
     private void initGamePreparations() throws IOException {
