@@ -73,6 +73,7 @@ public class MapController {
      * @param name Der Name der Karte, die geladen werden soll.
      */
     public void loadMapToEditor(String name) {
+        
 
     }
 
