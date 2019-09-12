@@ -1,7 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
-import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
@@ -9,6 +9,8 @@ import de.sopra.javagame.util.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
+import static de.sopra.javagame.control.ai2.decisions.Condition.*;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -19,16 +21,13 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @version 11.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialUseSandbagToDrainLandingSite.class)
+@PreCondition(allTrue = {PLAYER_HAS_SANDBAGS_CARD, PLAYER_NO_ACTION_LEFT, GAME_ANY_LAST_TEMPLE_IN_DANGER})
+//FIXME ist GAME_ANY_LAST_TEMPLE_IN_DANGER richtig?
 public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public Decision decide() {
-        if (!control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
-            return null;
-        }
-        if (!hasValidActions(0)) {
-            return null;
-        }
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
