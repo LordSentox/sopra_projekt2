@@ -23,6 +23,8 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
     @Override
     public Decision decide() {
 
+        //TODO prüfe ob aktiver Spieler auf Tempel steht
+
         List<Pair<Point, MapTile>> templeList = control.getTemples();
 
         //filter non-flooded tiles
