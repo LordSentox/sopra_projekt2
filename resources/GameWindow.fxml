@@ -74,15 +74,17 @@
    		<ImageView fx:id="markerForSpinnerImageView" layoutX="1650" layoutY="970" />
    		
    		<!-- Settings -->
-   		<!-- 
    		<Button fx:id="endTurnButton" layoutX="1500.0" layoutY="975.0" text="Zug beenden" prefHeight="30" prefWidth="150" onAction="#onEndTurnClicked"/>
    		
-   		<Button fx:id="redoButton" layoutX="1500.0" layoutY="1035.0" text="Zug rückgängig" prefHeight="30" prefWidth="150" onAction="#onRedoClicked"/>
+   		<Button fx:id="redoButton" layoutX="1500.0" layoutY="1015.0" text="Zug rückgängig" prefHeight="30" prefWidth="150" onAction="#onRedoClicked"/>
    		
-   		<Button fx:id="undoButton" layoutX="1500.0" layoutY="1095.0" text="Zug wiederholen" prefHeight="30" prefWidth="150" onAction="#onUndoClicked"/>
+   		<Button fx:id="undoButton" layoutX="1500.0" layoutY="1055.0" text="Zug wiederholen" prefHeight="30" prefWidth="150" onAction="#onUndoClicked"/>
    		
-   		<Button fx:id="settingsButton" layoutX="1500.0" layoutY="1155.0" text="Einstellungen" prefHeight="30" prefWidth="150" onAction="#onSettingsClicked"/>
-   		-->
+   		<Button fx:id="settingsButton" layoutX="1500.0" layoutY="1095.0" text="Einstellungen" prefHeight="30" prefWidth="150" onAction="#onSettingsClicked"/>
+   		
+   		<Button fx:id="pauseButton" layoutX="1500" layoutY="1145" text="▌▌" prefHeight="30" prefWidth="40"/>
+   		<Button fx:id="playButton" layoutX="1555" layoutY="1145" text="▶" prefHeight="30" prefWidth="40"/>
+   		<Button fx:id="stopeButton" layoutX="1610" layoutY="1145" text="■" prefHeight="30" prefWidth="40"/>
    		
    		
    		<!-- 
