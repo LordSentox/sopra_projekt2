@@ -25,7 +25,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
     @Override
     public Decision decide() {
 
-        if(hasValidActions(0)){
+        if (hasValidActions(0)) {
             return null;
         }
 
@@ -41,7 +41,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
 
-            if(!activePlayerPosition.equals(orphanedTemplePoint)){
+            if (!activePlayerPosition.equals(orphanedTemplePoint)) {
                 return null;
             }
 

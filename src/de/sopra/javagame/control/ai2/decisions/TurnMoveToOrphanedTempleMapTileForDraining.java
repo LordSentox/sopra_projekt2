@@ -46,7 +46,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
             //prüfe, ob Player auf betroffenem Tempel steht
-            if(orphanedTemplePoint.equals(activePlayerPosition)){
+            if (orphanedTemplePoint.equals(activePlayerPosition)) {
                 return null;
             }
             //prüfe, ob Tempelatefakt bereits geborgen ist

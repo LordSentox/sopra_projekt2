@@ -12,7 +12,7 @@ public class TurnEndTurnEarly extends Decision {
     public Decision decide() {
         return this;
     }
-    
+
     @Override
     public void act() {
         //TODO

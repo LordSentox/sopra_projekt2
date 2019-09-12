@@ -24,11 +24,11 @@ public class TurnGivePlayerTheFourthTreasureCard extends Decision {
         int fire = playerHand().getAmount(FIRE);
         int earth = playerHand().getAmount(EARTH);
         int air = playerHand().getAmount(AIR);
-        
+
         List<Player> allPlayers = control.getAllPlayers();
         List<PlayerType> receivers = player().legalReceivers();
         allPlayers.removeIf(player -> !receivers.contains(player.getType()));
-        
+
         for (Player player : allPlayers) {
             EnhancedPlayerHand hand = hand(player);
             int water2 = hand.getAmount(WATER);
@@ -44,10 +44,10 @@ public class TurnGivePlayerTheFourthTreasureCard extends Decision {
             )) {
                 return this;
             }
-        }    
-       return null; 
+        }
+        return null;
     }
-    
+
     @Override
     public void act() {
         //TODO

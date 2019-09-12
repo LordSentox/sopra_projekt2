@@ -26,8 +26,8 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
         EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
         for (int i = 0; i < 8; i++) {
-            
-            if(hasValidActions(0)){
+
+            if (hasValidActions(0)) {
                 return null;
             }
 

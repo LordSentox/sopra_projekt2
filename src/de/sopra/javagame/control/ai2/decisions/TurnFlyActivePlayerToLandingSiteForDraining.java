@@ -45,12 +45,12 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
         }
         //Prüfe für Sonderfall: --Player steht auf Tempel, kann dort Schatz bergen-- ob Sandsack spielbar
         EnhancedPlayerHand hand = playerHand();
-        
+
         if (any(all(hand.getAmount(FIRE) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.FIRE),
                 all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
                 all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
-                all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR)) 
-                && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)){
+                all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))
+                && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
         }
 

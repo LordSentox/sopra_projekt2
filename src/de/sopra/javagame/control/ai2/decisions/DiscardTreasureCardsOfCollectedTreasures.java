@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.Action;
@@ -18,7 +17,7 @@ import java.util.List;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-@DoAfter(act=DecisionResult.DISCARD,value=Decision.class)
+@DoAfter(act = DecisionResult.DISCARD, value = Decision.class)
 public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
 
     @Override
