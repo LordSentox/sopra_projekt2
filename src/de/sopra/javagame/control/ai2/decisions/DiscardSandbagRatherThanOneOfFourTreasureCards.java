@@ -2,8 +2,8 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 
-import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
  * <h1>projekt2</h1>
@@ -13,25 +13,11 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @since 10.09.2019
  */
 @DoAfter(act = DecisionResult.PLAY_SPECIAL_CARD, value = DiscardOddTreasureCardWhenPlayerHasThreeOfSomething.class)
+@PreCondition( allTrue={Condition.PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS,Condition.PLAYER_HAS_SANDBAGS_CARD})
 public class DiscardSandbagRatherThanOneOfFourTreasureCards extends Decision {
     @Override
     public Decision decide() {
-
-        if (!playerHand().hasCard(SANDBAGS)) {
-            return null;
-        }
-
-        int water = playerHand().getAmount(WATER);
-        int fire = playerHand().getAmount(FIRE);
-        int earth = playerHand().getAmount(EARTH);
-        int air = playerHand().getAmount(AIR);
-
-        if (any(air == FOUR_CARDS, fire == FOUR_CARDS, earth == FOUR_CARDS, water == FOUR_CARDS)) {
-            return this;
-        }
-
-        return null;
-
+        return this;
     }
 
     @Override

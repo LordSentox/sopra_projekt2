@@ -1,11 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
-import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.control.ai2.PreCondition;
 
-import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
  * <h1>projekt2</h1>
@@ -16,18 +14,12 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  */
 
 @DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveToLandingSiteForDeparture.class)
+@PreCondition( allTrue= Condition.PLAYER_CAN_CAPTURE_TREASURE)
 public class TurnCaptureTreasure extends Decision {
 
     @Override
     public Decision decide() {
-        EnhancedPlayerHand hand = playerHand();
-        if (any(all(hand.getAmount(FIRE) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.FIRE),
-                all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
-                all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
-                all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))) {
-            return this;
-        }
-        return null;
+        return this;
     }
 
     @Override

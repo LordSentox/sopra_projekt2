@@ -2,9 +2,9 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTileState;
 
-import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
 
 /**
  * <h1>projekt2</h1>
@@ -14,13 +14,12 @@ import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
  * @since 10.09.2019
  */
 @DoAfter(act = DecisionResult.DISCARD, value = DiscardTreasureCardOfWhichareTwoInDiscard.class)
+@PreCondition( allTrue=Condition.PLAYER_HAS_SANDBAGS_CARD)
 public class DiscardUseSandbagInsteadOfDiscardingTreasureCard extends Decision {
     @Override
     public Decision decide() {
         if (control.anyTile(MapTileState.FLOODED) != null) {
-            if (playerHand().hasCard(SANDBAGS)) {
-                return this;
-            }
+            return this;
         }
         return null;
     }
