@@ -8,6 +8,8 @@ import de.sopra.javagame.util.Point;
 
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ARTIFACTS;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -22,7 +24,7 @@ public class TurnEndGame extends Decision {
     @Override
     public Decision decide() {
 
-        if (condition(Condition.GAME_HAS_ALL_ARTIFACTS).isFalse(this)) {
+        if (condition(GAME_HAS_ALL_ARTIFACTS).isFalse(this)) {
             return null;
         }
 
