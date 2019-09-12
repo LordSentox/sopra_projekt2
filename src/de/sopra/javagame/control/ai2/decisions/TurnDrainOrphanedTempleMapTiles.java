@@ -1,10 +1,13 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,18 +25,38 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public Decision decide() {
-
-        //TODO prüfe ob aktiver Spieler auf Tempel steht
-
+        
+        if(hasValidActions(0)){
+            return null;                
+        }
+        
+        Point activePlayerPosition = player().getPosition();
+        
         List<Pair<Point, MapTile>> templeList = control.getTemples();
 
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
         for (Pair<Point, MapTile> temple : templeList) {
-
+            
             Point orphanedTemplePoint = temple.getLeft();
+            MapTile orphanedTemple = temple.getRight();
+            
+            if(!activePlayerPosition.equals(orphanedTemplePoint)){
+                return null;
+            }
 
+            if (orphanedTemple.getState() != MapTileState.FLOODED) {
+                continue;
+            }
+            
+            ArtifactType templeType = orphanedTemple.getProperties().getHidden();
+            EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
+
+            if (discoveredArtifacts.contains(templeType)) {
+                continue;
+            }
+            
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
 
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
@@ -42,19 +65,9 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
-
-            //old way of if above
-//            if (!((northernNeighbour == null || northernNeighbour.getState() == GONE)
-//                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == GONE)
-//                    && (easternNeighbour == null || easternNeighbour.getState() == GONE)
-//                    && (southEasternNeighbour == null || southEasternNeighbour.getState() == GONE)
-//                    && (southernNeighbour == null || southernNeighbour.getState() == GONE)
-//                    && (southWesternNeighbour == null || southWesternNeighbour.getState() == GONE)
-//                    && (westernNeighbour == null || westernNeighbour.getState() == GONE)
-//                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == GONE))) {
-//                continue;
-//            }
-
+                        
+            
+            
             return this;
 
         }
