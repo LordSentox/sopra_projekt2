@@ -276,7 +276,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onSettingsClicked() {
-
+        this.getGameWindow().setState(ViewState.SETTINGS);
     }
     
     public void onArtifactCardDiscardStackClicked(){
