@@ -26,7 +26,7 @@ public class FloodCard implements Copyable<FloodCard> {
      *             wenn das Feld bereits versunken war. Die Karte hätte dann aus
      *             dem Stapel entfernt werden sollen.
      */
-    void flood() throws IllegalStateException {
+    public void flood() throws IllegalStateException {
         // Überprüfe, ob das Feld bereits entfernt wurde. Diese Karte hätte dann
         // nicht gespielt
         // werden können dürfen.
