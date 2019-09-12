@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -14,8 +13,6 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -50,7 +47,10 @@ public class GameWindow {
 //        initMapEditor();
         initInGameSettings();
         initSettings();
-        
+
+        //DO NOT REMOVE THIS - Julius
+        initStageStuff();
+
         mainStage.setResizable(false);
         mainStage.initStyle(StageStyle.UNDECORATED);
         this.setState(ViewState.MENU);
@@ -140,14 +140,27 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
- 
-        
-        
-        
-        
-        
-        
-        
+
+    //DO NOT REMOVE THIS - Julius
+    private void initStageStuff() {
+        mainStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.isAltDown() && event.getCode() == KeyCode.C) {
+                TextInputDialog dialog = new TextInputDialog("");
+                dialog.setContentText("Command:");
+                dialog.setTitle(null);
+                dialog.setHeaderText(null);
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.initOwner(mainStage);
+                dialog.initStyle(StageStyle.UTILITY);
+                Optional<String> result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    System.out.println(result.get());
+                }
+                //TODO replace sout with Commands call
+            }
+        });
+    }
+
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GameWindow.fxml"));
 //        AnchorPane mainPane = fxmlLoader.load();
 //        InGameViewController inGameViewController = fxmlLoader.getController();
