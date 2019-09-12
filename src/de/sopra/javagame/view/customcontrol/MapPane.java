@@ -66,8 +66,11 @@ public class MapPane extends GridPane {
     }
 
     private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
-        if (e.getButton() == MouseButton.PRIMARY)
+        if (e.getButton() == MouseButton.PRIMARY){
+            map[y][x].getChildren().add(new ActionPicker());
             putPlayer(x, y, PlayerType.DIVER);
+        }
+            
         else if (e.getButton() == MouseButton.SECONDARY)
             removePlayer(x, y, PlayerType.DIVER);
     }

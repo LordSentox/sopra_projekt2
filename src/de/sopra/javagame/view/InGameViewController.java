@@ -228,7 +228,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPlayerSelected() {
-
+        
     }
 
     public void onTransferCardClicked(int cardIndex) {
