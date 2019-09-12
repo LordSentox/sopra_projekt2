@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
@@ -23,14 +24,11 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @since 09.09.2019
  */
 @DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainOrphanedTempleMapTiles.class)
+@PreCondition( allFalse= Condition.PLAYER_HAS_MORE_THAN_1_ACTION_LEFT)
 public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
 
     @Override
     public Decision decide() {
-
-        if (hasValidActions(0, 1)) {
-            return null;
-        }
 
         PlayerType activePlayerType = player().getType();
         Point activePlayerPosition = player().getPosition();

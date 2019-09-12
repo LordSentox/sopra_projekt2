@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 
 /**
@@ -10,6 +11,7 @@ import de.sopra.javagame.model.ArtifactType;
  * @since 10.09.2019
  */
 @DoAfter(act = DecisionResult.TURN_ACTION, value = TurnGiveTreasureCardsToPlayersWhoNeedThem.class)
+@PreCondition( allTrue= Condition.PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS)
 public class TurnMoveOntoTreasureCollectionPointIfPlayerHasFour extends Decision {
     @Override
     public Decision decide() {
