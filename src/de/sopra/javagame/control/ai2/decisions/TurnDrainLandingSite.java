@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
@@ -10,6 +9,9 @@ import de.sopra.javagame.util.Point;
 
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SIDE_IN_DANGER;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -18,8 +20,8 @@ import java.util.List;
  * @since 09.09.2019
  */
 
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnEndGame.class)
-@PreCondition( allTrue= Condition.GAME_LANDING_SIDE_IN_DANGER)
+@DoAfter(act = TURN_ACTION, value = TurnEndGame.class)
+@PreCondition(allTrue = GAME_LANDING_SIDE_IN_DANGER)
 public class TurnDrainLandingSite extends Decision {
 
     @Override

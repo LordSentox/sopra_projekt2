@@ -1,8 +1,10 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
+
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_CAN_CAPTURE_TREASURE;
 
 
 /**
@@ -13,8 +15,8 @@ import de.sopra.javagame.control.ai2.PreCondition;
  * @since 09.09.2019
  */
 
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveToLandingSiteForDeparture.class)
-@PreCondition( allTrue= Condition.PLAYER_CAN_CAPTURE_TREASURE)
+@DoAfter(act = TURN_ACTION, value = TurnMoveToLandingSiteForDeparture.class)
+@PreCondition(allTrue = PLAYER_CAN_CAPTURE_TREASURE)
 public class TurnCaptureTreasure extends Decision {
 
     @Override

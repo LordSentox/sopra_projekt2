@@ -1,12 +1,14 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ARTIFACTS;
 
 
 /**
@@ -17,14 +19,14 @@ import de.sopra.javagame.util.Point;
  * @since 09.09.2019
  */
 
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainLandingSite.class)
-@PreCondition( allTrue= Condition.GAME_HAS_ALL_ARTIFACTS)
+@DoAfter(act = TURN_ACTION, value = TurnDrainLandingSite.class)
+@PreCondition(allTrue = GAME_HAS_ALL_ARTIFACTS)
 public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
 
- 
+
     @Override
     public Decision decide() {
-       
+
         Point playerPosition = player().getPosition();
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);

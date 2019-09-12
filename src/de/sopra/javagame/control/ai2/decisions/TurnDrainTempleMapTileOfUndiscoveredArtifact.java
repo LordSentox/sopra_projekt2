@@ -1,8 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -12,6 +12,9 @@ import de.sopra.javagame.util.Point;
 import java.util.EnumSet;
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION_LEFT;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -19,7 +22,8 @@ import java.util.List;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveToOrphanedTempleMapTileForDraining.class)
+@DoAfter(act = TURN_ACTION, value = TurnMoveToOrphanedTempleMapTileForDraining.class)
+@PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
 
     @Override
@@ -28,10 +32,6 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
         EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
         for (int i = 0; i < 8; i++) {
-
-            if (hasValidActions(0)) {
-                return null;
-            }
 
             MapTile orphanedTemple = templeList.get(i).getRight();
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();

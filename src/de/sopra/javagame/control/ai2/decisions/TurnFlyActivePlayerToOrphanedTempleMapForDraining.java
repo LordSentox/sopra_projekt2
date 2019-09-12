@@ -1,7 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactCardType;
@@ -14,6 +13,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION_LEFT;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
@@ -26,8 +27,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @version 11.09.2019
  * @since 10.09.2019
  */
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainTempleMapTileOfUndiscoveredArtifact.class)
-@PreCondition( allFalse= Condition.PLAYER_NO_ACTION_LEFT)
+@DoAfter(act = TURN_ACTION, value = TurnDrainTempleMapTileOfUndiscoveredArtifact.class)
+@PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
 
     @Override

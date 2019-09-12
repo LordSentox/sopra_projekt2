@@ -1,9 +1,11 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTileState;
+
+import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_SANDBAGS_CARD;
 
 
 /**
@@ -13,8 +15,8 @@ import de.sopra.javagame.model.MapTileState;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-@DoAfter(act = DecisionResult.DISCARD, value = DiscardTreasureCardOfWhichareTwoInDiscard.class)
-@PreCondition( allTrue=Condition.PLAYER_HAS_SANDBAGS_CARD)
+@DoAfter(act = DISCARD, value = DiscardTreasureCardOfWhichareTwoInDiscard.class)
+@PreCondition(allTrue = PLAYER_HAS_SANDBAGS_CARD)
 public class DiscardUseSandbagInsteadOfDiscardingTreasureCard extends Decision {
     @Override
     public Decision decide() {

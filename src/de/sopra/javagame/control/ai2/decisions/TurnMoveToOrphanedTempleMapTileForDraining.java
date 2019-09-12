@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
@@ -13,6 +12,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_MORE_THAN_1_ACTION_LEFT;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -23,8 +24,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnDrainOrphanedTempleMapTiles.class)
-@PreCondition( allFalse= Condition.PLAYER_HAS_MORE_THAN_1_ACTION_LEFT)
+@DoAfter(act = TURN_ACTION, value = TurnDrainOrphanedTempleMapTiles.class)
+@PreCondition(allFalse = PLAYER_HAS_MORE_THAN_1_ACTION_LEFT)
 public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
 
     @Override

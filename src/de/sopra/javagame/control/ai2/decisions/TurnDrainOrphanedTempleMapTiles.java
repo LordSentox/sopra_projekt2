@@ -1,7 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -12,6 +12,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION_LEFT;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -23,15 +25,12 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @since 09.09.2019
  */
 
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnGivePlayerTheFourthTreasureCard.class)
+@DoAfter(act = TURN_ACTION, value = TurnGivePlayerTheFourthTreasureCard.class)
+@PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public Decision decide() {
-
-        if (hasValidActions(0)) {
-            return null;
-        }
 
         Point activePlayerPosition = player().getPosition();
 

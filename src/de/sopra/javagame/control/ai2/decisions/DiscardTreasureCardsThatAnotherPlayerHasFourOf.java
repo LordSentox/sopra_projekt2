@@ -1,7 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
@@ -10,6 +9,7 @@ import de.sopra.javagame.model.player.Player;
 import java.util.EnumSet;
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
@@ -19,7 +19,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-@DoAfter(act = DecisionResult.DISCARD, value = DiscardTreasureCardsOfCollectedTreasures.class)
+@DoAfter(act = DISCARD, value = DiscardTreasureCardsOfCollectedTreasures.class)
 public class DiscardTreasureCardsThatAnotherPlayerHasFourOf extends Decision {
 
     @Override

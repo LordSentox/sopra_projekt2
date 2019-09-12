@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
@@ -11,6 +10,7 @@ import de.sopra.javagame.util.Point;
 
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ARTIFACTS;
 
 /**
@@ -21,7 +21,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
  * @since 11.09.2019
  */
 
-@DoAfter(act = DecisionResult.TURN_ACTION, value = Decision.class)
+@DoAfter(act = TURN_ACTION, value = Decision.class)
 @PreCondition(allTrue = GAME_HAS_ALL_ARTIFACTS)
 public class TurnEndGame extends Decision {
 

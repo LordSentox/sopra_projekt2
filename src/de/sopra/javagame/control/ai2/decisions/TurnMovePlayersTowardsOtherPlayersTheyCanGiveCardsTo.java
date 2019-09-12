@@ -1,7 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.player.Player;
@@ -9,6 +8,8 @@ import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_ANY_ARTIFACT_CARD;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
@@ -16,8 +17,8 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 11.09.2019
  * @since 10.09.2019
  */
-@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveOntoTreasureCollectionPointIfPlayerHasFour.class)
-@PreCondition( allTrue= Condition.PLAYER_HAS_ANY_ARTIFACT_CARD)
+@DoAfter(act = TURN_ACTION, value = TurnMoveOntoTreasureCollectionPointIfPlayerHasFour.class)
+@PreCondition(allTrue = PLAYER_HAS_ANY_ARTIFACT_CARD)
 public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decision {
     @Override
     public Decision decide() {
