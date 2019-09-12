@@ -35,9 +35,8 @@ public class MapPane extends GridPane {
     private static final int TILE_SIZE = 130;
     private InGameViewController inGameViewController;
     
-    public MapPane(InGameViewController inGameViewController) throws IOException {
+    public MapPane() throws IOException {
         super();
-        this.inGameViewController = inGameViewController;
         map = new StackPane[7][10];
 
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
@@ -137,6 +136,10 @@ public class MapPane extends GridPane {
     
     public InGameViewController getInGameViewController() {
         return this.inGameViewController;
+        
+    }
+    public void setIngameViewController(InGameViewController inGameViewController){
+        this.inGameViewController = inGameViewController;
         
     }
 }
