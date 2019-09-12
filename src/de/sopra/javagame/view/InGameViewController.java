@@ -54,13 +54,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 //        IntStream.range(0, 9).forEach(i -> { IntStream.range(0, 12).forEach(j -> System.out.print(tiles[i][j])); System.out.println();});
         /* END TEMP */ 
         mainPane.setImage(TextureLoader.getBackground());
-
+        mainPane.setFitHeight(1200);
         initGridPane();
 
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.DIVER));
         activePlayerTypeImageView.setPreserveRatio(true);
         activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        activePlayerTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         activePlayerTypeImageView.setVisible(true);
         
         playerOneTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.PILOT));
@@ -87,14 +86,17 @@ public class InGameViewController extends AbstractViewController implements InGa
         turnSpinnerWithoutMarkerImageView.setFitWidth(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setFitHeight(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setVisible(true);
+        //Bild um 72 Grad drehen
         turnSpinnerWithoutMarkerImageView.setRotate(72.0);
-        turnSpinnerWithoutMarkerImageView.getStyleClass().add("Artifact_Fire");
-        //TODO Bild um 72 Grad drehen
+        turnSpinnerWithoutMarkerImageView.getStyleClass().add("CardView");
         markerForSpinnerImageView.setImage(TextureLoader.getSpinnerMarker());
+        
         markerForSpinnerImageView.setPreserveRatio(true);
         markerForSpinnerImageView.setFitWidth(SPINNER_SIZE);
         markerForSpinnerImageView.setFitHeight(SPINNER_SIZE);
         markerForSpinnerImageView.setVisible(true);
+        markerForSpinnerImageView.getStyleClass().add("CardView");
+        
         
         
         
