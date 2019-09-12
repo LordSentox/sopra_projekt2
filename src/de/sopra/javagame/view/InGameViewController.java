@@ -44,6 +44,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     final int SPINNER_SIZE = 250;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
+    
+    private static double turnSpinnerCount;
 
     public void init() {
         //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentAction().getTiles();
@@ -58,24 +60,24 @@ public class InGameViewController extends AbstractViewController implements InGa
         mapPane.setIngameViewController(this);
         initGridPane();
 
-        activePlayerTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.DIVER));
+        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.DIVER));
         activePlayerTypeImageView.setPreserveRatio(true);
         activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         activePlayerTypeImageView.setVisible(true);
         
-        playerOneTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.PILOT));
+        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.PILOT));
         playerOneTypeImageView.setPreserveRatio(true);
         playerOneTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setVisible(true);
         
-        playerTwoTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.EXPLORER));
+        playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.EXPLORER));
         playerTwoTypeImageView.setPreserveRatio(true);
         playerTwoTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerTwoTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerTwoTypeImageView.setVisible(true);
         
-        playerThreeTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.ENGINEER));
+        playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.ENGINEER));
         playerThreeTypeImageView.setPreserveRatio(true);
         playerThreeTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerThreeTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
@@ -87,8 +89,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         turnSpinnerWithoutMarkerImageView.setFitWidth(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setFitHeight(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setVisible(true);
-        //Bild um 72 Grad drehen
-        turnSpinnerWithoutMarkerImageView.setRotate(72.0);
         turnSpinnerWithoutMarkerImageView.getStyleClass().add("CardView");
         markerForSpinnerImageView.setImage(TextureLoader.getSpinnerMarker());
         
@@ -211,7 +211,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     }
 
-
+    public void rotateTurnSpinner(){
+      //Bild um 72 Grad drehen
+        turnSpinnerCount -= 72.0;
+        turnSpinnerCount %= 360;
+        turnSpinnerWithoutMarkerImageView.setRotate(turnSpinnerCount);
+    }
     public void onShowMovementOptionsClicked() {
         System.out.println("juch, ich bin der bewegungsindikator");
     }
@@ -273,11 +278,13 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPauseClicked() {
-
+        //TEMP
+        rotateTurnSpinner();
+        //END TEMP
     }
 
     public void onSettingsClicked() {
-        this.getGameWindow().setState(ViewState.SETTINGS);
+        changeState(ViewState.IN_GAME_SETTINGS);
     }
     
     public void onArtifactCardDiscardStackClicked(){

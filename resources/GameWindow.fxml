@@ -77,17 +77,17 @@
    		
    		<!-- Settings -->
    		
-   		<JFXButton fx:id="endTurnButton" layoutX="1500.0" layoutY="975.0" text="Zug beenden" prefHeight="30" prefWidth="150" onAction="#onEndTurnClicked"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="endTurnButton" layoutX="1500.0" layoutY="975.0" text="Zug beenden" prefHeight="30" prefWidth="150" onAction="#onEndTurnClicked"/>
    		
-   		<JFXButton fx:id="redoButton" layoutX="1500.0" layoutY="1015.0" text="Zug rückgängig" prefHeight="30" prefWidth="150" onAction="#onRedoClicked"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="redoButton" layoutX="1500.0" layoutY="1015.0" text="Zug rückgängig" prefHeight="30" prefWidth="150" onAction="#onRedoClicked"/>
    		
-   		<JFXButton fx:id="undoButton" layoutX="1500.0" layoutY="1055.0" text="Zug wiederholen" prefHeight="30" prefWidth="150" onAction="#onUndoClicked"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="undoButton" layoutX="1500.0" layoutY="1055.0" text="Zug wiederholen" prefHeight="30" prefWidth="150" onAction="#onUndoClicked"/>
    		
-   		<JFXButton fx:id="settingsButton" layoutX="1500.0" layoutY="1095.0" text="Einstellungen" prefHeight="30" prefWidth="150" onAction="#onSettingsClicked"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="settingsButton" layoutX="1500.0" layoutY="1095.0" text="Einstellungen" prefHeight="30" prefWidth="150" onAction="#onSettingsClicked"/>
    		
-   		<JFXButton fx:id="pauseButton" layoutX="1500" layoutY="1145" text="▌▌" prefHeight="30" prefWidth="40"/>
-   		<JFXButton fx:id="playButton" layoutX="1555" layoutY="1145" text="▶" prefHeight="30" prefWidth="40"/>
-   		<JFXButton fx:id="stopeButton" layoutX="1610" layoutY="1145" text="■" prefHeight="30" prefWidth="40"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="pauseButton" layoutX="1500" layoutY="1145" text="▌▌" prefHeight="30" prefWidth="40" onAction="#onPauseClicked"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="playButton" layoutX="1555" layoutY="1145" text="▶" prefHeight="30" prefWidth="40"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="stopeButton" layoutX="1610" layoutY="1145" text="■" prefHeight="30" prefWidth="40"/>
    		
    		
    		<!-- 

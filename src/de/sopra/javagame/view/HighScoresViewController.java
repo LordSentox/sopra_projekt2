@@ -1,6 +1,9 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.view.textures.TextureLoader;
+import javafx.fxml.FXML;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -11,6 +14,12 @@ import java.util.List;
  * @author Hannah, Lisa
  */
 public class HighScoresViewController extends AbstractViewController implements HighScoresViewAUI {
+    
+    @FXML ImageView mainPane;
+    
+    public void init(){
+        mainPane.setImage(TextureLoader.getBackground());
+    }
 
     public void onResetClicked() {
 
@@ -25,7 +34,7 @@ public class HighScoresViewController extends AbstractViewController implements 
     }
 
     public void onCloseClicked() {
-
+        changeState(ViewState.MENU);
     }
 
     @Override

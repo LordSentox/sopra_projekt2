@@ -5,12 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-/**
- * GUI für die Spieleinstellungen
- *
- * @author Lisa, Hannah
- */
-public class SettingsViewController extends AbstractViewController {
+public class InGameSettingsViewController extends AbstractViewController {
+    
     
     @FXML ImageView mainPane;
     
@@ -32,12 +28,21 @@ public class SettingsViewController extends AbstractViewController {
     }
 
     public void onCloseClicked() {
+        changeState(ViewState.IN_GAME);
+    }
+    
+    public void onSaveClicked(){
+        
+    }
+    
+    public void onBackToMenuClicked(){
         changeState(ViewState.MENU);
     }
+    
 
     @Override
     ViewState getType() {
-        return ViewState.SETTINGS;
+        return ViewState.IN_GAME_SETTINGS;
     }
 
     @Override

@@ -39,14 +39,16 @@ public class GameWindow {
         this.controllerChan = new ControllerChan();
         this.views = new HashMap<>();
         this.mainStage = stage;
+        stage.centerOnScreen();
     }
 
     public void init() throws IOException {
         initMainMenu();
 //        initGamePreparations();
-//        initHighScore();
+        initHighScore();
         initInGame();
 //        initMapEditor();
+        initInGameSettings();
         initSettings();
         
         mainStage.setResizable(false);
@@ -68,15 +70,15 @@ public class GameWindow {
     }
     //TODO
     private void initHighScore() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Highscores.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
-        MainMenuViewController mainMenuViewController = fxmlLoader.getController();
+        HighScoresViewController highScoresViewController = fxmlLoader.getController();
         Scene mainMenuScene = new Scene(mainPane);
         mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
-        mainMenuViewController.setGameWindow(this);
-        mainMenuViewController.setScene(mainMenuScene);
-        mainMenuViewController.init();
-        views.put(ViewState.MENU, mainMenuViewController);
+        highScoresViewController.setGameWindow(this);
+        highScoresViewController.setScene(mainMenuScene);
+        highScoresViewController.init();
+        views.put(ViewState.HIGH_SCORES, highScoresViewController);
     }
     
     private void initInGame() throws IOException {
@@ -113,6 +115,18 @@ public class GameWindow {
         settingsViewController.setScene(mainMenuScene);
         settingsViewController.init();
         views.put(ViewState.SETTINGS, settingsViewController);
+    }
+    
+    private void initInGameSettings() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InGameSettings.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        InGameSettingsViewController inGameSettingsViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
+        inGameSettingsViewController.setGameWindow(this);
+        inGameSettingsViewController.setScene(mainMenuScene);
+        inGameSettingsViewController.init();
+        views.put(ViewState.IN_GAME_SETTINGS, inGameSettingsViewController);
     }
     //TODO
     private void initGamePreparations() throws IOException {
@@ -180,6 +194,7 @@ public class GameWindow {
         
         mainStage.setScene(views.get(state).getScene());
         mainStage.setFullScreen(state.isFullscreen());
+        mainStage.centerOnScreen();
     }
 
     public ControllerChan getControllerChan() {

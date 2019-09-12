@@ -1,11 +1,13 @@
 package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXButton;
-
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
+import static de.sopra.javagame.view.ViewState.SETTINGS;
+import static de.sopra.javagame.view.ViewState.HIGH_SCORES;
 
 /**
  * GUI für das Hauptfenster
@@ -13,18 +15,21 @@ import javafx.stage.Stage;
  * @author Lisa, Hannah
  */
 public class MainMenuViewController extends AbstractViewController {
-    @FXML ImageView mainPane;
-    @FXML JFXButton settingsButton, closeButton, startGameButton, loadGameButton, mapEditorButton, highscoreButton;
+    @FXML
+    ImageView mainPane;
+    @FXML
+    JFXButton settingsButton, closeButton, startGameButton, loadGameButton, mapEditorButton, highscoreButton;
+
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
-        System.out.println("bin im menuC");
     }
+
     public void onSettingsClicked() {
-        this.getGameWindow().setState(ViewState.SETTINGS);
+        changeState(SETTINGS);
     }
 
     public void onStartGameClicked() {
-        this.getGameWindow().setState(ViewState.IN_GAME);
+        changeState(ViewState.IN_GAME);
     }
 
     public void onLoadGameClicked() {
@@ -36,11 +41,11 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onHighscoresClicked() {
-
+        changeState(HIGH_SCORES);
     }
 
     public void onCloseClicked() {
-     this.getGameWindow().setState(ViewState.CLOSE);   
+        changeState(ViewState.CLOSE);
     }
 
     public void onLoadReplayClicked() {

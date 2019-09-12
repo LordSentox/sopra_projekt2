@@ -119,8 +119,8 @@ public class MapUtil {
         }
 
         // Fülle die Karte mit den aus dem String ausgelesenen Werten
-        for (int y = 0; y < size.yPos; ++y) {
-            for (int x = 0; x < size.xPos; ++x) {
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[y].length; ++x) {
                 String sign = map[y][x].trim();
                 if (!sign.equals("-")) {
                     // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
