@@ -40,6 +40,11 @@ public class TextureLoader {
     private static Image gone;
     private static Image artifactCardBack;
     private static Image floodCardBack;
+    private static Image giveCard;
+    private static Image findArtifact;
+    private static Image special;
+    private static Image drain;
+    private static Image move;
 
     static {
         PACKS.add("default.zip");
@@ -80,6 +85,11 @@ public class TextureLoader {
             turnSpinner = new Image(misc.inputStreamByName("turnSpinner.png"));
             spinnerMarker = new Image(misc.inputStreamByName("spinnerMarker.png"));
             water = new Image(misc.inputStreamByName("water.png"));
+            giveCard = new Image(misc.inputStreamByName("give-card.png"));
+            findArtifact = new Image(misc.inputStreamByName("find-artifact.png"));
+            special = new Image(misc.inputStreamByName("special.png"));
+            drain = new Image(misc.inputStreamByName("drain.png"));
+            move = new Image(misc.inputStreamByName("move.png"));
             sea0 = new Image(tilesExtra.inputStreamByName("sea_0.png"));
             sea1 = new Image(tilesExtra.inputStreamByName("sea_1.png"));
             gone = new Image(tilesExtra.inputStreamByName("flooded.png"));
@@ -186,6 +196,26 @@ public class TextureLoader {
 
     public static Image getFloodCardBack() {
         return floodCardBack;
+    }
+
+    public static Image getGiveCard() {
+        return giveCard;
+    }
+
+    public static Image getFindArtifact() {
+        return findArtifact;
+    }
+
+    public static Image getSpecial() {
+        return special;
+    }
+
+    public static Image getDrain() {
+        return drain;
+    }
+
+    public static Image getMove() {
+        return move;
     }
 
     private static URL getResource(String name) {
