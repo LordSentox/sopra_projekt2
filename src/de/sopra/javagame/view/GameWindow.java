@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -13,6 +14,8 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,44 +39,24 @@ public class GameWindow {
         this.controllerChan = new ControllerChan();
         this.views = new HashMap<>();
         this.mainStage = stage;
+        stage.centerOnScreen();
     }
 
     public void init() throws IOException {
         initMainMenu();
 //        initGamePreparations();
-//        initHighScore();
+        initHighScore();
         initInGame();
 //        initMapEditor();
         initInGameSettings();
         initSettings();
-
-        initStageStuff();
-
+        
         mainStage.setResizable(false);
         mainStage.initStyle(StageStyle.UNDECORATED);
         this.setState(ViewState.MENU);
         mainStage.show();
     }
-
-    private void initStageStuff() {
-        mainStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.isAltDown() && event.getCode() == KeyCode.C) {
-                TextInputDialog dialog = new TextInputDialog("");
-                dialog.setContentText("Command:");
-                dialog.setTitle(null);
-                dialog.setHeaderText(null);
-                dialog.initModality(Modality.WINDOW_MODAL);
-                dialog.initOwner(mainStage);
-                dialog.initStyle(StageStyle.UTILITY);
-                Optional<String> result = dialog.showAndWait();
-                if (result.isPresent()) {
-                    System.out.println(result.get());
-                }
-                //TODO replace sout with Commands call
-            }
-        });
-    }
-
+    
     private void initMainMenu() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -85,20 +68,19 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
-
     //TODO
     private void initHighScore() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Highscores.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
-        MainMenuViewController mainMenuViewController = fxmlLoader.getController();
+        HighScoresViewController highScoresViewController = fxmlLoader.getController();
         Scene mainMenuScene = new Scene(mainPane);
         mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
-        mainMenuViewController.setGameWindow(this);
-        mainMenuViewController.setScene(mainMenuScene);
-        mainMenuViewController.init();
-        views.put(ViewState.MENU, mainMenuViewController);
+        highScoresViewController.setGameWindow(this);
+        highScoresViewController.setScene(mainMenuScene);
+        highScoresViewController.init();
+        views.put(ViewState.HIGH_SCORES, highScoresViewController);
     }
-
+    
     private void initInGame() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GameWindow.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -110,7 +92,6 @@ public class GameWindow {
         inGameViewController.init();
         views.put(ViewState.IN_GAME, inGameViewController);
     }
-
     //TODO
     private void initMapEditor() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
@@ -123,7 +104,7 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
-
+    
     private void initSettings() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Settings.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -135,19 +116,18 @@ public class GameWindow {
         settingsViewController.init();
         views.put(ViewState.SETTINGS, settingsViewController);
     }
-
+    
     private void initInGameSettings() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InGameSettings.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
-        InGameSettingsViewController InGameSettingsViewController = fxmlLoader.getController();
+        InGameSettingsViewController inGameSettingsViewController = fxmlLoader.getController();
         Scene mainMenuScene = new Scene(mainPane);
         mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
-        InGameSettingsViewController.setGameWindow(this);
-        InGameSettingsViewController.setScene(mainMenuScene);
-        InGameSettingsViewController.init();
-        views.put(ViewState.IN_GAME_SETTINGS, InGameSettingsViewController);
+        inGameSettingsViewController.setGameWindow(this);
+        inGameSettingsViewController.setScene(mainMenuScene);
+        inGameSettingsViewController.init();
+        views.put(ViewState.IN_GAME_SETTINGS, inGameSettingsViewController);
     }
-
     //TODO
     private void initGamePreparations() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
@@ -160,8 +140,14 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
-
-
+ 
+        
+        
+        
+        
+        
+        
+        
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GameWindow.fxml"));
 //        AnchorPane mainPane = fxmlLoader.load();
 //        InGameViewController inGameViewController = fxmlLoader.getController();
@@ -200,14 +186,15 @@ public class GameWindow {
     public void setState(ViewState state) {
         if (currentViewState == state)
             return;
-
-        if (state == ViewState.CLOSE) {
+        
+        if(state == ViewState.CLOSE){
             mainStage.close();
             return;
         }
-
+        
         mainStage.setScene(views.get(state).getScene());
         mainStage.setFullScreen(state.isFullscreen());
+        mainStage.centerOnScreen();
     }
 
     public ControllerChan getControllerChan() {

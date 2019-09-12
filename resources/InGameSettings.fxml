@@ -7,7 +7,7 @@
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="222.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.InGameSettingsViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="285.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.InGameSettingsViewController">
    <children>
    
    
@@ -23,7 +23,11 @@
    	   
    	   <JFXCheckBox fx:id="developerToolsCheckbox" layoutX="27" layoutY="130" text="Developer Tools"/>
    	   
-   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="closeButton" layoutX="55" layoutY="165" text="Schließen" prefHeight="30"  prefWidth="90" onAction="#onCloseClicked"/>
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="saveButton" layoutX="50" layoutY="165" text="Speichern" prefHeight="30"  prefWidth="100" onAction ="#onSaveClicked"/>
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="backToMainMenuButton" layoutX="50" layoutY="205" text="Hauptmenü" prefHeight="30"  prefWidth="100" onAction ="#onBackToMenuClicked"/>
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="closeButton" layoutX="50" layoutY="245" text="Schließen" prefHeight="30"  prefWidth="100" onAction="#onCloseClicked"/>
  	
  	
    </children>

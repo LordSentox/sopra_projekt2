@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import static de.sopra.javagame.view.ViewState.SETTINGS;
+import static de.sopra.javagame.view.ViewState.HIGH_SCORES;
 
 /**
  * GUI für das Hauptfenster
@@ -40,7 +41,7 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onHighscoresClicked() {
-
+        changeState(HIGH_SCORES);
     }
 
     public void onCloseClicked() {
