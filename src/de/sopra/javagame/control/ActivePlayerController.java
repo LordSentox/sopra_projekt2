@@ -38,7 +38,6 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         List<Point> movements = player.legalMoves(specialActive);
         controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-
     }
 
     /**

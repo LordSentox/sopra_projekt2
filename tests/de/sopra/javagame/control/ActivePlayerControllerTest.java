@@ -1,12 +1,14 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.TestDummy.InGameView;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,11 +26,10 @@ public class ActivePlayerControllerTest {
     
     private ControllerChan controllerChan;
     private ActivePlayerController activePlayerController;
-    private TestDummy.InGameView inGameView;
     private JavaGame javaGame;
     private int[][] testMapNumbers;
     private MapTile[][] testMap;
-    private List moveablePlayers;
+    private List<Player> moveablePlayers;
     private MapController mapController;
     private Action action;
     private ArtifactCard fireCard;
@@ -44,19 +45,18 @@ public class ActivePlayerControllerTest {
     private CardStack<ArtifactCard> artifactCardStack;
     private List<ArtifactCard> handCardsExpected;
     List<Pair<PlayerType, Boolean>> players;
-    
-    
-    
-    @Before
+
+    private InGameView inGameView;
+
     public void setUp() throws IOException {
         controllerChan = TestDummy.getDummyControllerChan();
         activePlayerController = controllerChan.getActivePlayerController();
-        inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
         javaGame = controllerChan.getJavaGame();
         action = controllerChan.getCurrentAction();
-        
+
         boolean [][] tiles = new boolean [12][12];
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
+        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         players = Arrays.asList(
@@ -99,7 +99,7 @@ public class ActivePlayerControllerTest {
         explorer = new Explorer("explorer", new Point(5,2), action);
         navigator = new Navigator("navigator", new Point(4,2), action);
         
-        handCardsExpected = new ArrayList<ArtifactCard>();
+        handCardsExpected = new ArrayList<>();
         explorer.getHand().add(fireCard);
         handCardsExpected.add(fireCard);
         explorer.getHand().add(waterCard);
@@ -114,23 +114,101 @@ public class ActivePlayerControllerTest {
         moveablePlayers.add(navigator);
         moveablePlayers.add(courier);
     }
+
+    @Before
+    public void setUp2() throws Exception {
+        controllerChan = TestDummy.getDummyControllerChan();
+        activePlayerController = controllerChan.getActivePlayerController();
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
+
+        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
+        testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
+        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+
+        players = Arrays.asList(
+                new Pair<>(PlayerType.COURIER, false),
+                new Pair<>(PlayerType.EXPLORER, false),
+                new Pair<>(PlayerType.NAVIGATOR, false),
+                new Pair<>(PlayerType.PILOT, false));
+
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        TestDummy.injectJavaGame(controllerChan, pair.getLeft());
+        TestDummy.injectCurrentAction(controllerChan, pair.getRight());
+        action = pair.getRight();
+        javaGame = controllerChan.getJavaGame();
+
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
+        printMap(testMap);
+    }
     
 
     @Test
     public void testShowMovements() {
-        int activePlayerNumber = action.getActivePlayerIndex();
-        Pair<PlayerType, Boolean> activeplayer = players.get(activePlayerNumber);
-        
+        Player activePlayer = action.getActivePlayer();
+        Point playerPos = activePlayer.getPosition();
+
         //Optionen für Courier
-        if (activeplayer.equals(courier)) {
+        if (activePlayer.getType() == PlayerType.COURIER) {
+            Assert.assertEquals("Courier not on correct spawn location", new Point(3, 4), playerPos);
             activePlayerController.showMovements(false);
-        }
-        
-        //alle Felder müssen angezeigt werden
-        if (activeplayer.equals(pilot)) {
+            List<Point> movementPoints = inGameView.getMovementPoints();
+            Assert.assertEquals("More/less than 2 tiles are marked as movement option", 2, movementPoints.size());
+            Assert.assertTrue("Point 3,3 is not marked as movement option", movementPoints.contains(new Point(3, 3)));
+            Assert.assertTrue("Point 2,4 is not marked as movement option", movementPoints.contains(new Point(2, 4)));
+
             activePlayerController.showMovements(true);
+            movementPoints = inGameView.getMovementPoints();
+            Assert.assertEquals("More/less than 2 tiles are marked as movement option after enabling non existant special movement on courier", 2, movementPoints.size());
+            Assert.assertTrue("Point 3,3 is not marked as movement option after enabling non existant special movement on courier", movementPoints.contains(new Point(3, 3)));
+            Assert.assertTrue("Point 2,4 is not marked as movement option after enabling non existant special movement on courier", movementPoints.contains(new Point(2, 4)));
         }
-        fail("Not yet implemented");
+
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+
+        if (activePlayer.getType() == PlayerType.EXPLORER) {
+            Assert.assertEquals("Explorer not on correct spawn location", new Point(6, 4), playerPos);
+            activePlayerController.showMovements(false);
+            List<Point> movementPoints = inGameView.getMovementPoints();
+            Assert.assertEquals("More/less than 2 tiles are marked as movement option", 2, movementPoints.size());
+            Assert.assertTrue("Point 6,3 is not marked as movement option", movementPoints.contains(new Point(6, 3)));
+            Assert.assertTrue("Point 7,4 is not marked as movement option", movementPoints.contains(new Point(7, 4)));
+
+            activePlayerController.showMovements(true);
+            movementPoints = inGameView.getMovementPoints();
+            Assert.assertEquals("More/less than 4 tiles are marked as movement option after enabling non existant special movement on courier", 4, movementPoints.size());
+            Assert.assertTrue("Point 6,3 is not marked as movement option", movementPoints.contains(new Point(6, 3)));
+            Assert.assertTrue("Point 7,4 is not marked as movement option", movementPoints.contains(new Point(7, 4)));
+            Assert.assertTrue("Point 5,3 is not marked as movement option", movementPoints.contains(new Point(5, 3)));
+            Assert.assertTrue("Point 7,3 is not marked as movement option", movementPoints.contains(new Point(7, 3)));
+        }
+
+        action.nextPlayerActive();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+
+        if (activePlayer.getType() == PlayerType.PILOT) {
+            Assert.assertEquals("Pilot not on correct spawn location", new Point(6, 3), playerPos);
+            activePlayerController.showMovements(false);
+            List<Point> movementPoints = inGameView.getMovementPoints();
+            Assert.assertEquals("More/less than 4 tiles are marked as movement option", 4, movementPoints.size());
+            for (Point point : adjacentPoints(playerPos, false)) {
+                Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", point.xPos, point.yPos), movementPoints.contains(point));
+            }
+
+            activePlayerController.showMovements(true);
+            movementPoints = inGameView.getMovementPoints();
+            for (int y = 1; y < testMap.length - 1; y++) {
+                for (int x = 1; x < testMap[y].length - 1; x++) {
+                    MapTile tile = testMap[y][x];
+                    if (tile != null && tile.getState() != MapTileState.FLOODED) {
+                        Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", x, y), movementPoints.contains(new Point(x, y)));
+                    }
+                }
+            }
+        }
     }
 
 
@@ -189,4 +267,32 @@ public class ActivePlayerControllerTest {
         fail("Not yet implemented");
     }
 
+    private static List<Point> adjacentPoints(Point point, boolean diagonal) {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(point.xPos, point.yPos - 1));
+        points.add(new Point(point.xPos, point.yPos + 1));
+        points.add(new Point(point.xPos - 1, point.yPos));
+        points.add(new Point(point.xPos + 1, point.yPos));
+
+        if (diagonal) {
+            points.add(new Point(point.xPos - 1, point.yPos - 1));
+            points.add(new Point(point.xPos + 1, point.yPos + 1));
+            points.add(new Point(point.xPos - 1, point.yPos + 1));
+            points.add(new Point(point.xPos + 1, point.yPos - 1));
+        }
+
+        return points;
+    }
+
+    private static void printMap(MapTile[][] tiles){
+        for (MapTile[] row : tiles) {
+            Arrays.stream(row).map(t -> {
+                if (t == null)
+                    return "☐";
+                else
+                    return String.valueOf(t.getProperties().getIndex());
+            }).forEach(t -> System.out.printf("%3s", t));
+            System.out.println();
+        }
+    }
 }
