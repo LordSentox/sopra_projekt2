@@ -8,19 +8,19 @@ import de.sopra.javagame.view.textures.ZipWrapper.ZipEntryList;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class TextureLoader {
 
-    private static String packName = "default.zip";
-    private static final Map<PlayerType, String> PLAYER_TEXTURES_NAMES = new EnumMap<>(PlayerType.class);
+    private static final Queue<String> PACKS = new ArrayDeque<>();
 
     //Textures
     private static final Map<ArtifactType, Image> ARTIFACT_TEXTURES = new EnumMap<>(ArtifactType.class);
@@ -42,26 +42,29 @@ public class TextureLoader {
     private static Image floodCardBack;
 
     static {
-        PLAYER_TEXTURES_NAMES.put(PlayerType.COURIER, "courier.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.DIVER, "diver.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.ENGINEER, "engineer.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.EXPLORER, "explorer.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.NAVIGATOR, "navigator.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.PILOT, "pilot.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.NONE, "");
-
+        PACKS.add("default.zip");
         refreshTextures();
     }
 
-    public static void setPack(String packName) {
-        TextureLoader.packName = packName + ".zip";
-        refreshTextures();
+    public static void addPack(String packName) throws FileNotFoundException {
+        String packFileName = packName + ".zip";
+        if (getResource(packFileName) == null) throw new FileNotFoundException(packFileName);
+        PACKS.add(packFileName);
+        loadPack(packFileName);
     }
 
+    private static void removePack(String packName) {
+        if (packName.equals("default")) throw new IllegalArgumentException("Default textures cannot be removed");
+        if (PACKS.remove(packName + ".zip")) refreshTextures();
+    }
 
     private static void refreshTextures() {
+        PACKS.forEach(TextureLoader::loadPack);
+    }
+
+    private static void loadPack(String packFileName) {
         try {
-            ZipFile zipFile = new ZipFile(new File(getResource(packName).toURI()));
+            ZipFile zipFile = new ZipFile(new File(getResource(packFileName).toURI()));
             ZipWrapper pack = new ZipWrapper(zipFile);
 
             ZipEntryList artifacts = pack.entriesIn("textures/artifacts/");
@@ -73,7 +76,7 @@ public class TextureLoader {
             ZipEntryList tilesFlooded = pack.entriesIn("textures/tiles/flooded/");
             ZipEntryList tilesExtra = pack.entriesIn("textures/tiles/extra/");
 
-            background = new Image(misc.inputStreamByName("background.png"));
+            background = new Image(misc.inputStreamByName("background.png"), 1920, 1200, false, true);
             turnSpinner = new Image(misc.inputStreamByName("turnSpinner.png"));
             spinnerMarker = new Image(misc.inputStreamByName("spinnerMarker.png"));
             water = new Image(misc.inputStreamByName("water.png"));
@@ -121,6 +124,9 @@ public class TextureLoader {
         }
     }
 
+    private static List<String> getPacks() {
+        return Collections.unmodifiableList(PACKS.stream().map(s -> s.substring(s.length() - 4)).collect(Collectors.toList()));
+    }
 
     public static Image getArtifactTexture(ArtifactType type) {
         return ARTIFACT_TEXTURES.get(type);
