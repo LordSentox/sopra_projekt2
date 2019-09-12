@@ -1,11 +1,13 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,20 +26,38 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
 
     @Override
     public Decision decide() {
+        
         if (hasValidActions(0, 1)) {
             return null;
         }
+        
         PlayerType activePlayerType = player().getType();
+        Point activePlayerPosition = player().getPosition();
+        
         //Nur für Diver und Pilot relevant
         if (none(activePlayerType == PlayerType.DIVER, activePlayerType == PlayerType.PILOT)) {
             return null;
         }
+        
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
         for (Pair<Point, MapTile> temple : templeList) {
             Point orphanedTemplePoint = temple.getLeft();
+            MapTile orphanedTemple = temple.getRight();
+            //prüfe, ob Player auf betroffenem Tempel steht
+            if(orphanedTemplePoint.equals(activePlayerPosition)){
+                return null;
+            }
+            //prüfe, ob Tempelatefakt bereits geborgen ist
+            ArtifactType templeType = orphanedTemple.getProperties().getHidden();
+            EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
+
+            if (discoveredArtifacts.contains(templeType)) {
+                continue;
+            }
+            
             List<Point> inOneMovedrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
             if (!inOneMovedrainablePositionslist.contains(orphanedTemplePoint)) {
                 return null;
@@ -52,18 +72,6 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
         }
         return null;
     }
-
-            //alte version
-//            if (!((northernNeighbour == null || northernNeighbour.getState() == MapTileState.GONE)
-//                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == MapTileState.GONE)
-//                    && (easternNeighbour == null || easternNeighbour.getState() == MapTileState.GONE)
-//                    && (southEasternNeighbour == null || southEasternNeighbour.getState() == MapTileState.GONE)
-//                    && (southernNeighbour == null || southernNeighbour.getState() == MapTileState.GONE)
-//                    && (southWesternNeighbour == null || southWesternNeighbour.getState() == MapTileState.GONE)
-//                    && (westernNeighbour == null || westernNeighbour.getState() == MapTileState.GONE)
-//                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == MapTileState.GONE))) {
-//                continue;
-//            }
 
     @Override
     public void act() {
