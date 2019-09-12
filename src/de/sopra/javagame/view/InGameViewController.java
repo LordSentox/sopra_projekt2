@@ -57,24 +57,24 @@ public class InGameViewController extends AbstractViewController implements InGa
         mainPane.setFitHeight(1200);
         initGridPane();
 
-        activePlayerTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.DIVER));
+        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.DIVER));
         activePlayerTypeImageView.setPreserveRatio(true);
         activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         activePlayerTypeImageView.setVisible(true);
         
-        playerOneTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.PILOT));
+        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.PILOT));
         playerOneTypeImageView.setPreserveRatio(true);
         playerOneTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setVisible(true);
         
-        playerTwoTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.EXPLORER));
+        playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.EXPLORER));
         playerTwoTypeImageView.setPreserveRatio(true);
         playerTwoTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerTwoTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerTwoTypeImageView.setVisible(true);
         
-        playerThreeTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.ENGINEER));
+        playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.ENGINEER));
         playerThreeTypeImageView.setPreserveRatio(true);
         playerThreeTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerThreeTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
