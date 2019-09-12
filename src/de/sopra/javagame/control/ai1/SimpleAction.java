@@ -13,7 +13,7 @@ import java.util.EnumSet;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public final class Action {
+public final class SimpleAction {
 
     private final ActionType type;
     private final Point startingPoint;
@@ -23,7 +23,7 @@ public final class Action {
     private final ArtifactCardType cardType;
 
     //MOVE, DRAIN
-    public Action(ActionType type, Point startingPoint, Point targetPoint) {
+    public SimpleAction(ActionType type, Point startingPoint, Point targetPoint) {
         this.type = type;
         this.startingPoint = startingPoint;
         this.targetPoint = targetPoint;
@@ -32,7 +32,7 @@ public final class Action {
     }
 
     //DISCARD_CARD, TRADE_CARD
-    public Action(ActionType type, EnumSet<PlayerType> targetPlayers, ArtifactCardType cardType) {
+    public SimpleAction(ActionType type, EnumSet<PlayerType> targetPlayers, ArtifactCardType cardType) {
         this.type = type;
         this.targetPlayers = targetPlayers;
         this.cardType = cardType;
@@ -41,7 +41,7 @@ public final class Action {
     }
 
     //SPECIAL_CARD
-    public Action(Point startingPoint, Point targetPoint, EnumSet<PlayerType> targetPlayers, ArtifactCardType cardType) {
+    public SimpleAction(Point startingPoint, Point targetPoint, EnumSet<PlayerType> targetPlayers, ArtifactCardType cardType) {
         this.type = ActionType.SPECIAL_CARD;
         this.startingPoint = startingPoint;
         this.targetPoint = targetPoint;
@@ -50,7 +50,7 @@ public final class Action {
     }
 
     //SPECIAL_ABILITY
-    public Action(Point startingPoint, Point targetPoint, EnumSet<PlayerType> targetPlayers) {
+    public SimpleAction(Point startingPoint, Point targetPoint, EnumSet<PlayerType> targetPlayers) {
         this.type = ActionType.SPECIAL_ABILITY;
         this.startingPoint = startingPoint;
         this.targetPoint = targetPoint;
