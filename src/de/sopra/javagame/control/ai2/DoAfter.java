@@ -19,6 +19,6 @@ public @interface DoAfter {
 
     Class<? extends Decision> value();
 
-    DecisionResult[] act();
+    DecisionResult act();
 
 }

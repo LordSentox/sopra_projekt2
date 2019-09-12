@@ -2,17 +2,18 @@ package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.control.ai2.condition.Condition;
+import de.sopra.javagame.control.ai2.condition.Conditions;
+import de.sopra.javagame.control.ai2.condition.ICondition;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static de.sopra.javagame.util.Direction.*;
 
@@ -34,6 +35,8 @@ public abstract class Decision {
     protected final int FOUR_CARDS = 4;
 
     protected AIController control;
+
+    private HashMap<Condition, ICondition> conditions = new HashMap<>();
 
     /**
      * Entscheidet, ob die mit diesem Objekt verbundene Aktion ausgeführt werden soll, oder nicht.
@@ -72,6 +75,18 @@ public abstract class Decision {
                 //empty
             }
         };
+    }
+
+    //condition NUR prüfen
+    protected ICondition getCondition(Condition condition, ICondition defCondition) {
+        return conditions.getOrDefault(condition, defCondition);
+    }
+
+    //condition prüfen und wenn nicht gesetzt neu setzen
+    protected ICondition condition(Condition condition, Supplier<Boolean> definition) {
+        if (conditions.containsKey(condition))
+            return conditions.get(condition);
+        else return conditions.put(condition, Conditions.condition(definition.get()));
     }
 
     protected Point translate(Point point, Direction... directions) {
