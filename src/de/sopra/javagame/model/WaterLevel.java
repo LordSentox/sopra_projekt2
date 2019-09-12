@@ -39,7 +39,7 @@ public class WaterLevel implements Copyable<WaterLevel> {
     /**
      * erhöht das akutelle Wasserlevel um 1
      */
-    void increment() {
+    public void increment() {
         if (!isGameLost()) {
             level += 1;
         }
@@ -51,7 +51,7 @@ public class WaterLevel implements Copyable<WaterLevel> {
      *
      * @return true: Level=9 false: level<9
      */
-    boolean isGameLost() {
+    public boolean isGameLost() {
         return level == 9;
     }
 
@@ -60,7 +60,7 @@ public class WaterLevel implements Copyable<WaterLevel> {
      *
      * @return Zahl der zu ziehenden Karten
      */
-    int getDrawAmount() {
+    public int getDrawAmount() {
         if (!isGameLost()) {
             return DRAW_AMOUNT_BY_LEVEL[level];
         } else {

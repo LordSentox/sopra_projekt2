@@ -104,10 +104,10 @@ public class MapUtilTest {
 
     @Test
     public void readNumberMapFromString() {
-        String extendedMap = "-, -, -,20,19, -, -, 2, 6, -, -, -\n" +
-                             "-, -,21,22,18,11, 3, 5, 4, 8, -, -\n" +
-                             "-, -, 7,12,23,14,13, 1,17, 0, -, -\n" +
-                             "-, -, -, 9,16, -, -,15,10, -, -, -\n";
+        String extendedMap = "-, -,20,19, -, -, 2, 6, -, -\n" +
+                             "-,21,22,18,11, 3, 5, 4, 8, -\n" +
+                             "-, 7,12,23,14,13, 1,17, 0, -\n" +
+                             "-, -, 9,16, -, -,15,10, -, -\n";
 
         int[][] numbers = MapUtil.readNumberMapFromString(extendedMap);
         Assert.assertNotNull("Zahlen wurden nicht aus dem String gelesen", numbers);
@@ -127,7 +127,7 @@ public class MapUtilTest {
     }
 
     @Test
-    public static void readBoolMapFromString() {
+    public void readBoolMapFromString() {
 
     }
 }
