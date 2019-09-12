@@ -8,6 +8,9 @@ import javafx.stage.Stage;
  * @author Lisa, Hannah
  */
 public class SettingsViewController extends AbstractViewController {
+    public void init() {
+        
+    }
 
     public void onEffectVolumeChanged() {
 
@@ -22,7 +25,7 @@ public class SettingsViewController extends AbstractViewController {
     }
 
     public void onCloseClicked() {
-
+        this.getGameWindow().setState(ViewState.MENU);
     }
 
     @Override

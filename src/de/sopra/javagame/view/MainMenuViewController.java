@@ -20,7 +20,7 @@ public class MainMenuViewController extends AbstractViewController {
         System.out.println("bin im menuC");
     }
     public void onSettingsClicked() {
-        
+        this.getGameWindow().setState(ViewState.SETTINGS);
     }
 
     public void onStartGameClicked() {

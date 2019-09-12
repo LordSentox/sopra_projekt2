@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="222.0" prefWidth="170.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.SettingsViewController">
    <children>
@@ -15,7 +16,7 @@
    	   
    	   <CheckBox fx:id="developerToolsCheckbox" layoutX="27" layoutY="98"/>
    	   
-   	   <Button fx:id="closeButton" layoutX="40.0" layoutY="134" visible="false" disable="true" onAction="#onCloseClicked"/>
+   	   <Button fx:id="closeButton" layoutX="40.0" layoutY="134" visible="true" disable="false" onAction="#onCloseClicked"/>
    	
      
    </children>
