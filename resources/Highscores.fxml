@@ -6,6 +6,7 @@
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXButton?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.HighScoresViewController">
    <children>
@@ -15,6 +16,7 @@
    	
    	<Label fx:id="chooseMapLabel" layoutX="10" layoutY="20" text="Map auswählen:"/>
    	<JFXComboBox fx:id="mapSelectionComboBox" layoutX="10" layoutY="40" prefWidth="290"/>
-   	<JFXListView fx:id="highScoreListView" layoutX="10.0" layoutY="80.0" prefHeight="500.0" prefWidth="290.0"/>
+   	<JFXListView fx:id="highScoreListView" layoutX="10.0" layoutY="80.0" prefHeight="450.0" prefWidth="290.0"/>
+   	<JFXButton styleClass="mainmenuJFXButton" fx:id="backToMenu" layoutX="10" layoutY="550" prefHeight="30" text="Hauptmenü" />
    </children>
 </AnchorPane>
