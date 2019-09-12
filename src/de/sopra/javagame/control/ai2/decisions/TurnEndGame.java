@@ -22,7 +22,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
  */
 
 @DoAfter(act = DecisionResult.TURN_ACTION, value = Decision.class)
-@PreCondition(allFalse = GAME_HAS_ALL_ARTIFACTS)
+@PreCondition(allTrue = GAME_HAS_ALL_ARTIFACTS)
 public class TurnEndGame extends Decision {
 
     @Override
