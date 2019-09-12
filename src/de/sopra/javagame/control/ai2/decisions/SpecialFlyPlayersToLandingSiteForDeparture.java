@@ -1,13 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.control.ai2.PreCondition;
 
-import java.util.List;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER;
 
 /**
  * <h1>projekt2</h1>
@@ -16,8 +11,8 @@ import java.util.List;
  * @version 12.09.2019
  * @since 12.09.2019
  */
-
-public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision{
+@PreCondition(allTrue = PLAYER_HAS_HELICOPTER)
+public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
 
     @Override
     public Decision decide() {
@@ -28,7 +23,7 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision{
     @Override
     public void act() {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
 }

@@ -1,8 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
-import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
@@ -14,6 +13,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
+import static de.sopra.javagame.control.ai2.decisions.Condition.*;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -24,19 +25,13 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @version 12.09.2019
  * @since 12.09.2019
  */
-
-@DoAfter(act = DecisionResult.PLAY_SPECIAL_CARD, value = SpecialUseSandbagToDrainOrphanedTempleMapTile.class)
+@DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialUseSandbagToDrainOrphanedTempleMapTile.class)
+@PreCondition(allTrue = {PLAYER_HAS_HELICOPTER, PLAYER_NO_ACTION_LEFT, GAME_ANY_LAST_TEMPLE_IN_DANGER}) //FIXME ist GAME_ANY_LAST_TEMPLE_IN_DANGER richtig?
 public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public Decision decide() {
-        
-        if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
-            return null;
-        }
-        if (!hasValidActions(0)) {
-            return null;
-        }
+
         Player nextActivePlayer = action().getNextPlayer();
         Point nextActivePlayerPosition = nextActivePlayer.getPosition();
         PlayerType nextActivePlayerType = nextActivePlayer.getType();
@@ -48,7 +43,7 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
             //prüfe, ob NextPlayer auf betroffenem Tempel steht
-            if(orphanedTemplePoint.equals(nextActivePlayerPosition)){
+            if (orphanedTemplePoint.equals(nextActivePlayerPosition)) {
                 return null;
             }
             //prüfe, ob Tempelartefakt bereits geborgen ist

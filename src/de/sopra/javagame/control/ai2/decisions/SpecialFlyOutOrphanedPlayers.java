@@ -1,8 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
-import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -11,6 +10,9 @@ import de.sopra.javagame.util.Point;
 
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -18,16 +20,12 @@ import java.util.List;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-
-@DoAfter(act = DecisionResult.PLAY_SPECIAL_CARD, value = SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile.class)
+@DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile.class)
+@PreCondition(allTrue = PLAYER_HAS_HELICOPTER)
 public class SpecialFlyOutOrphanedPlayers extends Decision {
 
     @Override
     public Decision decide() {
-        
-        if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
-            return null;
-        }
         List<Player> allPlayers = control.getAllPlayers();
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
