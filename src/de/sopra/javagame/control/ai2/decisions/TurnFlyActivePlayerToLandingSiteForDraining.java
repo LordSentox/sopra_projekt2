@@ -1,7 +1,14 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import static de.sopra.javagame.model.ArtifactCardType.AIR;
+import static de.sopra.javagame.model.ArtifactCardType.EARTH;
+import static de.sopra.javagame.model.ArtifactCardType.FIRE;
+import static de.sopra.javagame.model.ArtifactCardType.WATER;
+
+import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
@@ -38,6 +45,16 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
         }
 
         if (player().drainablePositions().contains(landingSitePosition)) {
+            return null;
+        }
+        //Prüfe für Sonderfall: --Player steht auf Tempel, kann dort Schatz bergen-- ob Sandsack spielbar
+        EnhancedPlayerHand hand = playerHand();
+        
+        if (any(all(hand.getAmount(FIRE) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.FIRE),
+                all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
+                all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
+                all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR)) 
+                && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)){
             return null;
         }
 

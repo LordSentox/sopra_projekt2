@@ -191,6 +191,10 @@ public class Action implements Copyable<Action> {
         this.players.get(this.activePlayer).onTurnStarted();
     }
 
+    public Player getNextPlayer() {
+        return this.players.get(this.activePlayer + 1 % this.players.size());
+    }
+
     /**
      * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
      * kein Inselfeld wird <code>null</code> übergeben.
