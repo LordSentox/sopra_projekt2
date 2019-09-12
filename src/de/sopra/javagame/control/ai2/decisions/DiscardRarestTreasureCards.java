@@ -7,6 +7,8 @@ import static de.sopra.javagame.model.ArtifactCardType.WATER;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 
 /**
  * <h1>projekt2</h1>
@@ -15,6 +17,7 @@ import de.sopra.javagame.control.ai2.Decision;
  * @version 12.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act=DecisionResult.DISCARD,value=DiscardSandbagRatherThanOneOfFourTreasureCards.class)
 public class DiscardRarestTreasureCards extends Decision {
     @Override
     public Decision decide() {
@@ -23,10 +26,10 @@ public class DiscardRarestTreasureCards extends Decision {
         int fire = activeHand.getAmount(FIRE);
         int earth = activeHand.getAmount(EARTH);
         int air = activeHand.getAmount(AIR);
-        if((water<fire && water< earth && water <air ) ||
-           (fire<water && fire< earth && fire <air )||
-           (earth<fire && earth< water && earth <air )||
-           (air<fire && air< earth && air<water )){
+        if(any(all(water<fire ,water< earth ,water <air ),
+           all(fire<water, fire< earth , fire <air ),
+           all(earth<fire , earth< water , earth <air ),
+           all(air<fire , air< earth , air<water ))){
             return this;
         }
         return null;
