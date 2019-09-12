@@ -8,8 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.image.ImageView;
-import jfxtras.scene.menu.CirclePopupMenu;
 import javafx.scene.input.MouseButton;
+import jfxtras.scene.menu.CirclePopupMenu;
 
 
 public class ActionPicker extends CirclePopupMenu {
@@ -35,13 +35,10 @@ public class ActionPicker extends CirclePopupMenu {
     
     private CustomMenuItem createMoveButton() {
         Button moveButton = new Button("move");
-        EventHandler<ActionEvent> moveHandler = new EventHandler<ActionEvent>() { 
-            @Override 
-            public void handle(ActionEvent e) { 
-               System.out.println("Hello Move");
-               mapPane.getInGameViewController().onShowMovementOptionsClicked();
-            } 
-         };   
+        EventHandler<ActionEvent> moveHandler = (ActionEvent e) -> {
+           System.out.println("Hello Move");
+           mapPane.getInGameViewController().onShowMovementOptionsClicked();
+        };
         moveButton.setOnAction(moveHandler);
         CustomMenuItem moveButtonMenuItem = new CustomMenuItem(new Button("move"));
         moveButtonMenuItem.setGraphic(new ImageView(TextureLoader.getMove()));

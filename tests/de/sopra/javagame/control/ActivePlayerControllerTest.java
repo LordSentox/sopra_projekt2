@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ActivePlayerControllerTest {
     
@@ -254,7 +254,28 @@ public class ActivePlayerControllerTest {
 
     @Test
     public void testShowTransferable() {
-        fail("Not yet implemented");
+        Player activePlayer = action.getActivePlayer();
+        Point playerPos = activePlayer.getPosition();
+
+        if (activePlayer.getType() == PlayerType.COURIER) {
+            activePlayerController.showTransferable(PlayerType.EXPLORER);
+            assertTrue("Courier can not give cards to all players", inGameView.getTransferable());
+            activePlayerController.showTransferable(PlayerType.PILOT);
+            assertTrue("Courier can not give cards to all players", inGameView.getTransferable());
+            activePlayerController.showTransferable(PlayerType.NAVIGATOR);
+            assertTrue("Courier can not give cards to all players", inGameView.getTransferable());
+        }
+
+        action.nextPlayerActive();
+
+        if (activePlayer.getType() == PlayerType.EXPLORER) {
+            activePlayerController.showTransferable(PlayerType.COURIER);
+            assertFalse("Can give cards to player on other tile", inGameView.getTransferable());
+            activePlayerController.showTransferable(PlayerType.PILOT);
+            assertFalse("Can give cards to player on other tile", inGameView.getTransferable());
+            activePlayerController.showTransferable(PlayerType.NAVIGATOR);
+            assertFalse("Can give cards to player on other tile", inGameView.getTransferable());
+        }
     }
 
     @Test
