@@ -1,8 +1,8 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.model.Turn;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class MapControllerTest {
     private ControllerChan controllerChan;
     private MapController mapController;
     private JavaGame javaGame;
-    private Turn turn;
+    private Action action;
     private TestDummy.MapEditorView mapEditorView;
     private boolean[][] map;
     private String name;
@@ -31,7 +31,7 @@ public class MapControllerTest {
         controllerChan = TestDummy.getDummyControllerChan();
         mapController = controllerChan.getMapController();
         javaGame = controllerChan.getJavaGame();
-        turn = controllerChan.getCurrentTurn();
+        action = controllerChan.getCurrentAction();
         mapEditorView = (TestDummy.MapEditorView) mapController.getMapEditorViewAUI();
         map = new boolean[12][12];
         name = "hallo";

@@ -1,8 +1,8 @@
 package de.sopra.javagame.model.player;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.Turn;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Point;
 
@@ -16,15 +16,15 @@ public class Engineer extends Player {
 
     private boolean hasExtraDrain;
 
-    public Engineer(String name, Point position, Turn turn) {
-        super(PlayerType.ENGINEER, name, turn);
+    public Engineer(String name, Point position, Action action) {
+        super(PlayerType.ENGINEER, name, action);
         this.position = position;
         this.isAI = false;
         this.hasExtraDrain = false;
     }
 
-    public Engineer(String name, Point position, Turn turn, boolean isAI) {
-        super(PlayerType.ENGINEER, name, turn);
+    public Engineer(String name, Point position, Action action, boolean isAI) {
+        super(PlayerType.ENGINEER, name, action);
         this.position = position;
         this.isAI = isAI;
         this.hasExtraDrain = false;
@@ -39,17 +39,22 @@ public class Engineer extends Player {
      */
     @Override
     public boolean drain(Point position) {
-        if (!hasExtraDrain) {
-            MapTile mapTile = this.turn.getTiles()[position.yPos][position.xPos];
-            if (mapTile.getState() == MapTileState.GONE || mapTile.getState() == MapTileState.DRY) {
-                return false;
-            } else {
-                mapTile.drain();
-                return super.drain(position);
-            }
-        } else {
-            return super.drain(position);
+        if (this.hasExtraDrain) {
+            this.actionsLeft++;
         }
+
+        boolean drained = super.drain(position);
+        if (!drained && this.hasExtraDrain) {
+            this.actionsLeft--;
+        }
+        else if (drained && this.hasExtraDrain) {
+            this.hasExtraDrain = false;
+        }
+        else if (drained && !this.hasExtraDrain) {
+            this.hasExtraDrain = true;
+        }
+
+        return drained;
     }
 
     @Override
@@ -64,7 +69,8 @@ public class Engineer extends Player {
 
     @Override
     public Player copy() {
-        Player player = new Engineer(CopyUtil.copy(this.name), new Point(position), null);
+        Engineer player = new Engineer(CopyUtil.copy(this.name), new Point(position), null);
+        player.hasExtraDrain = this.hasExtraDrain;
         player.hand = this.hand;
         player.actionsLeft = this.actionsLeft;
         player.isAI = this.isAI;

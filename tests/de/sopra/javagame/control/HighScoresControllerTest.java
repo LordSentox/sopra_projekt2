@@ -59,7 +59,8 @@ public class HighScoresControllerTest {
         String mapName = "newMap";
         String scoreData = scoreName + ";" + score + ";" + replayName;
 
-        HighScore no1 = new HighScore(scoreName, mapName, score);
+        // TODO: Add highscore IO util
+        // HighScore no1 = new HighScore(scoreName, mapName, score);
 
         File outFile = new File(MapController.MAP_FOLDER + mapName + ".score");
         PrintWriter out = new PrintWriter(outFile);

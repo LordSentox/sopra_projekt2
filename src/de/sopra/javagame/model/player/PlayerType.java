@@ -43,5 +43,6 @@ public enum PlayerType {
     /**
      * Es liegt keine der Figuren vor
      */
-    NONE
+    NONE;
+
 }

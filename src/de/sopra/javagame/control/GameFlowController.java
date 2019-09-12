@@ -1,5 +1,7 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.model.Action;
+
 /**
  * Kontrolliert den Spielablauf, auf den kein Spieler einen direkten Einfluss hat.
  */
@@ -37,7 +39,7 @@ public class GameFlowController {
 
     /**
      * Wenn mindestens eine Aktion gemacht wurde, wird eine Aktion zurückgenommen. Eine Aktion heißt in diesem Fall
-     * genau ein {@link de.sopra.javagame.model.Turn}. Wurde keine gemacht passiert nichts.
+     * genau ein {@link Action}. Wurde keine gemacht passiert nichts.
      */
     public void undo() {
 

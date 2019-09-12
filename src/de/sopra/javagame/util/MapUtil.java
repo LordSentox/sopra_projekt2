@@ -4,6 +4,7 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -110,8 +111,12 @@ public class MapUtil {
             map[i] = split;
         }
 
+        // Set the width of the map to the maximum width present in the map and two for the buffer zone
+        // FIXME: Ask if this works as I expect
+        int mapWidth = Arrays.stream(map).max(Comparator.comparing(row -> row.length)).get().length + 2;
+
         // Erstelle eine leere Map
-        int[][] numbers = new int[12][12];
+        int[][] numbers = new int[map.length + 2][mapWidth];
         for (int[] line : numbers) {
             Arrays.fill(line, -1);
         }
@@ -122,7 +127,8 @@ public class MapUtil {
             for (int x = 0; x < Math.min(numbers[y].length, map[y].length); ++x) {
                 String sign = map[y][x].trim();
                 if (!sign.equals("-")) {
-                    numbers[y][x] = Integer.parseUnsignedInt(sign) % 24;
+                    // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
+                    numbers[y+1][x+1] = Integer.parseUnsignedInt(sign) % 24;
                 }
             }
         }

@@ -2,6 +2,8 @@ package de.sopra.javagame.util;
 
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -14,11 +16,13 @@ public class CardStackUtilTest {
     @Test
     public void createFloodCardStackTest() {
         //TODO
+        fail("Not yet implemented");
     }
 
     @Test
     public void createArtifactCardStackTest() {
         //TODO
+        fail("Not yet implemented");
     }
 
 }

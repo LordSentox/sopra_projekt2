@@ -2,8 +2,8 @@ package de.sopra.javagame.control.ai1;
 
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
 import java.util.EnumSet;
 
 /**

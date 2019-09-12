@@ -1,5 +1,6 @@
 package de.sopra.javagame.model;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,9 +25,7 @@ public class FloodCardTest {
     }
 
     @Test
-    public void testFlood() {
-        wannKommtDieFlut = new FloodCard(blubBlub);
-        
+    public void testFlood() {        
         wannKommtDieFlut.setTile(blubBlub);
         assertEquals(MapTileState.DRY, wannKommtDieFlut.getTile().getState());
 
@@ -49,4 +48,25 @@ public class FloodCardTest {
         wannKommtDieFlut.flood();
     }
 
+    @Test
+    public void testEquals() {
+        FloodCard newWannKommtDieFlut = new FloodCard(MapTile.fromNumber(4));
+        FloodCard sameNumberWannKommtDieFlut = new FloodCard(MapTile.fromNumber(5));
+        
+        boolean isEqual = wannKommtDieFlut.equals(wannKommtDieFlut);
+        Assert.assertTrue("Equals sollte bei ein und derselben Karte true ausgeben", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(newWannKommtDieFlut);
+        Assert.assertFalse("Equals sollte nicht bei verschiedenen Karten mit verschiedenen Nummern true ausgeben", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(sameNumberWannKommtDieFlut);
+        Assert.assertTrue("Equals sollte bei einer Karte und einer anderen mit gleicher Nummer true ausgeben", isEqual);
+        
+        isEqual = newWannKommtDieFlut.equals(wannKommtDieFlut);
+        Assert.assertFalse("Equals sollte nicht bei verschiedenen Karten mit verschiedenen Nummern true ausgeben", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(null);
+        Assert.assertFalse("Equals sollte bei Vergleich mit null false sein", isEqual);
+        
+    }
 }
