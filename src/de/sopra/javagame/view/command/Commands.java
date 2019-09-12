@@ -3,7 +3,7 @@ package de.sopra.javagame.view.command;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.view.GameWindow;
+import de.sopra.javagame.view.abstraction.GameWindow;
 import de.spaceparrots.api.command.core.CommandProcessor;
 import de.spaceparrots.api.command.interfaces.CommandResult;
 import de.spaceparrots.api.command.interfaces.Definitions;
@@ -21,6 +21,10 @@ public final class Commands {
 
     private static Commands handler;
     private static GameWindow window;
+    private CommandProcessor processor;
+
+    private Commands() {
+    }
 
     public static CommandResult processCommand(GameWindow gameWindow, String command) {
         synchronized (gameWindow) {
@@ -31,11 +35,6 @@ public final class Commands {
             }
         }
         return handler.processor.simpleInputHandler().apply(command);
-    }
-
-    private CommandProcessor processor;
-
-    private Commands() {
     }
 
     private void init() {
@@ -61,7 +60,7 @@ public final class Commands {
                         PropertyResolver.create("canRedo", boolean.class, JavaGame::canRedo),
                         PropertyResolver.create("canUndo", boolean.class, JavaGame::canUndo),
                         PropertyResolver.create("difficulty", Difficulty.class, JavaGame::getDifficulty))
-                ;
+        ;
     }
 
 }

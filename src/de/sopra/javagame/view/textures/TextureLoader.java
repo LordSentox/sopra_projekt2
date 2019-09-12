@@ -27,7 +27,7 @@ public class TextureLoader {
     private static final Map<ArtifactCardType, Image> ARTIFACT_CARD_TEXTURES = new EnumMap<>(ArtifactCardType.class);
     private static final Map<MapTileProperties, Image> FLOOD_CARD_TEXTURES = new EnumMap<>(MapTileProperties.class);
     private static final Map<PlayerType, PlayerTexture> PLAYER_CARD_TEXTURES = new EnumMap<>(PlayerType.class);
-    private static final Map<PlayerType, PlayerTexture>  PLAYER_ICON_TEXTURES = new EnumMap<>(PlayerType.class);
+    private static final Map<PlayerType, PlayerTexture> PLAYER_ICON_TEXTURES = new EnumMap<>(PlayerType.class);
     private static final Map<MapTileProperties, TileTexture> TILE_TEXTURES_DRY = new EnumMap<>(MapTileProperties.class);
     private static final Map<MapTileProperties, TileTexture> TILE_TEXTURES_FLOODED = new EnumMap<>(MapTileProperties.class);
 

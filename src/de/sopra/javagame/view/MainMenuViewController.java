@@ -1,13 +1,15 @@
 package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXButton;
+import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import static de.sopra.javagame.view.ViewState.SETTINGS;
-import static de.sopra.javagame.view.ViewState.HIGH_SCORES;
+import static de.sopra.javagame.view.abstraction.ViewState.HIGH_SCORES;
+import static de.sopra.javagame.view.abstraction.ViewState.SETTINGS;
 
 /**
  * GUI für das Hauptfenster
@@ -53,17 +55,12 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     @Override
-    ViewState getType() {
-        return ViewState.MENU;
-    }
-
-    @Override
-    void reset() {
+    public void reset() {
 
     }
 
     @Override
-    void show(Stage stage) {
+    public void show(Stage stage) {
 
     }
 }

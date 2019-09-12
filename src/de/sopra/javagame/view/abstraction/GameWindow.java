@@ -1,10 +1,12 @@
-package de.sopra.javagame.view;
+package de.sopra.javagame.view.abstraction;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.view.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -56,7 +58,7 @@ public class GameWindow {
         this.setState(ViewState.MENU);
         mainStage.show();
     }
-    
+
     private void initMainMenu() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -68,6 +70,7 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
+
     //TODO
     private void initHighScore() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Highscores.fxml"));
@@ -80,7 +83,7 @@ public class GameWindow {
         highScoresViewController.init();
         views.put(ViewState.HIGH_SCORES, highScoresViewController);
     }
-    
+
     private void initInGame() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GameWindow.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -92,6 +95,7 @@ public class GameWindow {
         inGameViewController.init();
         views.put(ViewState.IN_GAME, inGameViewController);
     }
+
     //TODO
     private void initMapEditor() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
@@ -104,7 +108,7 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
-    
+
     private void initSettings() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Settings.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -116,7 +120,7 @@ public class GameWindow {
         settingsViewController.init();
         views.put(ViewState.SETTINGS, settingsViewController);
     }
-    
+
     private void initInGameSettings() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InGameSettings.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -128,6 +132,7 @@ public class GameWindow {
         inGameSettingsViewController.init();
         views.put(ViewState.IN_GAME_SETTINGS, inGameSettingsViewController);
     }
+
     //TODO
     private void initGamePreparations() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
@@ -196,17 +201,18 @@ public class GameWindow {
      *
      * @param state Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
      */
-    public void setState(ViewState state) {
+    void setState(ViewState state) {
         if (currentViewState == state)
             return;
-        
-        if(state == ViewState.CLOSE){
+
+        if (state == ViewState.CLOSE) {
             mainStage.close();
             return;
         }
-        
+
         mainStage.setScene(views.get(state).getScene());
         mainStage.setFullScreen(state.isFullscreen());
+        mainStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); //Spieler soll den Fullscreen nicht beenden können
         mainStage.centerOnScreen();
     }
 
