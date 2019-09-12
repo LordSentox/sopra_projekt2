@@ -92,10 +92,15 @@ public class DecisionMaker implements AIProcessor {
 
     private Decision buildTower(Queue<Class<? extends Decision>> queuedDecisions) {
         if (!queuedDecisions.isEmpty()) {
-            Decision tower = ClassUtil.create(queuedDecisions.poll());
+            Class<? extends Decision> poll = queuedDecisions.poll();
+            Decision tower = ClassUtil.create(poll);
+            tower.setPreCondition(poll.getDeclaredAnnotation(PreCondition.class));
             if (tower != null) {
                 while (!queuedDecisions.isEmpty()) {
-                    tower = tower.next(ClassUtil.create(queuedDecisions.poll()));
+                    Class<? extends Decision> polled = queuedDecisions.poll();
+                    Decision lessImportantDecision = ClassUtil.create(polled);
+                    lessImportantDecision.setPreCondition(polled.getDeclaredAnnotation(PreCondition.class));
+                    tower = tower.next(lessImportantDecision);
                 }
             }
             return tower;

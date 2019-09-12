@@ -23,7 +23,7 @@ import static de.sopra.javagame.util.Direction.*;
  * Stellt eine Aktion bereit, die mit einer Entscheidung als Bedingung verknüpft wird.
  *
  * @author Julius Korweck
- * @version 09.09.2019
+ * @version 12.09.2019
  * @since 09.09.2019
  */
 public abstract class Decision {
@@ -37,6 +37,8 @@ public abstract class Decision {
     protected AIController control;
 
     private HashMap<Condition, ICondition> conditions = new HashMap<>();
+
+    private PreCondition preCondition;
 
     /**
      * Entscheidet, ob die mit diesem Objekt verbundene Aktion ausgeführt werden soll, oder nicht.
@@ -64,9 +66,9 @@ public abstract class Decision {
         return new Decision() {
             @Override
             public Decision decide() {
-                Decision decision = self.decide();
+                Decision decision = self.matchPreCondition() ? self.decide() : null;
                 if (decision == null) {
-                    return lessImportantDecision.decide();
+                    return lessImportantDecision.matchPreCondition() ? lessImportantDecision.decide() : null;
                 } else return decision;
             }
 
@@ -168,4 +170,18 @@ public abstract class Decision {
     public final void setControl(AIController control) {
         this.control = control;
     }
+
+    final void setPreCondition(PreCondition preCondition) {
+        this.preCondition = preCondition;
+    }
+
+    final boolean matchPreCondition() {
+        if (preCondition == null) return true;
+        boolean allMatchTrue = Arrays.stream(preCondition.allTrue())
+                .allMatch(condition -> getCondition(condition, Conditions.stayFalse()).isTrue());
+        boolean allMatchFalse = Arrays.stream(preCondition.allFalse())
+                .allMatch(condition -> getCondition(condition, Conditions.stayTrue()).isFalse());
+        return allMatchTrue && allMatchFalse;
+    }
+
 }
