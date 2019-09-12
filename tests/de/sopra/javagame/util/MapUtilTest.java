@@ -131,4 +131,9 @@ public class MapUtilTest {
             Assert.assertArrayEquals("Fehler beim Einlesen einer Kartenzeile", expectedNumbers[y], numbers[y]);
         }
     }
+
+    @Test
+    public static void readBoolMapFromString() {
+
+    }
 }
