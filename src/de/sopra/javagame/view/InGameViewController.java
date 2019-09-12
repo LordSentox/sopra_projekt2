@@ -54,7 +54,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 //        IntStream.range(0, 9).forEach(i -> { IntStream.range(0, 12).forEach(j -> System.out.print(tiles[i][j])); System.out.println();});
         /* END TEMP */ 
         mainPane.setImage(TextureLoader.getBackground());
-
+        mainPane.setFitHeight(1200);
         initGridPane();
 
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.DIVER));
