@@ -1,5 +1,11 @@
 package de.sopra.javagame.control;
 
+import java.util.Arrays;
+import java.util.Random;
+
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.util.MapCheckUtil;
+import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 /**
@@ -38,7 +44,26 @@ public class MapController {
      * zusammenhängende Insel.
      */
     public void generateMapToEditor() {
-
+        boolean[][] feldsUsed = new boolean[12][12];
+        for (int i = 0; i < feldsUsed[i].length; i++){ 
+        Arrays.fill(feldsUsed[i], false);
+        }
+        Random random = new Random();
+        boolean unqualified =true;
+        while (unqualified) {           
+            for (int i = 0; i<24; i++){
+                int x = random.nextInt(12);
+                int y = random.nextInt(12);
+                if (feldsUsed[x][y]){
+                    i--;
+                }else {
+                    feldsUsed[x][y] = true;
+                }
+            }
+            
+            unqualified = !MapCheckUtil.checkMapValidity(feldsUsed);
+        }
+        mapEditorViewAUI.setMap("Coole Insel!", feldsUsed);
     }
 
     /**
