@@ -1,6 +1,7 @@
 package de.sopra.javagame.util;
 
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.Arrays;
@@ -134,5 +135,9 @@ public class MapUtil {
         }
 
         return numbers;
+    }
+
+    public static Point getPositionForTile (MapTileProperties tileProperties) {
+        return null;
     }
 }
