@@ -28,7 +28,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     }
 
     public void onCloseClicked() {
-        this.getGameWindow().setState(ViewState.IN_GAME);
+        changeState(ViewState.IN_GAME);
     }
 
     @Override
