@@ -138,7 +138,6 @@ public class ActivePlayerControllerTest {
         javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
-        printMap(testMap);
     }
     
 
@@ -211,10 +210,36 @@ public class ActivePlayerControllerTest {
         }
     }
 
-
     @Test
     public void testShowDrainOptions() {
-        fail("Not yet implemented");
+        Player activePlayer = action.getActivePlayer();
+        Point playerPos = activePlayer.getPosition();
+        testMap[3][3].flood();
+        testMap[3][5].flood();
+        testMap[4][7].flood();
+
+
+        printMap(testMap);
+
+        if (activePlayer.getType() == PlayerType.COURIER) {
+            Assert.assertEquals("Courier not on correct spawn location", new Point(3, 4), playerPos);
+            activePlayerController.showDrainOptions();
+            List<Point> drainPoints = inGameView.getDrainPoints();
+            Assert.assertEquals("More/less than 1 tile is marked as drain option. Only 1 flooded tile is in range", 1, drainPoints.size());
+            Assert.assertTrue("Point 3,3 is not marked as drain option", drainPoints.contains(new Point(3, 3)));
+        }
+
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+
+        if (activePlayer.getType() == PlayerType.EXPLORER) {
+            activePlayerController.showDrainOptions();
+            List<Point> drainPoints = inGameView.getDrainPoints();
+            Assert.assertEquals("More/less than 2 tiles are marked as drain option", 2, drainPoints.size());
+            Assert.assertTrue("Point 7,4 is not marked as drain option", drainPoints.contains(new Point(7, 4)));
+            Assert.assertTrue("Point 6,3 is not marked as drain option", drainPoints.contains(new Point(6, 3)));
+        }
     }
 
     @Test
@@ -290,8 +315,8 @@ public class ActivePlayerControllerTest {
                 if (t == null)
                     return "☐";
                 else
-                    return String.valueOf(t.getProperties().getIndex());
-            }).forEach(t -> System.out.printf("%3s", t));
+                    return (t.getState() == MapTileState.DRY ? "d" : (t.getState() == MapTileState.FLOODED ? "f" : "g")) + t.getProperties().getIndex();
+            }).forEach(t -> System.out.printf("%4s", t));
             System.out.println();
         }
     }
