@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.util.Point;
 
@@ -12,6 +14,7 @@ import java.util.List;
  * @version 11.09.2019
  * @since 11.09.2019
  */
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo.class)
 public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
 
     private final int TWO_POSITIONS = 2;

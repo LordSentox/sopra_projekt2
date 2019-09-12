@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.util.Pair;
@@ -18,6 +20,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @version 11.09.2019
  * @since 10.09.2019
  */
+
+@DoAfter(act = DecisionResult.PLAY_SPECIAL_CARD, value = SpecialUseSandbagToDrainLandingSite.class)
 public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override

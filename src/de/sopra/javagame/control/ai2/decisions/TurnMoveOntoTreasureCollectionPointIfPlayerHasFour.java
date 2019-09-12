@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.ArtifactType;
 
 /**
@@ -7,6 +9,7 @@ import de.sopra.javagame.model.ArtifactType;
  * @version 10.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnGiveTreasureCardsToPlayersWhoNeedThem.class)
 public class TurnMoveOntoTreasureCollectionPointIfPlayerHasFour extends Decision {
     @Override
     public Decision decide() {

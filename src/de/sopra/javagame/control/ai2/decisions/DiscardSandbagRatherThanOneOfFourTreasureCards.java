@@ -12,7 +12,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 10.09.2019
  * @since 10.09.2019
  */
-@DoAfter(act = DecisionResult.DISCARD, value = DiscardOddTreasureCardWhenPlayerHasThreeOfSomething.class)
+@DoAfter(act = DecisionResult.PLAY_SPECIAL_CARD, value = DiscardOddTreasureCardWhenPlayerHasThreeOfSomething.class)
 public class DiscardSandbagRatherThanOneOfFourTreasureCards extends Decision {
     @Override
     public Decision decide() {

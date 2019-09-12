@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -17,6 +19,8 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
  * @version 11.09.2019
  * @since 11.09.2019
  */
+
+@DoAfter(act = DecisionResult.TURN_ACTION, value = Decision.class)
 public class TurnEndGame extends Decision {
 
     private final int FOUR_ARTIFACTS = 4;

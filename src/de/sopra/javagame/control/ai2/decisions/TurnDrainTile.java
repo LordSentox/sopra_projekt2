@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai2.DecisionResult;
+import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
 
 /**
@@ -9,6 +11,8 @@ import de.sopra.javagame.model.player.Player;
  * @version 10.09.2019
  * @since 10.09.2019
  */
+
+@DoAfter(act = DecisionResult.TURN_ACTION, value = TurnMoveIfMovingCouldDrainTwoTiles.class)
 public class TurnDrainTile extends Decision {
     @Override
     public Decision decide() {
