@@ -26,7 +26,7 @@ public class Prioritizer implements AIProcessor {
 
     }
 
-    double getPriority(Action action, AIController control) {
+    double getPriority(SimpleAction action, AIController control) {
         Optional<Priority> priority = priorities.stream()
                 .reduce((pr1, pr2) -> (act, con) -> pr1.getPriority(act, con) + pr2.getPriority(act, con));
         return priority.map(value -> value.getPriority(action, control)).orElse(-1.0);
