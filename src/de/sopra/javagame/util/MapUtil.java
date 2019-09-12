@@ -1,10 +1,12 @@
 package de.sopra.javagame.util;
 
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -107,7 +109,8 @@ public class MapUtil {
 
         // Set the width of the map to the maximum width present in the map and two for the buffer zone
         // FIXME: Ask if this works as I expect
-        Point size = new Point(map.length, Arrays.stream(map).max(Comparator.comparing(row -> row.length)).get().length);
+        Optional<Integer> maxLength = Arrays.stream(map).map(row -> row.length).max(Integer::compareTo);
+        Point size = new Point(maxLength.orElse(0), map.length);
 
         // Erstelle eine leere Map mit Platz for einen leeren Rahmen
         int[][] numbers = new int[size.yPos + 2][size.xPos + 2];
@@ -174,5 +177,9 @@ public class MapUtil {
         }
 
         return items;
+    }
+
+    public static Point getPositionForTile (MapTileProperties tileProperties) {
+        return null;
     }
 }
