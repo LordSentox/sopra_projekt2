@@ -178,9 +178,9 @@ public abstract class Decision {
     private final boolean matchPreCondition() {
         if (preCondition == null) return true;
         boolean allMatchTrue = Arrays.stream(preCondition.allTrue())
-                .allMatch(condition -> getCondition(condition, Conditions.stayFalse()).isTrue(this));
+                .allMatch(condition -> condition(condition).isTrue(this));
         boolean allMatchFalse = Arrays.stream(preCondition.allFalse())
-                .allMatch(condition -> getCondition(condition, Conditions.stayTrue()).isFalse(this));
+                .allMatch(condition -> condition(condition).isFalse(this));
         return allMatchTrue && allMatchFalse;
     }
 

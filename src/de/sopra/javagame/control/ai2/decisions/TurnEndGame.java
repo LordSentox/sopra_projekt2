@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.DecisionResult;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -21,16 +22,11 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
  */
 
 @DoAfter(act = DecisionResult.TURN_ACTION, value = Decision.class)
+@PreCondition(allFalse = GAME_HAS_ALL_ARTIFACTS)
 public class TurnEndGame extends Decision {
-
-    private final int FOUR_ARTIFACTS = 4;
 
     @Override
     public Decision decide() {
-
-        if (condition(GAME_HAS_ALL_ARTIFACTS).isFalse(this)) {
-            return null;
-        }
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();

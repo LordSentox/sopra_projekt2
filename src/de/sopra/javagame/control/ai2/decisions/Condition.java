@@ -62,6 +62,18 @@ public enum Condition implements ICondition {
             return atomicBoolean.get();
         }
     },
+    GAME_ANY_PLAYER_HAS_HELICOPTER {
+        @Override
+        public boolean isTrue(Decision decision) {
+            return decision.control.anyPlayerHasCard(HELICOPTER);
+        }
+    },
+    GAME_ANY_PLAYER_HAS_SANDBAGS {
+        @Override
+        public boolean isTrue(Decision decision) {
+            return decision.control.anyPlayerHasCard(SANDBAGS);
+        }
+    },
     PLAYER_HAS_ANY_ARTIFACT_CARD {
         @Override
         public boolean isTrue(Decision decision) {
