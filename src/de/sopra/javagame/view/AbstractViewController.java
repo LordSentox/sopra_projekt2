@@ -1,5 +1,6 @@
 package de.sopra.javagame.view;
 
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -10,6 +11,7 @@ import javafx.stage.Stage;
 public abstract class AbstractViewController {
 
     private GameWindow gameWindow;
+    private Scene scene;
 
     void setGameWindow(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -17,6 +19,14 @@ public abstract class AbstractViewController {
 
     GameWindow getGameWindow() {
         return gameWindow;
+    }
+    
+    void setScene(Scene scene) {
+        this.scene = scene;
+    }
+    
+    Scene getScene() {
+        return this.scene;
     }
 
     /**
