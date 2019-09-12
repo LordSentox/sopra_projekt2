@@ -31,37 +31,57 @@ public class InGameUserController {
      */
     public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players) {
         Action currentAction = controllerChan.getJavaGame().getPreviousAction();
-        MapTile[][] map = currentAction.getTiles();
-        Point heliPoint = MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT);
-        EnumSet<ArtifactType> artifactsFound = currentAction.getDiscoveredArtifacts();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
         List<Player> selectedPlayers = new ArrayList<>();
-
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
         if (handCards.get(handCardIndex).getType() != ArtifactCardType.HELICOPTER) {
             throw new IllegalStateException("Es wurde keine Helikopter-Karte übergeben " +
                     "aber die playHelicopterCard Methode aufgerufen!");
         }
-
         //prüfe, ob alle zu bewegenden Spieler auf ein und demselben Punkt stehen
-        Point oldPosition = null;
-        for (PlayerType currentPlayerType : players) {
-            Point currentPosition = currentAction.getPlayer(currentPlayerType).getPosition();
-            if (oldPosition != null && currentPosition != oldPosition) {
-                throw new IllegalStateException("Die übergebenen Spieler standen nicht auf einem Feld. " +
-                        "Sie hätten gar nicht gemeinsam übergeben werden dürfen!");
-            } else {
-                oldPosition = currentPosition;
-            }
+        boolean allOnFlightRouteStartPoint = playersOnPoint(flightRoute.getLeft(), players);
+        if (!allOnFlightRouteStartPoint) {
+            throw new IllegalStateException("Die übergebenen Spieler standen nicht auf einem Feld. " +
+                    "Sie hätten gar nicht gemeinsam übergeben werden dürfen!");
         }
-
         //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
-        boolean allOnHeliPoint = true;
-        for (Player currentPlayer : currentAction.getPlayers()) {
-            if (currentPlayer.getPosition() != heliPoint) {
-                allOnHeliPoint = false;
-            }
+        checkWonOnHelicopter(currentAction);
+        //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
+        if (flightRoute.getLeft() == null || flightRoute.getRight() == null) {
+            throw new IllegalStateException("Mindestens einer der übergebenen Points war null. " +
+                    "Fliegen ist so nicht möglich!");
         }
+        //entferne die gespielte Karte von der Spieler-Hand
+        currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
+        controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
+        //bewege die players
+        for (PlayerType currentPlayerType : players) {
+            Player currentPlayer = currentAction.getPlayer(currentPlayerType);
+            if (currentPlayer.getPosition() != flightRoute.getLeft()) {
+                throw new IllegalStateException(currentPlayer.getName() + " stand nicht auf dem gewählten Feld. " +
+                        "Fliegen ist so nicht möglich!");
+            }
+            currentPlayer.setPosition(flightRoute.getRight());
+            controllerChan.getInGameViewAUI().refreshPlayerPosition(flightRoute.getRight(), currentPlayer.getType());
+        }
+        controllerChan.finishAction();
+    }
+
+    /**
+     * Prüft, ob die Gewinnbedingungen erfüllt sind (alle Artefakte gefunden, alle Spieler stehen auf dem Helikopter-Punkt)
+     * @param currentAction aktuelle Aktion, in der die Helikopterkarte gespielt wurde
+     */
+    private void checkWonOnHelicopter(Action currentAction) {
+        MapTile[][] map = currentAction.getTiles();
+        Point heliPoint = MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT);
+        EnumSet<ArtifactType> artifactsFound = currentAction.getDiscoveredArtifacts();
+        List<Player> players = controllerChan.getCurrentAction().getPlayers();
+        List<PlayerType> allPlayersTypes = new ArrayList<>();
+        for(Player currentPlayer : players) {
+            allPlayersTypes.add(currentPlayer.getType());
+        }
+        boolean allOnHeliPoint =  playersOnPoint(heliPoint, allPlayersTypes);
+
         if (artifactsFound.size() == 4 && !artifactsFound.contains(ArtifactType.NONE) && allOnHeliPoint) {
             currentAction.setGameEnded(true);
             currentAction.setGameWon(true);
@@ -73,31 +93,25 @@ public class InGameUserController {
             //dann View bescheid geben, dass Spiel vorbei (set as Replay)
             //controllerChan.getHighScoresController().save;
         }
-
-        //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
-        if (flightRoute.getLeft() == null || flightRoute.getRight() == null) {
-            throw new IllegalStateException("Mindestens einer der übergebenen Points war null. " +
-                    "Fliegen ist so nicht möglich!");
-        }
-
-        //entferne die gespielte Karte von der Spieler-Hand
-        currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
-        controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
-
-        //bewege die players
-        for (PlayerType currentPlayerType : players) {
-            Player currentPlayer = currentAction.getPlayer(currentPlayerType);
-            if (currentPlayer.getPosition() != flightRoute.getLeft()) {
-                throw new IllegalStateException(currentPlayer.getName() + " stand nicht auf dem gewählten Feld. " +
-                        "Fliegen ist so nicht möglich!");
-            }
-
-            currentPlayer.setPosition(flightRoute.getRight());
-            //fix point in view
-            //controllerChan.getInGameViewAUI().refreshPlayerPosition(flyTo, currentPlayer.getType());
-        }
     }
 
+    /**
+     * Überprüft, ob die übergebenen Spieler alle auf dem übergebenen Punkt stehen
+     * @param positionToCheck Der übergebene Punkt, auf dem die übergebenen Spieler stehen sollen
+     * @param playerTypesToCheck Die übergebenen Spieler, die alle auf dem übergebenen Punkt stehen sollen
+     * @return
+     */
+    public boolean playersOnPoint(Point positionToCheck, List<PlayerType> playerTypesToCheck) {
+        List<Player> playersToCheck = new ArrayList<>();
+
+        for (PlayerType currentPlayerType : playerTypesToCheck) {
+            Player currentPlayer = controllerChan.getCurrentAction().getPlayer(currentPlayerType);
+            if (currentPlayer.getPosition() == positionToCheck) {
+                playersToCheck.add(currentPlayer);
+            }
+        }
+        return playersToCheck.size() == playerTypesToCheck.size();
+    }
 
     /**
      * Spielt eine Sandsackkarte in der aktuelle Situation im Spiel mit den gegebenen Funktionen.
@@ -135,9 +149,8 @@ public class InGameUserController {
         currentAction.getTile(destination).drain();
         //fix point in View
         //controllerChan.getInGameViewAUI().refreshMapTile(destination, tileToDrain);
-
+        controllerChan.finishAction();
     }
-
 
 
     /**
@@ -150,7 +163,7 @@ public class InGameUserController {
         Action currentAction = controllerChan.getCurrentAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
         //Prüfe, ob genug Karten auf der Hand des Spielers vorhanden sind
-        if (handCards.size() < 5) {
+        if (handCards.size() < Player.MAXIMUM_HANDCARDS) {
             controllerChan.getInGameViewAUI().showNotification("Es darf keine Karte abgeworfen werden!");
             return;
         }
@@ -164,6 +177,7 @@ public class InGameUserController {
         currentAction.getArtifactCardStack().discard(handCards.get(handCardIndex));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
+        controllerChan.finishAction();
     }
 
 }

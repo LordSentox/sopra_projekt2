@@ -17,6 +17,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 
 public abstract class Player implements Copyable<Player> {
 
+    public static final int MAXIMUM_HANDCARDS = 5;
+
     protected final PlayerType type;
 
     protected final String name;
