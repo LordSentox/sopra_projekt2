@@ -135,7 +135,7 @@ public class Action implements Copyable<Action> {
             throw new NullPointerException();
 
         if (players.isEmpty() || players.size() <2 || players.size() > 4)
-            throw new IllegalArgumentException();
+            throw new IllegalStateException();
 
         action.tiles = tiles;
         action.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
