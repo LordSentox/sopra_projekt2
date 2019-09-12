@@ -176,4 +176,18 @@ public class JavaGame {
         this.cheetah = true;
     }
 
+    public void undoAction() {
+        if (canUndo()) {
+            Action undoneAction = this.undoActions.pop();
+            this.redoActions.push(undoneAction);
+            markCheetah();
+        }
+    }
+
+    public void redoAction() {
+        if (canRedo()) {
+            Action redoneAction = this.redoActions.pop();
+            this.undoActions.push(redoneAction);
+        }
+    }
 }
