@@ -1,0 +1,16 @@
+
+<?import javafx.scene.control.Button?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1200" prefWidth="1920" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.MainMenuViewController">
+   <children>
+      <Button fx:id="settingsButton" layoutX="" layoutY="" prefHeight="30" prefWidth="200" text="Einstellungen" onAction="#onSettingsClicked"/>
+      <Button fx:id="startGameButton" layoutX="" layoutY="" prefHeight="30" prefWidth="200" text="Spiel starten" onAction="#onStartGameClicked"/>
+      <Button fx:id="loadGameButton" layoutX="" layoutY="" prefHeight="30" prefWidth="200" text="Spiel lade" onAction="#onLoadGameClicked"/>
+      <Button fx:id="mapEditorButton" layoutX="" layoutY="" prefHeight="30" prefWidth="200" text="Karte ersstellen oder bearbeiten" onAction="#onMapEditorClicked"/>
+      <Button fx:id="highscoreButton" layoutX="" layoutY="" prefHeight="30" prefWidth="200" text="Highscores" onAction="#onHighscoresClicked"/>
+      <Button fx:id="loadReplayButton" layoutX="" layoutY="" prefHeight="30" prefWidth="200" text="Replay laden" onAction="#onLoadReplayClicked"/>
+      <Button fx:id="closeButton" layoutX="" layoutY="" prefHeight="30" prefWidth="200" text="Beenden" onAction="#onHighscoresClicked"/>
+      
+         
+   </children>
+</AnchorPane>
