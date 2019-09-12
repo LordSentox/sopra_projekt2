@@ -1,7 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
-
 /**
  * <h1>projekt2</h1>
  *

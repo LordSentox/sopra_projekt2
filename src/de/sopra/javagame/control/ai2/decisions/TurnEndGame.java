@@ -1,14 +1,11 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
-import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -24,9 +21,8 @@ public class TurnEndGame extends Decision {
 
     @Override
     public Decision decide() {
-        EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
-        if (discoveredArtifacts.size() != FOUR_ARTIFACTS) {
+        if (condition(Condition.GAME_HAS_ALL_ARTIFACTS).isFalse(this)) {
             return null;
         }
 

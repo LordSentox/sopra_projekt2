@@ -1,10 +1,8 @@
-package de.sopra.javagame.control.ai2;
+package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.condition.Condition;
-import de.sopra.javagame.control.ai2.condition.Conditions;
-import de.sopra.javagame.control.ai2.condition.ICondition;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
@@ -13,7 +11,6 @@ import de.sopra.javagame.util.Point;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static de.sopra.javagame.util.Direction.*;
 
@@ -61,7 +58,7 @@ public abstract class Decision {
      * @return ein neues Decision Objekt, welches keine eigene Aktion enthält,
      * aber mittels {@link #decide()} ein Objekt mit Aktion liefert
      */
-    final Decision next(Decision lessImportantDecision) {
+    public final Decision next(Decision lessImportantDecision) {
         Decision self = this;
         return new Decision() {
             @Override
@@ -85,10 +82,13 @@ public abstract class Decision {
     }
 
     //condition prüfen und wenn nicht gesetzt neu setzen
-    protected ICondition condition(Condition condition, Supplier<Boolean> definition) {
+    protected ICondition condition(Condition condition) {
         if (conditions.containsKey(condition))
             return conditions.get(condition);
-        else return conditions.put(condition, Conditions.condition(definition.get()));
+        else {
+            boolean value = condition.isTrue(this);
+            return conditions.put(condition, Conditions.condition(value));
+        }
     }
 
     protected Point translate(Point point, Direction... directions) {
@@ -171,16 +171,16 @@ public abstract class Decision {
         this.control = control;
     }
 
-    final void setPreCondition(PreCondition preCondition) {
+    public final void setPreCondition(PreCondition preCondition) {
         this.preCondition = preCondition;
     }
 
-    final boolean matchPreCondition() {
+    private final boolean matchPreCondition() {
         if (preCondition == null) return true;
         boolean allMatchTrue = Arrays.stream(preCondition.allTrue())
-                .allMatch(condition -> getCondition(condition, Conditions.stayFalse()).isTrue());
+                .allMatch(condition -> getCondition(condition, Conditions.stayFalse()).isTrue(this));
         boolean allMatchFalse = Arrays.stream(preCondition.allFalse())
-                .allMatch(condition -> getCondition(condition, Conditions.stayTrue()).isFalse());
+                .allMatch(condition -> getCondition(condition, Conditions.stayTrue()).isFalse(this));
         return allMatchTrue && allMatchFalse;
     }
 

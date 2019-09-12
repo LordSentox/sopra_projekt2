@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.player.Player;
 
 /**

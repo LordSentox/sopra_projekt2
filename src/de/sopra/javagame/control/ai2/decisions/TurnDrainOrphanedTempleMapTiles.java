@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -25,23 +24,23 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public Decision decide() {
-        
+
         if(hasValidActions(0)){
-            return null;                
+            return null;
         }
-        
+
         Point activePlayerPosition = player().getPosition();
-        
+
         List<Pair<Point, MapTile>> templeList = control.getTemples();
 
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
         for (Pair<Point, MapTile> temple : templeList) {
-            
+
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
-            
+
             if(!activePlayerPosition.equals(orphanedTemplePoint)){
                 return null;
             }
@@ -49,14 +48,14 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
             if (orphanedTemple.getState() != MapTileState.FLOODED) {
                 continue;
             }
-            
+
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
             EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-            
+
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
 
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
@@ -65,9 +64,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
-                        
-            
-            
+
             return this;
 
         }

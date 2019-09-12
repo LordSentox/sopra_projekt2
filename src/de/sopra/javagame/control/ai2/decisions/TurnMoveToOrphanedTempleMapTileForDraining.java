@@ -1,6 +1,5 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
@@ -26,19 +25,19 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
 
     @Override
     public Decision decide() {
-        
+
         if (hasValidActions(0, 1)) {
             return null;
         }
-        
+
         PlayerType activePlayerType = player().getType();
         Point activePlayerPosition = player().getPosition();
-        
+
         //Nur für Diver und Pilot relevant
         if (none(activePlayerType == PlayerType.DIVER, activePlayerType == PlayerType.PILOT)) {
             return null;
         }
-        
+
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
@@ -57,7 +56,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-            
+
             List<Point> inOneMovedrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
             if (!inOneMovedrainablePositionslist.contains(orphanedTemplePoint)) {
                 return null;

@@ -1,6 +1,6 @@
 package de.sopra.javagame.control.ai2;
 
-import de.sopra.javagame.control.ai2.condition.Condition;
+import de.sopra.javagame.control.ai2.decisions.Condition;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

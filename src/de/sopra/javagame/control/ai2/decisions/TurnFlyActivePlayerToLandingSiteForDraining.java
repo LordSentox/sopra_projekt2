@@ -1,12 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import static de.sopra.javagame.model.ArtifactCardType.AIR;
-import static de.sopra.javagame.model.ArtifactCardType.EARTH;
-import static de.sopra.javagame.model.ArtifactCardType.FIRE;
-import static de.sopra.javagame.model.ArtifactCardType.WATER;
-
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.Decision;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
@@ -14,6 +8,8 @@ import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+
+import static de.sopra.javagame.model.ArtifactCardType.*;
 
 
 /**

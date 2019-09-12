@@ -1,4 +1,4 @@
-package de.sopra.javagame.control.ai2.condition;
+package de.sopra.javagame.control.ai2.decisions;
 
 /**
  * <h1>Projekt2</h1>
@@ -10,7 +10,7 @@ package de.sopra.javagame.control.ai2.condition;
 public class Conditions {
 
     public static ICondition condition(boolean value) {
-        return () -> value;
+        return decision -> value;
     }
 
     public static ICondition stayFalse() {
