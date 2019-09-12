@@ -27,3 +27,14 @@
 .Artifact_Air {
 	-fx-effect: dropshadow(three-pass-box, rgba(197,115,33,1), 10, 0.6, 0, 0);
 }
+.mainmenuJFXButton {
+	-fx-text-fill: "#000000";
+	-fx-background-color: "#039be5";
+	-jfx-button-type: RAISED;
+}
+
+.close-Button {
+	-fx-text-fill: "#000000";
+	-fx-background-color: "#FF0000";
+	-jfx-button-type: RAISED;
+}
