@@ -90,7 +90,7 @@ public class MapPane extends GridPane {
             Point pos = playerPos.get();
             removePlayer(pos.xPos, pos.yPos, type);
         }
-        ImageView view = new ImageView(TextureLoader.getPlayerTexture(type));
+        ImageView view = new ImageView(TextureLoader.getPlayerCardTexture(type));
         view.setPreserveRatio(true);
         view.setFitHeight(110);
         pane.getChildren().add(view);
