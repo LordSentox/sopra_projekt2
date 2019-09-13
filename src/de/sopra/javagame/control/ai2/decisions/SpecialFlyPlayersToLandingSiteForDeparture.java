@@ -45,9 +45,8 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

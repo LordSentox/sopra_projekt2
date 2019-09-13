@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
@@ -11,7 +12,8 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
-import static de.sopra.javagame.control.ai2.decisions.Condition.*;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_ANY_PLAYER_HAS_HELICOPTER;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SITE_IS_FLOODED;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 
 
@@ -29,7 +31,7 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
 
     @Override
     public Decision decide() {
-        
+
         if (!hasValidActions(1)) {
             return null;
         }
@@ -55,9 +57,8 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }
