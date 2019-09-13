@@ -38,7 +38,6 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         List<Point> movements = player.legalMoves(specialActive);
         controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-
     }
 
     /**
@@ -249,6 +248,5 @@ public class ActivePlayerController {
     public void endTurn() {
         Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().finishAction(currentAction);
-
     }
 }

@@ -27,6 +27,7 @@ import java.util.List;
  * @since 05.09.2019
  */
 public class TestDummy {
+    
 
     public static ControllerChan getDummyControllerChan() {
         ControllerChan controllerChan = new ControllerChan();
@@ -40,6 +41,13 @@ public class TestDummy {
         Field field = ControllerChan.class.getDeclaredField("javaGame");
         field.setAccessible(true);
         field.set(controllerChan, game);
+        field.setAccessible(false);
+    }
+
+    public static void injectCurrentAction(ControllerChan controllerChan, Action action) throws Exception {
+        Field field = ControllerChan.class.getDeclaredField("currentAction");
+        field.setAccessible(true);
+        field.set(controllerChan, action);
         field.setAccessible(false);
     }
 
