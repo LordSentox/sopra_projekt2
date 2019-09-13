@@ -7,6 +7,7 @@ import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import de.sopra.javagame.view.textures.TextureLoader.PlayerTexture;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -29,7 +30,6 @@ public class MapPane extends GridPane {
     private static final int TILE_SIZE = 130;
     private final StackPane[][] map;
     private InGameViewController inGameViewController;
-    public boolean isOpen = false;
 
     public MapPane() throws IOException {
         super();
@@ -38,8 +38,9 @@ public class MapPane extends GridPane {
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
 
-        MapTile[][] tiles = MapUtil.createMapFromNumbers(MapUtil.readNumberMapFromString(new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8)));
+    }
 
+    public void buildMap(MapTile[][] tiles){
         for (int y = 1; y < map.length + 1; y++) {
             for (int x = 1; x < map[y - 1].length + 1; x++) {
                 if (tiles[y][x] != null) {
@@ -66,16 +67,25 @@ public class MapPane extends GridPane {
             }
         }
     }
-
     private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
         if (e.getButton() == MouseButton.PRIMARY) {
-            if(!isOpen){
-                ActionPicker ap = new ActionPicker(v, e.getButton(), this);
-                isOpen = true;
+            if(v.getHighlighted()){
+                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x,y), false);
+                System.out.println("ich sollte mich bewegen");
             }
-
-        } else if (e.getButton() == MouseButton.SECONDARY)
-            removePlayer(x, y, PlayerType.DIVER);
+        } else if (e.getButton() == MouseButton.SECONDARY){
+            
+        }
+    }
+    
+    private void onPlayerClicked(MouseEvent e, ImageView v, int x, int y) {
+        if (e.getButton() == MouseButton.PRIMARY) {
+           
+                ActionPicker ap = new ActionPicker(v, e.getButton(), this);
+                if(!ap.isShown()){
+                    ap.show(v.getLayoutX(),v.getLayoutY());
+                }
+        }
     }
 
     /**
@@ -101,6 +111,8 @@ public class MapPane extends GridPane {
         view.setPreserveRatio(true);
         view.setFitHeight(110);
         pane.getChildren().add(view);
+        final int newX = x, newY = y;
+        view.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onPlayerClicked(event, view, newX, newY));
     }
 
     public void removePlayer(int x, int y, PlayerType type) {
@@ -143,7 +155,28 @@ public class MapPane extends GridPane {
 
     }
     
-    public void buildMapPane(MapTile[][] tiles) {
-        
+    public void setMapTile(Point position, MapTile tile){
+        StackPane pane = this.getMapStackPane(position.xPos, position.yPos);
+        for(Node node : pane.getChildren()){
+            if(node instanceof TileView){
+                TileView tileView = (TileView) node;
+                tileView.showImage(tile.getState());
+            }
+        }
     }
+    
+    public void highlightMapTile (Point position,boolean isHighlighted){
+        StackPane pane = this.getMapStackPane(position.xPos, position.yPos);
+        for(Node node : pane.getChildren()){
+            if(node instanceof TileView){
+                TileView tileView = (TileView) node;
+                if(!isHighlighted){
+                    tileView.highlight();
+                } else {
+                    tileView.deHighlight();
+                }
+            }
+        }            
+    }
+
 }

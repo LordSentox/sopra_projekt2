@@ -239,11 +239,15 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
+        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getTiles());
+        
+        //DEBUG
+        mapPane.putPlayer(3, 5, PlayerType.DIVER);
     }
 
     @Override
     public void refreshMovementOptions(List<Point> points) {
-        points.forEach(point ->((TileView) mapPane.getMapStackPane(point.yPos, point.xPos).getChildren().get(0)).showImage(MapTileState.FLOODED));
+        points.forEach(point -> mapPane.highlightMapTile(point,false));
     }
 
     @Override
@@ -313,7 +317,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshArtifactStack(CardStack stack) {
+    public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
         artifactCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -336,7 +340,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshFloodStack(CardStack stack) {
+    public void refreshFloodStack(CardStack<FloodCard> stack) {
         floodCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -358,12 +362,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
-
+        mapPane.putPlayer(position.xPos, position.yPos, player);
     }
 
     @Override
     public void refreshMapTile(Point position, MapTile tile) {
-
+        mapPane.setMapTile(position, tile);
     }
 
     @Override

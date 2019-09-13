@@ -19,6 +19,7 @@ public class ActionPicker extends CirclePopupMenu {
 
     public ActionPicker(Node node, MouseButton mouseButton, MapPane mapPane) {
         super(node, mouseButton);
+        
         this.mapPane = mapPane;
         this.init();
     }
@@ -41,7 +42,6 @@ public class ActionPicker extends CirclePopupMenu {
             public void handle(ActionEvent e) {
                 System.out.println("Hello Move");
                 mapPane.getInGameViewController().onShowMovementOptionsClicked();
-                mapPane.isOpen = false;
             }
         };
         moveButton.setOnAction(moveHandler);
@@ -59,7 +59,7 @@ public class ActionPicker extends CirclePopupMenu {
             public void handle(ActionEvent e) {
                 System.out.println("Hello Drain");
                 mapPane.getInGameViewController().onShowDrainOptionsClicked();
-                mapPane.isOpen = false;
+                
             }
         };
         drainButton.setOnAction(drainHandler);
@@ -77,7 +77,6 @@ public class ActionPicker extends CirclePopupMenu {
             public void handle(ActionEvent e) {
                 System.out.println("Hello Special");
                 mapPane.getInGameViewController().onShowSpecialAbilityOptionsClicked();
-                mapPane.isOpen = false;
             }
         };
         specialButton.setOnAction(specialHandler);
@@ -95,7 +94,6 @@ public class ActionPicker extends CirclePopupMenu {
             public void handle(ActionEvent e) {
                 System.out.println("Hello Transfer");
                 mapPane.getInGameViewController().onTransferCardClicked(1);
-                mapPane.isOpen = false;
             }
         };
         giveCardButton.setOnAction(giveCardHandler);
@@ -113,7 +111,6 @@ public class ActionPicker extends CirclePopupMenu {
             public void handle(ActionEvent e) {
                 System.out.println("Hello Artifact");
                 mapPane.getInGameViewController().onCollectArtifactClicked();
-                mapPane.isOpen = false;
             }
         };
         findArtifactButton.setOnAction(findArtifactHandler);
