@@ -1,8 +1,10 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.CardStackTracker;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.player.Player;
 
 import static de.sopra.javagame.control.ai2.decisions.Condition.*;
@@ -31,7 +33,7 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
          * dann spieler lieber laufen lassen und heli sparen
         */
         
-        
+        CardStackTracker<FloodCard> floodCards = control.getFloodCardStackTracker();
         
         
         
