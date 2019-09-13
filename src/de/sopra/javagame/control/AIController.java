@@ -275,4 +275,9 @@ public class AIController {
         return getTip(() -> getCurrentAction().getActivePlayer());
     }
 
+    public boolean landingSiteIsFlooded() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

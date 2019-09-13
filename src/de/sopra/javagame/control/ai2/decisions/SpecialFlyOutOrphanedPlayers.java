@@ -11,7 +11,7 @@ import de.sopra.javagame.util.Point;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
-import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER_CARD;
 
 /**
  * <h1>projekt2</h1>
@@ -21,7 +21,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELIC
  * @since 10.09.2019
  */
 @DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile.class)
-@PreCondition(allTrue = PLAYER_HAS_HELICOPTER)
+@PreCondition(allTrue = PLAYER_HAS_HELICOPTER_CARD)
 public class SpecialFlyOutOrphanedPlayers extends Decision {
 
     @Override
@@ -30,11 +30,12 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
 
         Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
-
+        //prüfe, ob Spieler auf LandingSite steht, von dort muss er nicht gerettet werden 
         for (Player player : allPlayers) {
             if (player.getPosition().equals(landingSitePosition)) {
                 return null;
             }
+            //prüfe, ob der Spieler sich noch selbst wegbewegen kann
             if (player.legalMoves(true).isEmpty()) {
                 return this;
             }

@@ -24,7 +24,6 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
 @PreCondition(allTrue = GAME_HAS_ALL_ARTIFACTS)
 public class TurnMoveToLandingSiteForDeparture extends Decision {
 
-
     @Override
     public Decision decide() {
         Action action = control.getCurrentAction();
