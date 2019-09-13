@@ -9,5 +9,7 @@
 	<classpathentry kind="lib" path="libs/translator-api-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="libs/ring-indicator.jar"/>
 	<classpathentry kind="lib" path="libs/commandapi.jar"/>
+	<classpathentry kind="lib" path="libs/jfoenix.jar"/>
+	<classpathentry kind="lib" path="libs/jfxtras-labs-samples-8.0-r6-SNAPSHOT-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

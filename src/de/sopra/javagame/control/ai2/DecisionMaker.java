@@ -3,9 +3,13 @@ package de.sopra.javagame.control.ai2;
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
 import de.sopra.javagame.control.ai.ClassUtil;
+import de.sopra.javagame.control.ai2.decisions.Decision;
 import de.sopra.javagame.util.Pair;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.*;
@@ -27,21 +31,24 @@ public class DecisionMaker implements AIProcessor {
         try {
             List<Class> classes = ClassUtil.getClasses("de.sopra.javagame.control.ai2.decisions");
             decisionClasses = classes.stream()
-                    .filter(Decision.class::isAssignableFrom)
+                    .filter(clazz -> clazz.isAnnotationPresent(DoAfter.class))
                     .map(clazz -> (Class<? extends Decision>) clazz)
                     .map(clazz -> new Pair<DoAfter, Class<? extends Decision>>(clazz.getDeclaredAnnotation(DoAfter.class), clazz))
                     .collect(Collectors.toList());
+            for (Pair<DoAfter, Class<? extends Decision>> clazz : decisionClasses)
+                System.out.println("> " + clazz.getRight().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void buildTowers() {
+        decisionTowers = new HashMap<>();
         for (DecisionResult decisionType : DecisionResult.values()) {
 
             //Alle für diesen Tower relevanten Decisions herausfiltern
             List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions = decisionClasses.stream()
-                    .filter(pair -> Collections.singletonList(pair.getLeft()).contains(decisionType))
+                    .filter(pair -> pair.getLeft().act().equals(decisionType))
                     .collect(Collectors.toList());
 
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander
@@ -56,7 +63,11 @@ public class DecisionMaker implements AIProcessor {
         }
     }
 
-    private LinkedList<Class<? extends Decision>> buildingQueue
+    List<Pair<DoAfter, Class<? extends Decision>>> getDecisionClasses() {
+        return decisionClasses;
+    }
+
+    LinkedList<Class<? extends Decision>> buildingQueue
             (List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions) {
 
         Queue<Pair<DoAfter, Class<? extends Decision>>> buildingQueue = new LinkedList<>();
@@ -89,10 +100,15 @@ public class DecisionMaker implements AIProcessor {
 
     private Decision buildTower(Queue<Class<? extends Decision>> queuedDecisions) {
         if (!queuedDecisions.isEmpty()) {
-            Decision tower = ClassUtil.create(queuedDecisions.poll());
+            Class<? extends Decision> poll = queuedDecisions.poll();
+            Decision tower = ClassUtil.create(poll);
+            tower.setPreCondition(poll.getDeclaredAnnotation(PreCondition.class));
             if (tower != null) {
                 while (!queuedDecisions.isEmpty()) {
-                    tower = tower.next(ClassUtil.create(queuedDecisions.poll()));
+                    Class<? extends Decision> polled = queuedDecisions.poll();
+                    Decision lessImportantDecision = ClassUtil.create(polled);
+                    lessImportantDecision.setPreCondition(polled.getDeclaredAnnotation(PreCondition.class));
+                    tower = tower.next(lessImportantDecision);
                 }
             }
             return tower;

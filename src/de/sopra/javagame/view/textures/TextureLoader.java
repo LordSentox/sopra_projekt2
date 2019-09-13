@@ -8,25 +8,26 @@ import de.sopra.javagame.view.textures.ZipWrapper.ZipEntryList;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class TextureLoader {
 
-    private static String packName = "default.zip";
-    private static final Map<PlayerType, String> PLAYER_TEXTURES_NAMES = new EnumMap<>(PlayerType.class);
+    private static final Queue<String> PACKS = new ArrayDeque<>();
 
     //Textures
     private static final Map<ArtifactType, Image> ARTIFACT_TEXTURES = new EnumMap<>(ArtifactType.class);
     private static final Map<ArtifactCardType, Image> ARTIFACT_CARD_TEXTURES = new EnumMap<>(ArtifactCardType.class);
     private static final Map<MapTileProperties, Image> FLOOD_CARD_TEXTURES = new EnumMap<>(MapTileProperties.class);
-    private static final Map<PlayerType, PlayerTexture> PLAYER_TEXTURES = new EnumMap<>(PlayerType.class);
+    private static final Map<PlayerType, PlayerTexture> PLAYER_CARD_TEXTURES = new EnumMap<>(PlayerType.class);
+    private static final Map<PlayerType, PlayerTexture> PLAYER_ICON_TEXTURES = new EnumMap<>(PlayerType.class);
     private static final Map<MapTileProperties, TileTexture> TILE_TEXTURES_DRY = new EnumMap<>(MapTileProperties.class);
     private static final Map<MapTileProperties, TileTexture> TILE_TEXTURES_FLOODED = new EnumMap<>(MapTileProperties.class);
 
@@ -40,43 +41,57 @@ public class TextureLoader {
     private static Image gone;
     private static Image artifactCardBack;
     private static Image floodCardBack;
+    private static Image giveCard;
+    private static Image findArtifact;
+    private static Image special;
+    private static Image drain;
+    private static Image move;
 
     static {
-        PLAYER_TEXTURES_NAMES.put(PlayerType.COURIER, "courier.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.DIVER, "diver.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.ENGINEER, "engineer.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.EXPLORER, "explorer.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.NAVIGATOR, "navigator.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.PILOT, "pilot.png");
-        PLAYER_TEXTURES_NAMES.put(PlayerType.NONE, "");
-
+        PACKS.add("default.zip");
         refreshTextures();
     }
 
-    public static void setPack(String packName) {
-        TextureLoader.packName = packName + ".zip";
-        refreshTextures();
+    public static void addPack(String packName) throws FileNotFoundException {
+        String packFileName = packName + ".zip";
+        if (getResource(packFileName) == null) throw new FileNotFoundException(packFileName);
+        PACKS.add(packFileName);
+        loadPack(packFileName);
     }
 
+    private static void removePack(String packName) {
+        if (packName.equals("default")) throw new IllegalArgumentException("Default textures cannot be removed");
+        if (PACKS.remove(packName + ".zip")) refreshTextures();
+    }
 
     private static void refreshTextures() {
+        PACKS.forEach(TextureLoader::loadPack);
+    }
+
+    private static void loadPack(String packFileName) {
         try {
-            ZipFile zipFile = new ZipFile(new File(getResource(packName).toURI()));
+            ZipFile zipFile = new ZipFile(new File(getResource(packFileName).toURI()));
             ZipWrapper pack = new ZipWrapper(zipFile);
 
             ZipEntryList artifacts = pack.entriesIn("textures/artifacts/");
             ZipEntryList artifactCards = pack.entriesIn("textures/cards/artifacts/");
             ZipEntryList floodCards = pack.entriesIn("textures/cards/flood/");
             ZipEntryList misc = pack.entriesIn("textures/misc/");
-            ZipEntryList players = pack.entriesIn("textures/players/");
+            ZipEntryList playerCards = pack.entriesIn("textures/players/cards/");
+            ZipEntryList playerIcons = pack.entriesIn("textures/players/icons/");
             ZipEntryList tilesDry = pack.entriesIn("textures/tiles/dry/");
             ZipEntryList tilesFlooded = pack.entriesIn("textures/tiles/flooded/");
             ZipEntryList tilesExtra = pack.entriesIn("textures/tiles/extra/");
 
-            background = new Image(misc.inputStreamByName("background.png"));
+            background = new Image(misc.inputStreamByName("background.png"), 1920, 1200, false, true);
             turnSpinner = new Image(misc.inputStreamByName("turnSpinner.png"));
             spinnerMarker = new Image(misc.inputStreamByName("spinnerMarker.png"));
             water = new Image(misc.inputStreamByName("water.png"));
+            giveCard = new Image(misc.inputStreamByName("give-card.png"));
+            findArtifact = new Image(misc.inputStreamByName("find-artifact.png"));
+            special = new Image(misc.inputStreamByName("special.png"));
+            drain = new Image(misc.inputStreamByName("drain.png"));
+            move = new Image(misc.inputStreamByName("move.png"));
             sea0 = new Image(tilesExtra.inputStreamByName("sea_0.png"));
             sea1 = new Image(tilesExtra.inputStreamByName("sea_1.png"));
             gone = new Image(tilesExtra.inputStreamByName("flooded.png"));
@@ -99,11 +114,18 @@ public class TextureLoader {
             }
             floodCardBack = new Image(floodCards.inputStreamByName("floodcard_back.png"));
 
-            for (ZipEntry playerEntry : players) {
+            for (ZipEntry playerEntry : playerCards) {
                 String name = playerEntry.getName();
                 String textureName = name.substring(name.lastIndexOf("/") + 1);
                 PlayerType type = PlayerType.valueOf(textureName.substring(0, textureName.length() - 4).toUpperCase());
-                PLAYER_TEXTURES.put(type, new PlayerTexture(players.inputStreamByName(textureName), type));
+                PLAYER_CARD_TEXTURES.put(type, new PlayerTexture(playerCards.inputStreamByName(textureName), type));
+            }
+
+            for (ZipEntry playerEntry : playerIcons) {
+                String name = playerEntry.getName();
+                String textureName = name.substring(name.lastIndexOf("/") + 1);
+                PlayerType type = PlayerType.valueOf(textureName.substring(0, textureName.length() - 4).toUpperCase());
+                PLAYER_ICON_TEXTURES.put(type, new PlayerTexture(playerCards.inputStreamByName(textureName), type));
             }
 
             for (int i = 0; i < MapTileProperties.values().length; i++) {
@@ -121,6 +143,9 @@ public class TextureLoader {
         }
     }
 
+    private static List<String> getPacks() {
+        return Collections.unmodifiableList(PACKS.stream().map(s -> s.substring(s.length() - 4)).collect(Collectors.toList()));
+    }
 
     public static Image getArtifactTexture(ArtifactType type) {
         return ARTIFACT_TEXTURES.get(type);
@@ -134,8 +159,12 @@ public class TextureLoader {
         return FLOOD_CARD_TEXTURES.get(type);
     }
 
-    public static PlayerTexture getPlayerTexture(PlayerType type) {
-        return PLAYER_TEXTURES.get(type);
+    public static PlayerTexture getPlayerCardTexture(PlayerType type) {
+        return PLAYER_CARD_TEXTURES.get(type);
+    }
+
+    public static PlayerTexture getPlayerIconTexture(PlayerType type) {
+        return PLAYER_ICON_TEXTURES.get(type);
     }
 
     public static TileTexture getTileTextureDry(MapTileProperties properties) {
@@ -180,6 +209,26 @@ public class TextureLoader {
 
     public static Image getFloodCardBack() {
         return floodCardBack;
+    }
+
+    public static Image getGiveCard() {
+        return giveCard;
+    }
+
+    public static Image getFindArtifact() {
+        return findArtifact;
+    }
+
+    public static Image getSpecial() {
+        return special;
+    }
+
+    public static Image getDrain() {
+        return drain;
+    }
+
+    public static Image getMove() {
+        return move;
     }
 
     private static URL getResource(String name) {

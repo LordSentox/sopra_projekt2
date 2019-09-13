@@ -1,5 +1,6 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.view.abstraction.AbstractViewController;
 import javafx.stage.Stage;
 
 /**
@@ -22,17 +23,12 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
 
     @Override
-    ViewState getType() {
-        return ViewState.GAME_PREPARATIONS;
-    }
-
-    @Override
-    void reset() {
+    public void reset() {
 
     }
 
     @Override
-    void show(Stage stage) {
+    public void show(Stage stage) {
 
     }
 }

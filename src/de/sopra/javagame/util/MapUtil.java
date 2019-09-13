@@ -5,13 +5,21 @@ import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Optional;
 import java.util.Random;
 
 /**
  * Enthält Helferfunktionen für Kartenerstellung und Kartenmanipulation
  */
 public class MapUtil {
+    public static boolean[][] generateRandomIsland() {
+        return null;
+    }
+
+    public static boolean[][] generateRandomIsland(int seed) {
+        return null;
+    }
+
     /**
      * Füllt die einfache Karte, die nur die Inselform enthält mit zufällig ausgewählten MapTiles und gibt die so
      * entstandene, spielbare Karte zurück.
@@ -104,32 +112,25 @@ public class MapUtil {
      * @return Die Nummern, die einzelnen Tiles entsprechen, bzw. -1, wo Wasser ist.
      */
     public static int[][] readNumberMapFromString(String toParse) {
-        // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
-        String[] lines = toParse.split("\n");
-        String[][] map = new String[lines.length][];
-        for (int i = 0; i < lines.length; ++i) {
-            String[] split = lines[i].split(",");
-            map[i] = split;
-        }
+        String[][] map = splitCSVString(toParse);
 
         // Set the width of the map to the maximum width present in the map and two for the buffer zone
-        // FIXME: Ask if this works as I expect
-        int mapWidth = Arrays.stream(map).max(Comparator.comparing(row -> row.length)).get().length + 2;
+        Optional<Integer> maxLength = Arrays.stream(map).map(row -> row.length).max(Integer::compareTo);
+        Point size = new Point(maxLength.orElse(0), map.length);
 
-        // Erstelle eine leere Map
-        int[][] numbers = new int[map.length + 2][mapWidth];
+        // Erstelle eine leere Map mit Platz for einen leeren Rahmen
+        int[][] numbers = new int[size.yPos + 2][size.xPos + 2];
         for (int[] line : numbers) {
             Arrays.fill(line, -1);
         }
 
-        // Fülle die map mit den Werten, die in map stehen. Ist die map größer als die Kartengröße werden Sachen, die
-        // rechts und unten überstehen ignoriert.
-        for (int y = 0; y < Math.min(numbers.length, map.length); ++y) {
-            for (int x = 0; x < Math.min(numbers[y].length, map[y].length); ++x) {
+        // Fülle die Karte mit den aus dem String ausgelesenen Werten
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[y].length; ++x) {
                 String sign = map[y][x].trim();
                 if (!sign.equals("-")) {
                     // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
-                    numbers[y+1][x+1] = Integer.parseUnsignedInt(sign) % 24;
+                    numbers[y + 1][x + 1] = Integer.parseUnsignedInt(sign) % 24;
                 }
             }
         }
@@ -137,7 +138,62 @@ public class MapUtil {
         return numbers;
     }
 
-    public static Point getPositionForTile (MapTileProperties tileProperties) {
+    public static boolean[][] readBoolMapFromString(String toParse) {
+        String[][] map = splitCSVString(toParse);
+
+        // Set the width of the map to the maximum width present in the map and two for the buffer zone
+        Optional<Integer> maxLength = Arrays.stream(map).map(row -> row.length).max(Integer::compareTo);
+        Point size = new Point(maxLength.orElse(0), map.length);
+
+        // Erstelle eine leere Map mit Platz for einen leeren Rahmen
+        boolean[][] bools = new boolean[size.yPos + 2][size.xPos + 2];
+        for (boolean[] line : bools) {
+            Arrays.fill(line, false);
+        }
+
+        // Fülle die Karte mit den aus dem String ausgelesenen Werten
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[y].length; ++x) {
+                String sign = map[y][x].trim();
+                // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
+                if (sign.equalsIgnoreCase("x")) {
+                    bools[y + 1][x + 1] = true;
+                }
+                else if (sign.equals("-")) {
+                    bools[y + 1][x + 1] = false;
+                } else {
+                    System.err.println("Karte ist korrumpiert und konnte nicht geladen werden");
+                    return null;
+                }
+            }
+        }
+
+        return bools;
+    }
+
+    public static Point getPositionForTile(MapTile[][] mapTiles, MapTileProperties tileProperties) {
+        for (int y = 0; y < mapTiles.length; ++y) {
+            for (int x = 0; x < mapTiles[y].length; ++x) {
+                if (mapTiles[y][x].getProperties() == tileProperties) {
+                    return new Point(x, y);
+                }
+            }
+        }
+
         return null;
+    }
+
+    // Helferfunktionen ------------------------------------------------------------------------------------------------
+
+    private static String[][] splitCSVString(String toParse) {
+        // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ",", der CSV-Trennung.
+        String[] lines = toParse.split("\n");
+        String[][] items = new String[lines.length][];
+        for (int i = 0; i < lines.length; ++i) {
+            String[] split = lines[i].split(",");
+            items[i] = split;
+        }
+
+        return items;
     }
 }

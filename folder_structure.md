@@ -22,10 +22,10 @@ wo sich Wasser befindet. Der Ordner enthält Dateien mit Namen in der Form
 Es handelt sich dabei um CSV-Dateien, welche für jedes Stück Land auf der Karte ein X enthalten, während sie für Wasser
 einen - enthalten. Eine 2x2 quadratische Insel umgeben von Wasser sieht demnach in der Datei wie folgt aus:
 ```
--;-;-;-
--;X;X;-
--;X;X;-
--;-;-;-
+-,-,-,-
+-,X,X,-
+-,X,X,-
+-,-,-,-
 ```
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit
 ```
@@ -61,8 +61,8 @@ Enthält die Bestenlisten der einzelnen Maps. Für jede Karte wird eine neue Dat
 Die Dateien sind im CSV-Format, wobei jede Zeile einen HighScore-Eintrag beschreiben soll. Übersichtshalber sollten
 sie in absteigender Reihenfolge nach Punkten in der Datei stehen.
 ```
-<name>;<score>;<replayName>
-<name2>;<score2>;<replayName2>
+<name>,<score>,<replayName>
+<name2>,<score2>,<replayName2>
 ```
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit
 ```
