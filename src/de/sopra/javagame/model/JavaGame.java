@@ -12,6 +12,9 @@ import java.util.Stack;
  * werden mit undo und redo.
  */
 public class JavaGame {
+    public static final int MAP_SIZE_X = 10;
+    public static final int MAP_SIZE_Y =  7;
+
     /**
      * Wenn ein Spiel gestartet wird, ist diese Variable zunächst false. Sollte ein Spieler sich aber im Laufe des Spiels
      * einen Tipp holen oder einen Zug rückgängig machen wird sie auf true gesetzt und das Spiel kann nicht mehr in die

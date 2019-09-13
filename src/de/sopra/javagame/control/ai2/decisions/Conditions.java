@@ -9,6 +9,9 @@ package de.sopra.javagame.control.ai2.decisions;
  */
 public class Conditions {
 
+    {
+    }
+
     private Conditions() {
     }
 
@@ -23,6 +26,4 @@ public class Conditions {
     public static ICondition stayTrue() {
         return condition(true);
     }
-
-    {}
 }

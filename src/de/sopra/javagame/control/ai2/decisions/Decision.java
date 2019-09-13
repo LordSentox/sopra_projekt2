@@ -1,6 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.Action;
@@ -25,11 +26,11 @@ import static de.sopra.javagame.util.Direction.*;
  */
 public abstract class Decision {
 
-    protected final int ZERO_CARDS = 0;
-    protected final int ONE_CARD = 1;
-    protected final int TWO_CARDS = 2;
-    protected final int THREE_CARDS = 3;
-    protected final int FOUR_CARDS = 4;
+    final int ZERO_CARDS = 0;
+    final int ONE_CARD = 1;
+    final int TWO_CARDS = 2;
+    final int THREE_CARDS = 3;
+    final int FOUR_CARDS = 4;
 
     protected AIController control;
 
@@ -48,7 +49,7 @@ public abstract class Decision {
      * Führt die Aktion aus.
      * Soll nur nach getroffener Entscheidung durch {@link #decide()} geschehen.
      */
-    public abstract void act();
+    public abstract ActionQueue act();
 
     /**
      * Baut aus zwei entscheidungsabhängigen Aktionen einen Turm.
@@ -74,10 +75,15 @@ public abstract class Decision {
             }
 
             @Override
-            public void act() {
+            public ActionQueue act() {
                 //empty
+                return null;
             }
         };
+    }
+
+    protected ActionQueue startActionQueue() {
+        return new ActionQueue(control.getActivePlayer().getType());
     }
 
     //condition NUR prüfen
@@ -186,6 +192,20 @@ public abstract class Decision {
         boolean allMatchFalse = Arrays.stream(preCondition.allFalse())
                 .allMatch(condition -> condition(condition).isFalse(this));
         return allMatchTrue && allMatchFalse;
+    }
+
+    public final static Decision empty() {
+        return new Decision() {
+            @Override
+            public Decision decide() {
+                return this;
+            }
+
+            @Override
+            public ActionQueue act() {
+                return startActionQueue();
+            }
+        };
     }
 
 }
