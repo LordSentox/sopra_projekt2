@@ -142,17 +142,29 @@ public class Action implements Copyable<Action> {
             Point start = map.getPlayerSpawnPoint(pair.getLeft());
             switch (pair.getLeft()) {
             case COURIER:
-                return new Courier("Hartmut Kurier", start, action);
+                Courier courier = new Courier("Hartmut Kurier", start, action);
+                courier.setActionsLeft(3);
+                return courier;
             case DIVER:
-                return new Diver("Hartmut im Spanienurlaub", start, action);
+                Diver diver = new Diver("Hartmut im Spanienurlaub", start, action);
+                diver.setActionsLeft(3);
+                return diver;
             case PILOT:
-                return new Pilot("Hartmut auf dem Weg in den Urlaub", start, action);
+                Pilot pilot = new Pilot("Hartmut auf dem Weg in den Urlaub", start, action);
+                pilot.setActionsLeft(3);
+                return pilot;
             case NAVIGATOR:
-                return new Navigator("Hartmut Verlaufen", start, action);
+                Navigator navigator = new Navigator("Hartmut Verlaufen", start, action);
+                navigator.setActionsLeft(3);
+                return navigator;
             case EXPLORER:
-                return new Explorer("Hartmut im Dschungel", start, action);
+                Explorer explorer = new Explorer("Hartmut im Dschungel", start, action);
+                explorer.setActionsLeft(3);
+                return explorer;
             case ENGINEER:
-                return new Engineer("Hartmut Auto Kaputt", start, action);
+                Engineer engineer = new Engineer("Hartmut Auto Kaputt", start, action);
+                engineer.setActionsLeft(3);
+                return engineer;
             default:
                 throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
             }
