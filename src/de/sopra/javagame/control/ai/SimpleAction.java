@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai;
 
 import de.sopra.javagame.control.ai1.ActionType;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.Copyable;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
 
@@ -14,7 +15,7 @@ import java.util.EnumSet;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public final class SimpleAction {
+public final class SimpleAction implements Copyable<SimpleAction> {
 
     private final ActionType type;
     private final Point startingPoint;
@@ -79,4 +80,8 @@ public final class SimpleAction {
         return targetPoint;
     }
 
+    @Override
+    public SimpleAction copy() {
+        return this; //should not actually copy, is here to by usable for
+    }
 }

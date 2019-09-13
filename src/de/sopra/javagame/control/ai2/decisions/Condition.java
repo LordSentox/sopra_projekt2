@@ -3,12 +3,10 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -49,11 +47,12 @@ public enum Condition implements ICondition {
                         .filter(tile -> tile.getState() == MapTileState.GONE)
                         .map(mapTile -> mapTile.getProperties().getHidden())
                         .collect(Collectors.toList());
+
                 @Override
                 public void accept(MapTile mapTile) {
                     if (atomicBoolean.get()) return;
-                    if (mapTile.getState() == MapTileState.FLOODED){                        
-                       atomicBoolean.set(sunkenTemples.contains(mapTile.getProperties().getHidden()));   
+                    if (mapTile.getState() == MapTileState.FLOODED) {
+                        atomicBoolean.set(sunkenTemples.contains(mapTile.getProperties().getHidden()));
                     }
                 }
             });
@@ -121,10 +120,10 @@ public enum Condition implements ICondition {
     //TODO test by playing: if limit 7 actions is too much, reduce to 4 
     PLAYER_REACHES_LANDINGSITE_WITH_LESS_THAN_SEVEN_ACTIONS {
         @Override
-        public boolean isTrue(Decision decision){
+        public boolean isTrue(Decision decision) {
             return decision.control.getMinimumActionsNeededToReachTarget
                     (decision.player().getPosition(), decision.control.getTile(PlayerType.PILOT).getLeft()) < 7;
         }
     }
-    
+
 }
