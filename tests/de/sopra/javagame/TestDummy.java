@@ -1,6 +1,7 @@
 package de.sopra.javagame;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
@@ -123,6 +124,7 @@ public class TestDummy {
         private HashMap<PlayerType, String> playerNames = new HashMap<>();
         private int refreshedAll = 0;
         private boolean isReplay = false;
+        private ActionQueue latestTip;
 
         @Override
         public void refreshMovementOptions(List<Point> points) {
@@ -202,6 +204,11 @@ public class TestDummy {
         @Override
         public void setIsReplayWindow(boolean replay) {
             this.isReplay = replay;
+        }
+
+        @Override
+        public void showTip(ActionQueue queue) {
+            this.latestTip = queue;
         }
 
         /**
@@ -352,6 +359,15 @@ public class TestDummy {
          */
         public boolean isReplay() {
             return isReplay;
+        }
+
+        /**
+         * Der letzte gezeigte Tipp in der GUI
+         *
+         * @return <code>null</code> falls nie einer gezeigt wurde
+         */
+        public ActionQueue getLatestTip() {
+            return latestTip;
         }
     }
 
