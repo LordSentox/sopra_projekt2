@@ -27,7 +27,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  */
 @DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialUseSandbagToDrainOrphanedTempleMapTile.class)
 @PreCondition(allTrue = {PLAYER_HAS_HELICOPTER, PLAYER_NO_ACTION_LEFT, GAME_ANY_LAST_TEMPLE_IN_DANGER})
-//FIXME ist GAME_ANY_LAST_TEMPLE_IN_DANGER richtig?
+
 public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Decision {
 
     @Override

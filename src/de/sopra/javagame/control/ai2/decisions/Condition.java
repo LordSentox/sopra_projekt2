@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 
@@ -10,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static de.sopra.javagame.model.ArtifactCardType.*;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
@@ -40,22 +42,17 @@ public enum Condition implements ICondition {
         @Override
         public boolean isTrue(Decision decision) {
             AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-            decision.control.getTemples().stream().map(Pair::getRight).forEach(new Consumer<MapTile>() {
-                List<ArtifactType> sunkenTemples = new LinkedList<>();
-                //FIXME soll auch funktionieren, wenn als erstes der nicht versunkene Tempel untersucht wird
+            List<MapTile> templeTiles = decision.control.getTemples().stream().map(Pair::getRight).collect(Collectors.toList());
+            templeTiles.forEach(new Consumer<MapTile>() {
+                List<ArtifactType> sunkenTemples = templeTiles.stream()
+                        .filter(tile -> tile.getState() == MapTileState.GONE)
+                        .map(mapTile -> mapTile.getProperties().getHidden())
+                        .collect(Collectors.toList());
                 @Override
                 public void accept(MapTile mapTile) {
                     if (atomicBoolean.get()) return;
-                    switch (mapTile.getState()) {
-                        case DRY:
-                            break;
-                        case FLOODED:
-                            if (sunkenTemples.contains(mapTile.getProperties().getHidden()))
-                                atomicBoolean.set(true);
-                            break;
-                        case GONE:
-                            sunkenTemples.add(mapTile.getProperties().getHidden());
-                            break;
+                    if (mapTile.getState() == MapTileState.FLOODED){                        
+                       atomicBoolean.set(sunkenTemples.contains(mapTile.getProperties().getHidden()));   
                     }
                 }
             });
