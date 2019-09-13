@@ -12,8 +12,7 @@ import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -98,6 +97,15 @@ public class AIController {
      * @see #getActivePlayer()
      */
     public boolean isCurrentlyDiscarding() {
+        return false; //TODO
+    }
+
+    /**
+     * Ob der aktive Spieler sich selber retten muss, d.h. auf einem versunkenen Feld steht
+     *
+     * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
+     */
+    public boolean isCurrentlyRescueingHimself() {
         return false; //TODO
     }
 
@@ -201,7 +209,27 @@ public class AIController {
      * @return eine Liste aller drainable positions nach einem Schritt
      */
     public List<Point> getDrainablePositionsOneMoveAway(Point position, PlayerType playerType) {
-        return null; //TODO
+        // Erstelle eine Kopie der momentanen Action, auf der gearbeitet werden kann
+        Action currentAction = getCurrentAction().copy();
+
+        // Setze den Spieler an die entsprechende Stelle.
+        Player player = currentAction.getPlayer(playerType);
+        player.setPosition(position);
+
+        // Liste der Positionen, die der Spieler schon vom Startpunkt aus trockenlegen kann.
+        // Diese wird später zum Abgleich benutzt, um sicherzustellen, dass diese Positionen nicht Teil der Rückgabe sind.
+        List<Point> drainableFromStart = player.drainablePositions();
+
+        // Bewege den Spieler zu allen Positionen, zu denen er darf und schaue, welche Felder er dann trockenlegen darf
+        Set<Point> drainableOneMoveAway = new HashSet<>();
+        for (Point possiblePosition : player.legalMoves(true)) {
+            player.setPosition(possiblePosition);
+            drainableOneMoveAway.addAll(player.drainablePositions());
+        }
+
+        // Entferne die Felder, die er auch ohne zusätzliche Bewegung trockenlegen konnte und gib die Übrigen zurück
+        drainableOneMoveAway.removeAll(drainableFromStart);
+        return new ArrayList<>(drainableOneMoveAway);
     }
 
     /**
@@ -275,9 +303,12 @@ public class AIController {
         return getTip(() -> getCurrentAction().getActivePlayer());
     }
 
-    public boolean landingSiteIsFlooded() {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean landingSiteIsFlooded() throws IllegalAccessException {
+        Point landingSite = MapUtil.getPositionForTile(getCurrentAction().getTiles(), MapTileProperties.FOOLS_LANDING);
+        if (landingSite == null)
+            throw new IllegalAccessException(); // Unerreichbar auf nicht korrumpierter map, sollte vorher gecheckt worden sein
+
+        return getCurrentAction().getTile(landingSite).getState() != MapTileState.DRY;
     }
 
     public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition) {

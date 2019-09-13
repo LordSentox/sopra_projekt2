@@ -1,6 +1,7 @@
 package de.sopra.javagame.control.ai1;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.SimpleAction;
 
 /**
  * <h1>projekt2</h1>
