@@ -97,7 +97,7 @@ public class AIController {
      * @see #getActivePlayer()
      */
     public boolean isCurrentlyDiscarding() {
-        return false; //TODO
+        return getActivePlayer().getHand().size() > Player.MAXIMUM_HANDCARDS;
     }
 
     /**
@@ -106,7 +106,7 @@ public class AIController {
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
      */
     public boolean isCurrentlyRescueingHimself() {
-        return false; //TODO
+        return getCurrentAction().getTile(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
     }
 
     /**
