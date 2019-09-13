@@ -151,7 +151,7 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
 
         if (player.collectArtifact() != ArtifactType.NONE) {
-            controllerChan.getInGameViewAUI().refreshArtifactsFound(currentAction.getDiscoveredArtifacts());
+            controllerChan.getInGameViewAUI().refreshArtifactsFound();
             controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());

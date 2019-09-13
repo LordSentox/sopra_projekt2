@@ -157,8 +157,8 @@ public class TestDummy {
         }
 
         @Override
-        public void refreshArtifactsFound(EnumSet<ArtifactType> artifacts) {
-            this.artifactsFound = artifacts;
+        public void refreshArtifactsFound() {
+            this.artifactsFound = null;//FIXME
         }
 
         @Override

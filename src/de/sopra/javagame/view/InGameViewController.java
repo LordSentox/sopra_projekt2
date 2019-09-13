@@ -1,8 +1,10 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.MapTileState;
@@ -24,7 +26,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -72,70 +76,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         initGridPane();
         initPlayerHands();
         initArtifactsFound();
-        
-
-
-        
-
-
-
-
-
-        /* Cards */
-        for (int i = 0; i < 9; i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showFrontImage();
-            cardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-
-
-        for (int i = 0; i < 5; i++) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
-            v.showFrontImage();
-            handOneCardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);activePlayerTypeImageView.setPreserveRatio(true);
-            activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-            activePlayerTypeImageView.setVisible(true);
-        }
-        for (int i = 0; i < 5; i++) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
-            v.showFrontImage();
-            handTwoCardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 5; i++) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
-            v.showFrontImage();
-            handThreeCardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-
-
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showBackImage();
-            artifactCardDrawStackGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showFrontImage();
-            artifactCardDicardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showBackImage();
-            floodCardDrawStackGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showFrontImage();
-            floodCardDiscardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
+       
 
         refreshWaterLevel(4);
     }
@@ -159,23 +100,30 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void initGridPane() {
-        IntStream.range(0, 9).forEach(i -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
+        IntStream.range(0, 9).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(item % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
 
-        IntStream.range(0, 5).forEach(i -> handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
-        IntStream.range(0, 5).forEach(i -> handTwoCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
-        IntStream.range(0, 5).forEach(i -> handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
+        IntStream.range(0, 5).forEach(item -> {
+            handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
+            handTwoCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
+            handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
+        });
 
-        IntStream.range(0, 28).forEach(i -> artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-        IntStream.range(0, 28).forEach(i -> artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-        IntStream.range(0, 24).forEach(i -> floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-        IntStream.range(0, 24).forEach(i -> floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
+        IntStream.range(0, 28).forEach(item ->  {
+            artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+            artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+        });
+           
+        IntStream.range(0, 24).forEach(item -> {
+            floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+            floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+        });
     }
 
     private void initPlayerHands(){
         activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        playerOneTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        playerTwoTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        playerThreeTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
+        playerOneTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
+        playerTwoTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
+        playerThreeTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
     }
     public void rotateTurnSpinner(double degree) {
         RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1));
@@ -286,8 +234,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshAll() {
-        refreshArtifactsFound(EnumSet.of(ArtifactType.EARTH, ArtifactType.WATER));
+        refreshArtifactsFound();
         refreshActivePlayer();
+        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
+        refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
+        refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
     }
 
     @Override
@@ -312,12 +263,44 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshHand(PlayerType player, List cards) {
-
+    public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
+        if(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
+            cardGridPane.getChildren().clear();
+            int index = 0;
+            for (ArtifactCard card : cards) {
+                CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+                v.showFrontImage();
+                cardGridPane.getChildren().add(v);
+                GridPane.setConstraints(v, index, 0);
+                index += 2;
+            }            
+        } else {
+            Action action = getGameWindow().getControllerChan().getCurrentAction();
+            List<Player> players = action.getPlayers();
+            GridPane pane = null;
+            
+            if(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
+                pane = handOneCardGridPane;
+            if(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+                pane = handTwoCardGridPane;
+            if(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+                pane = handThreeCardGridPane;
+            
+            pane.getChildren().clear();
+            int index = 0;            
+            for (ArtifactCard card : cards) {
+                CardView v = new ArtifactCardView(card.getType(), PASSIVE_CARD_SIZE);
+                v.showFrontImage();
+                pane.getChildren().add(v);
+                GridPane.setConstraints(v, index++, 0);
+            }
+        }
     }
 
     @Override
-    public void refreshArtifactsFound(EnumSet<ArtifactType> artifacts) {
+    public void refreshArtifactsFound() {
+        EnumSet<ArtifactType> artifacts = this.getGameWindow().getControllerChan().getCurrentAction().getDiscoveredArtifacts();
+        
         fireArtefactImageView.setEffect(artifacts.contains(ArtifactType.FIRE) ? null : DESATURATION);
         waterArtefactImageView.setEffect(artifacts.contains(ArtifactType.WATER) ? null : DESATURATION);
         earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
@@ -331,12 +314,46 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshArtifactStack(CardStack stack) {
+        artifactCardDrawStackGridPane.getChildren().clear();
+        for (int i = 0; i < stack.size(); i += 2) {
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
+            v.showBackImage();
+            artifactCardDrawStackGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, i, 0);
+        }
+        
+        List<ArtifactCard> discardPile = stack.getDiscardPile();
+        int index = 0;
+        artifactCardDicardGridPane.getChildren().clear();
+        for (ArtifactCard card : discardPile) {
+            CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+            v.showFrontImage();
+            artifactCardDicardGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, index, 0);
+            index +=2;
+        }
 
     }
 
     @Override
     public void refreshFloodStack(CardStack stack) {
-
+        floodCardDrawStackGridPane.getChildren().clear();
+        for (int i = 0; i < stack.size(); i += 2) {
+            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
+            v.showBackImage();
+            floodCardDrawStackGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, i, 0);
+        }
+        List<FloodCard> discardPile = stack.getDiscardPile();
+        int index = 0;
+        floodCardDiscardGridPane.getChildren().clear();
+        for (FloodCard card : discardPile) {
+            CardView v = new FloodCardView(card.getTile().getProperties(), ACTIVE_CARD_SIZE);
+            v.showFrontImage();
+            floodCardDiscardGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, index, 0);
+            index +=2;
+        }
     }
 
     @Override

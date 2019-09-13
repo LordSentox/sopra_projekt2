@@ -67,7 +67,7 @@ public interface InGameViewAUI {
      *
      * @param artifacts Array der Größe 4, index gibt Art des Artefakt an, wenn true ist es gefunden
      */
-    void refreshArtifactsFound(EnumSet<ArtifactType> artifacts);
+    void refreshArtifactsFound();
 
     /**
      * aktualisiert die Anzeige des Ziehstapels (Höhe) und des Ablagestapels der Artefaktkarten
