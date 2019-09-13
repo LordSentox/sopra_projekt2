@@ -60,7 +60,11 @@ public class DecisionMaker implements AIProcessor {
         }
     }
 
-    private LinkedList<Class<? extends Decision>> buildingQueue
+    List<Pair<DoAfter, Class<? extends Decision>>> getDecisionClasses() {
+        return decisionClasses;
+    }
+
+    LinkedList<Class<? extends Decision>> buildingQueue
             (List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions) {
 
         Queue<Pair<DoAfter, Class<? extends Decision>>> buildingQueue = new LinkedList<>();
