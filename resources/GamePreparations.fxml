@@ -31,7 +31,7 @@
    	   <JFXComboBox fx:id="playerTwoChooseCharakterComboBox" layoutX="425" layoutY="190" prefWidth="150" />
    	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerThreeButton" layoutX="55" layoutY="250" prefHeight="30"  prefWidth="150" text="Spieler 3" />
-   	   <JFXToggleButton fx:id="addPlayerThreeToggleButton" layoutX="0" layoutY="235" prefHeight="30" prefWidth="30" />
+   	   <JFXToggleButton fx:id="addPlayerThreeToggleButton" layoutX="0" layoutY="235" prefHeight="30" prefWidth="30" onAction="#onAddPlayerThreeClicked" />
    	   <JFXCheckBox fx:id="isPlayerThreeKiCheckBox" layoutX="55" layoutY="290" text="KI" />
    	   <Label fx:id="enterNamePlayerThreeLabel" layoutX="55" layoutY="330" text="Name:" />
    	   <JFXTextField fx:id="playerThreeNameTextField" layoutX="55" layoutY="350" />
@@ -39,7 +39,7 @@
    	   <JFXComboBox fx:id="playerThreeChooseCharakterComboBox" layoutX="55" layoutY="410" prefWidth="150" />
    	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerFourButton" layoutX="425" layoutY="250" prefHeight="30"  prefWidth="150" text="Spieler 4" />
-   	   <JFXToggleButton fx:id="addPlayerFourToggleButton" layoutX="370" layoutY="235" prefHeight="30" prefWidth="30"/>
+   	   <JFXToggleButton fx:id="addPlayerFourToggleButton" layoutX="370" layoutY="235" prefHeight="30" prefWidth="30" onAction="#onAddPlayerFourClicked" />
    	   <JFXCheckBox fx:id="isPlayerFourKiCheckBox" layoutX="425" layoutY="290" text="KI" />
    	   <Label fx:id="enterNamePlayerFourLabel" layoutX="425" layoutY="330" text="Name:" />
    	   <JFXTextField fx:id="playerFourNameTextField" layoutX="425" layoutY="350" />

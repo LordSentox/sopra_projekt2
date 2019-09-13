@@ -3,6 +3,7 @@ package de.sopra.javagame.view;
 import java.util.LinkedList;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 
 import de.sopra.javagame.model.Difficulty;
@@ -34,6 +35,9 @@ public class GamePreparationsViewController extends AbstractViewController {
     playerFourChooseCharakterComboBox, editDifficultyComboBox;
     @FXML ToggleButton addPlayerThreeToggleButton, addPlayerFourToggleButton;
     @FXML JFXButton addPlayerThreeButton,addPlayerFourButton;
+    @FXML JFXCheckBox isPlayerOneKiCheckBox, isPlayerTwoKiCheckBox, isPlayerThreeKiCheckBox, isPlayerFourKiCheckBox;
+    
+    private Difficulty difficulty;
     
     public void init(){
         mainPane.setImage(TextureLoader.getBackground());
@@ -53,7 +57,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         playerThreeChooseCharakterComboBox.getItems().addAll(playerTypesList);
         playerFourChooseCharakterComboBox.getItems().addAll(playerTypesList);
         
-        editDifficultyComboBox.getItems().addAll( "Einfach", "Mittel", "Schwer", "Legende");
+        editDifficultyComboBox.getItems().addAll( "Novice", "Normal", "Elite", "Legende");
         
         playerThreeNameTextField.setDisable(true);
         playerFourNameTextField.setDisable(true);
@@ -69,22 +73,58 @@ public class GamePreparationsViewController extends AbstractViewController {
     public void onMapEditorClicked() {
 
     }
+    
+    public void onAddPlayerThreeClicked(){
+            playerThreeNameTextField.setDisable(!addPlayerThreeButton.isDisabled());
+            playerThreeChooseCharakterComboBox.setDisable(!addPlayerThreeButton.isDisabled());
+            addPlayerThreeButton.setDisable(!addPlayerThreeButton.isDisabled());
+            isPlayerThreeKiCheckBox.setDisable(!addPlayerThreeButton.isDisabled());
+    }
+    public void onAddPlayerFourClicked(){
+        playerFourNameTextField.setDisable(!addPlayerFourButton.isDisabled());
+        playerFourChooseCharakterComboBox.setDisable(!addPlayerFourButton.isDisabled());
+        addPlayerFourButton.setDisable(!addPlayerFourButton.isDisabled());
+        isPlayerFourKiCheckBox.setDisable(!addPlayerFourButton.isDisabled());
+}
 
     public void onStartGameClicked() {
-        changeState(ViewState.IN_GAME);
-        LinkedList<Pair<PlayerType, Boolean>> list = new LinkedList<>();
-        list.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, false));
-        list.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, false));
-        list.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
-        list.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, true));
-        this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), list, Difficulty.ELITE);
+        //TEMP
+//        changeState(ViewState.IN_GAME);
+//        LinkedList<Pair<PlayerType, Boolean>> list = new LinkedList<>();
+//        list.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, false));
+//        list.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, false));
+//        list.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
+//        list.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, true));
+//        this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), list, Difficulty.ELITE);
+        //end TEMP
         
+        
+        LinkedList<Pair<PlayerType, Boolean>> playerList = new LinkedList<>();
+        
+        //Spielertypen hinzufügen
+        addPLayerType(playerOneChooseCharakterComboBox.getValue(), playerList, !isPlayerOneKiCheckBox.isDisabled());
+        addPLayerType(playerTwoChooseCharakterComboBox.getValue(), playerList, !isPlayerTwoKiCheckBox.isDisabled());
+        if(!addPlayerThreeButton.isDisabled()){
+            addPLayerType(playerThreeChooseCharakterComboBox.getValue(), playerList, !isPlayerThreeKiCheckBox.isDisabled());
+        }
+        if(!addPlayerFourButton.isDisabled()){
+            addPLayerType(playerFourChooseCharakterComboBox.getValue(), playerList, !isPlayerFourKiCheckBox.isDisabled());
+        }
+        setDifficulty();
+        
+        //PLayerList muss mind. zwei Spieler enthalten
+        //TODO Button disablen wenn die Bedingungen nicht erfüllt sind
+        if(!playerList.isEmpty() && difficulty != null){
+            changeState(ViewState.IN_GAME);
+            this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
+        }
     }
+        
 
     public void onCloseClicked() {
         changeState(ViewState.MENU);
     }
-
+    
     @Override
     public void reset() {
 
@@ -93,5 +133,64 @@ public class GamePreparationsViewController extends AbstractViewController {
     @Override
     public void show(Stage stage) {
 
+    }
+    
+    
+    public void addPLayerType(String type,  LinkedList<Pair<PlayerType, Boolean>> playerList, boolean isAi){
+        if(type == null){
+            //TODO Fehlermeldug kein Spieler ausgewählt
+            System.out.println("kein Typ angegeben");
+            return;
+        }
+        switch (type) {
+        case "Taucher":
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            System.out.println("i bims ein Taucher");
+            break;
+        case "Navigator":
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            break;
+        case "Pilot":
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            break;
+        case "Entdecker":
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            break;
+        case "Bote":
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            break;
+        case "Ingenieur":
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            break;
+        case "zufällig":
+            //TODO zufällige Verteilung
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            break;
+        default:
+        }
+    }
+    
+    public void setDifficulty(){
+        if(editDifficultyComboBox.getValue() == null){
+            //TODO Fehlermeldug kein Schwierigkeitsgrad ausgewählt
+            System.out.println("keine Schwierigkeit angegeben");
+            return;
+        }
+        switch (editDifficultyComboBox.getValue()) {
+        case "Novice":
+            difficulty = Difficulty.NOVICE;
+            break;
+        case "Normal":
+            difficulty = Difficulty.NORMAL;
+            break;
+        case "Elite":
+            difficulty = Difficulty.ELITE;
+            break;
+        case "Legende":
+            difficulty = Difficulty.LEGENDARY;
+            break;
+        default:
+            difficulty = Difficulty.LEGENDARY;
+        }
     }
 }
