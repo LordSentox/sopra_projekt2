@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
@@ -76,7 +77,7 @@ public class Explorer extends Player {
         // Entferne alle Positionen, wo die Map eigentlich keine Felder hat, oder sie nicht mehr trockengelegt werden
         // können
         // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
-        drainable = drainable.stream().filter(point -> this.action.getTile(point) != null && this.action.getTile(point).getState() != GONE).collect(Collectors.toList());
+        drainable = drainable.stream().filter(point -> this.action.getTile(point) != null && this.action.getTile(point).getState() == FLOODED).collect(Collectors.toList());
 
         return drainable;
     }

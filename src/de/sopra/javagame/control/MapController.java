@@ -1,5 +1,9 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.util.MapCheckUtil;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.view.MapEditorViewAUI;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +19,7 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.util.MapCheckUtil;
 import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 /**
@@ -56,24 +59,36 @@ public class MapController {
      */
     public void generateMapToEditor() {
         boolean[][] feldsUsed = new boolean[12][12];
-        for (int i = 0; i < feldsUsed[i].length; i++){ 
-        Arrays.fill(feldsUsed[i], false);
+        for (int i = 0; i < 12; i++){ 
+            for (int j = 0; j < 12; j++){
+                feldsUsed[i][j] = false;
+            }
+        
         }
+        List<Point> nearby = new ArrayList<>();
         Random random = new Random();
-        boolean unqualified =true;
-        while (unqualified) {           
-            for (int i = 0; i<24; i++){
-                int x = random.nextInt(12);
-                int y = random.nextInt(12);
-                if (feldsUsed[x][y]){
-                    i--;
-                }else {
-                    feldsUsed[x][y] = true;
+        for(int i = 24; i > 0; i--){
+            if (i == 24){
+                int x = random.nextInt(10) + 1;
+                int y = random.nextInt(10) + 1;
+                feldsUsed[x][y] = true;
+                nearby = new Point(x,y).getNeighbours(new Point(1, 1), new Point(10, 10));
+             } else {
+                int j = random.nextInt(nearby.size());
+                Point select = nearby.get(j);
+                nearby.remove(j);
+                feldsUsed[select.yPos][select.xPos] = true;
+                List<Point> neighbours = select.getNeighbours(new Point(1, 1), new Point(10, 10));
+                
+                for(Point water : neighbours) {
+                    if(feldsUsed[water.yPos][water.xPos] == false && !nearby.contains(water)){
+                        nearby.add(water);
+                    }
                 }
             }
-            
-            unqualified = !MapCheckUtil.checkMapValidity(feldsUsed);
+
         }
+           
         mapEditorViewAUI.setMap("Coole Insel!", feldsUsed);
     }
 
@@ -84,35 +99,15 @@ public class MapController {
      * @param name Der Name der Karte, die geladen werden soll.
      */
     public void loadMapToEditor(String name) {
+        if (name == ""){
+            System.err.println("Man muss einen Name angeben!");
+        }
         try {
-            String scoresToString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
-             // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
-            String[] maps = scoresToString.split("\n");
-            String[][] mapcsv = new String[maps.length][];
-            for (int i = 0; i < maps.length; ++i) {
-                String[] split = maps[i].split(",");
-                mapcsv[i] = split;
-            }
-            
-            boolean[][] mapTile = new boolean[12][12];
-            
-            for (String[] row : mapcsv) {
-                if (row.length != 12) {
-                    System.err.println("Map für " + name + " konnten nicht gelesen werden. Eine Zeile ist korrumpiert.");
-                    return;
-                }    
-            }
-            for (int y = 0; y < 12; y++){
-                for (int x = 0; x < 12; x++){
-                    if (mapcsv[y][x] == "X"){
-                        mapTile[y][x] = false;
-                    }else {
-                        mapTile[y][x] = true;
-                    }
-                }
-            }
-            
-            mapEditorViewAUI.setMap(name, mapTile);
+            String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
+
+            boolean[][] mapTiles = MapUtil.readBoolMapFromString(mapString);
+
+            mapEditorViewAUI.setMap(name, mapTiles);
             
         } catch (IOException e) {
             System.err.println("Map konnten nicht eingelesen werden");
@@ -130,15 +125,18 @@ public class MapController {
      * @param tiles Die Tiles, die die Karte beschreiben.
      */
     public void saveMap(String name, boolean[][] tiles) {
+        if (name == ""){
+            System.err.println("Die Karte muss einen Namen enthalten!");
+        }
         try {
             BufferedWriter out =new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name +".map"),  StandardCharsets.UTF_8));
             String[][] mapTiles = new String[tiles.length][];
             for (int y = 0; y < 12; y++){
                 for (int x = 0; x < 12; x++){
                     if (tiles[y][x] == false){
-                        mapTiles[y][x] = "X";
-                    }else {
                         mapTiles[y][x] = "-";
+                    }else {
+                        mapTiles[y][x] = "X";
                         
                     }
                     if (x != 11){

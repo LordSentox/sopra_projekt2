@@ -63,7 +63,7 @@ public class Navigator extends Player {
             return false;
         }
 
-        if (this.hasExtraPush)
+        if (!this.hasExtraPush)
             --this.actionsLeft;
         this.hasExtraPush = !this.hasExtraPush;
 

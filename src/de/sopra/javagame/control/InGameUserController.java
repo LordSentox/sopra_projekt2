@@ -10,6 +10,7 @@ import de.sopra.javagame.util.Point;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 public class InGameUserController {
 
@@ -32,8 +33,9 @@ public class InGameUserController {
     public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players) {
         Action currentAction = controllerChan.getCurrentAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
+        Point heliPoint = MapUtil.getPlayerSpawnPoint(currentAction.getTiles(), PlayerType.PILOT);
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
-        if (handCards.get(handCardIndex).getType() != ArtifactCardType.HELICOPTER) {
+        if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null || handCards.get(handCardIndex).getType() != ArtifactCardType.HELICOPTER) {
             throw new IllegalStateException("Es wurde keine Helikopter-Karte übergeben " +
                     "aber die playHelicopterCard Methode aufgerufen!");
         }
@@ -45,6 +47,9 @@ public class InGameUserController {
         }
         //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
         checkWonOnHelicopter(currentAction);
+        if (controllerChan.getCurrentAction() == null) {
+            return;
+        }
         //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
         if (flightRoute.getLeft() == null || flightRoute.getRight() == null
                 || controllerChan.getCurrentAction().getTile(flightRoute.getRight()) == null
@@ -70,7 +75,7 @@ public class InGameUserController {
         if (derHARTMUT == currentAction.getPlayer(PlayerType.EXPLORER)){
             System.out.println("U Serious?");
         }
-        if (derHARTMUT != controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER)) {
+        if (currentAction != controllerChan.getCurrentAction()) {
            System.out.println("WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY?");
         }
         Point hartmuht = controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER).getPosition();
@@ -99,6 +104,7 @@ public class InGameUserController {
             controllerChan.getInGameViewAUI().showNotification("Herzlichen Glückwunsch! Ihr habt die Insel besiegt." +
                     "Euch allen eine sichere und schnelle Heimreise " +
                     "und auf ein baldiges Wiedersehen~");
+            return;
             //TODO in HighScoreIO Methode zum speichern von High-Scores
             //dann View bescheid geben, dass Spiel vorbei (set as Replay)
             //controllerChan.getHighScoresController().save;
@@ -132,12 +138,12 @@ public class InGameUserController {
      * @param destination   die Position auf der Karte, welche trockengelegt werden soll
      */
     public void playSandbagCard(PlayerType sourcePlayer, int handCardIndex, Point destination) {
-        Action currentAction = controllerChan.getJavaGame().getPreviousAction();
+        Action currentAction = controllerChan.getCurrentAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
         MapTile tileToDrain = currentAction.getTile(destination);
 
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
-        if (handCards.get(handCardIndex).getType() != ArtifactCardType.SANDBAGS) {
+        if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null || handCards.get(handCardIndex).getType() != ArtifactCardType.SANDBAGS) {
             throw new IllegalStateException("Es wurde keine Sandsack-Karte übergeben " +
                     "aber die playSandbagCard Methode aufgerufen!");
         }
@@ -173,12 +179,12 @@ public class InGameUserController {
         Action currentAction = controllerChan.getCurrentAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
         //Prüfe, ob genug Karten auf der Hand des Spielers vorhanden sind
-        if (handCards.size() < Player.MAXIMUM_HANDCARDS) {
+        if (handCards.size() <= Player.MAXIMUM_HANDCARDS) {
             controllerChan.getInGameViewAUI().showNotification("Es darf keine Karte abgeworfen werden!");
-            return;
+            throw new IllegalStateException("Es darf keine Karte abgeworfen werden!");
         }
         //Falls sich am handCardIndex des sourcePlayers keine Karte befindet war der Aufruf ungültig
-        if (handCards.get(handCardIndex).getType() != ArtifactCardType.SANDBAGS) {
+        if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null) {
             throw new IllegalStateException("Es wurde keine Karte übergeben " +
                     "aber die discardCard Methode aufgerufen!");
         }

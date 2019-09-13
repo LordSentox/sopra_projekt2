@@ -175,7 +175,7 @@ public class JavaGame {
 
     public boolean canUndo() {
         final int INITIAL_TURN_SIZE = 1;
-        return undoActions.size() == INITIAL_TURN_SIZE;
+        return undoActions.size() != INITIAL_TURN_SIZE;
     }
 
     public void markCheetah() {
