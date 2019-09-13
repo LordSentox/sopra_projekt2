@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 
@@ -115,6 +116,14 @@ public enum Condition implements ICondition {
         @Override
         public boolean isTrue(Decision decision) {
             return decision.player().getActionsLeft() == 0;
+        }
+    },
+    //TODO test by playing: if limit 7 actions is too much, reduce to 4 
+    PLAYER_REACHES_LANDINGSITE_WITH_LESS_THAN_SEVEN_ACTIONS {
+        @Override
+        public boolean isTrue(Decision decision){
+            return decision.control.getMinimumActionsNeededToReachTarget
+                    (decision.player().getPosition(), decision.control.getTile(PlayerType.PILOT).getLeft()) < 7;
         }
     }
     

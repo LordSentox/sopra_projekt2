@@ -280,4 +280,9 @@ public class AIController {
         return false;
     }
 
+    public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }
