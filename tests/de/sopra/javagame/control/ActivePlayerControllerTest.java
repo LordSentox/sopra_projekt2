@@ -3,13 +3,17 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.TestDummy.InGameView;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.*;
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.model.player.Engineer;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,111 +30,20 @@ public class ActivePlayerControllerTest {
 
     private ControllerChan controllerChan;
     private ActivePlayerController activePlayerController;
-    private JavaGame javaGame;
-    private int[][] testMapNumbers;
     private MapTile[][] testMap;
-    private List<Player> moveablePlayers;
-    private MapController mapController;
     private Action action;
-    private ArtifactCard fireCard;
-    private ArtifactCard waterCard;
-    private ArtifactCard earthCard;
-    private ArtifactCard airCard;
-    private ArtifactCard sandCard;
-    private ArtifactCard heliCard;
-    private Courier courier;
-    private Explorer explorer;
-    private Navigator navigator;
-    private Pilot pilot;
-    private CardStack<ArtifactCard> artifactCardStack;
-    private List<ArtifactCard> handCardsExpected;
     private List<Pair<PlayerType, Boolean>> players;
 
     private InGameView inGameView;
 
-    public void setUp() throws IOException {
-        controllerChan = TestDummy.getDummyControllerChan();
-        activePlayerController = controllerChan.getActivePlayerController();
-        inGameView = (InGameView) controllerChan.getInGameViewAUI();
-        javaGame = controllerChan.getJavaGame();
-        action = controllerChan.getCurrentAction();
-
-        boolean [][] tiles = new boolean [12][12];
-        for (int y = 1; y < 3; y++) {
-            for (int x = 1; x < tiles[y].length-1; x++) {
-                tiles[y][x] = true;
-            }
-        }
-        for (int x = 1; x < 5; x++) {
-            tiles[3][x] = true;
-        }
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
-        testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        players = Arrays.asList(
-                new Pair<>(PlayerType.COURIER, false),
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false));
-        controllerChan.startNewGame("TestMap", tiles, players, Difficulty.NORMAL);
-        mapController = controllerChan.getMapController();
-
-        artifactCardStack = action.getArtifactCardStack();
-        List<ArtifactCard> cardList = artifactCardStack.draw(28, false);
-
-        for (ArtifactCard cur : cardList) {
-            if (fireCard != null && waterCard != null && earthCard != null && airCard != null && sandCard != null && heliCard != null) {
-                break;
-            }
-
-            if (cur.getType() == ArtifactCardType.FIRE) {
-                fireCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.WATER) {
-                waterCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.EARTH) {
-                earthCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.AIR) {
-                airCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.SANDBAGS) {
-                sandCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.HELICOPTER) {
-                heliCard = cur;
-            }
-        }
-
-        pilot = new Pilot("pilot", new Point(4, 2), action);
-        courier = new Courier("courier", new Point(4, 2), action);
-        explorer = new Explorer("explorer", new Point(5, 2), action);
-        navigator = new Navigator("navigator", new Point(4, 2), action);
-
-        handCardsExpected = new ArrayList<>();
-        explorer.getHand().add(fireCard);
-        handCardsExpected.add(fireCard);
-        explorer.getHand().add(waterCard);
-        handCardsExpected.add(waterCard);
-        explorer.getHand().add(earthCard);
-        handCardsExpected.add(earthCard);
-        explorer.getHand().add(airCard);
-        handCardsExpected.add(airCard);
-
-
-        moveablePlayers = new ArrayList<Player>();
-        moveablePlayers.add(navigator);
-        moveablePlayers.add(courier);
-    }
-
     @Before
-    public void setUp2() throws Exception {
+    public void setUp() throws Exception {
         controllerChan = TestDummy.getDummyControllerChan();
         activePlayerController = controllerChan.getActivePlayerController();
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
 
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
+        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
 
         players = Arrays.asList(
@@ -143,7 +56,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
@@ -281,7 +193,7 @@ public class ActivePlayerControllerTest {
         assertTrue("Explorer drainable tiles not displayed correctly", expectedDrainables.containsAll(inGameView.getDrainPoints()) && inGameView.getDrainPoints().containsAll(expectedDrainables));
         assertTrue("Tile explorer is standing on, not marked as drainable", expectedDrainables.contains(playerPos));
         List<Point> expectedMovePoints = adjacentPoints(playerPos, true);
-        assertTrue("Explorer drainable tiles not displayed correctly", expectedMovePoints.containsAll(inGameView.getMovementPoints()) && inGameView.getMovementPoints().containsAll(moveablePlayers));
+        assertTrue("Explorer drainable tiles not displayed correctly", expectedMovePoints.containsAll(inGameView.getMovementPoints()) && inGameView.getMovementPoints().containsAll(expectedMovePoints));
 
 
         activePlayerController.cancelSpecialAbility();
@@ -325,7 +237,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
@@ -406,7 +317,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
@@ -532,7 +442,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
@@ -612,7 +521,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
