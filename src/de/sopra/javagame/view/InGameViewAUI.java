@@ -3,14 +3,12 @@ package de.sopra.javagame.view;
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
 
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -69,7 +67,7 @@ public interface InGameViewAUI {
      *
      * @param artifacts Array der Größe 4, index gibt Art des Artefakt an, wenn true ist es gefunden
      */
-    void refreshArtifactsFound(EnumSet<ArtifactType> artifacts);
+    void refreshArtifactsFound();
 
     /**
      * aktualisiert die Anzeige des Ziehstapels (Höhe) und des Ablagestapels der Artefaktkarten
@@ -103,10 +101,8 @@ public interface InGameViewAUI {
 
     /**
      * aktualisiert die Anzeige welcher Spieler an der Reihe ist
-     *
-     * @param player Spieler der zurzeit am Zug ist
      */
-    void refreshActivePlayer(PlayerType player);
+    void refreshActivePlayer();
 
     /**
      * aktualisiert die Anzeige der übrigen Aktionen

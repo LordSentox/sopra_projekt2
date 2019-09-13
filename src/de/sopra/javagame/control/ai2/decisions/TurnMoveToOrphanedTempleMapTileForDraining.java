@@ -57,7 +57,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             if (orphanedTemplePoint.equals(activePlayerPosition)) {
                 continue; 
             }
-            //prüfe, ob Tempelatefakt bereits geborgen ist
+            //prüfe, ob Tempelartefakt bereits geborgen ist
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
             EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
             if (discoveredArtifacts.contains(templeType)) {

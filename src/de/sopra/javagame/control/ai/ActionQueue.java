@@ -95,7 +95,16 @@ public final class ActionQueue {
         return this;
     }
 
-    public ActionQueue diveTo(Point targetPoint) {
+    public ActionQueue collectTreasure() {
+        nextAction(new SimpleAction(COLLECT_TREASURE));
+        return this;
+    }
+
+    public ActionQueue finishTheGame(Point landingSide, EnumSet<PlayerType> allPlayers) {
+        return helicopterCard(landingSide, landingSide, allPlayers);
+    }
+
+    public ActionQueue diverDiveTo(Point targetPoint) {
         nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;
     }
@@ -105,17 +114,17 @@ public final class ActionQueue {
         return this;
     }
 
-    public ActionQueue flyTo(Point targetPoint) {
+    public ActionQueue pilotFlyTo(Point targetPoint) {
         nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;
     }
 
-    public ActionQueue explore(Point targetPoint) {
+    public ActionQueue explorerDiagonal(Point targetPoint) {
         nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;
     }
 
-    public ActionQueue navigate(PlayerType target, Point startPoint, Direction direction) {
+    public ActionQueue navigatorMoveOther(PlayerType target, Point startPoint, Direction direction) {
         nextAction(new SimpleAction(startPoint, direction.translate(startPoint), EnumSet.of(target)));
         return this;
     }

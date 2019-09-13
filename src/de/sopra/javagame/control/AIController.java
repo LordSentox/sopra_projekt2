@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class AIController {
 
-    private ControllerChan controllerChan;
+    private final ControllerChan controllerChan;
 
     private AIProcessor processor;
 
@@ -32,9 +32,9 @@ public class AIController {
 
     public AIController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
-        artifactCardStackTracker = new CardStackTracker<>();
-        floodCardStackTracker = new CardStackTracker<>();
-        processor = null;
+        this.artifactCardStackTracker = new CardStackTracker<>();
+        this.floodCardStackTracker = new CardStackTracker<>();
+        this.processor = null;
     }
 
     /**
@@ -135,7 +135,7 @@ public class AIController {
      * @return der für die KI aktive Spieler
      */
     public Player getActivePlayer() {
-        return activePlayerSupplier.get();
+        return activePlayerSupplier != null ? activePlayerSupplier.get() : controllerChan.getCurrentAction().getActivePlayer();
     }
 
     /**

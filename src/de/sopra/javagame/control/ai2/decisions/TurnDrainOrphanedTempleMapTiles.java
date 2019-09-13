@@ -5,7 +5,6 @@ import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -33,47 +32,39 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
     @Override
     public Decision decide() {
 
-        Point activePlayerPosition = player().getPosition();
-
-        List<Pair<Point, MapTile>> templeList = aiController.getTemples();
+        List<Pair<Point, MapTile>> templeList = control.getTemples();
 
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
-        for (Pair<Point, MapTile> temple : templeList) {
+        return checkTemples(templeList) ? this : null;
 
+    }
+
+    private boolean checkTemples(List<Pair<Point, MapTile>> temples){
+        Point activePlayerPosition = player().getPosition();
+        for (Pair<Point, MapTile> temple : temples) {
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
             //prüft, ob aktiver Spieler auf dem betroffenen Tempel steht
             if (!activePlayerPosition.equals(orphanedTemplePoint)) {
-                return null;
-            }
-            //prüft, ob Tempel überhaupt geflutet ist
-            if (orphanedTemple.getState() != MapTileState.FLOODED) {
                 continue;
             }
-
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
             EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
             //prüft, ob Artefakt des betroffenen Tempels bereits geborgen wurde, dann Tempelrettung irrelevant
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
-
-            List<MapTile> surroundingTiles = surroundingPoints.stream().map(aiController::getTile).collect(Collectors.toList());
-
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
             //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
-
-            return this;
-
+            return true;
         }
-
-        return null;
+        return false;
     }
 
     @Override

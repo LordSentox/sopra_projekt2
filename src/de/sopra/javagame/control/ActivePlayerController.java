@@ -38,7 +38,6 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         List<Point> movements = player.legalMoves(specialActive);
         controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-
     }
 
     /**
@@ -151,7 +150,7 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
 
         if (player.collectArtifact() != ArtifactType.NONE) {
-            controllerChan.getInGameViewAUI().refreshArtifactsFound(currentAction.getDiscoveredArtifacts());
+            controllerChan.getInGameViewAUI().refreshArtifactsFound();
             controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
@@ -173,12 +172,14 @@ public class ActivePlayerController {
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
         int actionsLeft = player.getActionsLeft();
-
+        
         if (player.move(destination, true, useSpecial)) {
             controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
             controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
 
             controllerChan.finishAction();
+        } else {
+            System.out.println("du dulli");
         }
     }
 
@@ -247,6 +248,5 @@ public class ActivePlayerController {
     public void endTurn() {
         Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().finishAction(currentAction);
-
     }
 }

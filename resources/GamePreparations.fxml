@@ -1,0 +1,55 @@
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.GamePreparationsViewController">
+   <children>
+   	   <ImageView fx:id="mainPane"/>
+   	   
+   	   <JFXButton styleClass="close-Button" fx:id="closeButton" layoutX="565" layoutY="5" prefHeight="30" prefWidth="30" text="x" onAction="#onCloseClicked"/>  	      	   
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerOneButton" layoutX="55" layoutY="35" prefHeight="30"  prefWidth="150" text="Spieler 1" />
+   	   <JFXCheckBox fx:id="isPlayerOneKiCheckBox" layoutX="55" layoutY="75" text="KI" />
+   	   <Label fx:id="enterNamePlayerOneLabel" layoutX="55" layoutY="115" text="Name:" />
+   	   <JFXTextField fx:id="playerOneNameTextField" layoutX="55" layoutY="135" />
+   	   <Label fx:id="chooseCharakterPlayerOneLabel" layoutX="55" layoutY="170" text="Charakter auswählen:" />
+   	   <JFXComboBox fx:id="playerOneChooseCharakterComboBox" layoutX="55" layoutY="190" prefWidth="150" />
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerTwoButton" layoutX="425" layoutY="35" prefHeight="30"  prefWidth="150" text="Spieler 2" />
+   	   <JFXCheckBox fx:id="isPlayerTwoKiCheckBox" layoutX="425" layoutY="75" text="KI" />
+   	   <Label fx:id="enterNamePlayerTwoLabel" layoutX="425" layoutY="115" text="Name:" />
+   	   <JFXTextField fx:id="playerTwoNameTextField" layoutX="425" layoutY="135" />
+   	   <Label fx:id="chooseCharakterPlayerTwoLabel" layoutX="425" layoutY="170" text="Charakter auswählen:" />
+   	   <JFXComboBox fx:id="playerTwoChooseCharakterComboBox" layoutX="425" layoutY="190" prefWidth="150" />
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerThreeButton" layoutX="55" layoutY="250" prefHeight="30"  prefWidth="150" text="Spieler 3" />
+   	   <JFXToggleButton fx:id="addPlayerThreeToggleButton" layoutX="0" layoutY="235" prefHeight="30" prefWidth="30" onAction="#onAddPlayerThreeClicked" />
+   	   <JFXCheckBox fx:id="isPlayerThreeKiCheckBox" layoutX="55" layoutY="290" text="KI" />
+   	   <Label fx:id="enterNamePlayerThreeLabel" layoutX="55" layoutY="330" text="Name:" />
+   	   <JFXTextField fx:id="playerThreeNameTextField" layoutX="55" layoutY="350" />
+   	   <Label fx:id="chooseCharakterPlayerThreeLabel" layoutX="55" layoutY="390" text="Charakter auswählen:" />
+   	   <JFXComboBox fx:id="playerThreeChooseCharakterComboBox" layoutX="55" layoutY="410" prefWidth="150" />
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerFourButton" layoutX="425" layoutY="250" prefHeight="30"  prefWidth="150" text="Spieler 4" />
+   	   <JFXToggleButton fx:id="addPlayerFourToggleButton" layoutX="370" layoutY="235" prefHeight="30" prefWidth="30" onAction="#onAddPlayerFourClicked" />
+   	   <JFXCheckBox fx:id="isPlayerFourKiCheckBox" layoutX="425" layoutY="290" text="KI" />
+   	   <Label fx:id="enterNamePlayerFourLabel" layoutX="425" layoutY="330" text="Name:" />
+   	   <JFXTextField fx:id="playerFourNameTextField" layoutX="425" layoutY="350" />
+   	   <Label fx:id="chooseCharakterPlayerFourLabel" layoutX="425" layoutY="390" text="Charakter auswählen:" />
+   	   <JFXComboBox fx:id="playerFourChooseCharakterComboBox" layoutX="425" layoutY="410" prefWidth="150" />
+   	   
+   	   
+   	   <Label layoutX="240" layoutY="460" text="Schwierigkeit" />
+   	   <JFXComboBox fx:id="editDifficultyComboBox" layoutX="240" layoutY="480" prefHeight="30"  prefWidth="120" />
+   	   
+   	   <!--  
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="editPlayerOrderButton" layoutX="55" layoutY="525" prefHeight="30"  prefWidth="120" text="Zugreihenfolge" />
+   	   -->
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="startGameButton" layoutX="240" layoutY="535" text="Spiel Starten" prefHeight="30"  prefWidth="120" onAction="#onStartGameClicked"/>
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="chooseMapButton" layoutX="55" layoutY="535" prefHeight="30"  prefWidth="120" text="Map auswählen" onAction="#onMapEditorClicked" />
+   	   
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="menuButton" layoutX="425" layoutY="535" text="Hauptmenü" prefHeight="30"  prefWidth="120" onAction="#onCloseClicked"/>
+
+   </children>
+</AnchorPane>

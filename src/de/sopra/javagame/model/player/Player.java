@@ -54,8 +54,17 @@ public abstract class Player implements Copyable<Player> {
 
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> moves = this.position.getNeighbours();
+        List <Point> legalTiles = new ArrayList<>();
+        for (Point currentPoint : moves) {
+            MapTile tile = this.action.getTile(currentPoint);
+            if (tile != null && tile.getState() != GONE) {
+                legalTiles.add(currentPoint);
+            }
+
+        }
         moves = moves.stream().filter(point -> {
             MapTile tile = this.action.getTile(point);
+            //System.out.println(tile.getProperties().getName());
             return tile != null && tile.getState() != GONE;
         }).collect(Collectors.toList());
 

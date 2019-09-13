@@ -105,6 +105,8 @@ public class ControllerChan {
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
         this.javaGame = pair.getLeft();
         this.currentAction = pair.getRight();
+
+        this.inGameViewAUI.refreshAll();
     }
 
     /**

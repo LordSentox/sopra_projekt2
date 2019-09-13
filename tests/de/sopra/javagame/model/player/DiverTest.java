@@ -21,14 +21,17 @@ import static org.junit.Assert.fail;
 
 public class DiverTest {
     MapTile[][] testMap;
-    MapTile[][] testMapNull;
+    MapTile[][] testMapFull;
 
     @Before
     public void setUp() throws Exception {
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         int[][] testMapNumbers = MapUtil.readFullMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        this.testMapNull = new MapTile[12][];
+        String testMapStringFull = new String(Files.readAllBytes(Paths.get("resources/maps/test_maps/test_map1.csv")), StandardCharsets.UTF_8);
+        int[][] testMapNumbersFull = MapUtil.readNumberMapFromString(testMapStringFull);
+        this.testMapFull = MapUtil.createMapFromNumbers(testMapNumbersFull);
+
     }
 
     @Test
@@ -37,24 +40,25 @@ public class DiverTest {
         Player diver = action.getPlayers().get(0);
         List<Point> testLegelMovesWithSpecial = diver.legalMoves(true);
         List<Point> testLegelMovesWithoutSpecial = diver.legalMoves(false);
-        for (Point target : testLegelMovesWithSpecial){
+        for (Point target : testLegelMovesWithSpecial) {
             MapTile tile = action.getTile(target);
             Assert.assertNotNull(tile);
             Assert.assertEquals(tile.getState(), MapTileState.DRY);
         }
-        
-        for (Point target : testLegelMovesWithoutSpecial){
+
+        for (Point target : testLegelMovesWithoutSpecial) {
             MapTile tile = action.getTile(target);
             Assert.assertNotNull(tile);
             Assert.assertEquals(tile.getState(), MapTileState.DRY);
         }
-        
-        
-        Action turnnull = Action.createInitialAction(Difficulty.NORMAL, Arrays.asList(new Pair<>(PlayerType.DIVER, false), new Pair<>(PlayerType.COURIER, false)), this.testMapNull);
-        List<Point> testLegelMovesWithSpecialb = diver.legalMoves(true);
-        List<Point> testLegelMovesWithoutSpecialb = diver.legalMoves(false);
-        Assert.assertEquals(0, testLegelMovesWithoutSpecialb.size());
-        Assert.assertEquals(0, testLegelMovesWithSpecialb.size());
+
+        Action turnFullMapAction = Action.createInitialAction(Difficulty.NORMAL, Arrays.asList(new Pair<>(PlayerType.DIVER, false), new Pair<>(PlayerType.COURIER, false)), this.testMapFull);
+        diver = turnFullMapAction.getPlayer(PlayerType.DIVER);
+        diver.setPosition(MapUtil.getPlayerSpawnPoint(testMapFull,PlayerType.DIVER));
+        List<Point> testLegalMovesWithSpecialb = diver.legalMoves(true);
+        List<Point> testLegalMovesWithoutSpecialb = diver.legalMoves(false);
+        Assert.assertEquals(4, testLegalMovesWithoutSpecialb.size());
+        Assert.assertEquals(0, testLegalMovesWithSpecialb.size());
     }
 
     @Test

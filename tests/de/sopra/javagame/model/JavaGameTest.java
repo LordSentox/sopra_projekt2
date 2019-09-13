@@ -83,14 +83,14 @@ public class JavaGameTest {
         JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
         JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE,
                 Collections.emptyList());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void newGameTooManyPlayers() {
         players.add(new Pair<>(PlayerType.PILOT, false));
         //teste Erstellen mit 5+ Spielern
@@ -112,11 +112,13 @@ public class JavaGameTest {
         Assert.assertSame("Das Java-Game hätte einen neuen Previous Action haben sollen", javaGame.getPreviousAction(), currentAction);
         Assert.assertNotSame("Der neu erstellte Action hätte nicht gleich dem vorherigen sein dürfen", currentAction, nextAction);
 
-        //teste ob korrekr redo Stapel zurückgesetzt wird
-        controllerChan.getGameFlowController().undo();
-        controllerChan.getGameFlowController().undo();
+        nextAction = javaGame.finishAction(nextAction);
+        nextAction = javaGame.finishAction(nextAction);
+
+        //teste ob korrekt redo Stapel zurückgesetzt wird
+        javaGame.undoAction();
+        javaGame.undoAction();
         Assert.assertTrue("There should have been two redo turns", javaGame.canRedo());
-        currentAction = controllerChan.getCurrentAction();
         javaGame.finishAction(currentAction);
         Assert.assertFalse("There should have been no redo turns", javaGame.canRedo());
     }
@@ -171,7 +173,7 @@ public class JavaGameTest {
 
         secondNextAction.setGameWon(true);
         secondNextAction.setGameEnded(true);
-        secondNextAction = javaGame.finishAction(secondNextAction);
+        javaGame.finishAction(secondNextAction);
         Assert.assertEquals("Der score dieses Spiels hätte 120.000 sein müssen",
                 (1.0/turnCount * 10000.0 + (10000/turnCount * secondNextAction.getDiscoveredArtifacts().size())*actualDifficulty) + 100000,
                 javaGame.calculateScore(),
