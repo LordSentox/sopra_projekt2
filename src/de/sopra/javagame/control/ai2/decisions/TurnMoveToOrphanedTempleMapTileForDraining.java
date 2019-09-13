@@ -33,7 +33,6 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
     public Decision decide() {
 
         PlayerType activePlayerType = player().getType();
-        Point activePlayerPosition = player().getPosition();
 
         //Nur für Diver und Pilot relevant
         if (none(activePlayerType == PlayerType.DIVER, activePlayerType == PlayerType.PILOT)) {
@@ -56,7 +55,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             MapTile orphanedTemple = temple.getRight();
             //prüfe, ob Player auf betroffenem Tempel steht
             if (orphanedTemplePoint.equals(activePlayerPosition)) {
-                return false; //FIXME kann diese Aussage wirklich ohne die Prüfung der anderen Tempel getroffen werden
+                continue; 
             }
             //prüfe, ob Tempelatefakt bereits geborgen ist
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
@@ -66,7 +65,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             }
             List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
-                return false; //FIXME kann diese Aussage wirklich ohne die Prüfung der anderen Tempel getroffen werden
+                continue; 
             }
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
