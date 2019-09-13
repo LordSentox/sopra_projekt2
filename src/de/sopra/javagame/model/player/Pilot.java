@@ -57,9 +57,9 @@ public class Pilot extends Player {
 
         List<Point> movement = new ArrayList<>();
         MapTile[][] map = this.action.getTiles();
-        for (int x = 0; x < map.length; x++) {
-            for (int y = 0; y < map[x].length; y++) {
-                if (map[x][y] != null && map[x][y].getState() != MapTileState.GONE) {
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[y].length; x++) {
+                if (map[y][x] != null && map[y][x].getState() != MapTileState.GONE) {
                     movement.add(new Point(x, y));
                 }
             }
