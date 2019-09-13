@@ -1,0 +1,59 @@
+* {
+    -circle-color: #002eaa;
+}
+
+.water-level {
+    -fx-inner-radius: 100.0px !important;
+}
+
+.water-level-border-circle {
+    -fx-fill: transparent;
+    -fx-opacity: 0.8;
+    -fx-stroke-width: 5.0px;
+}
+
+
+.water-level-filler-cover {
+}
+
+.water-level-container  {
+    -fx-padding: 5.0;
+    -fx-background-color: transparent;
+}
+
+.water-level-container > .water-level-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 2.5em;
+}
+
+.water-level-label-circle {
+    -fx-fill: #000;
+    -fx-stroke-width: 3px;
+}
+
+
+.l-water {
+    -fx-text-fill: #0a0;
+    -fx-stroke: #0a0;
+}
+
+.lm-water {
+    -fx-text-fill: #6a0;
+    -fx-stroke: #6a0;
+}
+
+.m-water {
+    -fx-text-fill: #aa0;
+    -fx-stroke: #aa0;
+}
+
+.mh-water {
+    -fx-text-fill: #a60;
+    -fx-stroke: #a60;
+}
+
+.h-water {
+    -fx-text-fill: #a00;
+    -fx-font-size: 3.5em !important;
+    -fx-stroke: #a00;
+}

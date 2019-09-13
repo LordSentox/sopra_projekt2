@@ -24,6 +24,4 @@ public class ArtifactCardTypeTest {
         assertEquals(ArtifactType.NONE, ArtifactCardType.SANDBAGS.toArtifactType());
         assertEquals(ArtifactType.NONE, ArtifactCardType.WATERS_RISE.toArtifactType());
     }
-
-
 }

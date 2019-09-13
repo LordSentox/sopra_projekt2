@@ -2,6 +2,10 @@ package de.sopra.javagame.control;
 
 import static org.junit.Assert.*;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,24 +30,23 @@ public class GameFlowControllerTest {
         gameFlowController = controllerChan.getGameFlowController();
         this.dry = new MapTile();
         this.dry.setState(MapTileState.DRY);
-        
+
 
     }
 
     @Test
     public void testDrawArtifactCards() {
-        
-
+        fail("Not yet implemented");
     }
 
     @Test
     public void testDrawFloodCards() {
-        
+        fail("Not yet implemented");
     }
 
     @Test
     public void testCheckGameEnded() {
-        Assert.assertTrue();
+        fail("Not yet implemented");
     }
 
     @Test

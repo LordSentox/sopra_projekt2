@@ -1,16 +1,21 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.CardStack;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.Point;
 
-import java.awt.*;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
- * bietet Methoden zum aktualisieren der InGameView 
+ * bietet Methoden zum aktualisieren der InGameView
+ *
  * @author Hannah, Lisa
  */
 public interface InGameViewAUI {
@@ -64,7 +69,7 @@ public interface InGameViewAUI {
      *
      * @param artifacts Array der Größe 4, index gibt Art des Artefakt an, wenn true ist es gefunden
      */
-    void refreshArtifactsFound(boolean[] artifacts);
+    void refreshArtifactsFound(EnumSet<ArtifactType> artifacts);
 
     /**
      * aktualisiert die Anzeige des Ziehstapels (Höhe) und des Ablagestapels der Artefaktkarten
@@ -130,5 +135,13 @@ public interface InGameViewAUI {
      *               false: eine Partie kann gespielt werden
      */
     void setIsReplayWindow(boolean replay);
+
+    /**
+     * Soll die Aktionen in der Queue visuell darstellen, als Tipp.
+     * Eventuell kann dieser auch direkt ausgeführt werden: {@link AIController#doSteps(ActionQueue)}
+     *
+     * @param queue die queue an Aktionen, welche als Tipp ausgeführt würden (KI erstellt den Tipp)
+     */
+    void showTip(ActionQueue queue);
 
 }
