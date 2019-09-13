@@ -172,9 +172,7 @@ public class AIController {
         return new Pair<>(new Pair<>(point1, getTile(point1)), new Pair<>(point2, getTile(point2)));
     }
 
-   /**if (control.getTotalAmountOfCardsOnHands(ArtifactCardType.HELICOPTER) > ONE_CARD) {
-//            return this;
-//        }    /**
+   /**
      * Berechne eine Liste aller Tempelpunkte
      *
      * @return eine Liste aller Tempelpunkte (erwartete Länge: 4x2=8)
