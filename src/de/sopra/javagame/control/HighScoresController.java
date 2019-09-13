@@ -1,6 +1,8 @@
 package de.sopra.javagame.control;
 
-import java.io.FileNotFoundException;
+import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.view.HighScoresViewAUI;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,9 +11,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import de.sopra.javagame.util.HighScore;
-import de.sopra.javagame.view.HighScoresViewAUI;
 
 /**
  * Lädt, löscht und speichert die Bestenliste im {@link de.sopra.javagame.view.HighScoresViewController}. Hat keinen

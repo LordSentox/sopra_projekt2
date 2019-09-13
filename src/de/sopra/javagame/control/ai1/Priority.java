@@ -1,6 +1,7 @@
 package de.sopra.javagame.control.ai1;
 
 import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.SimpleAction;
 
 /**
  * <h1>projekt2</h1>
@@ -18,7 +19,7 @@ public interface Priority {
      * @param control der AIController mit allen wichtigen Inhalten
      * @return ein Bewertung der Aktion. Je größer die Zahl, desto wichtiger
      */
-    double getPriority(Action action, AIController control);
+    double getPriority(SimpleAction action, AIController control);
 
     /**
      * Ein Gewichtungswertswert, der als Multiplikator einfließt.

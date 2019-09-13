@@ -45,7 +45,7 @@ public class ActionTest {
 
         Assert.assertEquals(0, action.getActivePlayerIndex());
         Assert.assertEquals(28, action.getArtifactCardStack().size());
-        Assert.assertEquals("", action.getDescription());
+        Assert.assertEquals("Spielstart", action.getDescription());
         Assert.assertEquals(new HashSet(), action.getDiscoveredArtifacts());
         Assert.assertEquals(4, action.getPlayers().size());
         Assert.assertEquals(TurnState.FLOOD, action.getState());

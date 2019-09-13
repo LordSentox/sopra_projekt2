@@ -1,9 +1,15 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.*;
-import de.sopra.javagame.util.*;
-import de.sopra.javagame.view.*;
+import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.Difficulty;
+import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.view.HighScoresViewAUI;
+import de.sopra.javagame.view.InGameViewAUI;
+import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.io.File;
 import java.util.List;
@@ -92,6 +98,7 @@ public class ControllerChan {
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
+        
     public void startNewGame(String mapName, boolean[][] tiles, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
         MapTile[][] map = MapUtil.createAndFillMap(tiles);
         if (map != null) {

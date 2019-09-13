@@ -1,12 +1,16 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_ANY_ARTIFACT_CARD;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 
 /**
@@ -14,13 +18,11 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 10.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = TURN_ACTION, value = TurnFlyActivePlayerToOrphanedTempleMapForDraining.class)
+@PreCondition(allTrue = PLAYER_HAS_ANY_ARTIFACT_CARD)
 public class TurnGiveTreasureCardsToPlayersWhoNeedThem extends Decision {
     @Override
     public Decision decide() {
-
-        if (!playerHand().hasAnyCard(WATER, FIRE, EARTH, AIR)) {
-            return null;
-        }
 
         int water = playerHand().getAmount(WATER);
         int fire = playerHand().getAmount(FIRE);
@@ -51,7 +53,8 @@ public class TurnGiveTreasureCardsToPlayersWhoNeedThem extends Decision {
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
+
 }

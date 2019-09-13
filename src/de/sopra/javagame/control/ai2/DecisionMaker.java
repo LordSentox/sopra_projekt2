@@ -2,10 +2,15 @@ package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
+import de.sopra.javagame.control.ai2.decisions.Decision;
 import de.sopra.javagame.util.Pair;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.*;
@@ -27,21 +32,24 @@ public class DecisionMaker implements AIProcessor {
         try {
             List<Class> classes = ClassUtil.getClasses("de.sopra.javagame.control.ai2.decisions");
             decisionClasses = classes.stream()
-                    .filter(Decision.class::isAssignableFrom)
+                    .filter(clazz -> clazz.isAnnotationPresent(DoAfter.class))
                     .map(clazz -> (Class<? extends Decision>) clazz)
                     .map(clazz -> new Pair<DoAfter, Class<? extends Decision>>(clazz.getDeclaredAnnotation(DoAfter.class), clazz))
                     .collect(Collectors.toList());
+            for (Pair<DoAfter, Class<? extends Decision>> clazz : decisionClasses)
+                System.out.println("> " + clazz.getRight().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void buildTowers() {
+        decisionTowers = new HashMap<>();
         for (DecisionResult decisionType : DecisionResult.values()) {
 
             //Alle für diesen Tower relevanten Decisions herausfiltern
             List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions = decisionClasses.stream()
-                    .filter(pair -> Collections.singletonList(pair.getLeft()).contains(decisionType))
+                    .filter(pair -> pair.getLeft().act().equals(decisionType))
                     .collect(Collectors.toList());
 
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander
@@ -56,7 +64,11 @@ public class DecisionMaker implements AIProcessor {
         }
     }
 
-    private LinkedList<Class<? extends Decision>> buildingQueue
+    List<Pair<DoAfter, Class<? extends Decision>>> getDecisionClasses() {
+        return decisionClasses;
+    }
+
+    LinkedList<Class<? extends Decision>> buildingQueue
             (List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions) {
 
         Queue<Pair<DoAfter, Class<? extends Decision>>> buildingQueue = new LinkedList<>();
@@ -89,10 +101,15 @@ public class DecisionMaker implements AIProcessor {
 
     private Decision buildTower(Queue<Class<? extends Decision>> queuedDecisions) {
         if (!queuedDecisions.isEmpty()) {
-            Decision tower = ClassUtil.create(queuedDecisions.poll());
+            Class<? extends Decision> poll = queuedDecisions.poll();
+            Decision tower = ClassUtil.create(poll);
+            tower.setPreCondition(poll.getDeclaredAnnotation(PreCondition.class));
             if (tower != null) {
                 while (!queuedDecisions.isEmpty()) {
-                    tower = tower.next(ClassUtil.create(queuedDecisions.poll()));
+                    Class<? extends Decision> polled = queuedDecisions.poll();
+                    Decision lessImportantDecision = ClassUtil.create(polled);
+                    lessImportantDecision.setPreCondition(polled.getDeclaredAnnotation(PreCondition.class));
+                    tower = tower.next(lessImportantDecision);
                 }
             }
             return tower;
@@ -102,9 +119,10 @@ public class DecisionMaker implements AIProcessor {
 
     private Decision decide(AIController control, DecisionResult result) {
         Decision decision = decisionTowers.get(result);
-        if (decision != null)
+        if (decision != null) {
             decision.setControl(control);
-        return decision;
+            return decision.decide();
+        } else return Decision.empty();
     }
 
     private Decision makeTurnDecision(AIController control) {
@@ -119,6 +137,10 @@ public class DecisionMaker implements AIProcessor {
         return decide(control, PLAY_SPECIAL_CARD);
     }
 
+    private Decision makeSafetyDecision(AIController control) {
+        return decide(control, SWIM_TO_SAFETY);
+    }
+
     @Override
     public void init() {
         findDecisions();
@@ -127,21 +149,30 @@ public class DecisionMaker implements AIProcessor {
 
     @Override
     public void makeStep(AIController control) {
-        if (control.isCurrentlyDiscarding()) {
-            Decision decision = makeDiscardDecision(control);
-            decision.act();
-        } else {
-            Decision turn = makeTurnDecision(control);
-            turn.act();
-            Decision special = makeSpecialCardDecision(control);
-            if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
-                special.act();
-        }
+        ActionQueue tip = getTip(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
+        control.doSteps(tip);
     }
 
     @Override
-    public String getTip(AIController control) {
-        return null; //TODO
+    public ActionQueue getTip(AIController control) {
+        ActionQueue actionQueue;
+        if (control.isCurrentlyDiscarding()) { //entweder ist der Spieler mit abwerfen beschäftigt
+            Decision decision = makeDiscardDecision(control);
+            actionQueue = decision.act();
+        } else if (control.isCurrentlyRescueingHimself()) { //oder damit sich selbst zu retten
+            Decision decision = makeSafetyDecision(control);
+            actionQueue = decision.act();
+        } else { //ansonsten ist er einfach am Zug
+            Decision turn = makeTurnDecision(control);
+            actionQueue = turn.act();
+        }
+        //für den eigentlich nicht wahrscheinlichen Fall, dass die Queue null ist, eine Sicherheitsmaßnahme
+        if (actionQueue == null)
+            actionQueue = new ActionQueue(control.getActivePlayer().getType());
+        Decision special = makeSpecialCardDecision(control);
+        if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
+            actionQueue.nextActions(special.act());
+        return actionQueue;
     }
 
 }

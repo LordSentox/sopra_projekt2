@@ -1,5 +1,9 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.util.MapCheckUtil;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.view.MapEditorViewAUI;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -101,34 +103,11 @@ public class MapController {
             System.err.println("Man muss einen Name angeben!");
         }
         try {
-            String scoresToString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
-             // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
-            String[] maps = scoresToString.split("\n");
-            String[][] mapcsv = new String[maps.length][];
-            for (int i = 0; i < maps.length; ++i) {
-                String[] split = maps[i].split(",");
-                mapcsv[i] = split;
-            }
-            
-            boolean[][] mapTile = new boolean[12][12];
-            
-            for (String[] row : mapcsv) {
-                if (row.length != 12) {
-                    System.err.println("Map für " + name + " konnten nicht gelesen werden. Eine Zeile ist korrumpiert.");
-                    return;
-                }    
-            }
-            for (int y = 0; y < 12; y++){
-                for (int x = 0; x < 12; x++){
-                    if (mapcsv[y][x] == "X"){
-                        mapTile[y][x] = true;
-                    }else {
-                        mapTile[y][x] = false;
-                    }
-                }
-            }
-            
-            mapEditorViewAUI.setMap(name, mapTile);
+            String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
+
+            boolean[][] mapTiles = MapUtil.readBoolMapFromString(mapString);
+
+            mapEditorViewAUI.setMap(name, mapTiles);
             
         } catch (IOException e) {
             System.err.println("Map konnten nicht eingelesen werden");

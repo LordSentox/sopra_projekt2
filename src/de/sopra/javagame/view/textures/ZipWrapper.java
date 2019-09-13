@@ -9,7 +9,7 @@ import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class ZipWrapper implements Iterable<ZipEntry>{
+public class ZipWrapper implements Iterable<ZipEntry> {
 
     private ZipFile zipFile;
 
@@ -42,37 +42,17 @@ public class ZipWrapper implements Iterable<ZipEntry>{
 
     @Override
     public Iterator<ZipEntry> iterator() {
-        return Spliterators.iterator(Spliterators.spliteratorUnknownSize(new EnumerationIterator<>(zipFile.entries()), Spliterator.ORDERED));
+        return Spliterators.iterator(Spliterators.spliteratorUnknownSize(Collections.list(zipFile.entries()).iterator(), Spliterator.ORDERED));
     }
 
     public Stream<ZipEntry> stream() {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(new EnumerationIterator<>(zipFile.entries()), Spliterator.ORDERED), false);
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(Collections.list(zipFile.entries()).iterator(), Spliterator.ORDERED), false);
     }
 
     public Stream<ZipEntry> parallelStream() {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(new EnumerationIterator<>(zipFile.entries()), Spliterator.ORDERED), true);
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(Collections.list(zipFile.entries()).iterator(), Spliterator.ORDERED), true);
     }
 
-
-    private static class EnumerationIterator<T> implements Iterator<T> {
-
-        private Enumeration<T> enumeration;
-
-        EnumerationIterator(Enumeration<T> enumeration) {
-            this.enumeration = enumeration;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return enumeration.hasMoreElements();
-        }
-
-        @Override
-        public T next() {
-            return enumeration.nextElement();
-        }
-
-    }
 
     public static class ZipEntryList extends ArrayList<ZipEntry> {
 

@@ -27,7 +27,7 @@ public class GameFlowController {
     public void drawArtifactCards() {
         WaterLevel waterLevel = controllerChan.getCurrentAction().getWaterLevel();
         CardStack<ArtifactCard> artifactCardStack = controllerChan.getCurrentAction().getArtifactCardStack();
-        List<ArtifactCard> drawnCards = artifactCardStack.draw( 2, false);
+        List<ArtifactCard> drawnCards = artifactCardStack.draw(2, false);
         Player activePlayer = controllerChan.getCurrentAction().getActivePlayer();
         for (ArtifactCard currentCard : drawnCards) {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
@@ -63,19 +63,22 @@ public class GameFlowController {
      * Zieht die Menge an Flutkarten, die laut {@link de.sopra.javagame.model.WaterLevel} gezogen werden müssen und
      * überflutet bzw. versenkt die entsprechenden Felder.
      */
-    public void drawFloodCard() {
+	public void drawFloodCards() {
         WaterLevel waterLevel = controllerChan.getCurrentAction().getWaterLevel();
         CardStack<FloodCard> floodCardCardStack = controllerChan.getCurrentAction().getFloodCardStack();
-        FloodCard floodCard = floodCardCardStack.draw(true);
-        floodCard.flood();
-        //check if one or more Players are drowning
-        List<Player> rescuesNeeded = playersNeedRescue(MapUtil.getPositionForTile(floodCard.getTile().getProperties()));
-        for (Player rescuePlayer : rescuesNeeded) {
-            controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(false));
+        List<FloodCard> floodCards = floodCardCardStack.draw(waterLevel.getDrawAmount(), true);
+        for (FloodCard currentCard : floodCards) {
+            currentCard.flood();
+            //check if one or more Players are drowning
+            List<Player> rescuesNeeded = playersNeedRescue(MapUtil.getPositionForTile(controllerChan.getCurrentAction().getTiles(), currentCard.getTile().getProperties()));
+            for(Player rescuePlayer : rescuesNeeded) {
+                controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(false));
+            }
+            controllerChan.getInGameViewAUI().refreshMapTile(MapUtil.getPositionForTile(controllerChan.getCurrentAction().getTiles(),
+                    currentCard.getTile().getProperties()),
+                                                            currentCard.getTile());
+            controllerChan.finishAction();
         }
-        controllerChan.getInGameViewAUI().refreshMapTile(MapUtil.getPositionForTile(floodCard.getTile().getProperties()),
-                floodCard.getTile());
-        controllerChan.finishAction();
     }
 
 

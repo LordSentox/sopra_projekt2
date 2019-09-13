@@ -1,13 +1,20 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION_LEFT;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -18,10 +25,15 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @version 11.09.2019
  * @since 09.09.2019
  */
+
+@DoAfter(act = TURN_ACTION, value = TurnGivePlayerTheFourthTreasureCard.class)
+@PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public Decision decide() {
+
+        Point activePlayerPosition = player().getPosition();
 
         List<Pair<Point, MapTile>> templeList = control.getTemples();
 
@@ -31,27 +43,31 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
         for (Pair<Point, MapTile> temple : templeList) {
 
             Point orphanedTemplePoint = temple.getLeft();
+            MapTile orphanedTemple = temple.getRight();
+            //prüft, ob aktiver Spieler auf dem betroffenen Tempel steht
+            if (!activePlayerPosition.equals(orphanedTemplePoint)) {
+                return null;
+            }
+            //prüft, ob Tempel überhaupt geflutet ist
+            if (orphanedTemple.getState() != MapTileState.FLOODED) {
+                continue;
+            }
+
+            ArtifactType templeType = orphanedTemple.getProperties().getHidden();
+            EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
+            //prüft, ob Artefakt des betroffenen Tempels bereits geborgen wurde, dann Tempelrettung irrelevant
+            if (discoveredArtifacts.contains(templeType)) {
+                continue;
+            }
 
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
 
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
 
-            //wenn eins nicht GONE ist
+            //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
-
-            //old way of if above
-//            if (!((northernNeighbour == null || northernNeighbour.getState() == GONE)
-//                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == GONE)
-//                    && (easternNeighbour == null || easternNeighbour.getState() == GONE)
-//                    && (southEasternNeighbour == null || southEasternNeighbour.getState() == GONE)
-//                    && (southernNeighbour == null || southernNeighbour.getState() == GONE)
-//                    && (southWesternNeighbour == null || southWesternNeighbour.getState() == GONE)
-//                    && (westernNeighbour == null || westernNeighbour.getState() == GONE)
-//                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == GONE))) {
-//                continue;
-//            }
 
             return this;
 
@@ -61,9 +77,8 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

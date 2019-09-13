@@ -46,12 +46,8 @@ public class Engineer extends Player {
         boolean drained = super.drain(position);
         if (!drained && this.hasExtraDrain) {
             this.actionsLeft--;
-        }
-        else if (drained && this.hasExtraDrain) {
-            this.hasExtraDrain = false;
-        }
-        else if (drained && !this.hasExtraDrain) {
-            this.hasExtraDrain = true;
+        } else if (drained) {
+            this.hasExtraDrain = !this.hasExtraDrain;
         }
 
         return drained;
@@ -65,6 +61,10 @@ public class Engineer extends Player {
         }
 
         return success;
+    }
+
+    public boolean hasExtraDrain() {
+        return hasExtraDrain;
     }
 
     @Override

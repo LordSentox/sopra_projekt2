@@ -44,7 +44,8 @@ public class Explorer extends Player {
             return moves;
 
         // Diagonale Bewegungen
-        List<Point> additional = Arrays.asList(new Point(this.position.add(-1, -1)),
+        List<Point> additional = Arrays.asList(
+                new Point(this.position.add(-1, -1)),
                 new Point(this.position.add(-1, 1)),
                 new Point(this.position.add(1, 1)),
                 new Point(this.position.add(1, -1)));

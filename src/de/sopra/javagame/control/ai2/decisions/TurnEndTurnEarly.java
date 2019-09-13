@@ -1,6 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.control.ai2.DoAfter;
+
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 
 /**
  * <h1>projekt2</h1>
@@ -9,14 +12,16 @@ import de.sopra.javagame.control.ai2.Decision;
  * @version 11.09.2019
  * @since 11.09.2019
  */
+@DoAfter(act = TURN_ACTION, value = TurnMoveTowardsMiddle.class)
 public class TurnEndTurnEarly extends Decision {
     @Override
     public Decision decide() {
-        return null; //TODO
+        return this;
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
+
 }

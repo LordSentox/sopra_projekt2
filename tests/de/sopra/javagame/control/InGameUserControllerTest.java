@@ -122,7 +122,7 @@ public class InGameUserControllerTest {
     public void testPlayHelicopterCardNullMapTile() {
         //teste mit ungültigem Zielfeld(kein maptile)
         explorer.getHand().add(heliCard);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(navigator.getPosition(), new Point(1, 1)), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(navigator.getPosition(), new Point(5, 2)), moveablePlayers);
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);

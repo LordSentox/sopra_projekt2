@@ -4,7 +4,6 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.util.MapCheckUtil;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,21 +89,24 @@ public class MapControllerTest {
 
     @Test
     public void testLoadMapToEditor() throws FileNotFoundException {
-        File outFile = new File(MapController.MAP_FOLDER + name + ".txt");
+        File outFile = new File(MapController.MAP_FOLDER + name + ".map");
         PrintWriter out = new PrintWriter(outFile);
-        out.println(mapString);
+        out.write(mapString);
+        out.close();
 
-        for (int i = 1; i < 11; i++) {
-            for (int j = 1; j < 3; j++) {
-                map[i][j] = true;
+        for (int y = 1; y < 3; y++) {
+            for (int x = 1; x < 11; x++) {
+                map[y][x] = true;
             }
         }
-        for (int i = 1; i < 5; i += 2) {
-            map[i][3] = true;
+        for (int x = 1; x < 5; x++) {
+            map[3][x] = true;
         }
 
         mapController.loadMapToEditor(name);
-        Assert.assertEquals(map, mapEditorView.getTiles());
+        for (int y = 0; y < map.length; ++y) {
+            Assert.assertArrayEquals(map[y], mapEditorView.getTiles()[y]);
+        }
         
         outFile.delete();
     }

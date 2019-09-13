@@ -60,7 +60,7 @@ public class InGameUserController {
         //entferne die gespielte Karte von der Spieler-Hand
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
-        Player HARTMUT = null;
+        Player derHARTMUT = null;
         //bewege die players
         for (PlayerType currentPlayerType : players) {
             Player currentPlayer = currentAction.getPlayer(currentPlayerType);
@@ -69,10 +69,10 @@ public class InGameUserController {
                         "Fliegen ist so nicht möglich!");
             }
             currentPlayer.setPosition(flightRoute.getRight());
-            HARTMUT = currentPlayer;
+            derHARTMUT = currentPlayer;
             controllerChan.getInGameViewAUI().refreshPlayerPosition(currentPlayer.getPosition(), currentPlayer.getType());
         }
-        if (HARTMUT == currentAction.getPlayer(PlayerType.EXPLORER)){
+        if (derHARTMUT == currentAction.getPlayer(PlayerType.EXPLORER)){
             System.out.println("U Serious?");
         }
         if (currentAction != controllerChan.getCurrentAction()) {

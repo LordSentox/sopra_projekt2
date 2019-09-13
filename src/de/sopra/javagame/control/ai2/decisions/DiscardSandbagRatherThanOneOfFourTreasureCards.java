@@ -1,8 +1,13 @@
 package de.sopra.javagame.control.ai2.decisions;
 
-import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 
-import static de.sopra.javagame.model.ArtifactCardType.*;
+import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_SANDBAGS_CARD;
+
 
 /**
  * <h1>projekt2</h1>
@@ -11,29 +16,16 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 10.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = PLAY_SPECIAL_CARD, value = DiscardOddTreasureCardWhenPlayerHasThreeOfSomething.class)
+@PreCondition(allTrue = {PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS, PLAYER_HAS_SANDBAGS_CARD})
 public class DiscardSandbagRatherThanOneOfFourTreasureCards extends Decision {
     @Override
     public Decision decide() {
-
-        if (!playerHand().hasCard(SANDBAGS)) {
-            return null;
-        }
-
-        int water = playerHand().getAmount(WATER);
-        int fire = playerHand().getAmount(FIRE);
-        int earth = playerHand().getAmount(EARTH);
-        int air = playerHand().getAmount(AIR);
-
-        if (any(air == FOUR_CARDS, fire == FOUR_CARDS, earth == FOUR_CARDS, water == FOUR_CARDS)) {
-            return this;
-        }
-
-        return null;
-
+        return this;
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 }

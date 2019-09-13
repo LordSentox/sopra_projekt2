@@ -2,6 +2,8 @@ package de.sopra.javagame.control.ai1;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
+import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.control.ai.SimpleAction;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +28,7 @@ public class Prioritizer implements AIProcessor {
 
     }
 
-    double getPriority(Action action, AIController control) {
+    double getPriority(SimpleAction action, AIController control) {
         Optional<Priority> priority = priorities.stream()
                 .reduce((pr1, pr2) -> (act, con) -> pr1.getPriority(act, con) + pr2.getPriority(act, con));
         return priority.map(value -> value.getPriority(action, control)).orElse(-1.0);
@@ -43,7 +45,7 @@ public class Prioritizer implements AIProcessor {
     }
 
     @Override
-    public String getTip(AIController control) {
+    public ActionQueue getTip(AIController control) {
         return null; //TODO
     }
 
