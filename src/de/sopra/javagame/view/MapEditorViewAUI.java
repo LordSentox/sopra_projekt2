@@ -17,7 +17,7 @@ public interface MapEditorViewAUI {
      * setzt die Karte auf eine vorher ausgewählte Karte, die in Form eines boolean Arryas übergeben wurde
      *
      * @param mapName
-     * @param tiles true: hier kann ein MapTile platziert werden
+     * @param tiles   true: hier kann ein MapTile platziert werden
      */
     void setMap(String mapName, boolean[][] tiles);
 

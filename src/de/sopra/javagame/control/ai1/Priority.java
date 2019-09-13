@@ -18,7 +18,7 @@ public interface Priority {
      * @param control der AIController mit allen wichtigen Inhalten
      * @return ein Bewertung der Aktion. Je größer die Zahl, desto wichtiger
      */
-    double getPriority(Action action, AIController control);
+    double getPriority(SimpleAction action, AIController control);
 
     /**
      * Ein Gewichtungswertswert, der als Multiplikator einfließt.

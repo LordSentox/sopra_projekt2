@@ -8,11 +8,14 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.AIActionTip;
+import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * <h1>projekt2</h1>
@@ -127,7 +130,8 @@ public class AIController {
      * @return ein Pair aus Punkt und MapTile
      */
     public Pair<Point, MapTile> getTile(PlayerType playerType) {
-        return null; //TODO
+        Point playerSpawnPoint = MapUtil.getPlayerSpawnPoint(getCurrentAction().getTiles(), playerType);
+        return new Pair<>(playerSpawnPoint, getTile(playerSpawnPoint));
     }
 
     /**
@@ -138,7 +142,18 @@ public class AIController {
      * die jeweils die Position und das zugehörige MapTile eines Tempels beinhalten
      */
     public Pair<Pair<Point, MapTile>, Pair<Point, MapTile>> getTile(ArtifactType artifactType) {
-        return null; //TODO
+        Point point1 = null, point2 = null;
+        for (MapTileProperties properties : MapTileProperties.values()) {
+            if (properties.getHidden() == artifactType) {
+                if (point1 == null) {
+                    point1 = MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties);
+                } else {
+                    point2 = MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties);
+                    break;
+                }
+            }
+        }
+        return new Pair<>(new Pair<>(point1, getTile(point1)), new Pair<>(point2, getTile(point2)));
     }
 
     /**
@@ -147,7 +162,15 @@ public class AIController {
      * @return eine Liste aller Tempelpunkte (erwartete Länge: 4x2=8)
      */
     public List<Pair<Point, MapTile>> getTemples() {
-        return null; //TODO
+        List<Point> templePoints = new LinkedList<>();
+        for (MapTileProperties properties : MapTileProperties.values()) {
+            if (properties.getHidden() != ArtifactType.NONE) {
+                templePoints.add(MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties));
+            }
+        }
+        return templePoints.stream()
+                .map(point -> new Pair<>(point, getTile(point)))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -198,7 +221,14 @@ public class AIController {
      * @return ein beliebiges Tile im gegebenen Zustand
      */
     public MapTile anyTile(MapTileState state) {
-        return null; //TODO
+        for (MapTile[] tileRow : getCurrentAction().getTiles()) {
+            for (MapTile tile : tileRow) {
+                if (tile.getState() == state) {
+                    return tile;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -243,6 +273,11 @@ public class AIController {
      */
     public String getTip() {
         return getTip(() -> getCurrentAction().getActivePlayer());
+    }
+
+    public boolean landingSiteIsFlooded() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

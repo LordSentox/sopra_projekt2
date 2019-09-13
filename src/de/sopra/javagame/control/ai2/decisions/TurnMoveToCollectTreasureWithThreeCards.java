@@ -1,10 +1,14 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_ANY_ARTIFACT_CARD;
 
 /**
  * <h1>projekt2</h1>
@@ -13,6 +17,8 @@ import de.sopra.javagame.model.MapTile;
  * @version 10.09.2019
  * @since 10.09.2019
  */
+@DoAfter(act = TURN_ACTION, value = TurnDrainTile.class)
+@PreCondition(allTrue = PLAYER_HAS_ANY_ARTIFACT_CARD)
 public class TurnMoveToCollectTreasureWithThreeCards extends Decision {
     @Override
     public Decision decide() {
