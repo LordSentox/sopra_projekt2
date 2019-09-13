@@ -1,5 +1,6 @@
-package de.sopra.javagame.control.ai1;
+package de.sopra.javagame.control.ai;
 
+import de.sopra.javagame.control.ai1.ActionType;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
