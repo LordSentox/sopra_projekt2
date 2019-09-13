@@ -3,6 +3,8 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.util.MapCheckUtil;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,8 +56,34 @@ public class MapControllerTest {
     @Test
     public void testGenerateMapToEditor() {
         //TODO generate Methode implementieren
-        //TODO danach test anpassen
-        Assert.fail();
+        //TODO danach test anpassen        
+        try {
+            mapController.generateMapToEditor();
+            String content = new String(Files.readAllBytes(Paths.get("Coole Insel" + ".map")), StandardCharsets.UTF_8);
+            // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
+            String[] maps = content.split("\n");
+            String[][] gmap = new String[maps.length][];
+            for (int i = 0; i < maps.length; ++i) {
+                String[] split = maps[i].split(",");
+                gmap[i] = split;
+            }
+            
+            for (int y = 0; y < 12; y++){
+                for (int x = 0; x < 12; x++){
+                    if (gmap[y][x] == "X"){
+                        map[y][x] = true;
+                        
+                    }else {
+                        map[y][x] = false;
+                    }
+                }
+            }
+            Assert.assertTrue(MapCheckUtil.checkMapValidity(map));
+            
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
 
     }
@@ -90,6 +118,7 @@ public class MapControllerTest {
 
     @Test
     public void testSaveMap() throws IOException {
+        String content = new String(Files.readAllBytes(Paths.get(name + ".map")), StandardCharsets.UTF_8);
 
         //teste saveMap mit unvollständiger Map
         mapController.saveMap(name, map);
@@ -136,7 +165,7 @@ public class MapControllerTest {
         }
         mapController.saveMap(name, map);
 
-        String content = new String(Files.readAllBytes(Paths.get(name + ".java")), StandardCharsets.UTF_8);
+        content = new String(Files.readAllBytes(Paths.get(name + ".map")), StandardCharsets.UTF_8);
         Assert.assertEquals(mapString, content);
 
         //teste mit korrekter map ohne Namen

@@ -56,8 +56,11 @@ public class MapController {
      */
     public void generateMapToEditor() {
         boolean[][] feldsUsed = new boolean[12][12];
-        for (int i = 0; i < feldsUsed[i].length; i++){ 
-        Arrays.fill(feldsUsed[i], false);
+        for (int i = 0; i < 12; i++){ 
+            for (int j = 0; j < 12; j++){
+                feldsUsed[i][j] = false;
+            }
+        
         }
         Random random = new Random();
         boolean unqualified =true;
@@ -84,6 +87,9 @@ public class MapController {
      * @param name Der Name der Karte, die geladen werden soll.
      */
     public void loadMapToEditor(String name) {
+        if (name == ""){
+            System.err.println("Man muss einen Name angeben!");
+        }
         try {
             String scoresToString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
              // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
@@ -105,9 +111,9 @@ public class MapController {
             for (int y = 0; y < 12; y++){
                 for (int x = 0; x < 12; x++){
                     if (mapcsv[y][x] == "X"){
-                        mapTile[y][x] = false;
-                    }else {
                         mapTile[y][x] = true;
+                    }else {
+                        mapTile[y][x] = false;
                     }
                 }
             }
@@ -130,15 +136,18 @@ public class MapController {
      * @param tiles Die Tiles, die die Karte beschreiben.
      */
     public void saveMap(String name, boolean[][] tiles) {
+        if (name == ""){
+            System.err.println("Die Karte muss einen Namen enthalten!");
+        }
         try {
             BufferedWriter out =new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name +".map"),  StandardCharsets.UTF_8));
             String[][] mapTiles = new String[tiles.length][];
             for (int y = 0; y < 12; y++){
                 for (int x = 0; x < 12; x++){
                     if (tiles[y][x] == false){
-                        mapTiles[y][x] = "X";
-                    }else {
                         mapTiles[y][x] = "-";
+                    }else {
+                        mapTiles[y][x] = "X";
                         
                     }
                     if (x != 11){
