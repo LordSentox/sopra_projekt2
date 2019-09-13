@@ -44,24 +44,29 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
-        for (Pair<Point, MapTile> temple : templeList) {
+        return checkTemples(templeList) ? this : null;
+
+    }
+
+    private boolean checkTemples(List<Pair<Point, MapTile>> temples) {
+        PlayerType activePlayerType = player().getType();
+        Point activePlayerPosition = player().getPosition();
+        for (Pair<Point, MapTile> temple : temples) {
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
             //prüfe, ob Player auf betroffenem Tempel steht
             if (orphanedTemplePoint.equals(activePlayerPosition)) {
-                return null;
+                return false; //FIXME kann diese Aussage wirklich ohne die Prüfung der anderen Tempel getroffen werden
             }
             //prüfe, ob Tempelatefakt bereits geborgen ist
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
             EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
-
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-
             List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
-                return null;
+                return false; //FIXME kann diese Aussage wirklich ohne die Prüfung der anderen Tempel getroffen werden
             }
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
@@ -69,9 +74,9 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
-            return this;
+            return true;
         }
-        return null;
+        return false;
     }
 
     @Override
