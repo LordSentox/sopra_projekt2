@@ -101,10 +101,8 @@ public interface InGameViewAUI {
 
     /**
      * aktualisiert die Anzeige welcher Spieler an der Reihe ist
-     *
-     * @param player Spieler der zurzeit am Zug ist
      */
-    void refreshActivePlayer(PlayerType player);
+    void refreshActivePlayer();
 
     /**
      * aktualisiert die Anzeige der übrigen Aktionen

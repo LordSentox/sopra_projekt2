@@ -2,6 +2,8 @@ package de.sopra.javagame;
 
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.Diver;
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.HighScore;
@@ -180,8 +182,8 @@ public class TestDummy {
         }
 
         @Override
-        public void refreshActivePlayer(PlayerType player) {
-            this.activePlayer = player;
+        public void refreshActivePlayer() {
+            this.activePlayer = PlayerType.COURIER; //FIXME
         }
 
         @Override

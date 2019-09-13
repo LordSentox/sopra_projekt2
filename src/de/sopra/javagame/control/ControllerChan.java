@@ -106,6 +106,8 @@ public class ControllerChan {
             this.javaGame = pair.getLeft();
             this.currentAction = pair.getRight();
         }
+        
+        this.inGameViewAUI.refreshAll();
     }
 
     /**

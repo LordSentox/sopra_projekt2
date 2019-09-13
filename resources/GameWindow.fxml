@@ -34,17 +34,18 @@
    			preserveRatio="true"
    			layoutX="1330.0"
    			layoutY="975.0"
+   			visible="true"
    		/>
    		
    		
    		<!-- Passive Player Hands -->
-   		<ImageView fx:id="playerOneTypeImageView" styleClass="CardView" layoutX="20.0" layoutY="180"/>
+   		<ImageView fx:id="playerOneTypeImageView" styleClass="CardView" layoutX="20.0" layoutY="180" preserveRatio="true" visible="true"/>
    		<GridPane fx:id="handOneCardGridPane" layoutX="150.0" layoutY="180"/>
    		
-   		<ImageView fx:id="playerTwoTypeImageView" styleClass="CardView" layoutX="20.0" layoutY="360"/>
+   		<ImageView fx:id="playerTwoTypeImageView" styleClass="CardView" layoutX="20.0" layoutY="360" preserveRatio="true" visible="true"/>
    		<GridPane fx:id="handTwoCardGridPane" layoutX="150.0" layoutY="360"/>
    		
-   		<ImageView fx:id="playerThreeTypeImageView" styleClass="CardView" layoutX="20.0" layoutY="540"/>
+   		<ImageView fx:id="playerThreeTypeImageView" styleClass="CardView" layoutX="20.0" layoutY="540" preserveRatio="true" visible="true"/>
    		<GridPane fx:id="handThreeCardGridPane" layoutX="150.0" layoutY="540"/>
    		
    		
@@ -67,13 +68,13 @@
    		
    		<!-- Artifacts -->
    		
-   		<ImageView fx:id="fireArtefactImageView" layoutX="20" layoutY="0" />
-   		<ImageView fx:id="waterArtefactImageView" layoutX="140" layoutY="0" />
-        <ImageView fx:id="airArtefactImageView" layoutX="260" layoutY="0" />
-   		<ImageView fx:id="earthArtefactImageView" layoutX="380" layoutY="0" />
+   		<ImageView fx:id="fireArtefactImageView" layoutX="20" layoutY="0" preserveRatio="true"/>
+   		<ImageView fx:id="waterArtefactImageView" layoutX="140" layoutY="0" preserveRatio="true"/>
+        <ImageView fx:id="airArtefactImageView" layoutX="260" layoutY="0" preserveRatio="true"/>
+   		<ImageView fx:id="earthArtefactImageView" layoutX="380" layoutY="0" preserveRatio="true"/>
    		
-   		<ImageView fx:id="turnSpinnerWithoutMarkerImageView" layoutX="1650" layoutY="960" />
-   		<ImageView fx:id="markerForSpinnerImageView" layoutX="1650" layoutY="970" />
+   		<ImageView fx:id="turnSpinnerWithoutMarkerImageView" layoutX="1650" layoutY="960" preserveRatio="true"/>
+   		<ImageView fx:id="markerForSpinnerImageView" layoutX="1650" layoutY="970" preserveRatio="true"/>
    		
    		<!-- Settings -->
    		
