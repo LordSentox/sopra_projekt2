@@ -72,6 +72,13 @@ public final class SimpleAction implements Copyable<SimpleAction> {
         return targetPlayers;
     }
 
+    /**
+     * Der Startpunkt der Aktion, falls die Aktion keinen impliziten Startpunkt hat.
+     * Die Position des ausführenden Spielers wird beispielsweise bei einer normaler Bewegung nicht festgehalten.
+     * Ist primär relevant für Helikopter-Spezialkarten und die Spezialaktion des Navigators.
+     *
+     * @return der Startpunkt der Aktion
+     */
     public Point getStartingPoint() {
         return startingPoint;
     }

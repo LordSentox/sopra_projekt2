@@ -1,7 +1,6 @@
 package de.sopra.javagame.control.ai;
 
 import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Direction;
@@ -27,9 +26,9 @@ import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
 public final class ActionQueue {
 
     private Queue<SimpleAction> actions = new LinkedList<>();
-    private Player currentPlayer;
+    private PlayerType currentPlayer;
 
-    public ActionQueue(Player player) {
+    public ActionQueue(PlayerType player) {
         currentPlayer = player;
     }
 
@@ -46,7 +45,7 @@ public final class ActionQueue {
         return actions.size();
     }
 
-    public Player getPlayer() {
+    public PlayerType getPlayer() {
         return currentPlayer;
     }
 
@@ -67,12 +66,12 @@ public final class ActionQueue {
     }
 
     public ActionQueue move(Point targetPoint) {
-        nextAction(new SimpleAction(MOVE, currentPlayer.getPosition(), targetPoint));
+        nextAction(new SimpleAction(MOVE, null, targetPoint));
         return this;
     }
 
     public ActionQueue drain(Point targetPoint) {
-        nextAction(new SimpleAction(DRAIN, currentPlayer.getPosition(), targetPoint));
+        nextAction(new SimpleAction(DRAIN, null, targetPoint));
         return this;
     }
 
@@ -97,7 +96,7 @@ public final class ActionQueue {
     }
 
     public ActionQueue diveTo(Point targetPoint) {
-        nextAction(new SimpleAction(currentPlayer.getPosition(), targetPoint, EnumSet.noneOf(PlayerType.class)));
+        nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;
     }
 
@@ -107,12 +106,12 @@ public final class ActionQueue {
     }
 
     public ActionQueue flyTo(Point targetPoint) {
-        nextAction(new SimpleAction(currentPlayer.getPosition(), targetPoint, EnumSet.noneOf(PlayerType.class)));
+        nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;
     }
 
     public ActionQueue explore(Point targetPoint) {
-        nextAction(new SimpleAction(currentPlayer.getPosition(), targetPoint, EnumSet.noneOf(PlayerType.class)));
+        nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;
     }
 
@@ -122,7 +121,7 @@ public final class ActionQueue {
     }
 
     public ActionQueue engineersDrain(Point targetPoint) {
-        nextAction(new SimpleAction(currentPlayer.getPosition(), targetPoint, EnumSet.noneOf(PlayerType.class)));
+        nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;
     }
 
