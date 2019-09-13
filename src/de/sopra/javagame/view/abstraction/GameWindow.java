@@ -2,6 +2,8 @@ package de.sopra.javagame.view.abstraction;
 
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.view.*;
+import de.sopra.javagame.view.command.Commands;
+import de.spaceparrots.api.command.interfaces.CommandResult;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextInputDialog;
@@ -158,42 +160,15 @@ public class GameWindow {
                 dialog.initStyle(StageStyle.UTILITY);
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
-                    System.out.println(result.get());
+                    CommandResult commandResult = Commands.processCommand(this, result.get());
+                    if (!commandResult.wasSuccessful())
+                        System.out.println(commandResult.getResultMessage());
+                    else System.out.println("result: " + commandResult.get());
                 }
-                //TODO replace sout with Commands call
             }
         });
     }
 
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GameWindow.fxml"));
-//        AnchorPane mainPane = fxmlLoader.load();
-//        InGameViewController inGameViewController = fxmlLoader.getController();
-//
-//
-//        Scene mainScene = new Scene(mainPane);
-//        mainScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
-//        fullScreenStage.setScene(mainScene);
-//        fullScreenStage.setResizable(false);
-//        fullScreenStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-//        fullScreenStage.setFullScreen(true);
-//        fullScreenStage.show();
-//
-//        fullScreenStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-//            if (event.isAltDown() && event.getCode() == KeyCode.C) {
-//                TextInputDialog dialog = new TextInputDialog("");
-//                dialog.setContentText("Command:");
-//                dialog.setTitle(null);
-//                dialog.setHeaderText(null);
-//                dialog.initModality(Modality.WINDOW_MODAL);
-//                dialog.initOwner(fullScreenStage);
-//                dialog.initStyle(StageStyle.UTILITY);
-//                Optional<String> result = dialog.showAndWait();
-//                System.out.println(result.get());
-//                //TODO replace sout with Commands call
-//            }
-//        });
-//
-//        inGameViewController.init();
 
     /**
      * Wechselt die aktuelle {@link ViewState} zur Übergebenen
