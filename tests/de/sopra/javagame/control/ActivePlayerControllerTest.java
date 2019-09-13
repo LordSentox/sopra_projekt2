@@ -426,8 +426,78 @@ public class ActivePlayerControllerTest {
     }
 
     @Test
-    public void testDrain() {
-        fail("Not yet implemented");
+    public void testDrain() throws Exception {
+        players = Arrays.asList(
+                new Pair<>(PlayerType.NAVIGATOR, false),
+                new Pair<>(PlayerType.EXPLORER, false),
+                new Pair<>(PlayerType.ENGINEER, false),
+                new Pair<>(PlayerType.PILOT, false));
+
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        TestDummy.injectJavaGame(controllerChan, pair.getLeft());
+        TestDummy.injectCurrentAction(controllerChan, pair.getRight());
+        action = pair.getRight();
+        javaGame = controllerChan.getJavaGame();
+
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
+        action.getActivePlayer().setActionsLeft(3);
+
+        testMap[3][7].flood();
+        testMap[3][3].flood();
+        testMap[3][2].flood();
+        testMap[2][4].flood();
+        testMap[2][4].flood();
+        testMap[2][1].flood();
+        testMap[3][5].flood();
+
+        printMap(testMap);
+
+        Player activePlayer = action.getActivePlayer();
+        activePlayer.setActionsLeft(3);
+
+
+        assertEquals(activePlayer.getType(), PlayerType.NAVIGATOR);
+        assertEquals(activePlayer.getPosition(), new Point(2, 3));
+        activePlayerController.drain(new Point(1, 2));
+        assertEquals("Invalid tile was drained by Navigator", MapTileState.FLOODED, testMap[2][1].getState());
+        assertEquals("Navigator used action despite not draining tile", 3, activePlayer.getActionsLeft());
+        activePlayerController.drain(new Point(2, 3));
+        assertEquals("Tile which the Navigator was standing on was not drained by Navigator", MapTileState.DRY, testMap[3][2].getState());
+        assertEquals("Navigator did not use action despite draining tile", 2, activePlayer.getActionsLeft());
+
+
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        activePlayer.setActionsLeft(3);
+
+        assertEquals(activePlayer.getType(), PlayerType.EXPLORER);
+        assertEquals(activePlayer.getPosition(), new Point(6, 4));
+        activePlayerController.drain(new Point(6, 4));
+        assertEquals("Dry tile was modified by draining", MapTileState.DRY, testMap[4][6].getState());
+        assertEquals("Explorer used action despite not draining tile", 3, activePlayer.getActionsLeft());
+        activePlayerController.drain(new Point(7, 3));
+        assertEquals("Valid tile was not drained by Explorer", MapTileState.DRY, testMap[3][7].getState());
+        assertEquals("Explorer did not use action despite draining tile", 2, activePlayer.getActionsLeft());
+
+
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        activePlayer.setActionsLeft(3);
+
+        assertEquals(activePlayer.getType(), PlayerType.ENGINEER);
+        assertEquals(activePlayer.getPosition(), new Point(4, 3));
+        activePlayerController.drain(new Point(3, 3));
+        assertEquals("Valid tile was not drained by Engineer", MapTileState.DRY, testMap[3][3].getState());
+
+        activePlayerController.drain(new Point(4, 2));
+        assertEquals("Engineer drained gone tile", MapTileState.GONE, testMap[2][4].getState());
+        assertTrue("Engineer wasted extra drain on gone tile", ((Engineer) activePlayer).hasExtraDrain());
+
+        activePlayerController.drain(new Point(5, 3));
+        assertEquals("Engineer did not drain valid tile", MapTileState.DRY, testMap[3][5].getState());
+        assertEquals("Engineer did not use correct amount of actions", 2, activePlayer.getActionsLeft());
+        assertFalse("Engineer still has extra drain after draining 2 tiles", ((Engineer) activePlayer).hasExtraDrain());
+
     }
 
     @Test
