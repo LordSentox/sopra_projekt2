@@ -2,6 +2,8 @@ package de.sopra.javagame.view.abstraction;
 
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.view.*;
+import de.sopra.javagame.view.command.Commands;
+import de.spaceparrots.api.command.interfaces.CommandResult;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextInputDialog;
@@ -159,9 +161,11 @@ public class GameWindow {
                 dialog.initStyle(StageStyle.UTILITY);
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
-                    System.out.println(result.get());
+                    CommandResult commandResult = Commands.processCommand(this, result.get());
+                    if (!commandResult.wasSuccessful())
+                        System.out.println(commandResult.getResultMessage());
+                    else System.out.println("result: " + commandResult.get());
                 }
-                //TODO replace sout with Commands call
             }
         });
     }
