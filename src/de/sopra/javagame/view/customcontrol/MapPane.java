@@ -29,6 +29,7 @@ public class MapPane extends GridPane {
     private static final int TILE_SIZE = 130;
     private final StackPane[][] map;
     private InGameViewController inGameViewController;
+    public boolean isOpen = false;
 
     public MapPane() throws IOException {
         super();
@@ -68,7 +69,10 @@ public class MapPane extends GridPane {
 
     private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
         if (e.getButton() == MouseButton.PRIMARY) {
-            ActionPicker ap = new ActionPicker(v, e.getButton(), this);
+            if(!isOpen){
+                ActionPicker ap = new ActionPicker(v, e.getButton(), this);
+                isOpen = true;
+            }
 
         } else if (e.getButton() == MouseButton.SECONDARY)
             removePlayer(x, y, PlayerType.DIVER);
@@ -137,5 +141,9 @@ public class MapPane extends GridPane {
     public void setIngameViewController(InGameViewController inGameViewController) {
         this.inGameViewController = inGameViewController;
 
+    }
+    
+    public void buildMapPane(MapTile[][] tiles) {
+        
     }
 }
