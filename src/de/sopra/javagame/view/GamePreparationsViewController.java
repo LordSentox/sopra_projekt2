@@ -150,26 +150,26 @@ public class GamePreparationsViewController extends AbstractViewController {
             System.out.println("i bims ein Taucher");
             break;
         case "Navigator":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, isAi));
             break;
         case "Pilot":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, isAi));
             break;
         case "Entdecker":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, isAi));
             break;
         case "Bote":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.COURIER, isAi));
             break;
         case "Ingenieur":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, isAi));
             break;
         case "zufällig":
             //TODO zufällige Verteilung
             playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
             break;
         default:
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, isAi));
             break;
         }
     }

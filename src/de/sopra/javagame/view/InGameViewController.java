@@ -172,7 +172,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onEndTurnClicked() {
-
+        getGameWindow().getControllerChan().getActivePlayerController().endTurn();
     }
 
     public void onSpecialCardPlayClicked(int cardIndex) {
