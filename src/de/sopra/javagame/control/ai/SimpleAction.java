@@ -25,9 +25,9 @@ public final class SimpleAction implements Copyable<SimpleAction> {
     private final ArtifactCardType cardType;
 
     //MOVE, DRAIN
-    public SimpleAction(ActionType type, Point startingPoint, Point targetPoint) {
+    public SimpleAction(ActionType type, Point targetPoint) {
         this.type = type;
-        this.startingPoint = startingPoint;
+        this.startingPoint = null;
         this.targetPoint = targetPoint;
         this.cardType = null;
         this.targetPlayers = EnumSet.noneOf(PlayerType.class);

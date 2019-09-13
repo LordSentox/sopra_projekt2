@@ -66,12 +66,12 @@ public final class ActionQueue {
     }
 
     public ActionQueue move(Point targetPoint) {
-        nextAction(new SimpleAction(MOVE, null, targetPoint));
+        nextAction(new SimpleAction(MOVE, targetPoint));
         return this;
     }
 
     public ActionQueue drain(Point targetPoint) {
-        nextAction(new SimpleAction(DRAIN, null, targetPoint));
+        nextAction(new SimpleAction(DRAIN, targetPoint));
         return this;
     }
 

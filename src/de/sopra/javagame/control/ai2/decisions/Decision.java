@@ -83,7 +83,7 @@ public abstract class Decision {
     }
 
     protected ActionQueue startActionQueue() {
-        return new ActionQueue(control.getActivePlayer());
+        return new ActionQueue(control.getActivePlayer().getType());
     }
 
     //condition NUR prüfen
@@ -192,6 +192,20 @@ public abstract class Decision {
         boolean allMatchFalse = Arrays.stream(preCondition.allFalse())
                 .allMatch(condition -> condition(condition).isFalse(this));
         return allMatchTrue && allMatchFalse;
+    }
+
+    public final static Decision empty() {
+        return new Decision() {
+            @Override
+            public Decision decide() {
+                return this;
+            }
+
+            @Override
+            public ActionQueue act() {
+                return startActionQueue();
+            }
+        };
     }
 
 }
