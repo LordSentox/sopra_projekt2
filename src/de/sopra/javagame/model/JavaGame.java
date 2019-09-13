@@ -93,6 +93,9 @@ public class JavaGame {
         while (!redoActions.empty()) {
             redoActions.pop();
         }
+        if (currentAction.isGameEnded() || currentAction.isGameWon() || currentAction.getWaterLevel().isGameLost()){
+         return null;
+        }
 
         return currentAction.copy();
     }
@@ -176,4 +179,18 @@ public class JavaGame {
         this.cheetah = true;
     }
 
+    public void undoAction() {
+        if (canUndo()) {
+            Action undoneAction = this.undoActions.pop();
+            this.redoActions.push(undoneAction);
+            markCheetah();
+        }
+    }
+
+    public void redoAction() {
+        if (canRedo()) {
+            Action redoneAction = this.redoActions.pop();
+            this.undoActions.push(redoneAction);
+        }
+    }
 }

@@ -54,8 +54,16 @@ public class ActivePlayerControllerTest {
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
         javaGame = controllerChan.getJavaGame();
         action = controllerChan.getCurrentAction();
-        
+
         boolean [][] tiles = new boolean [12][12];
+        for (int y = 1; y < 3; y++) {
+            for (int x = 1; x < tiles[y].length-1; x++) {
+                tiles[y][x] = true;
+            }
+        }
+        for (int x = 1; x < 5; x++) {
+            tiles[3][x] = true;
+        }
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
         testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
@@ -63,7 +71,7 @@ public class ActivePlayerControllerTest {
                 new Pair<>(PlayerType.COURIER, false),
                 new Pair<>(PlayerType.EXPLORER, false),
                 new Pair<>(PlayerType.NAVIGATOR, false));
-        controllerChan.startNewGame(tiles, players, Difficulty.NORMAL);
+        controllerChan.startNewGame("TestMap", tiles, players, Difficulty.NORMAL);
         mapController = controllerChan.getMapController();
         
         artifactCardStack = action.getArtifactCardStack();

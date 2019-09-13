@@ -16,6 +16,7 @@ import static de.sopra.javagame.model.WaterLevel.MAX_WATER_LEVEL;
 
 public class WaterLevelSkin implements Skin<FillProgressIndicator> {
 
+    private static final String[] LABEL_COLOR_CLASSES = new String[]{"l-water", "lm-water", "m-water", "mh-water", "h-water"};
     private final FillProgressIndicator indicator;
     private final StackPane container = new StackPane();
     private final Label levelLabel = new Label();
@@ -23,8 +24,6 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
     private final Circle borderCircle = new Circle();
     private final Circle fillerCircle = new Circle();
     private final Circle labelCircle = new Circle();
-
-    private static final String[] LABEL_COLOR_CLASSES = new String[] {"l-water", "lm-water", "m-water", "mh-water", "h-water"};
 
     public WaterLevelSkin(FillProgressIndicator indicator) {
         this.indicator = indicator;
@@ -56,7 +55,7 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
 
         pane.setClip(cover);
 
-        coverPane.heightProperty().addListener((o, oldVal, newVal) -> this.cover.setHeight((double)newVal.intValue() * ((double) MAX_WATER_LEVEL - newVal.intValue()) / MAX_WATER_LEVEL));
+        coverPane.heightProperty().addListener((o, oldVal, newVal) -> this.cover.setHeight((double) newVal.intValue() * ((double) MAX_WATER_LEVEL - newVal.intValue()) / MAX_WATER_LEVEL));
         this.initLabel(indicator.getProgress());
         this.container.getChildren().addAll(coverPane, pane, this.borderCircle, this.labelCircle, this.levelLabel);
         updateRadii();
@@ -124,5 +123,6 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
         return this.container;
     }
 
-    public void dispose() { }
+    public void dispose() {
+    }
 }

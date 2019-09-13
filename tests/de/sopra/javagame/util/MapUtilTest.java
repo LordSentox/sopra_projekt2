@@ -5,6 +5,10 @@ import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -104,21 +108,21 @@ public class MapUtilTest {
 
     @Test
     public void readNumberMapFromString() {
-        String extendedMap = "-, -,20,19, -, -, 2, 6, -, -\n" +
-                             "-,21,22,18,11, 3, 5, 4, 8, -\n" +
-                             "-, 7,12,23,14,13, 1,17, 0, -\n" +
-                             "-, -, 9,16, -, -,15,10, -, -\n";
+        String extendedMap = "-, -,20,19, -, -, 2, 6\n" +
+                             "-,21,22,18,11, 3, 5, 4, 8\n" +
+                             "-, 7,12,23,14,13, 1,17, 0\n" +
+                             "-, -, 9,16, -, -,15,10\n";
 
         int[][] numbers = MapUtil.readNumberMapFromString(extendedMap);
         Assert.assertNotNull("Zahlen wurden nicht aus dem String gelesen", numbers);
 
         int[][] expectedNumbers = {
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, 20, 19, -1, -1,  2,  6, -1, -1, -1},
-                {-1, -1, 21, 22, 18, 11,  3,  5,  4,  8, -1, -1},
-                {-1, -1,  7, 12, 23, 14, 13,  1, 17,  0, -1, -1},
-                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, 20, 19, -1, -1,  2,  6, -1, -1},
+                {-1, -1, 21, 22, 18, 11,  3,  5,  4,  8, -1},
+                {-1, -1,  7, 12, 23, 14, 13,  1, 17,  0, -1},
+                {-1, -1, -1,  9, 16, -1, -1, 15, 10, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
         };
 
         for (int y = 0; y < expectedNumbers.length; ++y) {
@@ -127,7 +131,29 @@ public class MapUtilTest {
     }
 
     @Test
-    public void readBoolMapFromString() {
+    public void readBoolMapFromString() throws IOException {
+        final String testMapString = new String(Files.readAllBytes(Paths.get("resources/maps/island_of_death.map")), StandardCharsets.UTF_8);
+        final boolean[][] actual = MapUtil.readBoolMapFromString(testMapString);
+        Assert.assertNotNull(actual);
 
+        final boolean[][] expected = {
+                {false, false, false, false, false, false, false, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false,  true,  true,  true,  true,  true,  true,  true, false},
+                {false, false,  true,  true,  true,  true,  true, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false, false, false, false, false, false, false, false, false},
+        };
+
+        Assert.assertEquals(expected.length, actual.length);
+        for (int y = 0; y < expected.length; ++y) {
+            Assert.assertArrayEquals("Fehler beim Einlesen einer Kartenzeile", expected[y], actual[y]);
+        }
+
+        // Wenn eine extended map eingegeben wird, soll null zurückgegeben werden
+        final String fullMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
+        Assert.assertNull(MapUtil.readBoolMapFromString(fullMapString));
     }
 }

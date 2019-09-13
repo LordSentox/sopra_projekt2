@@ -9,7 +9,7 @@ import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class ZipWrapper implements Iterable<ZipEntry>{
+public class ZipWrapper implements Iterable<ZipEntry> {
 
     private ZipFile zipFile;
 

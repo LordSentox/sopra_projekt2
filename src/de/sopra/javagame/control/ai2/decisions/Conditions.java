@@ -9,6 +9,9 @@ package de.sopra.javagame.control.ai2.decisions;
  */
 public class Conditions {
 
+    private Conditions() {
+    }
+
     public static ICondition condition(boolean value) {
         return decision -> value;
     }
@@ -21,4 +24,5 @@ public class Conditions {
         return condition(true);
     }
 
+    {}
 }
