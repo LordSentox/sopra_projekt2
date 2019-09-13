@@ -135,6 +135,10 @@ public class DecisionMaker implements AIProcessor {
         return decide(control, PLAY_SPECIAL_CARD);
     }
 
+    private Decision makeSafetyDecision(AIController control) {
+        return decide(control, SWIM_TO_SAFETY);
+    }
+
     @Override
     public void init() {
         findDecisions();
@@ -146,13 +150,16 @@ public class DecisionMaker implements AIProcessor {
         if (control.isCurrentlyDiscarding()) {
             Decision decision = makeDiscardDecision(control);
             decision.act();
+        } else if (control.isCurrentlyRescueingHimself()) {
+            Decision decision = makeSafetyDecision(control);
+            decision.act();
         } else {
             Decision turn = makeTurnDecision(control);
             turn.act();
-            Decision special = makeSpecialCardDecision(control);
-            if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
-                special.act();
         }
+        Decision special = makeSpecialCardDecision(control);
+        if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
+            special.act();
     }
 
     @Override

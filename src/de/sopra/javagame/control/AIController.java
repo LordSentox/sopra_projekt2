@@ -102,6 +102,15 @@ public class AIController {
     }
 
     /**
+     * Ob der aktive Spieler sich selber retten muss, d.h. auf einem versunkenen Feld steht
+     *
+     * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
+     */
+    public boolean isCurrentlyRescueingHimself() {
+        return false; //TODO
+    }
+
+    /**
      * Der aktive Aktion, an welcher Änderungen vorgenommen werden dürfen
      *
      * @return Die aktuelle Aktion
