@@ -48,7 +48,7 @@ public class MainMenuViewController extends AbstractViewController {
         list.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, false));
         list.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
         list.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, true));
-        this.getGameWindow().getControllerChan().startNewGame(new MapLoader().loadMap("vulcan_island"), list, Difficulty.ELITE);
+        this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), list, Difficulty.ELITE);
         changeState(ViewState.IN_GAME);
     }
 

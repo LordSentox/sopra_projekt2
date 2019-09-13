@@ -5,7 +5,6 @@ import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
 
@@ -13,6 +12,14 @@ import java.util.Random;
  * Enthält Helferfunktionen für Kartenerstellung und Kartenmanipulation
  */
 public class MapUtil {
+    public static boolean[][] generateRandomIsland() {
+        return null;
+    }
+
+    public static boolean[][] generateRandomIsland(int seed) {
+        return null;
+    }
+
     /**
      * Füllt die einfache Karte, die nur die Inselform enthält mit zufällig ausgewählten MapTiles und gibt die so
      * entstandene, spielbare Karte zurück.
@@ -108,7 +115,6 @@ public class MapUtil {
         String[][] map = splitCSVString(toParse);
 
         // Set the width of the map to the maximum width present in the map and two for the buffer zone
-        // FIXME: Ask if this works as I expect
         Optional<Integer> maxLength = Arrays.stream(map).map(row -> row.length).max(Integer::compareTo);
         Point size = new Point(maxLength.orElse(0), map.length);
 
@@ -136,8 +142,8 @@ public class MapUtil {
         String[][] map = splitCSVString(toParse);
 
         // Set the width of the map to the maximum width present in the map and two for the buffer zone
-        // FIXME: Ask if this works as I expect
-        Point size = new Point(map.length, Arrays.stream(map).max(Comparator.comparing(row -> row.length)).get().length);
+        Optional<Integer> maxLength = Arrays.stream(map).map(row -> row.length).max(Integer::compareTo);
+        Point size = new Point(maxLength.orElse(0), map.length);
 
         // Erstelle eine leere Map mit Platz for einen leeren Rahmen
         boolean[][] bools = new boolean[size.yPos + 2][size.xPos + 2];
@@ -146,8 +152,8 @@ public class MapUtil {
         }
 
         // Fülle die Karte mit den aus dem String ausgelesenen Werten
-        for (int y = 0; y < size.yPos; ++y) {
-            for (int x = 0; x < size.xPos; ++x) {
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[y].length; ++x) {
                 String sign = map[y][x].trim();
                 // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
                 if (sign.equalsIgnoreCase("x")) {
@@ -165,6 +171,18 @@ public class MapUtil {
         return bools;
     }
 
+    public static Point getPositionForTile(MapTile[][] mapTiles, MapTileProperties tileProperties) {
+        for (int y = 0; y < mapTiles.length; ++y) {
+            for (int x = 0; x < mapTiles[y].length; ++x) {
+                if (mapTiles[y][x].getProperties() == tileProperties) {
+                    return new Point(x, y);
+                }
+            }
+        }
+
+        return null;
+    }
+
     // Helferfunktionen ------------------------------------------------------------------------------------------------
 
     private static String[][] splitCSVString(String toParse) {
@@ -177,9 +195,5 @@ public class MapUtil {
         }
 
         return items;
-    }
-
-    public static Point getPositionForTile (MapTileProperties tileProperties) {
-        return null;
     }
 }
