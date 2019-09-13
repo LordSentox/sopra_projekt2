@@ -1,21 +1,15 @@
 package de.sopra.javagame.control;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
+import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileProperties;
+import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.view.abstraction.GameWindow;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.WaterLevel;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.view.GameWindow;
-import org.junit.Assert;
+import static org.junit.Assert.fail;
 
 public class GameFlowControllerTest {
     private ControllerChan controllerChan;
@@ -28,10 +22,8 @@ public class GameFlowControllerTest {
         controllerChan = TestDummy.getDummyControllerChan();
         inGameViewAUI = (GameWindow) controllerChan.getInGameViewAUI();
         gameFlowController = controllerChan.getGameFlowController();
-        this.dry = new MapTile();
+        this.dry = new MapTile(MapTileProperties.CORAL_PALACE);
         this.dry.setState(MapTileState.DRY);
-
-
     }
 
     @Test
@@ -54,7 +46,8 @@ public class GameFlowControllerTest {
         this.dry.drain();
         gameFlowController.undo();
         Assert.assertEquals(MapTileState.DRY, this.dry.getState());
-        Assert.assertFalse(gameFlowController.undo());
+        gameFlowController.undo();
+        Assert.assertFalse(controllerChan.getJavaGame().canUndo());
         gameFlowController.redo();
         Assert.assertEquals(MapTileState.FLOODED, this.dry.getState());
         Assert.assertFalse(gameFlowController.redo());
