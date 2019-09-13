@@ -1,7 +1,8 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 
-import de.sopra.javagame.control.ai2.Decision;
+import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -11,6 +12,9 @@ import de.sopra.javagame.util.Point;
 import java.util.EnumSet;
 import java.util.List;
 
+import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION_LEFT;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -18,7 +22,8 @@ import java.util.List;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-
+@DoAfter(act = TURN_ACTION, value = TurnMoveToOrphanedTempleMapTileForDraining.class)
+@PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
 
     @Override

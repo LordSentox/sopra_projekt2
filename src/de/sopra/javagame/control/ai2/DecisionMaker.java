@@ -3,9 +3,13 @@ package de.sopra.javagame.control.ai2;
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
 import de.sopra.javagame.control.ai.ClassUtil;
+import de.sopra.javagame.control.ai2.decisions.Decision;
 import de.sopra.javagame.util.Pair;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.*;
@@ -41,7 +45,7 @@ public class DecisionMaker implements AIProcessor {
 
             //Alle für diesen Tower relevanten Decisions herausfiltern
             List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions = decisionClasses.stream()
-                    .filter(pair -> Collections.singletonList(pair.getLeft()).contains(decisionType))
+                    .filter(pair -> pair.getLeft().equals(decisionType))
                     .collect(Collectors.toList());
 
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander
@@ -89,10 +93,15 @@ public class DecisionMaker implements AIProcessor {
 
     private Decision buildTower(Queue<Class<? extends Decision>> queuedDecisions) {
         if (!queuedDecisions.isEmpty()) {
-            Decision tower = ClassUtil.create(queuedDecisions.poll());
+            Class<? extends Decision> poll = queuedDecisions.poll();
+            Decision tower = ClassUtil.create(poll);
+            tower.setPreCondition(poll.getDeclaredAnnotation(PreCondition.class));
             if (tower != null) {
                 while (!queuedDecisions.isEmpty()) {
-                    tower = tower.next(ClassUtil.create(queuedDecisions.poll()));
+                    Class<? extends Decision> polled = queuedDecisions.poll();
+                    Decision lessImportantDecision = ClassUtil.create(polled);
+                    lessImportantDecision.setPreCondition(polled.getDeclaredAnnotation(PreCondition.class));
+                    tower = tower.next(lessImportantDecision);
                 }
             }
             return tower;

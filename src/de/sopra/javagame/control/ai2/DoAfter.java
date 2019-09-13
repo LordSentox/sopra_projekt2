@@ -1,5 +1,7 @@
 package de.sopra.javagame.control.ai2;
 
+import de.sopra.javagame.control.ai2.decisions.Decision;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -19,6 +21,6 @@ public @interface DoAfter {
 
     Class<? extends Decision> value();
 
-    DecisionResult[] act();
+    DecisionResult act();
 
 }

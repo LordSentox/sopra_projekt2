@@ -4,8 +4,11 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import de.sopra.javagame.view.textures.TextureLoader.PlayerTexture;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -13,6 +16,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import jfxtras.labs.scene.control.radialmenu.RadialMenu;
+import jfxtras.labs.scene.control.radialmenu.RadialMenuItem;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +33,7 @@ public class MapPane extends GridPane {
     private final StackPane[][] map;
 
     private static final int TILE_SIZE = 130;
+    private InGameViewController inGameViewController;
     
     public MapPane() throws IOException {
         super();
@@ -66,8 +72,11 @@ public class MapPane extends GridPane {
     }
 
     private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
-        if (e.getButton() == MouseButton.PRIMARY)
-            putPlayer(x, y, PlayerType.DIVER);
+        if (e.getButton() == MouseButton.PRIMARY){
+            ActionPicker ap = new ActionPicker(v, e.getButton(), this);
+            
+        }
+            
         else if (e.getButton() == MouseButton.SECONDARY)
             removePlayer(x, y, PlayerType.DIVER);
     }
@@ -123,5 +132,14 @@ public class MapPane extends GridPane {
             }
         }
         return Optional.empty();
+    }
+    
+    public InGameViewController getInGameViewController() {
+        return this.inGameViewController;
+        
+    }
+    public void setIngameViewController(InGameViewController inGameViewController){
+        this.inGameViewController = inGameViewController;
+        
     }
 }
