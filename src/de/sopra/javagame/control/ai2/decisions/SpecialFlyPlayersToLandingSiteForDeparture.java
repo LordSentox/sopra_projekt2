@@ -20,7 +20,7 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
     @Override
     public Decision decide() {
 
-        if (control.getTotalAmountOfCardsOnHands(ArtifactCardType.HELICOPTER) > 1) {
+        if (control.getTotalAmountOfCardsOnHands(ArtifactCardType.HELICOPTER) > ONE_CARD) {
             return this;
         }
         /* TODO wahrscheinlichkeit berechnen: einzige Helikopterkarte gespielt
