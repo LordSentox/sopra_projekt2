@@ -105,7 +105,7 @@ public class AIController {
      * @see #getActivePlayer()
      */
     public boolean isCurrentlyDiscarding() {
-        return false; //TODO
+        return getActivePlayer().getHand().size() > Player.MAXIMUM_HANDCARDS;
     }
 
     /**
@@ -114,7 +114,7 @@ public class AIController {
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
      */
     public boolean isCurrentlyRescueingHimself() {
-        return false; //TODO
+        return getCurrentAction().getTile(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
     }
 
     /**
@@ -345,9 +345,57 @@ public class AIController {
      * @param targetPosition der Zielpunkt
      * @return die minimal Anzahl an Aktionen für den Weg
      */
-    public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition, PlayerType playerType) {
+        if (startPosition.equals(targetPosition))
+            return 0; // Nix zu tun
+
+        // Initialisiere einen Array, um die Anzahl der Aktionen, die benötigt werden zu zählen.
+        MapTile[][] mapTiles = getCurrentAction().getTiles();
+        Integer[][] stepMap = new Integer[mapTiles.length][];
+        for (int y = 0; y < mapTiles.length; ++y) {
+            for (int x = 0; x < mapTiles[y].length; ++x) {
+                if (new Point(x, y).equals(startPosition)) {
+                    stepMap[y][x] = 0;
+                } else {
+                    stepMap[y][x] = null;
+                }
+            }
+        }
+
+        // Erstelle einen Fake-Spieler und eine Fake-Action, auf dem gearbeitet werden kann
+        Action action = getCurrentAction().copy();
+        Player player = action.getPlayer(playerType);
+
+        // Gehe solange durch die map, wie noch Möglichkeiten offen sind, die man gehen kann.
+        boolean somethingChanged;
+        do {
+            somethingChanged = false;
+
+            for (int y = 0; y < stepMap.length; ++y) {
+                for (int x = 0; x < stepMap[y].length; ++x) {
+                    // Wenn die Position im letzten Zug noch nicht erreicht wurde, kann sie für's Erste
+                    // übersprungen werden
+                    if (stepMap[y][x] == null)
+                        continue;
+
+                    // Aktualisiere die Step-Map mit der Anzahl der Aktionen, die benötigt werden
+                    player.setPosition(new Point(x, y));
+                    List<Point> moves = player.legalMoves(false);
+                    moves.addAll(player.legalMoves(true));
+                    for (Point move : moves) {
+                        if (stepMap[move.yPos][move.xPos] == null) {
+                            stepMap[move.yPos][move.xPos] = stepMap[y][x] + 1;
+                            somethingChanged = true;
+                        }
+                    }
+                }
+            }
+
+        } while (somethingChanged);
+
+        // Zurückgeben der benötigten Aktionen, bzw. Integer-Maximum, falls die Position gar nicht erreicht werden kann
+        Integer requiredSteps = stepMap[targetPosition.yPos][targetPosition.xPos];
+        return requiredSteps != null ? requiredSteps : Integer.MAX_VALUE;
     }
 
 }
