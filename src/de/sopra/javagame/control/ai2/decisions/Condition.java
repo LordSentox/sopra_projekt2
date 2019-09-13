@@ -42,7 +42,7 @@ public enum Condition implements ICondition {
             AtomicBoolean atomicBoolean = new AtomicBoolean(false);
             decision.control.getTemples().stream().map(Pair::getRight).forEach(new Consumer<MapTile>() {
                 List<ArtifactType> sunkenTemples = new LinkedList<>();
-
+                //FIXME soll auch funktionieren, wenn als erstes der nicht versunkene Tempel untersucht wird
                 @Override
                 public void accept(MapTile mapTile) {
                     if (atomicBoolean.get()) return;
