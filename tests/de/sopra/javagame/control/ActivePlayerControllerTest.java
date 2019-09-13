@@ -138,8 +138,8 @@ public class ActivePlayerControllerTest {
         javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
+        action.getActivePlayer().setActionsLeft(3);
 
-        printMap(testMap);
     }
 
 
@@ -326,8 +326,77 @@ public class ActivePlayerControllerTest {
     }
 
     @Test
-    public void testMove() {
-        fail("Not yet implemented");
+    public void testMove() throws Exception {
+        Player activePlayer = action.getActivePlayer();
+
+        printMap(testMap);
+
+        System.out.println(activePlayer.getActionsLeft());
+
+        assertEquals(activePlayer.getType(), PlayerType.COURIER);
+        assertEquals(activePlayer.getPosition(), new Point(3, 4));
+        activePlayerController.move(new Point(2, 3), false);
+        assertNotEquals("Courier moved to invalid tile", new Point(2, 3), activePlayer.getPosition());
+        assertEquals("Courier used action despite not moving", 3, activePlayer.getActionsLeft());
+        activePlayerController.move(new Point(3, 3), false);
+        assertEquals("Courier did not move to valid tile", new Point(3, 3), activePlayer.getPosition());
+        assertEquals("Courier did not use action after moving", 2, activePlayer.getActionsLeft());
+
+        players = Arrays.asList(
+                new Pair<>(PlayerType.DIVER, false),
+                new Pair<>(PlayerType.EXPLORER, false),
+                new Pair<>(PlayerType.NAVIGATOR, false),
+                new Pair<>(PlayerType.PILOT, false));
+
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        TestDummy.injectJavaGame(controllerChan, pair.getLeft());
+        TestDummy.injectCurrentAction(controllerChan, pair.getRight());
+        action = pair.getRight();
+        javaGame = controllerChan.getJavaGame();
+
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
+        action.getActivePlayer().setActionsLeft(3);
+
+        testMap[3][6].flood();
+        testMap[3][7].flood();
+        testMap[3][7].flood();
+
+        activePlayer = action.getActivePlayer();
+
+        printMap(testMap);
+
+        assertEquals(activePlayer.getType(), PlayerType.DIVER);
+        assertEquals(activePlayer.getPosition(), new Point(5, 3));
+        activePlayerController.move(new Point(7, 3), false);
+        assertNotEquals("Diver moved to invalid tile", new Point(7, 3), activePlayer.getPosition());
+        assertEquals("Diver used action despite not moving", 3, activePlayer.getActionsLeft());
+        activePlayerController.move(new Point(7, 3), true);
+        assertEquals("Diver did not move to valid tile", new Point(7, 3), activePlayer.getPosition());
+        assertEquals("Diver did not use action after moving", 2, activePlayer.getActionsLeft());
+
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+
+        assertEquals(activePlayer.getType(), PlayerType.EXPLORER);
+        assertEquals(activePlayer.getPosition(), new Point(6, 4));
+        activePlayerController.move(new Point(5, 3), false);
+        assertNotEquals("Explorer moved to invalid tile", new Point(5, 3), activePlayer.getPosition());
+        assertEquals("Explorer used action despite not moving", 3, activePlayer.getActionsLeft());
+        activePlayerController.move(new Point(5, 3), true);
+        assertEquals("Explorer did not move to valid tile", new Point(5, 3), activePlayer.getPosition());
+        assertEquals("Explorer did not use action after moving with special move", 2, activePlayer.getActionsLeft());
+
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+
+        assertEquals(activePlayer.getType(), PlayerType.PILOT);
+        assertEquals(activePlayer.getPosition(), new Point(6, 3));
+        activePlayerController.move(new Point(2, 1), false);
+        assertNotEquals("Pilot moved to invalid tile", new Point(2, 1), activePlayer.getPosition());
+        assertEquals("Pilot used action despite not moving", 3, activePlayer.getActionsLeft());
+        activePlayerController.move(new Point(2, 1), true);
+        assertEquals("Pilot did not move to valid tile", new Point(2, 1), activePlayer.getPosition());
+        assertEquals("Pilot did not use action after moving", 2, activePlayer.getActionsLeft());
     }
 
     @Test
