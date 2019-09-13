@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class AIController {
 
-    private ControllerChan controllerChan;
+    private final ControllerChan controllerChan;
 
     private AIProcessor processor;
 
