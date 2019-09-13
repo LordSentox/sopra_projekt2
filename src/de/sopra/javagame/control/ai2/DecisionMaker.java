@@ -31,21 +31,24 @@ public class DecisionMaker implements AIProcessor {
         try {
             List<Class> classes = ClassUtil.getClasses("de.sopra.javagame.control.ai2.decisions");
             decisionClasses = classes.stream()
-                    .filter(Decision.class::isAssignableFrom)
+                    .filter(clazz -> clazz.isAnnotationPresent(DoAfter.class))
                     .map(clazz -> (Class<? extends Decision>) clazz)
                     .map(clazz -> new Pair<DoAfter, Class<? extends Decision>>(clazz.getDeclaredAnnotation(DoAfter.class), clazz))
                     .collect(Collectors.toList());
+            for (Pair<DoAfter, Class<? extends Decision>> clazz : decisionClasses)
+                System.out.println("> " + clazz.getRight().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void buildTowers() {
+        decisionTowers = new HashMap<>();
         for (DecisionResult decisionType : DecisionResult.values()) {
 
             //Alle für diesen Tower relevanten Decisions herausfiltern
             List<Pair<DoAfter, Class<? extends Decision>>> towerDecisions = decisionClasses.stream()
-                    .filter(pair -> pair.getLeft().equals(decisionType))
+                    .filter(pair -> pair.getLeft().act().equals(decisionType))
                     .collect(Collectors.toList());
 
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander
