@@ -5,7 +5,6 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.AIActionTip;
-import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -146,7 +145,7 @@ public class AIController {
      * @return ein Pair aus Punkt und MapTile
      */
     public Pair<Point, MapTile> getTile(PlayerType playerType) {
-        Point playerSpawnPoint = MapUtil.getPlayerSpawnPoint(getCurrentAction().getTiles(), playerType);
+        Point playerSpawnPoint = getCurrentAction().getMap().getPlayerSpawnPoint(playerType);
         return new Pair<>(playerSpawnPoint, getTile(playerSpawnPoint));
     }
 
@@ -162,9 +161,9 @@ public class AIController {
         for (MapTileProperties properties : MapTileProperties.values()) {
             if (properties.getHidden() == artifactType) {
                 if (point1 == null) {
-                    point1 = MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties);
+                    point1 = getCurrentAction().getMap().getPositionForTile(properties);
                 } else {
-                    point2 = MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties);
+                    point2 = getCurrentAction().getMap().getPositionForTile(properties);
                     break;
                 }
             }
@@ -181,7 +180,7 @@ public class AIController {
         List<Point> templePoints = new LinkedList<>();
         for (MapTileProperties properties : MapTileProperties.values()) {
             if (properties.getHidden() != ArtifactType.NONE) {
-                templePoints.add(MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties));
+                templePoints.add(getCurrentAction().getMap().getPositionForTile(properties));
             }
         }
         return templePoints.stream()
@@ -196,7 +195,7 @@ public class AIController {
      * @return das MapTile zu einem Punkt
      */
     public MapTile getTile(Point point) {
-        return getCurrentAction().getTile(point);
+        return getCurrentAction().getMap().get(point);
     }
 
     /**
@@ -270,9 +269,9 @@ public class AIController {
      * @return ein beliebiges Tile im gegebenen Zustand
      */
     public MapTile anyTile(MapTileState state) {
-        for (MapTile[] tileRow : getCurrentAction().getTiles()) {
+        for (MapTile[] tileRow : getCurrentAction().getMap().raw()) {
             for (MapTile tile : tileRow) {
-                if (tile.getState() == state) {
+                if (tile != null && tile.getState() == state) {
                     return tile;
                 }
             }
@@ -331,11 +330,11 @@ public class AIController {
      * @return <code>true</code> wenn der Landeplatz überflutet ist, sonst <code>false</code>
      */
     public boolean landingSiteIsFlooded() {
-        Point landingSite = MapUtil.getPositionForTile(getCurrentAction().getTiles(), MapTileProperties.FOOLS_LANDING);
+        Point landingSite = getCurrentAction().getMap().getPositionForTile(MapTileProperties.FOOLS_LANDING);
         if (landingSite == null)
             throw new IllegalStateException(); // Unerreichbar auf nicht korrumpierter map, sollte vorher gecheckt worden sein
 
-        return getCurrentAction().getTile(landingSite).getState() != MapTileState.DRY;
+        return getCurrentAction().getMap().get(landingSite).getState() != MapTileState.DRY;
     }
 
     /**

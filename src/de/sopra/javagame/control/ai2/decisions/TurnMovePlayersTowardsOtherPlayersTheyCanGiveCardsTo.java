@@ -30,7 +30,7 @@ public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decisi
         int earth = hand.getAmount(EARTH);
         int air = hand.getAmount(AIR);
 
-        List<Player> allPlayers = control.getAllPlayers();
+        List<Player> allPlayers = aiController.getAllPlayers();
         List<PlayerType> receivers = player().legalReceivers();
         allPlayers.removeIf(player -> !receivers.contains(player.getType()));
 

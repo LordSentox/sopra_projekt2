@@ -26,11 +26,11 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
         if (!hasValidActions(3)) {
             return null;
         }
-        Player activePlayer = control.getActivePlayer();
+        Player activePlayer = aiController.getActivePlayer();
         if (!(activePlayer.drainablePositions().size() < TWO_POSITIONS)) {
             return null;
         }
-        List<Point> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(
+        List<Point> drainablePositionsOneMoveAway = aiController.getDrainablePositionsOneMoveAway(
                 activePlayer.getPosition(), activePlayer.getType());
         if (!drainablePositionsOneMoveAway.isEmpty()) {
             return this;

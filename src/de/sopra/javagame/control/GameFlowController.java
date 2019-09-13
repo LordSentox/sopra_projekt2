@@ -3,7 +3,7 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 
 import java.util.ArrayList;
@@ -70,12 +70,11 @@ public class GameFlowController {
         for (FloodCard currentCard : floodCards) {
             currentCard.flood();
             //check if one or more Players are drowning
-            List<Player> rescuesNeeded = playersNeedRescue(MapUtil.getPositionForTile(controllerChan.getCurrentAction().getTiles(), currentCard.getTile().getProperties()));
+            List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(currentCard.getTile().getProperties()));
             for(Player rescuePlayer : rescuesNeeded) {
                 controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(false));
             }
-            controllerChan.getInGameViewAUI().refreshMapTile(MapUtil.getPositionForTile(controllerChan.getCurrentAction().getTiles(),
-                    currentCard.getTile().getProperties()),
+            controllerChan.getInGameViewAUI().refreshMapTile(controllerChan.getCurrentAction().getMap().getPositionForTile(currentCard.getTile().getProperties()),
                                                             currentCard.getTile());
             controllerChan.finishAction();
         }
@@ -83,11 +82,11 @@ public class GameFlowController {
 
 
     List<Player> playersNeedRescue(Point positionToCheck) {
-        MapTile[][] map = controllerChan.getCurrentAction().getTiles();
+        MapFull map = controllerChan.getCurrentAction().getMap();
         List<Player> playersToRescue = new ArrayList<>();
-        if (map[positionToCheck.yPos][positionToCheck.xPos].getState() == MapTileState.GONE) {
+        if (map.get(positionToCheck).getState() == MapTileState.GONE) {
             for (Player currentPlayer : controllerChan.getCurrentAction().getPlayers()) {
-                if (currentPlayer.getPosition() == positionToCheck) {
+                if (currentPlayer.getPosition().equals(positionToCheck)) {
                     playersToRescue.add(currentPlayer);
                 }
             }

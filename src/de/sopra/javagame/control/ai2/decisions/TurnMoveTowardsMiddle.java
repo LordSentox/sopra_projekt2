@@ -17,7 +17,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 public class TurnMoveTowardsMiddle extends Decision {
     @Override
     public Decision decide() {
-        Point position = control.getActivePlayer().getPosition();
+        Point position = aiController.getActivePlayer().getPosition();
         //FIXME calculation of middle is not precise
         if (any(position.xPos != 6, position.yPos != 6)) {
             return this;

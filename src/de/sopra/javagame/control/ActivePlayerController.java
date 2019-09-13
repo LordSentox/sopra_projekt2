@@ -218,7 +218,7 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         for (Point point : positions){
             if (player.drain(point)){
-                controllerChan.getInGameViewAUI().refreshMapTile(point, currentAction.getTile(point));
+                controllerChan.getInGameViewAUI().refreshMapTile(point, currentAction.getMap().get(point));
                 controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
                 controllerChan.getInGameViewAUI().refreshDrainOptions(player.drainablePositions());
             }

@@ -3,7 +3,7 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -47,8 +47,8 @@ public class InGameUserController {
         checkWonOnHelicopter(currentAction);
         //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
         if (flightRoute.getLeft() == null || flightRoute.getRight() == null
-                || controllerChan.getCurrentAction().getTile(flightRoute.getRight()) == null
-                || controllerChan.getCurrentAction().getTile(flightRoute.getRight()).getState() == MapTileState.GONE) {
+                || controllerChan.getCurrentAction().getMap().get(flightRoute.getRight()) == null
+                || controllerChan.getCurrentAction().getMap().get(flightRoute.getRight()).getState() == MapTileState.GONE) {
             throw new IllegalStateException("Mindestens einer der übergebenen Points war null. " +
                     "Fliegen ist so nicht möglich!");
         }
@@ -82,8 +82,9 @@ public class InGameUserController {
      * @param currentAction aktuelle Aktion, in der die Helikopterkarte gespielt wurde
      */
     private void checkWonOnHelicopter(Action currentAction) {
-        MapTile[][] map = currentAction.getTiles();
-        Point heliPoint = MapUtil.getPlayerSpawnPoint(map, PlayerType.PILOT);
+        MapFull map = currentAction.getMap();
+
+        Point heliPoint = map.getPlayerSpawnPoint(PlayerType.PILOT);
         EnumSet<ArtifactType> artifactsFound = currentAction.getDiscoveredArtifacts();
         List<Player> players = controllerChan.getCurrentAction().getPlayers();
         List<PlayerType> allPlayersTypes = new ArrayList<>();
@@ -134,7 +135,7 @@ public class InGameUserController {
     public void playSandbagCard(PlayerType sourcePlayer, int handCardIndex, Point destination) {
         Action currentAction = controllerChan.getJavaGame().getPreviousAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
-        MapTile tileToDrain = currentAction.getTile(destination);
+        MapTile tileToDrain = currentAction.getMap().get(destination);
 
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
         if (handCards.get(handCardIndex).getType() != ArtifactCardType.SANDBAGS) {
@@ -156,7 +157,7 @@ public class InGameUserController {
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
 
         //lege das gewählte MapTile trocken
-        currentAction.getTile(destination).drain();
+        currentAction.getMap().get(destination).drain();
         //fix point in View
         //controllerChan.getInGameViewAUI().refreshMapTile(destination, tileToDrain);
         controllerChan.finishAction();

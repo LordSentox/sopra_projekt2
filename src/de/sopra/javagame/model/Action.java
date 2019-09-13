@@ -37,7 +37,7 @@ public class Action implements Copyable<Action> {
     /**
      * Die Verteilung der {@link MapTile}
      */
-    private MapTile[][] tiles;
+    private MapFull map;
 
     /**
      * Der {@link WaterLevel}
@@ -112,10 +112,6 @@ public class Action implements Copyable<Action> {
         return state;
     }
 
-    public MapTile[][] getTiles() {
-        return tiles;
-    }
-
     public WaterLevel getWaterLevel() {
         return waterLevel;
     }
@@ -126,24 +122,24 @@ public class Action implements Copyable<Action> {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param tiles      Die Map des Spiels
      */
-    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapTile[][] tiles)
+    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapFull map)
         throws NullPointerException, IllegalArgumentException {
         Action action = new Action();
         action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
         action.description = "Spielstart";
-        if (tiles == null || difficulty == null || players == null)
+        if (map == null || difficulty == null || players == null)
             throw new NullPointerException();
 
-        if (players.isEmpty() || players.size() <2 || players.size() > 4)
+        if (players.isEmpty() || players.size() < 2 || players.size() > 4)
             throw new IllegalStateException();
 
-        action.tiles = tiles;
-        action.floodCardStack = CardStackUtil.createFloodCardStack(tiles);
+        action.map = map;
+        action.floodCardStack = CardStackUtil.createFloodCardStack(map.raw());
         action.waterLevel = new WaterLevel(difficulty);
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
 
         action.players = players.stream().map(pair -> {
-            Point start = MapUtil.getPlayerSpawnPoint(tiles, pair.getLeft());
+            Point start = map.getPlayerSpawnPoint(pair.getLeft());
             switch (pair.getLeft()) {
             case COURIER:
                 return new Courier("Hartmut Kurier", start, action);
@@ -195,28 +191,6 @@ public class Action implements Copyable<Action> {
         return this.players.get(this.activePlayer + 1 % this.players.size());
     }
 
-    /**
-     * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
-     * kein Inselfeld wird <code>null</code> übergeben.
-     *
-     * @param position Die Position, von der man das Tile wissen möchte.
-     * @return Tile an der Position
-     */
-    public MapTile getTile(Point position) {
-        return this.tiles[position.yPos][position.xPos];
-    }
-
-
-    /**
-     * Die Tile, welche an der übergebenen Position liegt wird zurückgegeben. Ist an der Stelle
-     * kein Inselfeld wird <code>null</code> übergeben.
-     *
-     * @return Tile an der Position
-     */
-    public MapTile getTile(int posX, int posY) {
-        return this.tiles[posY][posX];
-    }
-
     @Override
     public Action copy() {
         Action action = new Action();
@@ -230,8 +204,7 @@ public class Action implements Copyable<Action> {
             player.setAction(action);
         }
         action.state = this.state;
-        action.tiles = new MapTile[this.tiles.length][this.tiles[0].length];
-        CopyUtil.copyArr(this.tiles, action.tiles);
+        action.map = new MapFull(this.map);
         action.waterLevel = this.waterLevel.copy();
         return action;
     }
@@ -258,5 +231,9 @@ public class Action implements Copyable<Action> {
 
     public void changeDescription(String description) {
         this.description = description;
+    }
+
+    public MapFull getMap() {
+        return this.map;
     }
 }

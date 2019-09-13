@@ -57,7 +57,7 @@ public class InGameUserControllerTest {
         }
         String testMapName = "TestMap";
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
+        testMapNumbers = MapUtil.readFullMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair<>(PlayerType.COURIER, false),
                 new Pair<>(PlayerType.EXPLORER, false),

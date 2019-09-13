@@ -38,7 +38,7 @@ public class MapPane extends GridPane {
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
 
-        MapTile[][] tiles = MapUtil.createMapFromNumbers(MapUtil.readNumberMapFromString(new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8)));
+        MapTile[][] tiles = MapUtil.createMapFromNumbers(MapUtil.readFullMapFromString(new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8)));
 
         for (int y = 1; y < map.length + 1; y++) {
             for (int x = 1; x < map[y - 1].length + 1; x++) {

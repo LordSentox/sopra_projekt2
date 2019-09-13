@@ -27,7 +27,7 @@ public class JavaGameTest {
     public void setUp() throws Exception {
         controllerChan = TestDummy.getDummyControllerChan();
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
+        int[][] testMapNumbers = MapUtil.readFullMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         players = new ArrayList<Pair<PlayerType, Boolean>>() {{
             add(new Pair<>(PlayerType.EXPLORER, false));

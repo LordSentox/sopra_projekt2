@@ -25,7 +25,7 @@ public class DiscardTreasureCardsThatAnotherPlayerHasFourOf extends Decision {
 
     @Override
     public Decision decide() {
-        List<Player> allPlayers = control.getAllPlayers();
+        List<Player> allPlayers = aiController.getAllPlayers();
         allPlayers.removeIf(player -> player.getType() == player().getType());
         EnumSet<ArtifactCardType> onlyTypes = EnumSet.complementOf(EnumSet.of(HELICOPTER, SANDBAGS, WATERS_RISE));
         for (ArtifactCard activeCard : playerHand().getCards(onlyTypes)) {

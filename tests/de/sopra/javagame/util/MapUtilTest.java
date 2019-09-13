@@ -113,7 +113,7 @@ public class MapUtilTest {
                              "-, 7,12,23,14,13, 1,17, 0\n" +
                              "-, -, 9,16, -, -,15,10\n";
 
-        int[][] numbers = MapUtil.readNumberMapFromString(extendedMap);
+        int[][] numbers = MapUtil.readFullMapFromString(extendedMap);
         Assert.assertNotNull("Zahlen wurden nicht aus dem String gelesen", numbers);
 
         int[][] expectedNumbers = {
@@ -133,7 +133,7 @@ public class MapUtilTest {
     @Test
     public void readBoolMapFromString() throws IOException {
         final String testMapString = new String(Files.readAllBytes(Paths.get("resources/maps/island_of_death.map")), StandardCharsets.UTF_8);
-        final boolean[][] actual = MapUtil.readBoolMapFromString(testMapString);
+        final boolean[][] actual = MapUtil.readBlackWhiteMapFromString(testMapString);
         Assert.assertNotNull(actual);
 
         final boolean[][] expected = {
@@ -154,6 +154,6 @@ public class MapUtilTest {
 
         // Wenn eine extended map eingegeben wird, soll null zurückgegeben werden
         final String fullMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        Assert.assertNull(MapUtil.readBoolMapFromString(fullMapString));
+        Assert.assertNull(MapUtil.readBlackWhiteMapFromString(fullMapString));
     }
 }

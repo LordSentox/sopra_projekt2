@@ -37,7 +37,7 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
         Player nextActivePlayer = action().getNextPlayer();
         Point nextActivePlayerPosition = nextActivePlayer.getPosition();
         PlayerType nextActivePlayerType = nextActivePlayer.getType();
-        List<Pair<Point, MapTile>> templeList = control.getTemples();
+        List<Pair<Point, MapTile>> templeList = aiController.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
@@ -56,12 +56,12 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
                 continue;
             }
             //prüfe, ob NextActivePlayer zum Tempel hin"gehen" kann
-            List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, nextActivePlayerType);
+            List<Point> inOneMoveDrainablePositionslist = aiController.getDrainablePositionsOneMoveAway(orphanedTemplePoint, nextActivePlayerType);
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
                 return null;
             }
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
-            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(aiController::getTile).collect(Collectors.toList());
             //wenn eins nicht GONE ist
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;

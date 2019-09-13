@@ -36,7 +36,7 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
             return null;
         }
 
-        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
+        Pair<Point, MapTile> informationLandingSite = aiController.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
         //fliege den Spieler nur, wenn er den Landeplatz nicht sofort trockenlegen kann
         if (player().drainablePositions().contains(landingSitePosition)) {
@@ -49,7 +49,7 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
                 all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
                 all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
                 all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))
-                && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
+                && aiController.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
         }
 

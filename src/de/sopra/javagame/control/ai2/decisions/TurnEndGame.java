@@ -29,10 +29,10 @@ public class TurnEndGame extends Decision {
     @Override
     public Decision decide() {
 
-        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
+        Pair<Point, MapTile> informationLandingSite = aiController.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
 
-        List<Player> allPlayers = control.getAllPlayers();
+        List<Player> allPlayers = aiController.getAllPlayers();
 
         for (Player player : allPlayers) {
             Point playerPosition = player.getPosition();

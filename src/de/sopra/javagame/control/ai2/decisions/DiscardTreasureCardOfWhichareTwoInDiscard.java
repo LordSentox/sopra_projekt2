@@ -20,7 +20,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
 public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
     @Override
     public Decision decide() {
-        Collection<ArtifactCard> discardStack = control.getArtifactCardStackTracker().getDiscardPile();
+        Collection<ArtifactCard> discardStack = aiController.getArtifactCardStackTracker().getDiscardPile();
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         playerHand().getCards().forEach(activeCard ->
         {

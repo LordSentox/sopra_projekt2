@@ -38,7 +38,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 
         Point activePlayerPosition = player().getPosition();
 
-        List<Pair<Point, MapTile>> templeList = control.getTemples();
+        List<Pair<Point, MapTile>> templeList = aiController.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
@@ -61,7 +61,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
             }
 
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
-            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(aiController::getTile).collect(Collectors.toList());
             //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
@@ -74,7 +74,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
                     all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
                     all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
                     all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))
-                    && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
+                    && aiController.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
                 return null;
             }
 

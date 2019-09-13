@@ -65,7 +65,7 @@ public class ActivePlayerControllerTest {
             tiles[3][x] = true;
         }
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
-        testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
+        testMapNumbers = MapUtil.readFullMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         players = Arrays.asList(
                 new Pair<>(PlayerType.COURIER, false),

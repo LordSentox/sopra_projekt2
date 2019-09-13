@@ -35,7 +35,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
         Point activePlayerPosition = player().getPosition();
 
-        List<Pair<Point, MapTile>> templeList = control.getTemples();
+        List<Pair<Point, MapTile>> templeList = aiController.getTemples();
 
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
 
-            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(aiController::getTile).collect(Collectors.toList());
 
             //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {

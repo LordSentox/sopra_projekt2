@@ -3,8 +3,9 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapBlackWhite;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.HighScoresViewAUI;
@@ -94,18 +95,16 @@ public class ControllerChan {
     /**
      * startNewGame erstellt ein neues JavaGame
      *
-     * @param tiles      ein boolean Array, das die Form der Insel angibt
+     * @param map Die Karte mit der Inselform
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
         
-    public void startNewGame(String mapName, boolean[][] tiles, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
-        MapTile[][] map = MapUtil.createAndFillMap(tiles);
-        if (map != null) {
-            Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, map, difficulty, players);
-            this.javaGame = pair.getLeft();
-            this.currentAction = pair.getRight();
-        }
+    public void startNewGame(String mapName, MapBlackWhite map, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
+        MapFull fullMap = MapUtil.createAndFillMap(map);
+        Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
+        this.javaGame = pair.getLeft();
+        this.currentAction = pair.getRight();
     }
 
     /**

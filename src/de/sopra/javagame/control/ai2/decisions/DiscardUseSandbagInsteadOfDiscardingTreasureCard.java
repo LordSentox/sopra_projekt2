@@ -21,7 +21,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_SANDB
 public class DiscardUseSandbagInsteadOfDiscardingTreasureCard extends Decision {
     @Override
     public Decision decide() {
-        if (control.anyTile(MapTileState.FLOODED) != null) {
+        if (aiController.anyTile(MapTileState.FLOODED) != null) {
             return this;
         }
         return null;

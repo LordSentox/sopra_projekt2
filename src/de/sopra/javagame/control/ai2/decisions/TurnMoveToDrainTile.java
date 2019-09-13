@@ -20,11 +20,11 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 public class TurnMoveToDrainTile extends Decision {
     @Override
     public Decision decide() {
-        Player activePlayer = control.getActivePlayer();
+        Player activePlayer = aiController.getActivePlayer();
         if (!activePlayer.drainablePositions().isEmpty()) {
             return null;
         }
-        List<Point> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
+        List<Point> drainablePositionsOneMoveAway = aiController.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
                 activePlayer.getType());
         if (!drainablePositionsOneMoveAway.isEmpty()) {
             return this;

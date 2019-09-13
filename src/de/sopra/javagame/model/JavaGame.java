@@ -2,6 +2,7 @@ package de.sopra.javagame.model;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 
 import java.util.List;
@@ -55,12 +56,12 @@ public class JavaGame {
      * Erfordert den Aufruf von {@link AIController#connectTrackers()} danach.
      *
      * @param mapName    Der Name der Karte, die geladen wurde
-     * @param tiles      Die TileMap, welche als Spielfeld benutzt werden soll
+     * @param map        Die TileMap, welche als Spielfeld benutzt werden soll
      * @param difficulty Anfangsschwierigkeit, welche den anfänglichen Wasserpegel festlegt.
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public static Pair<JavaGame, Action> newGame(String mapName, MapTile[][] tiles, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
             throws NullPointerException, IllegalArgumentException {
         JavaGame game = new JavaGame();
 
@@ -79,10 +80,7 @@ public class JavaGame {
             game.difficulty = difficulty;
         }
 
-        Action initialAction = Action.createInitialAction(difficulty, players, tiles);
-        if (initialAction == null) {
-            return null;
-        }
+        Action initialAction = Action.createInitialAction(difficulty, players, map);
 
         return new Pair<>(game, game.finishAction(initialAction));
     }

@@ -30,7 +30,7 @@ public class ActionTest {
     @Before
     public void setUp() throws Exception {
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
+        int[][] testMapNumbers = MapUtil.readFullMapFromString(testMapString);
         this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
     }
 
