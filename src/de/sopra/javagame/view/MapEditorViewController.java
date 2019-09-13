@@ -1,11 +1,12 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.view.abstraction.AbstractViewController;
 import javafx.stage.Stage;
 
 /**
  * GUI für den Mapeditor
- * @author Lisa, Hannah
  *
+ * @author Lisa, Hannah
  */
 public class MapEditorViewController extends AbstractViewController implements MapEditorViewAUI {
 
@@ -25,19 +26,13 @@ public class MapEditorViewController extends AbstractViewController implements M
 
     }
 
-
     @Override
-    ViewState getType() {
-        return ViewState.MAP_EDITOR;
-    }
-
-    @Override
-    void reset() {
+    public void reset() {
 
     }
 
     @Override
-    void show(Stage stage) {
+    public void show(Stage stage) {
 
     }
 
@@ -47,7 +42,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     @Override
-    public void setMap(boolean[][] tiles) {
+    public void setMap(String mapName, boolean[][] tiles) {
 
     }
 }

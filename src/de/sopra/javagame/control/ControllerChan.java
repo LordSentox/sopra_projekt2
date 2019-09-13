@@ -1,8 +1,11 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
@@ -24,10 +27,13 @@ public class ControllerChan {
     private final InGameUserController inGameUserController;
     private final HighScoresController highScoresController;
     private final MapController mapController;
+    private final AIController aiController;
 
+    private String gameName;
     private InGameViewAUI inGameViewAUI;
 
     private JavaGame javaGame;
+    private Action currentAction;
 
     public ControllerChan() {
         this.javaGame = null;
@@ -36,6 +42,7 @@ public class ControllerChan {
         this.inGameUserController = new InGameUserController(this);
         this.highScoresController = new HighScoresController(this);
         this.mapController = new MapController(this);
+        this.aiController = new AIController(this); //setAI um die AI festzulegen
     }
 
     public void setMapEditorViewAUI(MapEditorViewAUI mapEditorViewAUI) {
@@ -74,6 +81,10 @@ public class ControllerChan {
         return mapController;
     }
 
+    public AIController getAiController() {
+        return aiController;
+    }
+
     public JavaGame getJavaGame() {
         return javaGame;
     }
@@ -87,8 +98,14 @@ public class ControllerChan {
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-    public void startNewGame(boolean[][] tiles, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
 
+    public void startNewGame(String mapName, boolean[][] tiles, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
+        MapTile[][] map = MapUtil.createAndFillMap(tiles);
+        if (map != null) {
+            Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, map, difficulty, players);
+            this.javaGame = pair.getLeft();
+            this.currentAction = pair.getRight();
+        }
     }
 
     /**
@@ -102,13 +119,13 @@ public class ControllerChan {
     }
 
     /**
-     * saveGame speichert das aktuell ausgeführte JavaGame in einer Datei
+     * saveGame speichert das aktuell ausgeführte JavaGame in einer Datei und gibt ihm einen Namen
      *
-     * @param file ist die Datei, in der gespeichert wird
+     * @param gameName ist der Name des Spiels, für das eine Datei angelegt werden soll
      */
 
-    public void saveGame(File file) {
-
+    public void saveGame(String gameName) {
+        this.gameName = gameName;
     }
 
     /**
@@ -125,4 +142,15 @@ public class ControllerChan {
 
     }
 
+    public void finishAction() {
+        this.currentAction = this.javaGame.finishAction(this.currentAction);
+    }
+
+    public Action getCurrentAction() {
+        return this.currentAction;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
 }

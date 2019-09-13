@@ -1,5 +1,6 @@
 package de.sopra.javagame.model;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * <h1>projekt2</h1>
  *
- * @author Julius Korweck, Max Bühmann, Melanie Arnds
+ * @author Julius Korweck, Max Bühmann, Mel Mel
  * @version 05.09.2019
  * @since 05.09.2019
  */
@@ -19,15 +20,12 @@ public class FloodCardTest {
 
     @Before
     public void setup() {
-        blubBlub = new MapTile();
-        wannKommtDieFlut = new FloodCard();
+        blubBlub = MapTile.fromNumber(5);
+        wannKommtDieFlut = new FloodCard(blubBlub);
     }
 
     @Test
-    public void testFlood() {
-        blubBlub = new MapTile();
-        wannKommtDieFlut = new FloodCard();
-
+    public void testFlood() {        
         wannKommtDieFlut.setTile(blubBlub);
         assertEquals(MapTileState.DRY, wannKommtDieFlut.getTile().getState());
 
@@ -42,13 +40,33 @@ public class FloodCardTest {
     @Test(expected = IllegalStateException.class)
     public void testWrongFlood() {
 
-        wannKommtDieFlut = new FloodCard();
+        wannKommtDieFlut = new FloodCard(blubBlub);
         wannKommtDieFlut.flood();
         wannKommtDieFlut.flood();
 
         //Test
         wannKommtDieFlut.flood();
-
     }
 
+    @Test
+    public void testEquals() {
+        FloodCard newWannKommtDieFlut = new FloodCard(MapTile.fromNumber(4));
+        FloodCard sameNumberWannKommtDieFlut = new FloodCard(MapTile.fromNumber(5));
+        
+        boolean isEqual = wannKommtDieFlut.equals(wannKommtDieFlut);
+        Assert.assertTrue("Equals sollte bei ein und derselben Karte true ausgeben", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(newWannKommtDieFlut);
+        Assert.assertFalse("Equals sollte nicht bei verschiedenen Karten mit verschiedenen Nummern true ausgeben", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(sameNumberWannKommtDieFlut);
+        Assert.assertTrue("Equals sollte bei einer Karte und einer anderen mit gleicher Nummer true ausgeben", isEqual);
+        
+        isEqual = newWannKommtDieFlut.equals(wannKommtDieFlut);
+        Assert.assertFalse("Equals sollte nicht bei verschiedenen Karten mit verschiedenen Nummern true ausgeben", isEqual);
+        
+        isEqual = wannKommtDieFlut.equals(null);
+        Assert.assertFalse("Equals sollte bei Vergleich mit null false sein", isEqual);
+        
+    }
 }

@@ -1,12 +1,34 @@
 package de.sopra.javagame.control;
 
-/**
- * <h1>projekt2</h1>
- *
- * @author Julius Korweck
- * @version 05.09.2019
- * @since 05.09.2019
- */
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 public class GameFlowControllerTest {
+
+    @Test
+    public void testDrawArtifactCards() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testDrawFloodCards() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testCheckGameEnded() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testUndo() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testRedo() {
+        fail("Not yet implemented");
+    }
 
 }

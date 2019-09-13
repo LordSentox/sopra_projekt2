@@ -1,15 +1,18 @@
 package de.sopra.javagame;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
-import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,7 +82,7 @@ public class TestDummy {
         }
 
         @Override
-        public void setMap(boolean[][] tiles) {
+        public void setMap(String mapName, boolean[][] tiles) {
             this.tiles = tiles;
         }
 
@@ -111,7 +114,7 @@ public class TestDummy {
         private Boolean transferable;
         private Integer waterlevel;
         private HashMap<PlayerType, List<ArtifactCard>> playerHands = new HashMap<>();
-        private boolean[] artifactsFound = new boolean[4];
+        private EnumSet<ArtifactType> artifactsFound = EnumSet.noneOf(ArtifactType.class);
         private CardStack<ArtifactCard> cardStackArtifact;
         private CardStack<FloodCard> cardStackFlood;
         private HashMap<PlayerType, Point> playerPositions = new HashMap<>();
@@ -121,6 +124,7 @@ public class TestDummy {
         private HashMap<PlayerType, String> playerNames = new HashMap<>();
         private int refreshedAll = 0;
         private boolean isReplay = false;
+        private ActionQueue latestTip;
 
         @Override
         public void refreshMovementOptions(List<Point> points) {
@@ -153,7 +157,7 @@ public class TestDummy {
         }
 
         @Override
-        public void refreshArtifactsFound(boolean[] artifacts) {
+        public void refreshArtifactsFound(EnumSet<ArtifactType> artifacts) {
             this.artifactsFound = artifacts;
         }
 
@@ -202,6 +206,11 @@ public class TestDummy {
             this.isReplay = replay;
         }
 
+        @Override
+        public void showTip(ActionQueue queue) {
+            this.latestTip = queue;
+        }
+
         /**
          * Gibt die Liste vergangener Notifications zurück.
          * Die Neueste ist die Letzte in der Liste
@@ -222,9 +231,9 @@ public class TestDummy {
 
         /**
          * @return <code>null</code> wenn niemals gesetzt
-         * @see #refreshArtifactsFound(boolean[])
+         * @see #refreshArtifactsFound(EnumSet)
          */
-        public boolean[] getArtifactsFound() {
+        public EnumSet<ArtifactType> getArtifactsFound() {
             return artifactsFound;
         }
 
@@ -350,6 +359,15 @@ public class TestDummy {
          */
         public boolean isReplay() {
             return isReplay;
+        }
+
+        /**
+         * Der letzte gezeigte Tipp in der GUI
+         *
+         * @return <code>null</code> falls nie einer gezeigt wurde
+         */
+        public ActionQueue getLatestTip() {
+            return latestTip;
         }
     }
 

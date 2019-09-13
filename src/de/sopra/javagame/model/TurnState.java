@@ -9,5 +9,5 @@ package de.sopra.javagame.model;
 public enum TurnState {
     FLOOD,
     PLAYER_ACTION,
-    DRAW_ARTIFACT_CARD;
+    DRAW_ARTIFACT_CARD
 }

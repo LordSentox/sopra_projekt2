@@ -19,16 +19,16 @@ data
 Enthält die vom MapEditor gespeicherten und ladbaren Dateien. Sie enthalten nur Informationen darüber, wo sich Land und
 wo sich Wasser befindet. Der Ordner enthält Dateien mit Namen in der Form
 ```data/maps/<mapName>.map```
-Es handelt sich dabei um CSV-Dateien, welche für jedes Stück Land auf der Karte eine 0 enthalten, während sie für Wasser
+Es handelt sich dabei um CSV-Dateien, welche für jedes Stück Land auf der Karte ein X enthalten, während sie für Wasser
 einen - enthalten. Eine 2x2 quadratische Insel umgeben von Wasser sieht demnach in der Datei wie folgt aus:
 ```
--;-;-;-
--;0;0;-
--;0;0;-
--;-;-;-
+-,-,-,-
+-,X,X,-
+-,X,X,-
+-,-,-,-
 ```
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit
-```java
+```
 MapController.MAP_FOLDER
 ```
 benutzt werden.
@@ -39,7 +39,7 @@ Enthält die gespeicherten Spiele, welche allerdings noch nicht zuende gespielt 
 Es handelt sich dabei um ein serialisiertes JavaGame, wobei der Turn-Pointer auf die zuletzt durchgeführte Aktion zeigen
 sollte.
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit
-```java
+```
 ControllerChan.SAVE_GAME_FOLDER
 ```
 benutzt werden.
@@ -50,7 +50,7 @@ Enthält zuendegespielte Spiele, deren Replays der Nutzer gespeichert hat. Die D
 Auch hierbei handelt es sich um ein serialisiertes JavaGame, wobei allerdings der Turn-Pointer statt wie bei save_game
 auf den zuletzt getätigten, auf den allerersten (den initialisierenden) Zug zeigen sollte.
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit
-```java
+```
 ControllerChan.REPLAY_FOLDER
 ```
 benutzt werden.
@@ -61,11 +61,11 @@ Enthält die Bestenlisten der einzelnen Maps. Für jede Karte wird eine neue Dat
 Die Dateien sind im CSV-Format, wobei jede Zeile einen HighScore-Eintrag beschreiben soll. Übersichtshalber sollten
 sie in absteigender Reihenfolge nach Punkten in der Datei stehen.
 ```
-<name>;<score>;<replayName>
-<name2>;<score2>;<replayName2>
+<name>,<score>,<replayName>
+<name2>,<score2>,<replayName2>
 ```
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit
-```java
+```
 HighScoresController.SCORE_FOLDER
 ```
 benutzt werden.
@@ -80,7 +80,7 @@ Reihenfolge in der Score-Datei für Index-Namen zu verwenden. So wird auch verhi
 aufgerufen werden können, aber weiterhin im Dateisystem verbleiben.
 
 Der Ordnerpfad soll im Code nicht als String hartgecoded werden, sondern kann mit
-```java
+```
 HighScoresController.REPLAY_FOLDER
 ```
 benutzt werden.
@@ -96,7 +96,7 @@ music_volume = 10
 ```
 
 Die Datei hat eine globale File in Controller-Chan, welche durch
-```java
+```
 ControllerChan.SETTINGS_FILE
 ```
 benutzt werden kann.

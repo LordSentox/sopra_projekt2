@@ -25,22 +25,42 @@ public class WaterLevelTest {
     @Test
     public void getDrawAmountTest() {
         Assert.assertEquals("Incorrect amount of cards drawn", 2, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         Assert.assertEquals("Incorrect amount of cards drawn", 3, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         Assert.assertEquals("Incorrect amount of cards drawn", 4, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         Assert.assertEquals("Incorrect amount of cards drawn", 5, waterLevel.getDrawAmount());
+        Assert.assertFalse("Game should not have been lost due to waterLevel", waterLevel.isGameLost());
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
         waterLevel.increment();
-        Assert.assertEquals("Incorrect amount of cards drawn", 5, waterLevel.getDrawAmount());
+        Assert.assertEquals("Incorrect amount of cards drawn", 0, waterLevel.getDrawAmount());
+        Assert.assertTrue("Game should have been lost due to waterLevel", waterLevel.isGameLost());
     }
+
+    @Test
+    public void copyTest() {
+        WaterLevel level = new WaterLevel();
+        level.increment();
+        level.increment();
+        WaterLevel copy = level.copy(); //make copy
+        copy.increment(); //change copy
+        copy.increment();
+        copy.increment();
+        //original should not change
+        Assert.assertNotEquals(level, copy);
+        Assert.assertNotEquals(level.getDrawAmount(), copy.getDrawAmount());
+    }
+
 }

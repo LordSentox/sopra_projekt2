@@ -1,16 +1,17 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.model.Turn;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -19,7 +20,7 @@ public class MapControllerTest {
     private ControllerChan controllerChan;
     private MapController mapController;
     private JavaGame javaGame;
-    private Turn turn;
+    private Action action;
     private TestDummy.MapEditorView mapEditorView;
     private boolean[][] map;
     private String name;
@@ -30,23 +31,23 @@ public class MapControllerTest {
         controllerChan = TestDummy.getDummyControllerChan();
         mapController = controllerChan.getMapController();
         javaGame = controllerChan.getJavaGame();
-        turn = javaGame.getCurrentTurn();
+        action = controllerChan.getCurrentAction();
         mapEditorView = (TestDummy.MapEditorView) mapController.getMapEditorViewAUI();
         map = new boolean[12][12];
         name = "hallo";
-        mapString = "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;1;1;1;1;1;1;1;1;1;1;-\n"
-                + "-;1;1;1;1;1;1;1;1;1;1;-\n"
-                + "-;1;1;1;1;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n"
-                + "-;-;-;-;-;-;-;-;-;-;-;-\n";
+        mapString = "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,x,x,x,x,x,x,x,x,x,x,-\n"
+                + "-,x,x,x,x,x,x,x,x,x,x,-\n"
+                + "-,x,x,x,x,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-,-,-\n";
     }
 
 
@@ -54,14 +55,15 @@ public class MapControllerTest {
     public void testGenerateMapToEditor() {
         //TODO generate Methode implementieren
         //TODO danach test anpassen
-        Assert.assertTrue(false);
+        Assert.fail();
 
 
     }
 
     @Test
     public void testLoadMapToEditor() throws FileNotFoundException {
-        PrintWriter out = new PrintWriter(name + ".txt");
+        File outFile = new File(MapController.MAP_FOLDER + name + ".txt");
+        PrintWriter out = new PrintWriter(outFile);
         out.println(mapString);
 
         for (int i = 1; i < 11; i++) {
@@ -75,6 +77,8 @@ public class MapControllerTest {
 
         mapController.loadMapToEditor(name);
         Assert.assertEquals(map, mapEditorView.getTiles());
+        
+        outFile.delete();
     }
 
     @Test(expected = NullPointerException.class)
@@ -85,7 +89,7 @@ public class MapControllerTest {
     }
 
     @Test
-    public void testSaveMap() throws UnsupportedEncodingException, IOException {
+    public void testSaveMap() throws IOException {
 
         //teste saveMap mit unvollständiger Map
         mapController.saveMap(name, map);
@@ -132,7 +136,7 @@ public class MapControllerTest {
         }
         mapController.saveMap(name, map);
 
-        String content = new String(Files.readAllBytes(Paths.get(name + ".java")), "UTF-8");
+        String content = new String(Files.readAllBytes(Paths.get(name + ".java")), StandardCharsets.UTF_8);
         Assert.assertEquals(mapString, content);
 
         //teste mit korrekter map ohne Namen
