@@ -11,7 +11,16 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.util.MapCheckUtil;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.MapEditorViewAUI;
 
 /**
  * Behandelt die Funktionen des Karteneditors, bzw. Funktionen auf einfache Karten, welche noch keine gesetzten Tiles
@@ -56,21 +65,30 @@ public class MapController {
             }
         
         }
+        List<Point> nearby = new ArrayList<>();
         Random random = new Random();
-        boolean unqualified =true;
-        while (unqualified) {           
-            for (int i = 0; i<24; i++){
-                int x = random.nextInt(12);
-                int y = random.nextInt(12);
-                if (feldsUsed[x][y]){
-                    i--;
-                }else {
-                    feldsUsed[x][y] = true;
+        for(int i = 24; i > 0; i--){
+            if (i == 24){
+                int x = random.nextInt(10) + 1;
+                int y = random.nextInt(10) + 1;
+                feldsUsed[x][y] = true;
+                nearby = new Point(x,y).getNeighbours(new Point(1, 1), new Point(10, 10));
+             } else {
+                int j = random.nextInt(nearby.size());
+                Point select = nearby.get(j);
+                nearby.remove(j);
+                feldsUsed[select.yPos][select.xPos] = true;
+                List<Point> neighbours = select.getNeighbours(new Point(1, 1), new Point(10, 10));
+                
+                for(Point water : neighbours) {
+                    if(feldsUsed[water.yPos][water.xPos] == false && !nearby.contains(water)){
+                        nearby.add(water);
+                    }
                 }
             }
-            
-            unqualified = !MapCheckUtil.checkMapValidity(feldsUsed);
+
         }
+           
         mapEditorViewAUI.setMap("Coole Insel!", feldsUsed);
     }
 
