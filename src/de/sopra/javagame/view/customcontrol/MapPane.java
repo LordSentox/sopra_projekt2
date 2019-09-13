@@ -2,7 +2,6 @@ package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -17,9 +16,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -71,7 +67,7 @@ public class MapPane extends GridPane {
         if (e.getButton() == MouseButton.PRIMARY) {
             if(v.getHighlighted()){
                 System.out.println(x + " " + y);
-                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(y,x), false);
+                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x,y), false);
                 System.out.println("ich sollte mich bewegen");
             }
         } else if (e.getButton() == MouseButton.SECONDARY){
