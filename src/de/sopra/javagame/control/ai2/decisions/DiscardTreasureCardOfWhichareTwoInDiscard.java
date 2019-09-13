@@ -22,7 +22,7 @@ public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
     private ArtifactCardType discarding;     
     @Override
     public Decision decide() {
-        Collection<ArtifactCard> discardStack = aiController.getArtifactCardStackTracker().getDiscardPile();
+        Collection<ArtifactCard> discardStack = control.getArtifactCardStackTracker().getDiscardPile();
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         playerHand().getCards().forEach(activeCard ->
         {

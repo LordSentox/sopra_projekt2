@@ -30,7 +30,7 @@ public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
 
         Point playerPosition = player().getPosition();
 
-        Pair<Point, MapTile> informationLandingSite = aiController.getTile(PlayerType.PILOT);
+        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
 
         if (landingSitePosition.equals(playerPosition)) {

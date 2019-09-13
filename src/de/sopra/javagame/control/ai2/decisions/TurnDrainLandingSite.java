@@ -29,7 +29,7 @@ public class TurnDrainLandingSite extends Decision {
     @Override
     public Decision decide() {
 
-        Pair<Point, MapTile> informationLandingSite = aiController.getTile(PlayerType.PILOT);
+        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
 
         List<Point> drainablePositions = player().drainablePositions();

@@ -1,7 +1,7 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.io.BufferedWriter;
@@ -11,9 +11,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Behandelt die Funktionen des Karteneditors, bzw. Funktionen auf einfache Karten, welche noch keine gesetzten Tiles
@@ -51,38 +48,7 @@ public class MapController {
      * zusammenhängende Insel.
      */
     public void generateMapToEditor() {
-        boolean[][] feldsUsed = new boolean[12][12];
-        for (int i = 0; i < 12; i++){ 
-            for (int j = 0; j < 12; j++){
-                feldsUsed[i][j] = false;
-            }
-        
-        }
-        List<Point> nearby = new ArrayList<>();
-        Random random = new Random();
-        for(int i = 24; i > 0; i--){
-            if (i == 24){
-                int x = random.nextInt(10) + 1;
-                int y = random.nextInt(10) + 1;
-                feldsUsed[x][y] = true;
-                nearby = new Point(x,y).getNeighbours(new Point(1, 1), new Point(10, 10));
-             } else {
-                int j = random.nextInt(nearby.size());
-                Point select = nearby.get(j);
-                nearby.remove(j);
-                feldsUsed[select.yPos][select.xPos] = true;
-                List<Point> neighbours = select.getNeighbours(new Point(1, 1), new Point(10, 10));
-                
-                for(Point water : neighbours) {
-                    if(feldsUsed[water.yPos][water.xPos] == false && !nearby.contains(water)){
-                        nearby.add(water);
-                    }
-                }
-            }
-
-        }
-           
-        mapEditorViewAUI.setMap("Coole Insel!", feldsUsed);
+        mapEditorViewAUI.setMap("Coole Insel!", MapUtil.generateRandomIsland());
     }
 
     /**
@@ -92,15 +58,15 @@ public class MapController {
      * @param name Der Name der Karte, die geladen werden soll.
      */
     public void loadMapToEditor(String name) {
-        if (name == ""){
+        if (name.equals("")){
             System.err.println("Man muss einen Name angeben!");
         }
         try {
             String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
 
-            boolean[][] mapTiles = MapUtil.readBoolMapFromString(mapString);
+            MapBlackWhite map = MapUtil.readBlackWhiteMapFromString(mapString);
 
-            mapEditorViewAUI.setMap(name, mapTiles);
+            mapEditorViewAUI.setMap(name, map);
             
         } catch (IOException e) {
             System.err.println("Map konnten nicht eingelesen werden");

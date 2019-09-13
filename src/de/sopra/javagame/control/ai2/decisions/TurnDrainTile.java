@@ -18,7 +18,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 public class TurnDrainTile extends Decision {
     @Override
     public Decision decide() {
-        Player activePlayer = aiController.getActivePlayer();
+        Player activePlayer = control.getActivePlayer();
         if (!activePlayer.drainablePositions().isEmpty()) {
             return this;
         }

@@ -22,7 +22,7 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
     @Override
     public Decision decide() {
 
-        if (aiController.getTotalAmountOfCardsOnHands(ArtifactCardType.HELICOPTER) > 1) {
+        if (control.getTotalAmountOfCardsOnHands(ArtifactCardType.HELICOPTER) > 1) {
             return this;
         }
         /* TODO wahrscheinlichkeit berechnen: einzige Helikopterkarte gespielt
@@ -30,7 +30,7 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
          * dann spieler lieber laufen lassen und heli sparen
          */
 
-        CardStackTracker<FloodCard> floodCards = aiController.getFloodCardStackTracker();
+        CardStackTracker<FloodCard> floodCards = control.getFloodCardStackTracker();
 
 
         return null;

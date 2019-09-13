@@ -3,15 +3,49 @@ package de.sopra.javagame.util;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Enthält Helferfunktionen für Kartenerstellung und Kartenmanipulation
  */
 public class MapUtil {
-    public static boolean[][] generateRandomIsland() {
-        return null;
+    public static MapBlackWhite generateRandomIsland() {
+        Random random = new Random();
+        MapBlackWhite map = new MapBlackWhite();
+
+        // Die Optionen, wo das nächste Tile generiert werden kann. Aus ihnen wird in jedem Schritt ein
+        // zufälliges ausgewählt, wo ein Inselfeld hinkommt.
+        List<Point> nextTileOptions = new ArrayList<>();
+        // Generieren des Starttiles, dieses wird benutzt, um die Insel von hier aus aufzubauen.
+        int x = random.nextInt(Map.SIZE_X);
+        int y = random.nextInt(Map.SIZE_Y);
+        map.set(true, x, y);
+        nextTileOptions = new Point(x, y).getNeighbours(new Point(0, 0), new Point(Map.SIZE_X - 1, Map.SIZE_Y - 1));
+
+        int tilesGenerated = 0;
+        while (tilesGenerated < MapTileProperties.values().length) {
+            // Wähle das nächste Tile zufällig aus
+            int next = random.nextInt(nextTileOptions.size());
+            Point nextPos = nextTileOptions.get(next);
+            map.set(true, nextPos);
+
+            // Füge die Punkte, die mit diesem zusätlichene Punkt jetzt auch noch erreicht werden können in die
+            // bestehende Liste ein.
+            List<Point> neighbours = nextPos.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X - 1, Map.SIZE_Y - 1));
+            for (Point neighbour : neighbours) {
+                if (!map.get(neighbour) && !nextTileOptions.contains(neighbour)) {
+                    nextTileOptions.add(neighbour);
+                }
+            }
+
+            nextTileOptions.remove(next);
+            ++tilesGenerated;
+        }
+
+        return map;
     }
 
     public static boolean[][] generateRandomIsland(int seed) {
@@ -26,7 +60,7 @@ public class MapUtil {
      * @return Spielbare Karte
      */
     public static MapFull createAndFillMap(MapBlackWhite blackWhiteMap) {
-        MapFull full = new MapFull(new MapTile[Map.SIZE_Y + 2][Map.SIZE_X + 2]);
+        MapFull full = new MapFull();
 
         Random random = new Random();
 
@@ -68,7 +102,7 @@ public class MapUtil {
         String[][] map = splitCSVString(toParse);
 
         // Erstelle eine leere Karte mit Platz für einen leeren Rahmen
-        MapFull full = new MapFull(new MapTile[Map.SIZE_Y][Map.SIZE_X]);
+        MapFull full = new MapFull();
 
         // Fülle die Karte mit den aus dem String ausgelesenen Werten
         for (int y = 0; y < map.length; ++y) {
@@ -93,7 +127,7 @@ public class MapUtil {
         String[][] map = splitCSVString(toParse);
 
         // Erstelle eine leere Karte
-        MapBlackWhite blackWhite = new MapBlackWhite(new Boolean[Map.SIZE_Y + 2][Map.SIZE_X + 2]);
+        MapBlackWhite blackWhite = new MapBlackWhite();
 
         // Fülle die Karte mit den aus dem String ausgelesenen Werten
         for (int y = 0; y < map.length; ++y) {

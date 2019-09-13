@@ -5,6 +5,10 @@ import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 
 public class MapFull extends Map<MapTile> {
+    MapFull() {
+        super();
+    }
+
     public MapFull(MapFull from) {
         super(from.raw);
     }

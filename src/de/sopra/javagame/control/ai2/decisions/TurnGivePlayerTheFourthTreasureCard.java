@@ -30,7 +30,7 @@ public class TurnGivePlayerTheFourthTreasureCard extends Decision {
         int earth = playerHand().getAmount(EARTH);
         int air = playerHand().getAmount(AIR);
 
-        List<Player> allPlayers = aiController.getAllPlayers();
+        List<Player> allPlayers = control.getAllPlayers();
         List<PlayerType> receivers = player().legalReceivers();
         allPlayers.removeIf(player -> !receivers.contains(player.getType()));
 

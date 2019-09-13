@@ -39,7 +39,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             return null;
         }
 
-        List<Pair<Point, MapTile>> templeList = aiController.getTemples();
+        List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
@@ -63,12 +63,12 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-            List<Point> inOneMoveDrainablePositionslist = aiController.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
+            List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
                 continue; 
             }
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
-            List<MapTile> surroundingTiles = surroundingPoints.stream().map(aiController::getTile).collect(Collectors.toList());
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
             //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;

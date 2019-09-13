@@ -27,9 +27,9 @@ public class TurnMoveToLandingSiteForDeparture extends Decision {
 
     @Override
     public Decision decide() {
-        Action action = aiController.getCurrentAction();
+        Action action = control.getCurrentAction();
 
-        Pair<Point, MapTile> informationLandingSite = aiController.getTile(PlayerType.PILOT);
+        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
 
         Player player = action.getActivePlayer();

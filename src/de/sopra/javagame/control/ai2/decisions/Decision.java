@@ -32,7 +32,7 @@ public abstract class Decision {
     final int THREE_CARDS = 3;
     final int FOUR_CARDS = 4;
 
-    protected AIController aiController;
+    protected AIController control;
 
     private HashMap<Condition, ICondition> conditions = new HashMap<>();
 
@@ -83,7 +83,7 @@ public abstract class Decision {
     }
 
     protected ActionQueue startActionQueue() {
-        return new ActionQueue(aiController.getActivePlayer().getType());
+        return new ActionQueue(control.getActivePlayer().getType());
     }
 
     //condition NUR prüfen
@@ -109,11 +109,11 @@ public abstract class Decision {
     }
 
     protected Player player() {
-        return aiController.getActivePlayer();
+        return control.getActivePlayer();
     }
 
     protected Action action() {
-        return aiController.getCurrentAction();
+        return control.getCurrentAction();
     }
 
     protected MapTile tile() {
@@ -177,8 +177,8 @@ public abstract class Decision {
         return points;
     }
 
-    public final void setAiController(AIController aiController) {
-        this.aiController = aiController;
+    public final void setControl(AIController control) {
+        this.control = control;
     }
 
     public final void setPreCondition(PreCondition preCondition) {

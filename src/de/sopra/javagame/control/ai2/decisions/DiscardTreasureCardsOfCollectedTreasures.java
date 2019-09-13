@@ -25,9 +25,9 @@ public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
 private ArtifactCardType discarded; 
     @Override
     public Decision decide() {
-        Action action = aiController.getCurrentAction();
+        Action action = control.getCurrentAction();
         EnumSet<ArtifactType> discoveredArtifacts = action.getDiscoveredArtifacts();
-        Player activePlayer = aiController.getActivePlayer();
+        Player activePlayer = control.getActivePlayer();
         List<ArtifactCard> hand = activePlayer.getHand();
         for (ArtifactCard card : hand) {
             if (discoveredArtifacts.contains(card.getType().toArtifactType())) {

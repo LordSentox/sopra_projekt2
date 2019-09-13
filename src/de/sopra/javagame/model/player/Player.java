@@ -57,14 +57,14 @@ public abstract class Player implements Copyable<Player> {
         List<Point> moves = this.position.getNeighbours();
         List <Point> legalTiles = new ArrayList<>();
         for (Point currentPoint : moves) {
-            MapTile tile = this.action.getTile(currentPoint);
+            MapTile tile = this.action.getMap().get(currentPoint);
             if (tile != null && tile.getState() != GONE) {
                 legalTiles.add(currentPoint);
             }
 
         }
         moves = moves.stream().filter(point -> {
-            MapTile tile = this.action.getTile(point);
+            MapTile tile = this.action.getMap().get(point);
             //System.out.println(tile.getProperties().getName());
             return tile != null && tile.getState() != GONE;
         }).collect(Collectors.toList());
@@ -126,9 +126,9 @@ public abstract class Player implements Copyable<Player> {
         // können
         // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
         drainable = drainable.stream().filter(point ->
-                this.action.getTile(point) != null &&
-                        this.action.getTile(point).getState() != GONE &&
-                        this.action.getTile(point).getState() != DRY).collect(Collectors.toList());
+                this.action.getMap().get(point) != null &&
+                        this.action.getMap().get(point).getState() != GONE &&
+                        this.action.getMap().get(point).getState() != DRY).collect(Collectors.toList());
 
         return drainable;
     }
@@ -146,7 +146,7 @@ public abstract class Player implements Copyable<Player> {
             return false;
         }
 
-        MapTile toDrain = this.action.getTile(position);
+        MapTile toDrain = this.action.getMap().get(position);
 
         if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
             return false;
@@ -170,7 +170,7 @@ public abstract class Player implements Copyable<Player> {
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
     public ArtifactType collectArtifact() {
-        MapTile mapTile = this.action.getTile(this.position);
+        MapTile mapTile = this.action.getMap().get(this.position);
         ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
 
         // Abbrechen, falls hier gar kein Artefakt versteckt ist.
@@ -209,10 +209,10 @@ public abstract class Player implements Copyable<Player> {
      */
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList<>();
-        MapTile mapTile = this.action.getTiles()[position.yPos][position.xPos];
+        MapTile mapTile = this.action.getMap().get(position);
         List<Player> players = action.getPlayers();
         for (Player player : players) {
-            if (mapTile == this.action.getTiles()[player.position.yPos][player.position.xPos] && player != this) {
+            if (mapTile == this.action.getMap().get(player.position) && player != this) {
                 receivers.add(player.getType());
             }
         }

@@ -4,6 +4,8 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 
 import java.util.ArrayList;
@@ -53,13 +55,13 @@ public class Pilot extends Player {
     @Override
     public List<Point> legalMoves(boolean specialActive) {
         if (!specialActive)
-            return super.legalMoves(specialActive);
+            return super.legalMoves(false);
 
         List<Point> movement = new ArrayList<>();
-        MapTile[][] map = this.action.getTiles();
-        for (int y = 0; y < map.length; y++) {
-            for (int x = 0; x < map[y].length; x++) {
-                if (map[y][x] != null && map[y][x].getState() != MapTileState.GONE) {
+        MapFull map = this.action.getMap();
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                if (map.get(x, y) != null && map.get(x, y).getState() != MapTileState.GONE) {
                     movement.add(new Point(x, y));
                 }
             }

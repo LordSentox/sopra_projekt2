@@ -27,9 +27,9 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
 
     @Override
     public Decision decide() {
-        List<Player> allPlayers = aiController.getAllPlayers();
+        List<Player> allPlayers = control.getAllPlayers();
 
-        Pair<Point, MapTile> informationLandingSite = aiController.getTile(PlayerType.PILOT);
+        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
         Point landingSitePosition = informationLandingSite.getLeft();
         //prüfe, ob Spieler auf LandingSite steht, von dort muss er nicht gerettet werden 
         for (Player player : allPlayers) {

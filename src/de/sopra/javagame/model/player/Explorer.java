@@ -52,7 +52,7 @@ public class Explorer extends Player {
                 new Point(this.position.add(1, -1)));
 
         for (Point point : additional) {
-            MapTile tile = this.action.getTile(point);
+            MapTile tile = this.action.getMap().get(point);
             if (tile != null && tile.getState() != GONE) {
                 moves.add(point);
             }
@@ -78,9 +78,9 @@ public class Explorer extends Player {
         // können
         // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
         drainable = drainable.stream().filter(point ->
-                this.action.getTile(point) != null &&
-                        this.action.getTile(point).getState() != GONE &&
-                        this.action.getTile(point).getState() != DRY).collect(Collectors.toList());
+                this.action.getMap().get(point) != null &&
+                        this.action.getMap().get(point).getState() != GONE &&
+                        this.action.getMap().get(point).getState() != DRY).collect(Collectors.toList());
 
         return drainable;
     }

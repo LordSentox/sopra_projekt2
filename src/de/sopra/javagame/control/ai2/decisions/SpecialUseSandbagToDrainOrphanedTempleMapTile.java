@@ -29,13 +29,13 @@ public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public Decision decide() {
-        List<Pair<Point, MapTile>> templeList = aiController.getTemples();
+        List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
         for (Pair<Point, MapTile> temple : templeList) {
             Point orphanedTemplePoint = temple.getLeft();
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
-            List<MapTile> surroundingTiles = surroundingPoints.stream().map(aiController::getTile).collect(Collectors.toList());
+            List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
             //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;

@@ -34,14 +34,14 @@ public enum Condition implements ICondition {
     GAME_LANDING_SITE_IS_FLOODED {
         @Override
         public boolean isTrue(Decision decision) {
-            return decision.aiController.getTile(PlayerType.PILOT).getRight().getState() == FLOODED;
+            return decision.control.getTile(PlayerType.PILOT).getRight().getState() == FLOODED;
         }
     },
     GAME_ANY_LAST_TEMPLE_IN_DANGER {
         @Override
         public boolean isTrue(Decision decision) {
             AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-            List<MapTile> templeTiles = decision.aiController.getTemples().stream().map(Pair::getRight).collect(Collectors.toList());
+            List<MapTile> templeTiles = decision.control.getTemples().stream().map(Pair::getRight).collect(Collectors.toList());
             templeTiles.forEach(new Consumer<MapTile>() {
                 List<ArtifactType> sunkenTemples = templeTiles.stream()
                         .filter(tile -> tile.getState() == MapTileState.GONE)
@@ -62,13 +62,13 @@ public enum Condition implements ICondition {
     GAME_ANY_PLAYER_HAS_HELICOPTER {
         @Override
         public boolean isTrue(Decision decision) {
-            return decision.aiController.anyPlayerHasCard(HELICOPTER);
+            return decision.control.anyPlayerHasCard(HELICOPTER);
         }
     },
     GAME_ANY_PLAYER_HAS_SANDBAGS {
         @Override
         public boolean isTrue(Decision decision) {
-            return decision.aiController.anyPlayerHasCard(SANDBAGS);
+            return decision.control.anyPlayerHasCard(SANDBAGS);
         }
     },
     PLAYER_HAS_ANY_ARTIFACT_CARD {
@@ -121,8 +121,8 @@ public enum Condition implements ICondition {
     PLAYER_REACHES_LANDINGSITE_WITH_LESS_THAN_SEVEN_ACTIONS {
         @Override
         public boolean isTrue(Decision decision) {
-            return decision.aiController.getMinimumActionsNeededToReachTarget
-                    (decision.player().getPosition(), decision.aiController.getTile(PlayerType.PILOT).getLeft()) < 7;
+            return decision.control.getMinimumActionsNeededToReachTarget
+                    (decision.player().getPosition(), decision.control.getTile(PlayerType.PILOT).getLeft()) < 7;
         }
     }
 

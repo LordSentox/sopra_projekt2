@@ -234,7 +234,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshActivePlayer();
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
-        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getTiles());
+        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         
         //DEBUG
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));

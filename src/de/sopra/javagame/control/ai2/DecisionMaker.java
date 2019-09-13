@@ -120,7 +120,7 @@ public class DecisionMaker implements AIProcessor {
     private Decision decide(AIController control, DecisionResult result) {
         Decision decision = decisionTowers.get(result);
         if (decision != null) {
-            decision.setAiController(control);
+            decision.setControl(control);
             return decision.decide();
         } else return Decision.empty();
     }

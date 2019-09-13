@@ -6,6 +6,10 @@ public abstract class Map<T> {
 
     T[][] raw;
 
+    Map() {
+        this.raw = newEmptyRaw();
+    }
+
     Map(T[][] raw) throws IllegalArgumentException {
         if (raw == null || raw.length - 2 != SIZE_Y)
             throw new IllegalArgumentException();
