@@ -138,6 +138,8 @@ public class ActivePlayerControllerTest {
         javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
+
+        action.getPlayer(PlayerType.COURIER).getHand().add(new ArtifactCard(ArtifactCardType.FIRE));
     }
     
 
@@ -255,7 +257,6 @@ public class ActivePlayerControllerTest {
     @Test
     public void testShowTransferable() {
         Player activePlayer = action.getActivePlayer();
-        Point playerPos = activePlayer.getPosition();
 
         if (activePlayer.getType() == PlayerType.COURIER) {
             activePlayerController.showTransferable(PlayerType.EXPLORER);
@@ -267,12 +268,14 @@ public class ActivePlayerControllerTest {
         }
 
         action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        activePlayer.setPosition(action.getPlayer(PlayerType.PILOT).getPosition());
 
         if (activePlayer.getType() == PlayerType.EXPLORER) {
             activePlayerController.showTransferable(PlayerType.COURIER);
             assertFalse("Can give cards to player on other tile", inGameView.getTransferable());
             activePlayerController.showTransferable(PlayerType.PILOT);
-            assertFalse("Can give cards to player on other tile", inGameView.getTransferable());
+            assertTrue("Cannot give cards to player on same tile", inGameView.getTransferable());
             activePlayerController.showTransferable(PlayerType.NAVIGATOR);
             assertFalse("Can give cards to player on other tile", inGameView.getTransferable());
         }
@@ -280,7 +283,16 @@ public class ActivePlayerControllerTest {
 
     @Test
     public void testTransferCard() {
-        fail("Not yet implemented");
+        Player activePlayer = action.getActivePlayer();
+        if (activePlayer.getType() == PlayerType.COURIER) {
+            assertEquals(1, activePlayer.getHand().size());
+            assertEquals(ArtifactCardType.FIRE, activePlayer.getHand().get(0).getType());
+            assertEquals(0, action.getPlayer(PlayerType.PILOT).getHand().size());
+            activePlayerController.transferCard(0, PlayerType.PILOT);
+            assertEquals("Card not lost after transfer", 0, activePlayer.getHand().size());
+            assertEquals("Card not transfered", 1, action.getPlayer(PlayerType.PILOT).getHand().size());
+            assertEquals("Wrong card transfered", ArtifactCardType.FIRE, action.getPlayer(PlayerType.PILOT).getHand().get(0).getType());
+        }
     }
 
     @Test
