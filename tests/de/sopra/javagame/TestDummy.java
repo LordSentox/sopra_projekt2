@@ -42,6 +42,13 @@ public class TestDummy {
         field.setAccessible(false);
     }
 
+    public static void injectCurrentAction(ControllerChan controllerChan, Action action) throws Exception {
+        Field field = ControllerChan.class.getDeclaredField("currentAction");
+        field.setAccessible(true);
+        field.set(controllerChan, action);
+        field.setAccessible(false);
+    }
+
     private static InGameViewAUI getInGameViewAUI() {
         return new InGameView();
     }
