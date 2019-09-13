@@ -2,6 +2,7 @@ package de.sopra.javagame.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Point {
@@ -100,6 +101,11 @@ public class Point {
             Point point = (Point) other;
             return this.xPos == point.xPos && this.yPos == point.yPos;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(xPos, yPos);
     }
 
     public String toString() {
