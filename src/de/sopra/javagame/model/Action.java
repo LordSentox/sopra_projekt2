@@ -161,7 +161,6 @@ public class Action implements Copyable<Action> {
                 throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
             }
         }).collect(Collectors.toList());
-
         action.state = TurnState.FLOOD;
         return action;
     }

@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 public class TileView extends ImageView {
 
     private final Image dryImage, floodedImage, goneImage;
+    private boolean isHighlighted = false;
 
     public TileView(int id, int size) {
         //System.out.println(id);
@@ -35,5 +36,20 @@ public class TileView extends ImageView {
 
         }
 
+    }
+    public void highlight(){
+        if(!isHighlighted){
+            this.getStyleClass().add("highlightmapTile");
+            isHighlighted = true;
+        }
+    }
+    public void deHighlight(){
+        if(isHighlighted){
+            this.getStyleClass().remove("highlightmapTile");
+            isHighlighted = false;
+        }
+    }
+    public boolean getHighlighted(){
+        return isHighlighted;
     }
 }

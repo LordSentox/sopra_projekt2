@@ -13,7 +13,7 @@ public abstract class AbstractViewController {
     private GameWindow gameWindow;
     private Scene scene;
 
-    protected GameWindow getGameWindow() {
+    public GameWindow getGameWindow() {
         return gameWindow;
     }
 

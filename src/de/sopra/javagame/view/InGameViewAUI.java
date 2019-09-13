@@ -69,7 +69,7 @@ public interface InGameViewAUI {
      *
      * @param artifacts Array der Größe 4, index gibt Art des Artefakt an, wenn true ist es gefunden
      */
-    void refreshArtifactsFound(EnumSet<ArtifactType> artifacts);
+    void refreshArtifactsFound();
 
     /**
      * aktualisiert die Anzeige des Ziehstapels (Höhe) und des Ablagestapels der Artefaktkarten
@@ -103,10 +103,8 @@ public interface InGameViewAUI {
 
     /**
      * aktualisiert die Anzeige welcher Spieler an der Reihe ist
-     *
-     * @param player Spieler der zurzeit am Zug ist
      */
-    void refreshActivePlayer(PlayerType player);
+    void refreshActivePlayer();
 
     /**
      * aktualisiert die Anzeige der übrigen Aktionen

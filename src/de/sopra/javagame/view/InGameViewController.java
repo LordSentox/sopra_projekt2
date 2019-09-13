@@ -1,7 +1,14 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ai.ActionQueue;
-import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.FloodCard;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileProperties;
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
@@ -19,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
@@ -35,7 +43,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final int PASSIVE_CARD_SIZE = 110;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
-    private static double turnSpinnerCount;
     final int SPINNER_SIZE = 250;
     @FXML
     MapPane mapPane;
@@ -51,161 +58,71 @@ public class InGameViewController extends AbstractViewController implements InGa
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
 
     public void init() {
-        //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentAction().getTiles();
-
-//        /* TEMP */
-//        MapTile[][] tiles = new MapTile[9][12];
-//        IntStream.range(0, 24).forEach(i -> tiles[i/10 +1][i%10 +1] = MapTile.fromNumber(i));
-//        IntStream.range(0, 9).forEach(i -> { IntStream.range(0, 12).forEach(j -> System.out.print(tiles[i][j])); System.out.println();});
-        /* END TEMP */
+        /* Set Background */
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
         mapPane.setIngameViewController(this);
-        initGridPane();
 
-        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.DIVER));
-        activePlayerTypeImageView.setPreserveRatio(true);
-        activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        activePlayerTypeImageView.setVisible(true);
-
-        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.PILOT));
-        playerOneTypeImageView.setPreserveRatio(true);
-        playerOneTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        playerOneTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
-        playerOneTypeImageView.setVisible(true);
-
-        playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.EXPLORER));
-        playerTwoTypeImageView.setPreserveRatio(true);
-        playerTwoTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        playerTwoTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
-        playerTwoTypeImageView.setVisible(true);
-
-        playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.ENGINEER));
-        playerThreeTypeImageView.setPreserveRatio(true);
-        playerThreeTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
-        playerThreeTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
-        playerThreeTypeImageView.setVisible(true);
-
+        /* Turn Marker */
         turnSpinnerWithoutMarkerImageView.setImage(TextureLoader.getTurnSpinner());
-        turnSpinnerWithoutMarkerImageView.setPreserveRatio(true);
-
         turnSpinnerWithoutMarkerImageView.setFitWidth(SPINNER_SIZE);
-        turnSpinnerWithoutMarkerImageView.setFitHeight(SPINNER_SIZE);
-        turnSpinnerWithoutMarkerImageView.setVisible(true);
         turnSpinnerWithoutMarkerImageView.getStyleClass().add("CardView");
         markerForSpinnerImageView.setImage(TextureLoader.getSpinnerMarker());
-
-        markerForSpinnerImageView.setPreserveRatio(true);
         markerForSpinnerImageView.setFitWidth(SPINNER_SIZE);
-        markerForSpinnerImageView.setFitHeight(SPINNER_SIZE);
-        markerForSpinnerImageView.setVisible(true);
         markerForSpinnerImageView.getStyleClass().add("CardView");
-
-
-        fireArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.FIRE));
-        fireArtefactImageView.setPreserveRatio(true);
-        fireArtefactImageView.setFitWidth(ARTIFACT_SIZE);
-        //fireArtefactImageView.setFitHeight(ARTIFACT_SIZE);
-        fireArtefactImageView.setVisible(true);
-        fireArtefactImageView.getStyleClass().add("Artifact_Fire");
-        //fireArtefactImageView.setEffect(DESATURATION);
-
-        waterArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.WATER));
-        waterArtefactImageView.setPreserveRatio(true);
-        waterArtefactImageView.setFitWidth(ARTIFACT_SIZE);
-        //waterArtefactImageView.setFitHeight(ARTIFACT_SIZE);
-        waterArtefactImageView.setVisible(true);
-        waterArtefactImageView.getStyleClass().add("Artifact_Water");
-        //waterArtefactImageView.setEffect(DESATURATION);
-
-        earthArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.EARTH));
-        earthArtefactImageView.setPreserveRatio(true);
-        earthArtefactImageView.setFitWidth(ARTIFACT_SIZE);
-        //earthArtefactImageView.setFitHeight(ARTIFACT_SIZE);
-        earthArtefactImageView.setVisible(true);
-        earthArtefactImageView.getStyleClass().add("Artifact_Earth");
-        //earthArtefactImageView.setEffect(DESATURATION);
-
-        airArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.AIR));
-        airArtefactImageView.setPreserveRatio(true);
-        airArtefactImageView.setFitWidth(ARTIFACT_SIZE);
-        //airArtefactImageView.setFitHeight(ARTIFACT_SIZE);
-        airArtefactImageView.setVisible(true);
-        airArtefactImageView.getStyleClass().add("Artifact_Air");
-        //airArtefactImageView.setEffect(DESATURATION);
-
-
-
-        /* Cards */
-        for (int i = 0; i < 9; i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showFrontImage();
-            cardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-
-
-        for (int i = 0; i < 5; i++) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
-            v.showFrontImage();
-            handOneCardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 5; i++) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
-            v.showFrontImage();
-            handTwoCardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 5; i++) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
-            v.showFrontImage();
-            handThreeCardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-
-
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showBackImage();
-            artifactCardDrawStackGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showFrontImage();
-            artifactCardDicardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showBackImage();
-            floodCardDrawStackGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
-        for (int i = 0; i < 10; i += 2) {
-            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
-            v.showFrontImage();
-            floodCardDiscardGridPane.getChildren().add(v);
-            GridPane.setConstraints(v, i, 0);
-        }
+        
+        initGridPane();
+        initPlayerHands();
+        initArtifactsFound();
+       
 
         refreshWaterLevel(4);
     }
 
-    private void initGridPane() {
-        IntStream.range(0, 9).forEach(i -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
+    private void initArtifactsFound() {
+        fireArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.FIRE));
+        fireArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        fireArtefactImageView.getStyleClass().add("Artifact_Fire");
 
-        IntStream.range(0, 5).forEach(i -> handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
-        IntStream.range(0, 5).forEach(i -> handTwoCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
-        IntStream.range(0, 5).forEach(i -> handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
+        waterArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.WATER));
+        waterArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        waterArtefactImageView.getStyleClass().add("Artifact_Water");
 
-        IntStream.range(0, 28).forEach(i -> artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-        IntStream.range(0, 28).forEach(i -> artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-        IntStream.range(0, 24).forEach(i -> floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-        IntStream.range(0, 24).forEach(i -> floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
+        earthArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.EARTH));
+        earthArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        earthArtefactImageView.getStyleClass().add("Artifact_Earth");
+
+        airArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.AIR));
+        airArtefactImageView.setFitWidth(ARTIFACT_SIZE);
+        airArtefactImageView.getStyleClass().add("Artifact_Air");
     }
 
+    private void initGridPane() {
+        IntStream.range(0, 9).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(item % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
+
+        IntStream.range(0, 5).forEach(item -> {
+            handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
+            handTwoCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
+            handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
+        });
+
+        IntStream.range(0, 28).forEach(item ->  {
+            artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+            artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+        });
+           
+        IntStream.range(0, 24).forEach(item -> {
+            floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+            floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+        });
+    }
+
+    private void initPlayerHands(){
+        activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
+        playerOneTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
+        playerTwoTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
+        playerThreeTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
+    }
     public void rotateTurnSpinner(double degree) {
         RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1));
         rotateTransition.setToAngle(degree);
@@ -219,15 +136,18 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onShowDrainOptionsClicked() {
-
+        System.out.println("juch, ich bin der drainindikator");
+        getGameWindow().getControllerChan().getActivePlayerController().showDrainOptions();
     }
 
     public void onShowSpecialAbilityOptionsClicked() {
 
+        System.out.println("juch, ich bin der specialindikator");
+        getGameWindow().getControllerChan().getActivePlayerController().showSpecialAbility();
     }
-
+    //TODO button zum abbrechen einbauen
     public void onSpecialAbilityCancelClicked() {
-
+        getGameWindow().getControllerChan().getActivePlayerController().cancelSpecialAbility();
     }
 
     public void onPlayerSelected() {
@@ -247,7 +167,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onEndTurnClicked() {
-
+        getGameWindow().getControllerChan().getActivePlayerController().endTurn();
     }
 
     public void onSpecialCardPlayClicked(int cardIndex) {
@@ -259,7 +179,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onCollectArtifactClicked() {
-
+        System.out.println("juch, ich bin der artefaktfinderotto");
+        getGameWindow().getControllerChan().getActivePlayerController().collectArtifact();
     }
 
     public void onRedoClicked() {
@@ -309,18 +230,32 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
+    public void showNotification(String notification) {
+        
+    }
+
+    @Override
+    public void refreshAll() {
+        refreshArtifactsFound();
+        refreshActivePlayer();
+        refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
+        refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
+        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getTiles());
+        
+        //DEBUG
+        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
+        mapPane.putPlayer(3, 5, PlayerType.DIVER);
+    }
+
+    @Override
     public void refreshMovementOptions(List<Point> points) {
-        points.forEach(point ->((TileView) mapPane.getMapStackPane(point.yPos, point.xPos).getChildren().get(0)).showImage(MapTileState.FLOODED));
+        points.forEach(point -> mapPane.highlightMapTile(point,false));
     }
 
     @Override
     public void refreshDrainOptions(List<Point> points) {
 
-    }
-
-    @Override
-    public void showNotification(String notification) {
-
+        points.forEach(point -> mapPane.highlightMapTile(point,false));
     }
 
     @Override
@@ -335,52 +270,137 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshHand(PlayerType player, List cards) {
-
+    public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
+        if(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
+            cardGridPane.getChildren().clear();
+            int index = 0;
+            for (ArtifactCard card : cards) {
+                CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+                v.showFrontImage();
+                cardGridPane.getChildren().add(v);
+                GridPane.setConstraints(v, index, 0);
+                index += 2;
+            }            
+        } else {
+            Action action = getGameWindow().getControllerChan().getCurrentAction();
+            List<Player> players = action.getPlayers();
+            GridPane pane = null;
+            
+            if(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
+                pane = handOneCardGridPane;
+            if(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+                pane = handTwoCardGridPane;
+            if(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+                pane = handThreeCardGridPane;
+            
+            pane.getChildren().clear();
+            int index = 0;            
+            for (ArtifactCard card : cards) {
+                CardView v = new ArtifactCardView(card.getType(), PASSIVE_CARD_SIZE);
+                v.showFrontImage();
+                pane.getChildren().add(v);
+                GridPane.setConstraints(v, index++, 0);
+            }
+        }
     }
 
     @Override
-    public void refreshArtifactsFound(EnumSet<ArtifactType> artifacts) {
-
+    public void refreshArtifactsFound() {
+        EnumSet<ArtifactType> artifacts = this.getGameWindow().getControllerChan().getCurrentAction().getDiscoveredArtifacts();
+        
+        fireArtefactImageView.setEffect(artifacts.contains(ArtifactType.FIRE) ? null : DESATURATION);
+        waterArtefactImageView.setEffect(artifacts.contains(ArtifactType.WATER) ? null : DESATURATION);
+        earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
+        airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
+        
+        System.out.println(artifacts.contains(ArtifactType.FIRE));
+        System.out.println(artifacts.contains(ArtifactType.WATER));
+        System.out.println(artifacts.contains(ArtifactType.EARTH));
+        System.out.println(artifacts.contains(ArtifactType.AIR));
     }
 
     @Override
-    public void refreshArtifactStack(CardStack stack) {
-
+    public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
+        this.refreshActionsLeft(-216);
+        artifactCardDrawStackGridPane.getChildren().clear();
+        for (int i = 0; i < stack.size(); i += 2) {
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
+            v.showBackImage();
+            artifactCardDrawStackGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, i, 0);
+        }
+        
+        List<ArtifactCard> discardPile = stack.getDiscardPile();
+        int index = 0;
+        artifactCardDicardGridPane.getChildren().clear();
+        for (ArtifactCard card : discardPile) {
+            CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+            v.showFrontImage();
+            artifactCardDicardGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, index, 0);
+            index +=2;
+        }
     }
 
     @Override
-    public void refreshFloodStack(CardStack stack) {
-
+    public void refreshFloodStack(CardStack<FloodCard> stack) {
+        this.refreshActionsLeft(-288);
+        floodCardDrawStackGridPane.getChildren().clear();
+        for (int i = 0; i < stack.size(); i += 2) {
+            CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
+            v.showBackImage();
+            floodCardDrawStackGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, i, 0);
+        }
+        List<FloodCard> discardPile = stack.getDiscardPile();
+        int index = 0;
+        floodCardDiscardGridPane.getChildren().clear();
+        for (FloodCard card : discardPile) {
+            CardView v = new FloodCardView(card.getTile().getProperties(), ACTIVE_CARD_SIZE);
+            v.showFrontImage();
+            floodCardDiscardGridPane.getChildren().add(v);
+            GridPane.setConstraints(v, index, 0);
+            index +=2;
+        }
     }
 
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
-
+        mapPane.putPlayer(position.xPos, position.yPos, player);
     }
 
     @Override
     public void refreshMapTile(Point position, MapTile tile) {
-
+        mapPane.setMapTile(position, tile);
     }
 
     @Override
-    public void refreshActivePlayer(PlayerType player) {
-
+    public void refreshActivePlayer() {
+        Action action = this.getGameWindow().getControllerChan().getCurrentAction();
+        List<Player> players = action.getPlayers();
+        
+        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
+        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
+        if(players.size() == 3){
+            playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
+        } else if(players.size() == 4){
+            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));            
+        }
     }
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
-
+        switch (actionsLeft) {
+        case 1: this.rotateTurnSpinner(-144); break;
+        case 2: this.rotateTurnSpinner(-72); break;
+        case 3: this.rotateTurnSpinner(0);break;
+        default: this.rotateTurnSpinner(0);
+            break;
+        }
     }
 
     @Override
     public void refreshPlayerName(String name, PlayerType player) {
-
-    }
-
-    @Override
-    public void refreshAll() {
 
     }
 
@@ -391,6 +411,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void showTip(ActionQueue queue) {
-
+        // TODO Auto-generated method stub
+        
     }
 }
