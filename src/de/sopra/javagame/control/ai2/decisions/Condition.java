@@ -83,7 +83,7 @@ public enum Condition implements ICondition {
             return decision.playerHand().hasSandBags();
         }
     },
-    PLAYER_HAS_HELICOPTER {
+    PLAYER_HAS_HELICOPTER_CARD {
         @Override
         public boolean isTrue(Decision decision) {
             return decision.playerHand().hasHelicopter();
