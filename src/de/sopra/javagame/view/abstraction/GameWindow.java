@@ -43,7 +43,7 @@ public class GameWindow {
 
     public void init() throws IOException {
         initMainMenu();
-//        initGamePreparations();
+        initGamePreparations();
         initHighScore();
         initInGame();
 //        initMapEditor();
@@ -69,6 +69,18 @@ public class GameWindow {
         mainMenuViewController.setScene(mainMenuScene);
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
+    }
+    
+    private void initGamePreparations() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GamePreparations.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        GamePreparationsViewController gamePreparationsViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
+        gamePreparationsViewController.setGameWindow(this);
+        gamePreparationsViewController.setScene(mainMenuScene);
+        gamePreparationsViewController.init();
+        views.put(ViewState.GAME_PREPARATIONS, gamePreparationsViewController);
     }
 
     //TODO
@@ -131,19 +143,6 @@ public class GameWindow {
         inGameSettingsViewController.setScene(mainMenuScene);
         inGameSettingsViewController.init();
         views.put(ViewState.IN_GAME_SETTINGS, inGameSettingsViewController);
-    }
-
-    //TODO
-    private void initGamePreparations() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
-        AnchorPane mainPane = fxmlLoader.load();
-        MainMenuViewController mainMenuViewController = fxmlLoader.getController();
-        Scene mainMenuScene = new Scene(mainPane);
-        mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
-        mainMenuViewController.setGameWindow(this);
-        mainMenuViewController.setScene(mainMenuScene);
-        mainMenuViewController.init();
-        views.put(ViewState.MENU, mainMenuViewController);
     }
 
     //DO NOT REMOVE THIS - Julius

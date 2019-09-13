@@ -31,7 +31,7 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onStartGameClicked() {
-        changeState(ViewState.IN_GAME);
+        changeState(ViewState.GAME_PREPARATIONS);
     }
 
     public void onLoadGameClicked() {
