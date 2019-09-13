@@ -429,7 +429,7 @@ public class ActivePlayerControllerTest {
         action.nextPlayerActive();
         activePlayer = action.getActivePlayer();
         assertSame(activePlayer.getType(), PlayerType.ENGINEER);
-        playerPos = activePlayer.getPosition();
+
         activePlayerController.showSpecialAbility();
         assertEquals("No notification of Engineer ability", 1, inGameView.getNotifications().size());
         inGameView.getNotifications().clear();
