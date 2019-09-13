@@ -4,6 +4,7 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
@@ -23,7 +24,7 @@ public class ExplorerTest {
 
     private ControllerChan controllerChan;
     private ActivePlayerController activePlayerController;
-    private MapTile[][] testMap;
+    private MapFull testMap;
     private Action action;
     private List<Pair<PlayerType, Boolean>> players;
 
@@ -36,8 +37,7 @@ public class ExplorerTest {
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
 
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+        this.testMap = MapUtil.readFullMapFromString(testMapString);
 
         players = Arrays.asList(
                 new Pair<>(PlayerType.EXPLORER, false),

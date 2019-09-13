@@ -6,10 +6,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Engineer;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Direction;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +27,7 @@ public class ActivePlayerControllerTest {
 
     private ControllerChan controllerChan;
     private ActivePlayerController activePlayerController;
-    private MapTile[][] testMap;
+    private MapFull testMap;
     private Action action;
     private List<Pair<PlayerType, Boolean>> players;
 
@@ -43,8 +40,7 @@ public class ActivePlayerControllerTest {
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
 
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+        this.testMap = MapUtil.readFullMapFromString(testMapString);
 
         players = Arrays.asList(
                 new Pair<>(PlayerType.COURIER, false),
@@ -124,9 +120,9 @@ public class ActivePlayerControllerTest {
 
         activePlayerController.showMovements(true);
         movementPoints = inGameView.getMovementPoints();
-        for (int y = 1; y < testMap.length - 1; y++) {
-            for (int x = 1; x < testMap[y].length - 1; x++) {
-                MapTile tile = testMap[y][x];
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                MapTile tile = testMap.get(x, y);
                 if (tile != null && tile.getState() != MapTileState.FLOODED && !new Point(x, y).equals(playerPos.getLocation())) {
                     Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", x, y), movementPoints.contains(new Point(x, y)));
                 }
@@ -140,9 +136,9 @@ public class ActivePlayerControllerTest {
     public void testShowDrainOptions() {
         Player activePlayer = action.getActivePlayer();
         Point playerPos = activePlayer.getPosition();
-        testMap[3][3].flood();
-        testMap[3][5].flood();
-        testMap[4][7].flood();
+        testMap.get(2, 2).flood();
+        testMap.get(4, 2).flood();
+        testMap.get(6, 3).flood();
 
 
         assertSame(activePlayer.getType(), PlayerType.COURIER);
@@ -171,9 +167,10 @@ public class ActivePlayerControllerTest {
         Player activePlayer = action.getActivePlayer();
         Point playerPos = activePlayer.getPosition();
 
-        testMap[4][6].flood();
-        testMap[2][5].flood();
-        printMap(testMap);
+        testMap.get(5, 3).flood();
+        testMap.get(4, 1).flood();
+
+        printMap(testMap.raw());
 
         assertSame(activePlayer.getType(), PlayerType.COURIER);
         activePlayerController.showSpecialAbility();
