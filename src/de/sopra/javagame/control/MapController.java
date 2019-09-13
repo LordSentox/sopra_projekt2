@@ -1,6 +1,7 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.util.MapCheckUtil;
+import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.io.BufferedWriter;
@@ -85,6 +86,8 @@ public class MapController {
         }
         try {
             String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
+
+            boolean[][] mapTiles = MapUtil.readBoolMapFromString(mapString);
 
             mapEditorViewAUI.setMap(name, mapTiles);
             

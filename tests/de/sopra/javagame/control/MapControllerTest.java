@@ -91,7 +91,8 @@ public class MapControllerTest {
     public void testLoadMapToEditor() throws FileNotFoundException {
         File outFile = new File(MapController.MAP_FOLDER + name + ".map");
         PrintWriter out = new PrintWriter(outFile);
-        out.println(mapString);
+        out.write(mapString);
+        out.close();
 
         for (int y = 1; y < 3; y++) {
             for (int x = 1; x < 11; x++) {
@@ -103,7 +104,9 @@ public class MapControllerTest {
         }
 
         mapController.loadMapToEditor(name);
-        Assert.assertEquals(map, mapEditorView.getTiles());
+        for (int y = 0; y < map.length; ++y) {
+            Assert.assertArrayEquals(map[y], mapEditorView.getTiles()[y]);
+        }
         
         outFile.delete();
     }
