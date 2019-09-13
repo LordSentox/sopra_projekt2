@@ -4,10 +4,7 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.TestDummy.InGameView;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.*;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -375,11 +372,11 @@ public class ActivePlayerControllerTest {
 
         assertEquals(activePlayer.getType(), PlayerType.DIVER);
         assertEquals(activePlayer.getPosition(), new Point(5, 3));
-        activePlayerController.move(new Point(7, 3), false);
-        assertNotEquals("Diver moved to invalid tile", new Point(7, 3), activePlayer.getPosition());
+        activePlayerController.move(new Point(7, 2), false);
+        assertNotEquals("Diver moved to invalid tile", new Point(7, 2), activePlayer.getPosition());
         assertEquals("Diver used action despite not moving", 3, activePlayer.getActionsLeft());
-        activePlayerController.move(new Point(7, 3), true);
-        assertEquals("Diver did not move to valid tile", new Point(7, 3), activePlayer.getPosition());
+        activePlayerController.move(new Point(7, 2), true);
+        assertEquals("Diver did not move to valid tile", new Point(7, 2), activePlayer.getPosition());
         assertEquals("Diver did not use action after moving", 2, activePlayer.getActionsLeft());
 
         action.nextPlayerActive();
@@ -409,7 +406,23 @@ public class ActivePlayerControllerTest {
 
     @Test
     public void testMoveOther() {
-        fail("Not yet implemented");
+        assertEquals(action.getPlayer(PlayerType.COURIER).getPosition(), new Point(3, 4));
+
+        activePlayerController.moveOther(Direction.UP, PlayerType.COURIER);
+        System.out.println("actionsLeft = " + action.getActivePlayer().getActionsLeft());
+        assertEquals(action.getPlayer(PlayerType.COURIER).getPosition(), new Point(3, 3));
+
+        activePlayerController.moveOther(Direction.RIGHT, PlayerType.COURIER);
+        System.out.println("actionsLeft = " + action.getActivePlayer().getActionsLeft());
+        assertEquals(action.getPlayer(PlayerType.COURIER).getPosition(), new Point(4, 3));
+
+        activePlayerController.moveOther(Direction.DOWN, PlayerType.COURIER);
+        System.out.println("actionsLeft = " + action.getActivePlayer().getActionsLeft());
+        assertEquals(action.getPlayer(PlayerType.COURIER).getPosition(), new Point(4, 4));
+
+        activePlayerController.moveOther(Direction.LEFT, PlayerType.COURIER);
+        System.out.println("actionsLeft = " + action.getActivePlayer().getActionsLeft());
+        assertEquals(action.getPlayer(PlayerType.COURIER).getPosition(), new Point(3, 4));
     }
 
     @Test
