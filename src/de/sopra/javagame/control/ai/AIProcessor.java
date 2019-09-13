@@ -30,6 +30,6 @@ public interface AIProcessor {
      *
      * @return ein Tipp in Befehlsform
      */
-    String getTip(AIController control);
+    ActionQueue getTip(AIController control);
 
 }

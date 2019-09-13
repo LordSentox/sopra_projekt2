@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
 import de.sopra.javagame.control.ai2.decisions.Decision;
 import de.sopra.javagame.util.Pair;
@@ -135,6 +136,10 @@ public class DecisionMaker implements AIProcessor {
         return decide(control, PLAY_SPECIAL_CARD);
     }
 
+    private Decision makeSafetyDecision(AIController control) {
+        return decide(control, SWIM_TO_SAFETY);
+    }
+
     @Override
     public void init() {
         findDecisions();
@@ -143,20 +148,27 @@ public class DecisionMaker implements AIProcessor {
 
     @Override
     public void makeStep(AIController control) {
+        ActionQueue actionQueue;
         if (control.isCurrentlyDiscarding()) {
             Decision decision = makeDiscardDecision(control);
-            decision.act();
+            actionQueue = decision.act();
+        } else if (control.isCurrentlyRescueingHimself()) {
+            Decision decision = makeSafetyDecision(control);
+            actionQueue = decision.act();
         } else {
             Decision turn = makeTurnDecision(control);
-            turn.act();
-            Decision special = makeSpecialCardDecision(control);
-            if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
-                special.act();
+            actionQueue = turn.act();
         }
+        if (actionQueue == null)
+            actionQueue = new ActionQueue(control.getActivePlayer());
+        Decision special = makeSpecialCardDecision(control);
+        if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
+            actionQueue.nextActions(special.act());
+
     }
 
     @Override
-    public String getTip(AIController control) {
+    public ActionQueue getTip(AIController control) {
         return null; //TODO
     }
 

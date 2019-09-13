@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai1;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
+import de.sopra.javagame.control.ai.SimpleAction;
 
 import java.util.LinkedList;
 import java.util.List;

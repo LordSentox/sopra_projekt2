@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
@@ -20,7 +21,8 @@ public class TurnMoveToDrainCorePositions extends Decision {
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
+
 }

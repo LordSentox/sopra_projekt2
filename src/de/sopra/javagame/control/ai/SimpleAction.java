@@ -1,6 +1,8 @@
-package de.sopra.javagame.control.ai1;
+package de.sopra.javagame.control.ai;
 
+import de.sopra.javagame.control.ai1.ActionType;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.Copyable;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
 
@@ -13,7 +15,7 @@ import java.util.EnumSet;
  * @version 09.09.2019
  * @since 09.09.2019
  */
-public final class SimpleAction {
+public final class SimpleAction implements Copyable<SimpleAction> {
 
     private final ActionType type;
     private final Point startingPoint;
@@ -70,6 +72,13 @@ public final class SimpleAction {
         return targetPlayers;
     }
 
+    /**
+     * Der Startpunkt der Aktion, falls die Aktion keinen impliziten Startpunkt hat.
+     * Die Position des ausführenden Spielers wird beispielsweise bei einer normaler Bewegung nicht festgehalten.
+     * Ist primär relevant für Helikopter-Spezialkarten und die Spezialaktion des Navigators.
+     *
+     * @return der Startpunkt der Aktion
+     */
     public Point getStartingPoint() {
         return startingPoint;
     }
@@ -78,4 +87,8 @@ public final class SimpleAction {
         return targetPoint;
     }
 
+    @Override
+    public SimpleAction copy() {
+        return this; //should not actually copy, is here to by usable for
+    }
 }
