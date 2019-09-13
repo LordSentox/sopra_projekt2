@@ -246,6 +246,5 @@ public class ActivePlayerController {
     public void endTurn() {
         Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().finishAction(currentAction);
-
     }
 }

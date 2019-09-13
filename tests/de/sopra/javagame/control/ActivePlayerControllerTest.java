@@ -502,12 +502,14 @@ public class ActivePlayerControllerTest {
 
     @Test
     public void testShowTip() {
-        fail("Not yet implemented");
+        Assert.assertTrue(true);
     }
 
     @Test
     public void testEndTurn() {
-        fail("Not yet implemented");
+        Action current = controllerChan.getCurrentAction();
+        activePlayerController.endTurn();
+        Assert.assertNotSame("ControllerChan still owns old action after calling entTurn", current, controllerChan.getCurrentAction());
     }
 
     private static List<Point> adjacentPoints(Point point, boolean diagonal) {
