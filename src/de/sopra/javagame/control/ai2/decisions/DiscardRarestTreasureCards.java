@@ -47,6 +47,6 @@ public class DiscardRarestTreasureCards extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().discard(discarded); //TODO
+        return startActionQueue().discard(discarded);
     }
 }
