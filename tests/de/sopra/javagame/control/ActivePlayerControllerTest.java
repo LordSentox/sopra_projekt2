@@ -16,6 +16,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -41,7 +44,7 @@ public class ActivePlayerControllerTest {
     private Pilot pilot;
     private CardStack<ArtifactCard> artifactCardStack;
     private List<ArtifactCard> handCardsExpected;
-    List<Pair<PlayerType, Boolean>> players;
+    private List<Pair<PlayerType, Boolean>> players;
 
     private InGameView inGameView;
 
@@ -212,11 +215,12 @@ public class ActivePlayerControllerTest {
         for (int y = 1; y < testMap.length - 1; y++) {
             for (int x = 1; x < testMap[y].length - 1; x++) {
                 MapTile tile = testMap[y][x];
-                if (tile != null && tile.getState() != MapTileState.FLOODED) {
+                if (tile != null && tile.getState() != MapTileState.FLOODED && !new Point(x, y).equals(playerPos.getLocation())) {
                     Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", x, y), movementPoints.contains(new Point(x, y)));
                 }
             }
         }
+        assertFalse("Current Position marked as movement point", movementPoints.contains(activePlayer.getPosition()));
 
     }
 
@@ -251,13 +255,184 @@ public class ActivePlayerControllerTest {
     }
 
     @Test
-    public void testShowSpecialAbility() {
-        fail("Not yet implemented");
+    public void testShowSpecialAbility() throws Exception {
+        Player activePlayer = action.getActivePlayer();
+        Point playerPos = activePlayer.getPosition();
+
+        testMap[4][6].flood();
+        testMap[2][5].flood();
+        printMap(testMap);
+
+        assertSame(activePlayer.getType(), PlayerType.COURIER);
+        activePlayerController.showSpecialAbility();
+        assertEquals("No notification of Courier ability", 1, inGameView.getNotifications().size());
+        inGameView.getNotifications().clear();
+
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.EXPLORER);
+        Assert.assertEquals("Explorer not on correct spawn location", new Point(6, 4), playerPos);
+        activePlayerController.showSpecialAbility();
+        List<Point> expectedDrainables = adjacentPoints(playerPos, true).stream()
+                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() == MapTileState.FLOODED)
+                .collect(Collectors.toList());
+        assertFalse("Dry tiles included in drainable positions. Must only be flooded", inGameView.getDrainPoints().size() > expectedDrainables.size());
+        assertTrue("Explorer drainable tiles not displayed correctly", expectedDrainables.containsAll(inGameView.getDrainPoints()) && inGameView.getDrainPoints().containsAll(expectedDrainables));
+        assertTrue("Tile explorer is standing on, not marked as drainable", expectedDrainables.contains(playerPos));
+        List<Point> expectedMovePoints = adjacentPoints(playerPos, true);
+        assertTrue("Explorer drainable tiles not displayed correctly", expectedMovePoints.containsAll(inGameView.getMovementPoints()) && inGameView.getMovementPoints().containsAll(moveablePlayers));
+
+
+        activePlayerController.cancelSpecialAbility();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.NAVIGATOR);
+        activePlayerController.showSpecialAbility();
+        assertEquals("No notification of Navigator ability", 1, inGameView.getNotifications().size());
+        inGameView.getNotifications().clear();
+
+
+        activePlayerController.showSpecialAbility();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.PILOT);
+        activePlayerController.showSpecialAbility();
+        List<Point> movementPoints = inGameView.getMovementPoints();
+        for (int y = 1; y < testMap.length - 1; y++) {
+            for (int x = 1; x < testMap[y].length - 1; x++) {
+                MapTile tile = testMap[y][x];
+                if (tile != null && tile.getState() != MapTileState.FLOODED && !new Point(x, y).equals(playerPos.getLocation())) {
+                    Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", x, y), movementPoints.contains(new Point(x, y)));
+                }
+            }
+        }
+        assertFalse("Current Position marked as movement point", movementPoints.contains(activePlayer.getPosition()));
+
+        inGameView.getMovementPoints().clear();
+        inGameView.getDrainPoints().clear();
+        activePlayerController.cancelSpecialAbility();
+
+        players = Arrays.asList(
+                new Pair<>(PlayerType.DIVER, false),
+                new Pair<>(PlayerType.ENGINEER, false),
+                new Pair<>(PlayerType.NAVIGATOR, false),
+                new Pair<>(PlayerType.PILOT, false));
+
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        TestDummy.injectJavaGame(controllerChan, pair.getLeft());
+        TestDummy.injectCurrentAction(controllerChan, pair.getRight());
+        action = pair.getRight();
+        javaGame = controllerChan.getJavaGame();
+
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
+        action.getActivePlayer().setActionsLeft(3);
+
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.DIVER);
+        activePlayerController.showSpecialAbility();
+        assertEquals(activePlayer.getPosition(), new Point(5, 3));
+        expectedMovePoints = new ArrayList<>();
+        expectedMovePoints.add(new Point(4, 2));
+        expectedMovePoints.add(new Point(4, 3));
+        expectedMovePoints.add(new Point(6, 2));
+        expectedMovePoints.add(new Point(6, 3));
+
+        assertEquals("Diver move points incorrect" , expectedMovePoints, inGameView.getMovementPoints());
+
+
+        activePlayerController.cancelSpecialAbility();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        assertSame(activePlayer.getType(), PlayerType.ENGINEER);
+        playerPos = activePlayer.getPosition();
+        activePlayerController.showSpecialAbility();
+        assertEquals("No notification of Engineer ability", 1, inGameView.getNotifications().size());
+        inGameView.getNotifications().clear();
     }
 
     @Test
-    public void testCancelSpecialAbility() {
-        fail("Not yet implemented");
+    public void testCancelSpecialAbility() throws Exception {
+        Player activePlayer = action.getActivePlayer();
+        Point playerPos = activePlayer.getPosition();
+
+        testMap[4][6].flood();
+        testMap[4][7].flood();
+        testMap[3][6].flood();
+        testMap[2][5].flood();
+        printMap(testMap);
+
+        action.nextPlayerActive();
+
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.EXPLORER);
+        Assert.assertEquals("Explorer not on correct spawn location", new Point(6, 4), playerPos);
+        activePlayerController.showSpecialAbility();
+        activePlayerController.cancelSpecialAbility();
+        List<Point> expectedDrainables = adjacentPoints(playerPos, true).stream()
+                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() == MapTileState.FLOODED)
+                .collect(Collectors.toList());
+        expectedDrainables.add(playerPos);
+        assertEquals("Incorrect amount of drainable tiles for explorer", 3, expectedDrainables.size());
+        List<Point> expectedMovePoints = adjacentPoints(playerPos, true).stream()
+                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() != MapTileState.GONE)
+                .collect(Collectors.toList());
+        assertEquals("Explorer incorrect amount of move tiles", 4, expectedMovePoints.size());
+
+        action.nextPlayerActive();
+
+        activePlayerController.showSpecialAbility();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.PILOT);
+        activePlayerController.showSpecialAbility();
+        activePlayerController.cancelSpecialAbility();
+        assertEquals("Not exactly the adjacent tiles marked as move positions", 4, inGameView.getMovementPoints().size());
+        assertEquals("Not exactly the flooded adjacent tiles and current position marked as drain positions", 2, inGameView.getDrainPoints().size());
+
+
+        players = Arrays.asList(
+                new Pair<>(PlayerType.DIVER, false),
+                new Pair<>(PlayerType.ENGINEER, false),
+                new Pair<>(PlayerType.NAVIGATOR, false),
+                new Pair<>(PlayerType.PILOT, false));
+
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        TestDummy.injectJavaGame(controllerChan, pair.getLeft());
+        TestDummy.injectCurrentAction(controllerChan, pair.getRight());
+        action = pair.getRight();
+        javaGame = controllerChan.getJavaGame();
+
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
+        action.getActivePlayer().setActionsLeft(3);
+
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.DIVER);
+        activePlayerController.showSpecialAbility();
+        activePlayerController.cancelSpecialAbility();
+        assertEquals(activePlayer.getPosition(), new Point(5, 3));
+        expectedMovePoints = new ArrayList<>();
+        expectedMovePoints.add(new Point(4, 3));
+        expectedMovePoints.add(new Point(5, 2));
+        expectedMovePoints.add(new Point(6, 3));
+
+        assertEquals("Diver move points incorrect" , expectedMovePoints, inGameView.getMovementPoints());
+
+
+        activePlayerController.cancelSpecialAbility();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        assertSame(activePlayer.getType(), PlayerType.ENGINEER);
+
+        activePlayerController.showSpecialAbility();
+        assertEquals("No notification of Engineer ability", 1, inGameView.getNotifications().size());
+        inGameView.getNotifications().clear();
     }
 
     @Test
@@ -521,12 +696,20 @@ public class ActivePlayerControllerTest {
 
         if (diagonal) {
             points.add(new Point(point.xPos - 1, point.yPos - 1));
-            points.add(new Point(point.xPos + 1, point.yPos + 1));
             points.add(new Point(point.xPos - 1, point.yPos + 1));
             points.add(new Point(point.xPos + 1, point.yPos - 1));
+            points.add(new Point(point.xPos + 1, point.yPos + 1));
         }
 
         return points;
+    }
+
+    private static Set<Point> pointsWithDistance(Point point, int distance) {
+        Stream<Point> points = Stream.of(point);
+        for (int i = 0; i < distance; i++) {
+            points = points.flatMap(p -> adjacentPoints(p, false).stream());
+        }
+        return points.filter(p -> !p.equals(point)).collect(Collectors.toSet());
     }
 
     private static void printMap(MapTile[][] tiles) {

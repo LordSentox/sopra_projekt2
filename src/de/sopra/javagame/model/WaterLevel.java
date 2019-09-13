@@ -7,11 +7,13 @@ package de.sopra.javagame.model;
  * @author Lisa, Hannah
  */
 public class WaterLevel implements Copyable<WaterLevel> {
+    public static final int LOSE_GAME_AT = 9;
+    public static final int CONTINUE_GAME = 5;
 
     /**
      * Hat am jeweiligen index die Anzahl der zu ziehenden Karten
      */
-    private static final int[] DRAW_AMOUNT_BY_LEVEL = new int[] { 2, 2, 3, 3, 3, 4, 4, 5, 5, 6 }; // TODO
+    private static final int[] DRAW_AMOUNT_BY_LEVEL = new int[]{2, 2, 3, 3, 3, 4, 4, 5, 5, 6}; // TODO
 
     /**
      * Das maximale Wasserlevel

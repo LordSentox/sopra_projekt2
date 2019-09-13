@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.model.ArtifactCardType;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
 import static de.sopra.javagame.model.ArtifactCardType.*;
@@ -14,8 +15,10 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  * @version 12.09.2019
  * @since 10.09.2019
  */
+
 @DoAfter(act = DISCARD, value = DiscardSandbagRatherThanOneOfFourTreasureCards.class)
 public class DiscardRarestTreasureCards extends Decision {
+    private ArtifactCardType discarded; 
     @Override
     public Decision decide() {
         EnhancedPlayerHand activeHand = playerHand();
@@ -23,10 +26,20 @@ public class DiscardRarestTreasureCards extends Decision {
         int fire = activeHand.getAmount(FIRE);
         int earth = activeHand.getAmount(EARTH);
         int air = activeHand.getAmount(AIR);
-        if (any(all(water < fire, water < earth, water < air),
-                all(fire < water, fire < earth, fire < air),
-                all(earth < fire, earth < water, earth < air),
-                all(air < fire, air < earth, air < water))) {
+        if(all(water <= fire, water <= earth, water <= air)){
+            discarded= WATER;
+            return this;
+        }
+        if(all(fire <= water, fire <= earth, fire <= air)){
+            discarded= FIRE;
+            return this;
+        }
+        if(all(earth <= fire, earth <= water, earth <= air)){
+            discarded= EARTH;
+            return this;
+        }
+        if(all(air <= fire, air <= earth, air <= water)){
+            discarded= AIR;
             return this;
         }
         return null;
@@ -34,6 +47,6 @@ public class DiscardRarestTreasureCards extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().discard(discarded);
     }
 }
