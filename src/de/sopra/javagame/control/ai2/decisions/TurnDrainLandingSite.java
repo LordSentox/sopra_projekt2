@@ -31,7 +31,7 @@ public class TurnDrainLandingSite extends Decision {
         Point landingSitePosition = informationLandingSite.getLeft();
 
         List<Point> drainablePositions = player().drainablePositions();
-
+        //pürfe, ob der aktive Spieler die LandingSite trockenlegen kann
         if (drainablePositions.contains(landingSitePosition)) {
             return this;
         }
