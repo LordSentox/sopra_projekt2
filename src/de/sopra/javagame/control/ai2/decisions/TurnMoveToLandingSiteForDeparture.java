@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.Action;
@@ -24,7 +25,6 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
 @PreCondition(allTrue = GAME_HAS_ALL_ARTIFACTS)
 public class TurnMoveToLandingSiteForDeparture extends Decision {
 
-
     @Override
     public Decision decide() {
         Action action = control.getCurrentAction();
@@ -42,9 +42,8 @@ public class TurnMoveToLandingSiteForDeparture extends Decision {
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

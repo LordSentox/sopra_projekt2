@@ -1,5 +1,7 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.control.AIController;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.FloodCard;
@@ -131,5 +133,13 @@ public interface InGameViewAUI {
      *               false: eine Partie kann gespielt werden
      */
     void setIsReplayWindow(boolean replay);
+
+    /**
+     * Soll die Aktionen in der Queue visuell darstellen, als Tipp.
+     * Eventuell kann dieser auch direkt ausgeführt werden: {@link AIController#doSteps(ActionQueue)}
+     *
+     * @param queue die queue an Aktionen, welche als Tipp ausgeführt würden (KI erstellt den Tipp)
+     */
+    void showTip(ActionQueue queue);
 
 }

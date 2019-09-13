@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
@@ -26,8 +27,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @since 12.09.2019
  */
 @DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialUseSandbagToDrainOrphanedTempleMapTile.class)
-@PreCondition(allTrue = {PLAYER_HAS_HELICOPTER, PLAYER_NO_ACTION_LEFT, GAME_ANY_LAST_TEMPLE_IN_DANGER})
-//FIXME ist GAME_ANY_LAST_TEMPLE_IN_DANGER richtig?
+@PreCondition(allTrue = {PLAYER_HAS_HELICOPTER_CARD, PLAYER_NO_ACTION_LEFT, GAME_ANY_LAST_TEMPLE_IN_DANGER})
+
 public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
@@ -72,9 +73,8 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

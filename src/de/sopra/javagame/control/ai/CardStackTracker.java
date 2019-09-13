@@ -7,6 +7,7 @@ import de.sopra.javagame.util.CardStackObserver;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.function.Predicate;
 
 /**
  * <h1>projekt2</h1>
@@ -52,6 +53,18 @@ public final class CardStackTracker<T extends Copyable<T>> implements CardStackO
 
     public Collection<T> getKnowTopCards() {
         return knowTopCards;
+    }
+
+    public int cardsInDeck(Predicate<T> matcher) {
+        return (int) drawStack.stream().filter(matcher).count();
+    }
+
+    public int cardsInTopOfDeck(Predicate<T> matcher) {
+        return (int) knowTopCards.stream().filter(matcher).count();
+    }
+
+    public int cardsInDiscardPile(Predicate<T> matcher) {
+        return (int) discardPile.stream().filter(matcher).count();
     }
 
     public void applyChange(CardStackChange<T> change) {

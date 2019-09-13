@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_ANY_PLAYER_HAS_HELICOPTER;
 import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION_LEFT;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
@@ -28,14 +30,12 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @since 10.09.2019
  */
 @DoAfter(act = TURN_ACTION, value = TurnDrainTempleMapTileOfUndiscoveredArtifact.class)
-@PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
+@PreCondition(allTrue = GAME_ANY_PLAYER_HAS_HELICOPTER, allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
 
     @Override
     public Decision decide() {
-        if (!control.anyPlayerHasCard(ArtifactCardType.HELICOPTER)) {
-            return null;
-        }
+
         Point activePlayerPosition = player().getPosition();
 
         List<Pair<Point, MapTile>> templeList = control.getTemples();
@@ -52,7 +52,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
                 return null;
             }
 
-            //prüfe, ob Tempelatefakt bereits geborgen ist
+            //prüfe, ob Tempelartefakt bereits geborgen ist
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
             EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
@@ -62,7 +62,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
-            //wenn eins nicht GONE ist
+            //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
@@ -84,9 +84,8 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

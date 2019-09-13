@@ -1,6 +1,7 @@
 package de.sopra.javagame.control.ai2.decisions;
 
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
@@ -35,23 +36,29 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
 
             MapTile orphanedTemple = templeList.get(i).getRight();
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
-
+            //prüft, ob Artefakt des betroffenen Tempels bereits geborgen wurde, dann Tempelrettung irrelevant
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
+            //prüft, ob Tempel überhaupt geflutet ist
             if (orphanedTemple.getState() != MapTileState.FLOODED) {
                 continue;
             }
+            Point orphanedTemplePosition = templeList.get(i).getLeft();
+            List<Point> drainablePositions = player().drainablePositions();
+            //prüfe, ob der aktive Spieler den betroffenen Tempel trockenlegen kann
+            if (!drainablePositions.contains(orphanedTemplePosition)) {
+                return null;
+            }
+
             return this;
         }
         return null;
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
-
 
 }

@@ -1,11 +1,12 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
 import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS;
-import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER_CARD;
 
 
 /**
@@ -16,7 +17,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELIC
  * @since 10.09.2019
  */
 @DoAfter(act = DISCARD, value = DiscardUseSandbagInsteadOfDiscardingTreasureCard.class)
-@PreCondition(allTrue = {PLAYER_HAS_HELICOPTER, PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS})
+@PreCondition(allTrue = {PLAYER_HAS_HELICOPTER_CARD, PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS})
 public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decision {
     @Override
     public Decision decide() {
@@ -24,7 +25,7 @@ public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decis
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 }
