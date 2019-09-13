@@ -1,11 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.List;
@@ -34,22 +32,21 @@ public class TurnMoveForDrainingNearbyLandingSite extends Decision {
     @Override
     public Decision decide() {
 
-        Point landingSitePosition = control.getTile(PlayerType.PILOT).getLeft();   
+        Point landingSitePosition = control.getTile(PlayerType.PILOT).getLeft();
         Point playerPosition = player().getPosition();
         PlayerType playerType = player().getType();
         List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
 
         if (drainablePositionslist.contains(landingSitePosition)) {
             return this;
-        }    
-        
+        }
+
         return null;
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

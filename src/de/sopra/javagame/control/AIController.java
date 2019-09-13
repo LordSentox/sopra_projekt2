@@ -1,9 +1,6 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.control.ai.AIProcessor;
-import de.sopra.javagame.control.ai.CardStackTracker;
-import de.sopra.javagame.control.ai.EnhancedPlayerHand;
-import de.sopra.javagame.control.ai.GameAI;
+import de.sopra.javagame.control.ai.*;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -70,6 +67,17 @@ public class AIController {
         Action currentAction = controllerChan.getCurrentAction();
         currentAction.getArtifactCardStack().setObserver(artifactCardStackTracker);
         currentAction.getFloodCardStack().setObserver(floodCardStackTracker);
+    }
+
+    /**
+     * Führt eine ActionQueue Schritt für Schritt durch.
+     *
+     * @param queue die Queue, welche alle Schritt nacheinander enthält
+     */
+    public void doSteps(ActionQueue queue) {
+        queue.actionIterator().forEachRemaining(action -> {
+        });
+        //TODO Alle Schritte in der queue nacheinander durchführen
     }
 
     /**
@@ -243,6 +251,19 @@ public class AIController {
     }
 
     /**
+     * Gibt die Gesamtanzahl der angegebenen Artefaktkarte an, die alle Spieler zusammen haben
+     *
+     * @param artifactCardType gewünschter {@link ArtifactCardType}
+     * @return Anzahl an insgesamt auf der Hand befindlichen gewünschten Artefaktkarten
+     */
+    public int getTotalAmountOfCardsOnHands(ArtifactCardType artifactCardType) {
+
+        return getAllPlayers().stream()
+                .map(player -> EnhancedPlayerHand.ofPlayer(player).getAmount(artifactCardType))
+                .reduce(Integer::sum).get();
+    }
+
+    /**
      * Berechnet ein beliebiges Tile im gegebenen Zustands
      *
      * @param state der Zustand
@@ -281,34 +302,52 @@ public class AIController {
     }
 
     /**
-     * Fordert einen Tipp in textueller Befehlsform von der KI an.
+     * Fordert einen Tipp als {@link ActionQueue} von der KI an.
      *
      * @param player der supplier für den für die KI aktiven Spieler,
      *               beinhaltet den Spieler, welche die Aktion durchführen soll
-     * @return ein Tipp in textueller Befehlsform
+     * @return ein Tipp als {@link ActionQueue}
      * @see AIActionTip
      */
-    public String getTip(Supplier<Player> player) {
+    public ActionQueue getTip(Supplier<Player> player) {
         this.activePlayerSupplier = player;
         return processor.getTip(this);
     }
 
     /**
-     * Fordert einen Tipp in textueller Befehlsform von der KI an.
+     * Fordert einen Tipp als {@link ActionQueue} von der KI an.
      * Der hierfür verwendete aktive Spieler ist der aktive Spieler im aktiven Zug {@link Action#getActivePlayer()}
      *
+     * @return ein Tipp als {@link ActionQueue}
      * @see #getCurrentAction()
      */
-    public String getTip() {
+    public ActionQueue getTip() {
         return getTip(() -> getCurrentAction().getActivePlayer());
     }
 
-    public boolean landingSiteIsFlooded() throws IllegalAccessException {
+    /**
+     * Gibt an, ob der Landeplatz überflutet ist
+     *
+     * @return <code>true</code> wenn der Landeplatz überflutet ist, sonst <code>false</code>
+     */
+    public boolean landingSiteIsFlooded() {
         Point landingSite = MapUtil.getPositionForTile(getCurrentAction().getTiles(), MapTileProperties.FOOLS_LANDING);
         if (landingSite == null)
-            throw new IllegalAccessException(); // Unerreichbar auf nicht korrumpierter map, sollte vorher gecheckt worden sein
+            throw new IllegalStateException(); // Unerreichbar auf nicht korrumpierter map, sollte vorher gecheckt worden sein
 
         return getCurrentAction().getTile(landingSite).getState() != MapTileState.DRY;
+    }
+
+    /**
+     * Berechnet die minimal nötige Anzahl an Aktionen, um vom gegebenen Startpunkt den Zielpunkt zu erreichen.
+     *
+     * @param startPosition  der Startpunkt
+     * @param targetPosition der Zielpunkt
+     * @return die minimal Anzahl an Aktionen für den Weg
+     */
+    public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

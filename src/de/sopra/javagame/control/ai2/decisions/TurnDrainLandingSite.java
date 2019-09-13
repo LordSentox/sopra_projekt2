@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
@@ -10,7 +11,8 @@ import de.sopra.javagame.util.Point;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
-import static de.sopra.javagame.control.ai2.decisions.Condition.*;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SITE_IS_FLOODED;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION_LEFT;
 
 /**
  * <h1>projekt2</h1>
@@ -40,8 +42,8 @@ public class TurnDrainLandingSite extends Decision {
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }
