@@ -30,9 +30,8 @@ public class InGameUserController {
      * @param players       die Spieler, welche transportiert werden sollen, darf nicht leer sein
      */
     public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players) {
-        Action currentAction = controllerChan.getJavaGame().getPreviousAction();
+        Action currentAction = controllerChan.getCurrentAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
-        List<Player> selectedPlayers = new ArrayList<>();
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
         if (handCards.get(handCardIndex).getType() != ArtifactCardType.HELICOPTER) {
             throw new IllegalStateException("Es wurde keine Helikopter-Karte übergeben " +
@@ -47,23 +46,34 @@ public class InGameUserController {
         //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
         checkWonOnHelicopter(currentAction);
         //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
-        if (flightRoute.getLeft() == null || flightRoute.getRight() == null) {
+        if (flightRoute.getLeft() == null || flightRoute.getRight() == null
+                || controllerChan.getCurrentAction().getTile(flightRoute.getRight()) == null
+                || controllerChan.getCurrentAction().getTile(flightRoute.getRight()).getState() == MapTileState.GONE) {
             throw new IllegalStateException("Mindestens einer der übergebenen Points war null. " +
                     "Fliegen ist so nicht möglich!");
         }
         //entferne die gespielte Karte von der Spieler-Hand
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
+        Player derHARTMUT = null;
         //bewege die players
         for (PlayerType currentPlayerType : players) {
             Player currentPlayer = currentAction.getPlayer(currentPlayerType);
-            if (currentPlayer.getPosition() != flightRoute.getLeft()) {
+            if (!currentPlayer.getPosition().equals(flightRoute.getLeft())) {
                 throw new IllegalStateException(currentPlayer.getName() + " stand nicht auf dem gewählten Feld. " +
                         "Fliegen ist so nicht möglich!");
             }
             currentPlayer.setPosition(flightRoute.getRight());
-            controllerChan.getInGameViewAUI().refreshPlayerPosition(flightRoute.getRight(), currentPlayer.getType());
+            derHARTMUT = currentPlayer;
+            controllerChan.getInGameViewAUI().refreshPlayerPosition(currentPlayer.getPosition(), currentPlayer.getType());
         }
+        if (derHARTMUT == currentAction.getPlayer(PlayerType.EXPLORER)){
+            System.out.println("U Serious?");
+        }
+        if (derHARTMUT != controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER)) {
+           System.out.println("WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY?");
+        }
+        Point hartmuht = controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER).getPosition();
         controllerChan.finishAction();
     }
 
@@ -106,7 +116,7 @@ public class InGameUserController {
 
         for (PlayerType currentPlayerType : playerTypesToCheck) {
             Player currentPlayer = controllerChan.getCurrentAction().getPlayer(currentPlayerType);
-            if (currentPlayer.getPosition() == positionToCheck) {
+            if (currentPlayer.getPosition().equals(positionToCheck)) {
                 playersToCheck.add(currentPlayer);
             }
         }

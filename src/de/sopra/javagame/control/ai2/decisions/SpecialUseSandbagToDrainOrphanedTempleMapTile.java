@@ -23,7 +23,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  */
 @DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialUseSandbagToDrainLandingSite.class)
 @PreCondition(allTrue = {PLAYER_HAS_SANDBAGS_CARD, PLAYER_NO_ACTION_LEFT, GAME_ANY_LAST_TEMPLE_IN_DANGER})
-//FIXME ist GAME_ANY_LAST_TEMPLE_IN_DANGER richtig?
+
 public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
@@ -35,7 +35,7 @@ public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
             Point orphanedTemplePoint = temple.getLeft();
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
-            //wenn eins nicht GONE ist
+            //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
@@ -43,18 +43,6 @@ public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
         }
         return null;
     }
-
-    //alte version
-//            if (!((northernNeighbour == null || northernNeighbour.getState() == MapTileState.GONE)
-//                    && (northEasternNeighbour == null || northEasternNeighbour.getState() == MapTileState.GONE)
-//                    && (easternNeighbour == null || easternNeighbour.getState() == MapTileState.GONE)
-//                    && (southEasternNeighbour == null || southEasternNeighbour.getState() == MapTileState.GONE)
-//                    && (southernNeighbour == null || southernNeighbour.getState() == MapTileState.GONE)
-//                    && (southWesternNeighbour == null || southWesternNeighbour.getState() == MapTileState.GONE)
-//                    && (westernNeighbour == null || westernNeighbour.getState() == MapTileState.GONE)
-//                    && (northWesternNeighbour == null || northWesternNeighbour.getState() == MapTileState.GONE))) {
-//                continue;
-//            }
 
     @Override
     public void act() {
