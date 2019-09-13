@@ -1,4 +1,4 @@
-package de.sopra.javagame.view;
+package de.sopra.javagame.view.abstraction;
 
 public enum ViewState {
 

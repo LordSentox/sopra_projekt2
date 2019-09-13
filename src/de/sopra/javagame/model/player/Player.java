@@ -208,7 +208,7 @@ public abstract class Player implements Copyable<Player> {
     }
 
     public void setPosition(Point position) {
-        this.position = position;
+        this.position.setLocation(position);
     }
 
     public void setActionsLeft(int actionsLeft) {
