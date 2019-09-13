@@ -20,8 +20,8 @@ public class GamePreparationsViewController extends AbstractViewController {
     
     @FXML
     ImageView mainPane;
-    TextField PlayerOneNameTextField, chooseCharakterPlayerTwoLabel, PlayerThreeNameTextField, PlayerFourNameTextField;
-    JFXComboBox PlayerOneChooseCharakterComboBox, PlayerTwoChooseCharakterComboBox, PlayerThreeChooseCharakterComboBox, PlayerFourChooseCharakterComboBox;
+    TextField playerOneNameTextField, chooseCharakterPlayerTwoLabel, playerThreeNameTextField, playerFourNameTextField;
+    JFXComboBox playerOneChooseCharakterComboBox, playerTwoChooseCharakterComboBox, playerThreeChooseCharakterComboBox, playerFourChooseCharakterComboBox;
 
     
     public void init(){
