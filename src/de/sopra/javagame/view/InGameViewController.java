@@ -8,9 +8,6 @@ import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
-import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.control.ai.ActionQueue;
-import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
@@ -31,7 +28,6 @@ import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -47,7 +43,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final int PASSIVE_CARD_SIZE = 110;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
-    private static double turnSpinnerCount;
     final int SPINNER_SIZE = 250;
     @FXML
     MapPane mapPane;
@@ -386,8 +381,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
         playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
-        playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
-        playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
+        if(players.size() == 3){
+            playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
+        } else if(players.size() == 4){
+            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));            
+        }
     }
 
     @Override

@@ -65,7 +65,8 @@ public class GamePreparationsViewController extends AbstractViewController {
         playerFourChooseCharakterComboBox.setDisable(true);
         addPlayerThreeButton.setDisable(true);
         addPlayerFourButton.setDisable(true);
-        
+        isPlayerThreeKiCheckBox.setDisable(true);
+        isPlayerFourKiCheckBox.setDisable(true);
 //        addPlayerThreeToggleButton. 
         
     }
@@ -75,29 +76,20 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
     
     public void onAddPlayerThreeClicked(){
-            playerThreeNameTextField.setDisable(!addPlayerThreeButton.isDisabled());
-            playerThreeChooseCharakterComboBox.setDisable(!addPlayerThreeButton.isDisabled());
-            addPlayerThreeButton.setDisable(!addPlayerThreeButton.isDisabled());
-            isPlayerThreeKiCheckBox.setDisable(!addPlayerThreeButton.isDisabled());
+            playerThreeNameTextField.setDisable(!addPlayerThreeToggleButton.isSelected());
+            playerThreeChooseCharakterComboBox.setDisable(!addPlayerThreeToggleButton.isSelected());
+            addPlayerThreeButton.setDisable(!addPlayerThreeToggleButton.isSelected());
+            isPlayerThreeKiCheckBox.setDisable(!addPlayerThreeToggleButton.isSelected());
     }
     public void onAddPlayerFourClicked(){
-        playerFourNameTextField.setDisable(!addPlayerFourButton.isDisabled());
-        playerFourChooseCharakterComboBox.setDisable(!addPlayerFourButton.isDisabled());
-        addPlayerFourButton.setDisable(!addPlayerFourButton.isDisabled());
-        isPlayerFourKiCheckBox.setDisable(!addPlayerFourButton.isDisabled());
+        playerFourNameTextField.setDisable(!addPlayerFourToggleButton.isSelected());
+        playerFourChooseCharakterComboBox.setDisable(!addPlayerFourToggleButton.isSelected());
+        addPlayerFourButton.setDisable(!addPlayerFourToggleButton.isSelected());
+        isPlayerFourKiCheckBox.setDisable(!addPlayerFourToggleButton.isSelected());
 }
 
     public void onStartGameClicked() {
-        //TEMP
-//        changeState(ViewState.IN_GAME);
-//        LinkedList<Pair<PlayerType, Boolean>> list = new LinkedList<>();
-//        list.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, false));
-//        list.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, false));
-//        list.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, true));
-//        list.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, true));
-//        this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), list, Difficulty.ELITE);
-        //end TEMP
-        
+
         
         LinkedList<Pair<PlayerType, Boolean>> playerList = new LinkedList<>();
         System.out.println(playerList);
@@ -107,10 +99,10 @@ public class GamePreparationsViewController extends AbstractViewController {
                 playerList,
                 !isPlayerOneKiCheckBox.isDisabled());
         addPLayerType(playerTwoChooseCharakterComboBox.getValue(), playerList, !isPlayerTwoKiCheckBox.isDisabled());
-        if(!addPlayerThreeButton.isDisabled()){
+        if(addPlayerThreeToggleButton.isSelected()){
             addPLayerType(playerThreeChooseCharakterComboBox.getValue(), playerList, !isPlayerThreeKiCheckBox.isDisabled());
         }
-        if(!addPlayerFourButton.isDisabled()){
+        if(addPlayerFourToggleButton.isSelected()){
             addPLayerType(playerFourChooseCharakterComboBox.getValue(), playerList, !isPlayerFourKiCheckBox.isDisabled());
         }
         setDifficulty();
