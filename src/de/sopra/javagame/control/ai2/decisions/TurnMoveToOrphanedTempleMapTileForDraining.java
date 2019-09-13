@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
@@ -32,7 +33,6 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
     public Decision decide() {
 
         PlayerType activePlayerType = player().getType();
-        Point activePlayerPosition = player().getPosition();
 
         //Nur für Diver und Pilot relevant
         if (none(activePlayerType == PlayerType.DIVER, activePlayerType == PlayerType.PILOT)) {
@@ -43,24 +43,29 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
-        for (Pair<Point, MapTile> temple : templeList) {
+        return checkTemples(templeList) ? this : null;
+
+    }
+
+    private boolean checkTemples(List<Pair<Point, MapTile>> temples) {
+        PlayerType activePlayerType = player().getType();
+        Point activePlayerPosition = player().getPosition();
+        for (Pair<Point, MapTile> temple : temples) {
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
             //prüfe, ob Player auf betroffenem Tempel steht
             if (orphanedTemplePoint.equals(activePlayerPosition)) {
-                return null;
+                continue; 
             }
-            //prüfe, ob Tempelatefakt bereits geborgen ist
+            //prüfe, ob Tempelartefakt bereits geborgen ist
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
             EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
-
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-
             List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
-                return null;
+                continue; 
             }
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
@@ -68,15 +73,14 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
-            return this;
+            return true;
         }
-        return null;
+        return false;
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

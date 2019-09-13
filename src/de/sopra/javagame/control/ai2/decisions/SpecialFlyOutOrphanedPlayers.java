@@ -1,5 +1,6 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
@@ -33,7 +34,7 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
         //prüfe, ob Spieler auf LandingSite steht, von dort muss er nicht gerettet werden 
         for (Player player : allPlayers) {
             if (player.getPosition().equals(landingSitePosition)) {
-                return null;
+                continue;
             }
             //prüfe, ob der Spieler sich noch selbst wegbewegen kann
             if (player.legalMoves(true).isEmpty()) {
@@ -44,9 +45,8 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
     }
 
     @Override
-    public void act() {
-        // TODO Auto-generated method stub
-
+    public ActionQueue act() {
+        return startActionQueue(); //TODO
     }
 
 }

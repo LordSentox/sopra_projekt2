@@ -1,8 +1,10 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.player.Player;
 
@@ -20,7 +22,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
  */
 @DoAfter(act = DISCARD, value = Decision.class)
 public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
-
+private ArtifactCardType discarded; 
     @Override
     public Decision decide() {
         Action action = control.getCurrentAction();
@@ -29,6 +31,7 @@ public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
         List<ArtifactCard> hand = activePlayer.getHand();
         for (ArtifactCard card : hand) {
             if (discoveredArtifacts.contains(card.getType().toArtifactType())) {
+                discarded=card.getType();
                 return this;
             }
         }
@@ -36,8 +39,8 @@ public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue().discard(discarded);
     }
 
 }

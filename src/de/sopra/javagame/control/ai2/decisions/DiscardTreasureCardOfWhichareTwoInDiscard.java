@@ -1,7 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,6 +19,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
  */
 @DoAfter(act = DISCARD, value = DiscardTreasureCardsThatAnotherPlayerHasFourOf.class)
 public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
+    private ArtifactCardType discarding;     
     @Override
     public Decision decide() {
         Collection<ArtifactCard> discardStack = control.getArtifactCardStackTracker().getDiscardPile();
@@ -31,13 +34,14 @@ public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
             }
             if (count > ONE_CARD) {
                 atomicBoolean.set(true);
+                discarding= activeCard.getType();
             }
         });
         return atomicBoolean.get() ? this : null;
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue().discard(discarding);
     }
 }

@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
 import de.sopra.javagame.control.ai2.decisions.Decision;
 import de.sopra.javagame.util.Pair;
@@ -118,9 +119,10 @@ public class DecisionMaker implements AIProcessor {
 
     private Decision decide(AIController control, DecisionResult result) {
         Decision decision = decisionTowers.get(result);
-        if (decision != null)
+        if (decision != null) {
             decision.setControl(control);
-        return decision;
+            return decision.decide();
+        } else return Decision.empty();
     }
 
     private Decision makeTurnDecision(AIController control) {
@@ -135,6 +137,10 @@ public class DecisionMaker implements AIProcessor {
         return decide(control, PLAY_SPECIAL_CARD);
     }
 
+    private Decision makeSafetyDecision(AIController control) {
+        return decide(control, SWIM_TO_SAFETY);
+    }
+
     @Override
     public void init() {
         findDecisions();
@@ -143,21 +149,30 @@ public class DecisionMaker implements AIProcessor {
 
     @Override
     public void makeStep(AIController control) {
-        if (control.isCurrentlyDiscarding()) {
-            Decision decision = makeDiscardDecision(control);
-            decision.act();
-        } else {
-            Decision turn = makeTurnDecision(control);
-            turn.act();
-            Decision special = makeSpecialCardDecision(control);
-            if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
-                special.act();
-        }
+        ActionQueue tip = getTip(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
+        control.doSteps(tip);
     }
 
     @Override
-    public String getTip(AIController control) {
-        return null; //TODO
+    public ActionQueue getTip(AIController control) {
+        ActionQueue actionQueue;
+        if (control.isCurrentlyDiscarding()) { //entweder ist der Spieler mit abwerfen beschäftigt
+            Decision decision = makeDiscardDecision(control);
+            actionQueue = decision.act();
+        } else if (control.isCurrentlyRescueingHimself()) { //oder damit sich selbst zu retten
+            Decision decision = makeSafetyDecision(control);
+            actionQueue = decision.act();
+        } else { //ansonsten ist er einfach am Zug
+            Decision turn = makeTurnDecision(control);
+            actionQueue = turn.act();
+        }
+        //für den eigentlich nicht wahrscheinlichen Fall, dass die Queue null ist, eine Sicherheitsmaßnahme
+        if (actionQueue == null)
+            actionQueue = new ActionQueue(control.getActivePlayer().getType());
+        Decision special = makeSpecialCardDecision(control);
+        if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
+            actionQueue.nextActions(special.act());
+        return actionQueue;
     }
 
 }

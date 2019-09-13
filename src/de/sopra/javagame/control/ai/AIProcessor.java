@@ -1,7 +1,6 @@
 package de.sopra.javagame.control.ai;
 
 import de.sopra.javagame.control.AIController;
-import de.sopra.javagame.util.AIActionTip;
 
 /**
  * <h1>Projekt2</h1>
@@ -26,10 +25,10 @@ public interface AIProcessor {
 
     /**
      * Fordert einen Tipp von der KI an.
-     * Der Tipp wird in Befehlsform definiert durch {@link AIActionTip} dargestellt.
+     * Der Tipp wird in Befehlsform definiert durch {@link ActionQueue} dargestellt.
      *
      * @return ein Tipp in Befehlsform
      */
-    String getTip(AIController control);
+    ActionQueue getTip(AIController control);
 
 }

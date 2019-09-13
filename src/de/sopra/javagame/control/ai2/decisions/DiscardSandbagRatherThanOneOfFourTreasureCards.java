@@ -1,7 +1,9 @@
 package de.sopra.javagame.control.ai2.decisions;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
+import de.sopra.javagame.model.ArtifactCardType;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
 import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS;
@@ -24,7 +26,7 @@ public class DiscardSandbagRatherThanOneOfFourTreasureCards extends Decision {
     }
 
     @Override
-    public void act() {
-        //TODO
+    public ActionQueue act() {
+        return startActionQueue().discard(ArtifactCardType.SANDBAGS);
     }
 }

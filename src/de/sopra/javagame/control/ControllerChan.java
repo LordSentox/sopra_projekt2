@@ -98,7 +98,7 @@ public class ControllerChan {
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-        
+
     public void startNewGame(String mapName, boolean[][] tiles, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
         MapTile[][] map = MapUtil.createAndFillMap(tiles);
         if (map != null) {
