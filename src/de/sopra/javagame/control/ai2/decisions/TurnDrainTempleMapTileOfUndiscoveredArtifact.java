@@ -39,10 +39,17 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-          //prüft, ob Tempel überhaupt geflutet ist
+            //prüft, ob Tempel überhaupt geflutet ist
             if (orphanedTemple.getState() != MapTileState.FLOODED) {
                 continue;
             }
+            Point orphanedTemplePosition = templeList.get(i).getLeft();
+            List<Point> drainablePositions = player().drainablePositions();
+            //prüfe, ob der aktive Spieler den betroffenen Tempel trockenlegen kann
+            if (!drainablePositions.contains(orphanedTemplePosition)) {
+                return null;
+            }
+
             return this;
         }
         return null;
