@@ -241,7 +241,17 @@ public class AIController {
     public boolean anyPlayerHasCard(ArtifactCardType artifactCardType) {
         return getAllPlayers().stream().anyMatch(player -> EnhancedPlayerHand.ofPlayer(player).hasCard(artifactCardType));
     }
-
+    /**
+     * Gibt die Gesamtanzahl der angegebenen Artefaktkarte an, die alle Spieler zusammen haben 
+     * @param artifactCardType gewünschter {@link ArtifactCardType}
+     * @return Anzahl an insgesamt auf der Hand befindlichen gewünschten Artefaktkarten
+     */
+    public int getTotalAmountOfCardsOnHands (ArtifactCardType artifactCardType){
+        
+        return getAllPlayers().stream()
+                .map(player -> EnhancedPlayerHand.ofPlayer(player).getAmount(artifactCardType))
+                .reduce(Integer::sum).get();
+    }
     /**
      * Berechnet ein beliebiges Tile im gegebenen Zustands
      *
