@@ -70,21 +70,12 @@ public class MapPane extends GridPane {
     private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
         if (e.getButton() == MouseButton.PRIMARY) {
             if(v.getHighlighted()){
-                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x,y), false);
+                System.out.println(x + " " + y);
+                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(y,x), false);
                 System.out.println("ich sollte mich bewegen");
             }
         } else if (e.getButton() == MouseButton.SECONDARY){
             
-        }
-    }
-    
-    private void onPlayerClicked(MouseEvent e, ImageView v, int x, int y) {
-        if (e.getButton() == MouseButton.PRIMARY) {
-           
-                ActionPicker ap = new ActionPicker(v, e.getButton(), this);
-                if(!ap.isShown()){
-                    ap.show(v.getLayoutX(),v.getLayoutY());
-                }
         }
     }
 
@@ -111,8 +102,7 @@ public class MapPane extends GridPane {
         view.setPreserveRatio(true);
         view.setFitHeight(110);
         pane.getChildren().add(view);
-        final int newX = x, newY = y;
-        view.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onPlayerClicked(event, view, newX, newY));
+        ActionPicker ap = new ActionPicker(view, MouseButton.PRIMARY, this);
     }
 
     public void removePlayer(int x, int y, PlayerType type) {

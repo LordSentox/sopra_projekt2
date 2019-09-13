@@ -100,9 +100,12 @@ public class GamePreparationsViewController extends AbstractViewController {
         
         
         LinkedList<Pair<PlayerType, Boolean>> playerList = new LinkedList<>();
-        
+        System.out.println(playerList);
         //Spielertypen hinzufügen
-        addPLayerType(playerOneChooseCharakterComboBox.getValue(), playerList, !isPlayerOneKiCheckBox.isDisabled());
+        System.out.println(playerOneChooseCharakterComboBox.getValue());
+        addPLayerType(playerOneChooseCharakterComboBox.getValue(),
+                playerList,
+                !isPlayerOneKiCheckBox.isDisabled());
         addPLayerType(playerTwoChooseCharakterComboBox.getValue(), playerList, !isPlayerTwoKiCheckBox.isDisabled());
         if(!addPlayerThreeButton.isDisabled()){
             addPLayerType(playerThreeChooseCharakterComboBox.getValue(), playerList, !isPlayerThreeKiCheckBox.isDisabled());
@@ -138,10 +141,9 @@ public class GamePreparationsViewController extends AbstractViewController {
     
     public void addPLayerType(String type,  LinkedList<Pair<PlayerType, Boolean>> playerList, boolean isAi){
         if(type == null){
-            //TODO Fehlermeldug kein Spieler ausgewählt
-            System.out.println("kein Typ angegeben");
-            return;
+            type = "";
         }
+        //TODO zufällig soll zufällig sein, und jeder playertype darf nur einmal benutzt werden
         switch (type) {
         case "Taucher":
             playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
@@ -167,16 +169,17 @@ public class GamePreparationsViewController extends AbstractViewController {
             playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
             break;
         default:
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            break;
         }
     }
     
     public void setDifficulty(){
-        if(editDifficultyComboBox.getValue() == null){
-            //TODO Fehlermeldug kein Schwierigkeitsgrad ausgewählt
-            System.out.println("keine Schwierigkeit angegeben");
-            return;
+        String diff = editDifficultyComboBox.getValue();
+        if(diff == null){
+            diff = "";
         }
-        switch (editDifficultyComboBox.getValue()) {
+        switch (diff) {
         case "Novice":
             difficulty = Difficulty.NOVICE;
             break;

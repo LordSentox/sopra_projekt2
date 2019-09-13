@@ -1,5 +1,6 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
@@ -138,15 +139,18 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onShowDrainOptionsClicked() {
-
+        System.out.println("juch, ich bin der drainindikator");
+        getGameWindow().getControllerChan().getActivePlayerController().showDrainOptions();
     }
 
     public void onShowSpecialAbilityOptionsClicked() {
 
+        System.out.println("juch, ich bin der specialindikator");
+        getGameWindow().getControllerChan().getActivePlayerController().showSpecialAbility();
     }
-
+    //TODO button zum abbrechen einbauen
     public void onSpecialAbilityCancelClicked() {
-
+        getGameWindow().getControllerChan().getActivePlayerController().cancelSpecialAbility();
     }
 
     public void onPlayerSelected() {
@@ -178,7 +182,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onCollectArtifactClicked() {
-
+        System.out.println("juch, ich bin der artefaktfinderotto");
+        getGameWindow().getControllerChan().getActivePlayerController().collectArtifact();
     }
 
     public void onRedoClicked() {
@@ -236,12 +241,12 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshAll() {
         refreshArtifactsFound();
         refreshActivePlayer();
-        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getTiles());
         
         //DEBUG
+        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         mapPane.putPlayer(3, 5, PlayerType.DIVER);
     }
 
@@ -253,6 +258,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshDrainOptions(List<Point> points) {
 
+        points.forEach(point -> mapPane.highlightMapTile(point,false));
     }
 
     @Override
@@ -318,6 +324,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
+        this.refreshActionsLeft(-216);
         artifactCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -336,11 +343,11 @@ public class InGameViewController extends AbstractViewController implements InGa
             GridPane.setConstraints(v, index, 0);
             index +=2;
         }
-
     }
 
     @Override
     public void refreshFloodStack(CardStack<FloodCard> stack) {
+        this.refreshActionsLeft(-288);
         floodCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -383,7 +390,13 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
-
+        switch (actionsLeft) {
+        case 1: this.rotateTurnSpinner(-144); break;
+        case 2: this.rotateTurnSpinner(-72); break;
+        case 3: this.rotateTurnSpinner(0);break;
+        default: this.rotateTurnSpinner(0);
+            break;
+        }
     }
 
     @Override
@@ -394,5 +407,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void setIsReplayWindow(boolean replay) {
 
+    }
+
+    @Override
+    public void showTip(ActionQueue queue) {
+        // TODO Auto-generated method stub
+        
     }
 }
