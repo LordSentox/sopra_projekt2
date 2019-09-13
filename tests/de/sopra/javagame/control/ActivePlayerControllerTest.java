@@ -355,8 +355,84 @@ public class ActivePlayerControllerTest {
     }
 
     @Test
-    public void testCancelSpecialAbility() {
-        fail("Not yet implemented");
+    public void testCancelSpecialAbility() throws Exception {
+        Player activePlayer = action.getActivePlayer();
+        Point playerPos = activePlayer.getPosition();
+
+        testMap[4][6].flood();
+        testMap[4][7].flood();
+        testMap[3][6].flood();
+        testMap[2][5].flood();
+        printMap(testMap);
+
+        action.nextPlayerActive();
+
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.EXPLORER);
+        Assert.assertEquals("Explorer not on correct spawn location", new Point(6, 4), playerPos);
+        activePlayerController.showSpecialAbility();
+        activePlayerController.cancelSpecialAbility();
+        List<Point> expectedDrainables = adjacentPoints(playerPos, true).stream()
+                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() == MapTileState.FLOODED)
+                .collect(Collectors.toList());
+        expectedDrainables.add(playerPos);
+        assertEquals("Incorrect amount of drainable tiles for explorer", 3, expectedDrainables.size());
+        List<Point> expectedMovePoints = adjacentPoints(playerPos, true).stream()
+                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() != MapTileState.GONE)
+                .collect(Collectors.toList());
+        assertEquals("Explorer incorrect amount of move tiles", 4, expectedMovePoints.size());
+
+        action.nextPlayerActive();
+
+        activePlayerController.showSpecialAbility();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.PILOT);
+        activePlayerController.showSpecialAbility();
+        activePlayerController.cancelSpecialAbility();
+        assertEquals("Not exactly the adjacent tiles marked as move positions", 4, inGameView.getMovementPoints().size());
+        assertEquals("Not exactly the flooded adjacent tiles and current position marked as drain positions", 2, inGameView.getDrainPoints().size());
+
+
+        players = Arrays.asList(
+                new Pair<>(PlayerType.DIVER, false),
+                new Pair<>(PlayerType.ENGINEER, false),
+                new Pair<>(PlayerType.NAVIGATOR, false),
+                new Pair<>(PlayerType.PILOT, false));
+
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        TestDummy.injectJavaGame(controllerChan, pair.getLeft());
+        TestDummy.injectCurrentAction(controllerChan, pair.getRight());
+        action = pair.getRight();
+        javaGame = controllerChan.getJavaGame();
+
+        inGameView = (InGameView) controllerChan.getInGameViewAUI();
+        action.getActivePlayer().setActionsLeft(3);
+
+        activePlayer = action.getActivePlayer();
+        playerPos = activePlayer.getPosition();
+        assertSame(activePlayer.getType(), PlayerType.DIVER);
+        activePlayerController.showSpecialAbility();
+        activePlayerController.cancelSpecialAbility();
+        assertEquals(activePlayer.getPosition(), new Point(5, 3));
+        expectedMovePoints = new ArrayList<>();
+        expectedMovePoints.add(new Point(4, 3));
+        expectedMovePoints.add(new Point(5, 2));
+        expectedMovePoints.add(new Point(6, 3));
+
+        assertEquals("Diver move points incorrect" , expectedMovePoints, inGameView.getMovementPoints());
+
+
+        activePlayerController.cancelSpecialAbility();
+        action.nextPlayerActive();
+        activePlayer = action.getActivePlayer();
+        assertSame(activePlayer.getType(), PlayerType.ENGINEER);
+        playerPos = activePlayer.getPosition();
+        activePlayerController.showSpecialAbility();
+        assertEquals("No notification of Engineer ability", 1, inGameView.getNotifications().size());
+        inGameView.getNotifications().clear();
     }
 
     @Test
