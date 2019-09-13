@@ -34,25 +34,15 @@ public class TurnMoveForDrainingNearbyLandingSite extends Decision {
     @Override
     public Decision decide() {
 
-        if (hasValidActions(0, 1)) {
-            return null;
-        }
+        Point landingSitePosition = control.getTile(PlayerType.PILOT).getLeft();   
+        Point playerPosition = player().getPosition();
+        PlayerType playerType = player().getType();
+        List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
 
-        Pair<Point, MapTile> informationLandingSite = control.getTile(PlayerType.PILOT);
-        MapTile landingSite = informationLandingSite.getRight();
-        Point landingSitePosition = informationLandingSite.getLeft();
-
-        if (landingSite.getState() == MapTileState.FLOODED) {
-
-            Point playerPosition = player().getPosition();
-            PlayerType playerType = player().getType();
-            List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
-
-            if (drainablePositionslist.contains(landingSitePosition)) {
-                return this;
-            }
-        }
-
+        if (drainablePositionslist.contains(landingSitePosition)) {
+            return this;
+        }    
+        
         return null;
     }
 
