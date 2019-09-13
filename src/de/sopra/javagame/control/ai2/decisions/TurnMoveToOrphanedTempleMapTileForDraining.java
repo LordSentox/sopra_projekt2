@@ -58,13 +58,13 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
                 continue;
             }
 
-            List<Point> inOneMovedrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
-            if (!inOneMovedrainablePositionslist.contains(orphanedTemplePoint)) {
+            List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
+            if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
                 return null;
             }
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
-            //wenn eins nicht GONE ist
+            //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }

@@ -28,7 +28,7 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
         drawStack.addAll(cards);
         discardPile = new ArrayList<>();
     }
-
+//FIXME Tests überarbeiten und draw nur noch ohne amount benutzen!
     /**
      * draw nimmt die angegebene Anzahl Karten von oben vom Stack
      *
@@ -63,6 +63,9 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
         return draw(amount, false);
     }
 
+    public T draw (boolean discard) {
+         return draw(1, discard).get(0);
+    }
     /**
      * @return die Anzahl an Karten im Ziehstapel
      */

@@ -5,6 +5,10 @@ import de.sopra.javagame.model.player.PlayerType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -127,7 +131,29 @@ public class MapUtilTest {
     }
 
     @Test
-    public void readBoolMapFromString() {
+    public void readBoolMapFromString() throws IOException {
+        final String testMapString = new String(Files.readAllBytes(Paths.get("resources/maps/island_of_death.map")), StandardCharsets.UTF_8);
+        final boolean[][] actual = MapUtil.readBoolMapFromString(testMapString);
+        Assert.assertNotNull(actual);
 
+        final boolean[][] expected = {
+                {false, false, false, false, false, false, false, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false,  true,  true,  true,  true,  true,  true,  true, false},
+                {false, false,  true,  true,  true,  true,  true, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false, false, false,  true,  true,  true, false, false, false},
+                {false, false, false, false, false, false, false, false, false},
+        };
+
+        Assert.assertEquals(expected.length, actual.length);
+        for (int y = 0; y < expected.length; ++y) {
+            Assert.assertArrayEquals("Fehler beim Einlesen einer Kartenzeile", expected[y], actual[y]);
+        }
+
+        // Wenn eine extended map eingegeben wird, soll null zurückgegeben werden
+        final String fullMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
+        Assert.assertNull(MapUtil.readBoolMapFromString(fullMapString));
     }
 }

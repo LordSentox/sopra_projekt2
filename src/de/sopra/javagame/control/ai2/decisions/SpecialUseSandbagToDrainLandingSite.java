@@ -15,7 +15,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.*;
  * @since 09.09.2019
  */
 @DoAfter(act = PLAY_SPECIAL_CARD, value = Decision.class)
-@PreCondition(allTrue = {PLAYER_HAS_SANDBAGS_CARD, PLAYER_NO_ACTION_LEFT, GAME_LANDING_SIDE_IN_DANGER})
+@PreCondition(allTrue = {PLAYER_HAS_SANDBAGS_CARD, PLAYER_NO_ACTION_LEFT, GAME_LANDING_SITE_IS_FLOODED})
 public class SpecialUseSandbagToDrainLandingSite extends Decision {
 
     @Override

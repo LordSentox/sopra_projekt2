@@ -31,21 +31,26 @@ public final class Commands {
         synchronized (gameWindow) {
             if (handler == null) {
                 handler = new Commands();
-                handler.init();
                 window = gameWindow;
+                handler.init();
             }
         }
+        String commandMarker = Definitions.standard().getCommandMarker();
+        if (!command.startsWith(commandMarker))
+            command = commandMarker + command;
         return handler.processor.simpleInputHandler().apply(command);
     }
 
     private void init() {
         processor = new CommandProcessor(Definitions.standard());
+        processor.setDefaultImplicit(i -> "");
         loadCommands();
         prepareTypes();
+        processor.enable();
     }
 
     private void loadCommands() {
-
+        processor.register(DemonstrateOrdinaryRandomImplosionStrategies.class, DemonstrateOrdinaryRandomImplosionStrategies::new);
     }
 
     @SuppressWarnings("unchecked")
@@ -73,7 +78,7 @@ public final class Commands {
                 .registerType(FloodCard.class, "floodcard",
                         PropertyResolver.create("tile", MapTile.class, FloodCard::getTile))
                 .registerType(Player.class, "player",
-                        TypeResolver.create(PlayerType.class, window.getControllerChan().getCurrentAction()::getPlayer, Player::getType))
+                        TypeResolver.create(PlayerType.class, this::toPlayer, Player::getType))
                 .registerType(JavaGame.class, "javagame",
                         TypeResolver.simple(window.getControllerChan()::getJavaGame),
                         PropertyResolver.create("mapname", String.class, JavaGame::getMapName),
@@ -85,6 +90,10 @@ public final class Commands {
                         PropertyResolver.create("difficulty", Difficulty.class, JavaGame::getDifficulty),
                         PropertyResolver.create("previousaction", Action.class, JavaGame::getPreviousAction))
         ;
+    }
+
+    private Player toPlayer(PlayerType type) {
+        return window.getControllerChan().getCurrentAction().getPlayer(type);
     }
 
 }

@@ -47,8 +47,8 @@ public class GameFlowController {
                 activePlayer.getHand().add(currentCard);
 
             }
-                    controllerChan.getInGameViewAUI().refreshArtifactStack(artifactCardStack);
-                    controllerChan.finishAction();
+            controllerChan.getInGameViewAUI().refreshArtifactStack(artifactCardStack);
+            controllerChan.finishAction();
         }
         controllerChan.getInGameViewAUI().refreshHand(activePlayer.getType(), activePlayer.getHand());
         if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
@@ -56,7 +56,6 @@ public class GameFlowController {
                     (activePlayer.getHand().size() - 5) + " Karten zum Abwerfen aus.");
             //TODO in HighScoreIO Methode zum speichern von High-Scores
             //                    //dann View bescheid geben, dass Spielvorbei (set as Replay)
-            //                    //controllerChan.getHighScoresController().save;
         }
     }
 
@@ -64,28 +63,30 @@ public class GameFlowController {
      * Zieht die Menge an Flutkarten, die laut {@link de.sopra.javagame.model.WaterLevel} gezogen werden müssen und
      * überflutet bzw. versenkt die entsprechenden Felder.
      */
-    public void drawFloodCards() {
+	public void drawFloodCards() {
         WaterLevel waterLevel = controllerChan.getCurrentAction().getWaterLevel();
         CardStack<FloodCard> floodCardCardStack = controllerChan.getCurrentAction().getFloodCardStack();
         List<FloodCard> floodCards = floodCardCardStack.draw(waterLevel.getDrawAmount(), true);
         for (FloodCard currentCard : floodCards) {
             currentCard.flood();
             //check if one or more Players are drowning
-            List<Player> rescuesNeeded = playersNeedRescue(MapUtil.getPositionForTile(currentCard.getTile().getProperties()));
+            List<Player> rescuesNeeded = playersNeedRescue(MapUtil.getPositionForTile(controllerChan.getCurrentAction().getTiles(), currentCard.getTile().getProperties()));
             for(Player rescuePlayer : rescuesNeeded) {
                 controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(false));
             }
-            controllerChan.getInGameViewAUI().refreshMapTile(MapUtil.getPositionForTile(currentCard.getTile().getProperties()),
+            controllerChan.getInGameViewAUI().refreshMapTile(MapUtil.getPositionForTile(controllerChan.getCurrentAction().getTiles(),
+                    currentCard.getTile().getProperties()),
                                                             currentCard.getTile());
             controllerChan.finishAction();
         }
     }
 
+
     List<Player> playersNeedRescue(Point positionToCheck) {
         MapTile[][] map = controllerChan.getCurrentAction().getTiles();
         List<Player> playersToRescue = new ArrayList<>();
         if (map[positionToCheck.yPos][positionToCheck.xPos].getState() == MapTileState.GONE) {
-            for(Player currentPlayer : controllerChan.getCurrentAction().getPlayers()) {
+            for (Player currentPlayer : controllerChan.getCurrentAction().getPlayers()) {
                 if (currentPlayer.getPosition() == positionToCheck) {
                     playersToRescue.add(currentPlayer);
                 }
@@ -95,19 +96,15 @@ public class GameFlowController {
     }
 
     /**
-     * Überprüft, ob das Spiel vorbei ist und gibt sofern dies der Fall ist eine Rückmeldung an das
-     * {@link de.sopra.javagame.view.InGameViewAUI}.
-     */
-    public void checkGameEnded() {
-
-    }
-
-    /**
      * Wenn mindestens eine Aktion gemacht wurde, wird eine Aktion zurückgenommen. Eine Aktion heißt in diesem Fall
      * genau ein {@link Action}. Wurde keine gemacht passiert nichts.
      */
     public void undo() {
-
+        if (controllerChan.getJavaGame().canUndo()) {
+            controllerChan.getJavaGame().markCheetah();
+            controllerChan.getJavaGame().undoAction();
+            controllerChan.getInGameViewAUI().refreshAll();
+        }
     }
 
     /**
@@ -117,6 +114,11 @@ public class GameFlowController {
      * @return true, falls eine Aktion wiederholt wurde, false, falls keine wiederholt werden konnte.
      */
     public boolean redo() {
+        if (controllerChan.getJavaGame().canRedo()) {
+            controllerChan.getJavaGame().redoAction();
+            controllerChan.getInGameViewAUI().refreshAll();
+            return true;
+        }
         return false;
     }
 }

@@ -4,6 +4,7 @@ import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
@@ -11,6 +12,7 @@ import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.textures.TextureLoader;
+import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
@@ -18,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -194,9 +197,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void initGridPane() {
-//        IntStream.range(0, 21).forEach(i -> gridPane.getColumnConstraints().add(new ColumnConstraints(i%2==0 ? 5 : 130)));
-//        IntStream.range(0, 15).forEach(i -> gridPane.getRowConstraints().add(new RowConstraints(i%2==0 ? 5 : 130)));
-//
         IntStream.range(0, 9).forEach(i -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
 
         IntStream.range(0, 5).forEach(i -> handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
@@ -207,18 +207,18 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 28).forEach(i -> artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
         IntStream.range(0, 24).forEach(i -> floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
         IntStream.range(0, 24).forEach(i -> floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
-
     }
 
-    public void rotateTurnSpinner() {
-        //Bild um 72 Grad drehen
-        turnSpinnerCount -= 72.0;
-        turnSpinnerCount %= 360;
-        turnSpinnerWithoutMarkerImageView.setRotate(turnSpinnerCount);
+    public void rotateTurnSpinner(double degree) {
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1));
+        rotateTransition.setToAngle(degree);
+        rotateTransition.setNode(turnSpinnerWithoutMarkerImageView);
+        rotateTransition.play();
     }
 
     public void onShowMovementOptionsClicked() {
         System.out.println("juch, ich bin der bewegungsindikator");
+        getGameWindow().getControllerChan().getActivePlayerController().showMovements(false);
     }
 
     public void onShowDrainOptionsClicked() {
@@ -278,9 +278,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPauseClicked() {
-        //TEMP
-        rotateTurnSpinner();
-        //END TEMP
+     
     }
 
     public void onSettingsClicked() {
@@ -315,7 +313,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshMovementOptions(List<Point> points) {
-
+        points.forEach(point ->((TileView) mapPane.getMapStackPane(point.yPos, point.xPos).getChildren().get(0)).showImage(MapTileState.FLOODED));
     }
 
     @Override

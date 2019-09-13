@@ -2,7 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai2.PreCondition;
 
-import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER;
+import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER_CARD;
 
 /**
  * <h1>projekt2</h1>
@@ -11,7 +11,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELIC
  * @version 12.09.2019
  * @since 12.09.2019
  */
-@PreCondition(allTrue = PLAYER_HAS_HELICOPTER)
+@PreCondition(allTrue = PLAYER_HAS_HELICOPTER_CARD)
 public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
 
     @Override

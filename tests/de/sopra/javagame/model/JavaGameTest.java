@@ -75,18 +75,18 @@ public class JavaGameTest {
 
     @Test(expected = NullPointerException.class)
     public void newGameNoDifficulty() {
-        JavaGame.newGame(testMapString, testMap, null, players);
+        JavaGame.newGame("TestMap", testMap, null, players);
     }
 
     @Test(expected = NullPointerException.class)
     public void newGameNoPlayers() {
-        JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, null);
+        JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
-        JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE,
+        JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE,
                 Collections.emptyList());
     }
 
