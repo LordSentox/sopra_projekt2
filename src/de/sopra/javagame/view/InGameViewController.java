@@ -1,10 +1,7 @@
 package de.sopra.javagame.view;
 
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileProperties;
-import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
@@ -389,6 +386,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void setIsReplayWindow(boolean replay) {
+
+    }
+
+    @Override
+    public void showTip(ActionQueue queue) {
 
     }
 }
