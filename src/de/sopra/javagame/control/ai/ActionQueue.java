@@ -95,6 +95,15 @@ public final class ActionQueue {
         return this;
     }
 
+    public ActionQueue collectTreasure() {
+        nextAction(new SimpleAction(COLLECT_TREASURE));
+        return this;
+    }
+
+    public ActionQueue finishTheGame(Point landingSide, EnumSet<PlayerType> allPlayers) {
+        return helicopterCard(landingSide, landingSide, allPlayers);
+    }
+
     public ActionQueue diverDiveTo(Point targetPoint) {
         nextAction(new SimpleAction(null, targetPoint, EnumSet.noneOf(PlayerType.class)));
         return this;

@@ -34,22 +34,25 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
 
     @Override
-    public Decision decide() {
-
-        Point activePlayerPosition = player().getPosition();
+    public Decision decide() {      
 
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
-        for (Pair<Point, MapTile> temple : templeList) {
+        return checkTemples(templeList) ? this : null;
+    }
+    
+    private boolean checkTemples(List<Pair<Point, MapTile>> temples){
+        Point activePlayerPosition = player().getPosition();
+        for (Pair<Point, MapTile> temple : temples) {
 
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
 
             //prüfe, ob Player auf betroffenem Tempel steht
             if (orphanedTemplePoint.equals(activePlayerPosition)) {
-                return null;
+                continue;
             }
 
             //prüfe, ob Tempelartefakt bereits geborgen ist
@@ -75,12 +78,13 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
                     all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
                     all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))
                     && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
-                return null;
+                continue;
             }
 
-            return this;
+            return true;
         }
-        return null;
+        return false;
+        
     }
 
     @Override
