@@ -14,6 +14,7 @@ public enum ActionType {
     DISCARD_CARD,
     TRADE_CARD,
     SPECIAL_CARD,
-    SPECIAL_ABILITY
+    SPECIAL_ABILITY,
+    COLLECT_TREASURE
 
 }

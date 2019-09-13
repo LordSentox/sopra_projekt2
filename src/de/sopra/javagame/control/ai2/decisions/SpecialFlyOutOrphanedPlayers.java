@@ -34,7 +34,7 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
         //prüfe, ob Spieler auf LandingSite steht, von dort muss er nicht gerettet werden 
         for (Player player : allPlayers) {
             if (player.getPosition().equals(landingSitePosition)) {
-                return null;
+                continue;
             }
             //prüfe, ob der Spieler sich noch selbst wegbewegen kann
             if (player.legalMoves(true).isEmpty()) {
