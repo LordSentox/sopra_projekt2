@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.model.MapTileState.DRY;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
@@ -80,10 +81,9 @@ public abstract class Player implements Copyable<Player> {
      *                    abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
-    // FIXME: Warum brauchen wir costsAction?!? Ist es nicht immer true?
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {
-        List<Point> legelMovement = legalMoves(specialActive);
-        if (actionsLeft < 1 || !legelMovement.contains(destination)) {
+        List<Point> legalMovement = legalMoves(specialActive);
+        if ((costsAction && actionsLeft < 1) || !legalMovement.contains(destination)) {
             return false;
         } else {
             this.setPosition(destination);
@@ -125,7 +125,10 @@ public abstract class Player implements Copyable<Player> {
         // Entferne alle Positionen, wo die Map eigentlich keine Felder hat, oder sie nicht mehr trockengelegt werden
         // können
         // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
-        drainable = drainable.stream().filter(point -> this.action.getTile(point) != null && this.action.getTile(point).getState() != GONE).collect(Collectors.toList());
+        drainable = drainable.stream().filter(point ->
+                this.action.getTile(point) != null &&
+                        this.action.getTile(point).getState() != GONE &&
+                        this.action.getTile(point).getState() != DRY).collect(Collectors.toList());
 
         return drainable;
     }
@@ -150,7 +153,7 @@ public abstract class Player implements Copyable<Player> {
         }
         
         // Muss überhaupt noch etwas getan werden?
-        if (toDrain.getState() == MapTileState.DRY) {
+        if (toDrain.getState() == DRY) {
             return false;
         } else {
             toDrain.drain();
