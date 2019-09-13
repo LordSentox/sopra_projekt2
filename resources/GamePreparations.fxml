@@ -31,7 +31,7 @@
    	   <JFXComboBox fx:id="playerTwoChooseCharakterComboBox" layoutX="425" layoutY="190" prefWidth="150" />
    	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerThreeButton" layoutX="55" layoutY="250" prefHeight="30"  prefWidth="150" text="Spieler 3" />
-   	   <JFXCheckBox fx:id="addPlayerThreeCheckBox" layoutX="15" layoutY="250" prefHeight="30" prefWidth="30" />
+   	   <JFXToggleButton fx:id="addPlayerThreeToggleButton" layoutX="0" layoutY="235" prefHeight="30" prefWidth="30" />
    	   <JFXCheckBox fx:id="isPlayerThreeKiCheckBox" layoutX="55" layoutY="290" text="KI" />
    	   <Label fx:id="enterNamePlayerThreeLabel" layoutX="55" layoutY="330" text="Name:" />
    	   <JFXTextField fx:id="playerThreeNameTextField" layoutX="55" layoutY="350" />
@@ -39,16 +39,16 @@
    	   <JFXComboBox fx:id="playerThreeChooseCharakterComboBox" layoutX="55" layoutY="410" prefWidth="150" />
    	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="addPlayerFourButton" layoutX="425" layoutY="250" prefHeight="30"  prefWidth="150" text="Spieler 4" />
-   	   <JFXCheckBox fx:id="addPlayerFourCheckBox" layoutX="380" layoutY="250" prefHeight="30" prefWidth="30"/>
+   	   <JFXToggleButton fx:id="addPlayerFourToggleButton" layoutX="370" layoutY="235" prefHeight="30" prefWidth="30"/>
    	   <JFXCheckBox fx:id="isPlayerFourKiCheckBox" layoutX="425" layoutY="290" text="KI" />
    	   <Label fx:id="enterNamePlayerFourLabel" layoutX="425" layoutY="330" text="Name:" />
-   	   <JFXTextField fx:id="playerThreeNameTextField" layoutX="425" layoutY="350" />
+   	   <JFXTextField fx:id="playerFourNameTextField" layoutX="425" layoutY="350" />
    	   <Label fx:id="chooseCharakterPlayerFourLabel" layoutX="425" layoutY="390" text="Charakter auswählen:" />
    	   <JFXComboBox fx:id="playerFourChooseCharakterComboBox" layoutX="425" layoutY="410" prefWidth="150" />
    	   
    	   
    	   <Label layoutX="240" layoutY="460" text="Schwierigkeit" />
-   	   <JFXComboBox fx:id="editDifficultyButtonComboBox" layoutX="240" layoutY="480" prefHeight="30"  prefWidth="120" />
+   	   <JFXComboBox fx:id="editDifficultyComboBox" layoutX="240" layoutY="480" prefHeight="30"  prefWidth="120" />
    	   
    	   <!--  
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="editPlayerOrderButton" layoutX="55" layoutY="525" prefHeight="30"  prefWidth="120" text="Zugreihenfolge" />
