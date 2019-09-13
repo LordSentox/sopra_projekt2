@@ -26,7 +26,8 @@ public class TextureLoader {
     private static final Map<ArtifactType, Image> ARTIFACT_TEXTURES = new EnumMap<>(ArtifactType.class);
     private static final Map<ArtifactCardType, Image> ARTIFACT_CARD_TEXTURES = new EnumMap<>(ArtifactCardType.class);
     private static final Map<MapTileProperties, Image> FLOOD_CARD_TEXTURES = new EnumMap<>(MapTileProperties.class);
-    private static final Map<PlayerType, PlayerTexture> PLAYER_TEXTURES = new EnumMap<>(PlayerType.class);
+    private static final Map<PlayerType, PlayerTexture> PLAYER_CARD_TEXTURES = new EnumMap<>(PlayerType.class);
+    private static final Map<PlayerType, PlayerTexture> PLAYER_ICON_TEXTURES = new EnumMap<>(PlayerType.class);
     private static final Map<MapTileProperties, TileTexture> TILE_TEXTURES_DRY = new EnumMap<>(MapTileProperties.class);
     private static final Map<MapTileProperties, TileTexture> TILE_TEXTURES_FLOODED = new EnumMap<>(MapTileProperties.class);
 
@@ -76,7 +77,8 @@ public class TextureLoader {
             ZipEntryList artifactCards = pack.entriesIn("textures/cards/artifacts/");
             ZipEntryList floodCards = pack.entriesIn("textures/cards/flood/");
             ZipEntryList misc = pack.entriesIn("textures/misc/");
-            ZipEntryList players = pack.entriesIn("textures/players/");
+            ZipEntryList playerCards = pack.entriesIn("textures/players/cards/");
+            ZipEntryList playerIcons = pack.entriesIn("textures/players/icons/");
             ZipEntryList tilesDry = pack.entriesIn("textures/tiles/dry/");
             ZipEntryList tilesFlooded = pack.entriesIn("textures/tiles/flooded/");
             ZipEntryList tilesExtra = pack.entriesIn("textures/tiles/extra/");
@@ -112,11 +114,18 @@ public class TextureLoader {
             }
             floodCardBack = new Image(floodCards.inputStreamByName("floodcard_back.png"));
 
-            for (ZipEntry playerEntry : players) {
+            for (ZipEntry playerEntry : playerCards) {
                 String name = playerEntry.getName();
                 String textureName = name.substring(name.lastIndexOf("/") + 1);
                 PlayerType type = PlayerType.valueOf(textureName.substring(0, textureName.length() - 4).toUpperCase());
-                PLAYER_TEXTURES.put(type, new PlayerTexture(players.inputStreamByName(textureName), type));
+                PLAYER_CARD_TEXTURES.put(type, new PlayerTexture(playerCards.inputStreamByName(textureName), type));
+            }
+
+            for (ZipEntry playerEntry : playerIcons) {
+                String name = playerEntry.getName();
+                String textureName = name.substring(name.lastIndexOf("/") + 1);
+                PlayerType type = PlayerType.valueOf(textureName.substring(0, textureName.length() - 4).toUpperCase());
+                PLAYER_ICON_TEXTURES.put(type, new PlayerTexture(playerCards.inputStreamByName(textureName), type));
             }
 
             for (int i = 0; i < MapTileProperties.values().length; i++) {
@@ -150,8 +159,12 @@ public class TextureLoader {
         return FLOOD_CARD_TEXTURES.get(type);
     }
 
-    public static PlayerTexture getPlayerTexture(PlayerType type) {
-        return PLAYER_TEXTURES.get(type);
+    public static PlayerTexture getPlayerCardTexture(PlayerType type) {
+        return PLAYER_CARD_TEXTURES.get(type);
+    }
+
+    public static PlayerTexture getPlayerIconTexture(PlayerType type) {
+        return PLAYER_ICON_TEXTURES.get(type);
     }
 
     public static TileTexture getTileTextureDry(MapTileProperties properties) {

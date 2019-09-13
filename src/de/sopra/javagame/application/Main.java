@@ -1,6 +1,6 @@
 package de.sopra.javagame.application;
 
-import de.sopra.javagame.view.GameWindow;
+import de.sopra.javagame.view.abstraction.GameWindow;
 import de.spaceparrots.translator.api.Translator;
 import de.spaceparrots.translator.core.Dictionary;
 import javafx.application.Application;

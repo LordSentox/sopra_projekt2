@@ -1,9 +1,10 @@
 package de.sopra.javagame.view.command;
 
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.view.GameWindow;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.abstraction.GameWindow;
 import de.spaceparrots.api.command.core.CommandProcessor;
 import de.spaceparrots.api.command.interfaces.CommandResult;
 import de.spaceparrots.api.command.interfaces.Definitions;
@@ -21,6 +22,10 @@ public final class Commands {
 
     private static Commands handler;
     private static GameWindow window;
+    private CommandProcessor processor;
+
+    private Commands() {
+    }
 
     public static CommandResult processCommand(GameWindow gameWindow, String command) {
         synchronized (gameWindow) {
@@ -33,11 +38,6 @@ public final class Commands {
         return handler.processor.simpleInputHandler().apply(command);
     }
 
-    private CommandProcessor processor;
-
-    private Commands() {
-    }
-
     private void init() {
         processor = new CommandProcessor(Definitions.standard());
         loadCommands();
@@ -48,10 +48,32 @@ public final class Commands {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void prepareTypes() {
-        processor.registerType(Action.class, "turn")
+        processor.registerType(Action.class, "turn",
+                PropertyResolver.create("activeplayer", Player.class, Action::getActivePlayer))
+                .registerType(ArtifactCardType.class, "artifactcardtype",
+                        TypeResolver.create(String.class, string -> ArtifactCardType.valueOf(string.toUpperCase()), ArtifactCardType::name))
+                .registerType(ArtifactType.class, "artifacttype",
+                        TypeResolver.create(String.class, string -> ArtifactType.valueOf(string.toUpperCase()), ArtifactType::name))
+                .registerType(MapTileState.class, "maptilestate",
+                        TypeResolver.create(String.class, string -> MapTileState.valueOf(string.toUpperCase()), MapTileState::name))
+                .registerType(MapTileProperties.class, "maptileproperties",
+                        TypeResolver.create(String.class, string -> MapTileProperties.valueOf(string.toUpperCase()), MapTileProperties::name))
+                .registerType(PlayerType.class, "playertype",
+                        TypeResolver.create(String.class, string -> PlayerType.valueOf(string.toUpperCase()), PlayerType::name))
                 .registerType(Difficulty.class, "difficulty",
-                        TypeResolver.create(String.class, string -> Difficulty.valueOf(string.toUpperCase()), Difficulty::name))
+                        TypeResolver.create(String.class, string -> Difficulty.valueOf(string.toUpperCase()), Difficulty::name));
+
+        processor.registerType(MapTile.class, "maptile",
+                PropertyResolver.create("state", MapTileState.class, MapTile::getState))
+                .registerType(Point.class, "point")
+                .registerType(ArtifactCard.class, "artifactcard",
+                        PropertyResolver.create("type", ArtifactCardType.class, ArtifactCard::getType))
+                .registerType(FloodCard.class, "floodcard",
+                        PropertyResolver.create("tile", MapTile.class, FloodCard::getTile))
+                .registerType(Player.class, "player",
+                        TypeResolver.create(PlayerType.class, window.getControllerChan().getCurrentAction()::getPlayer, Player::getType))
                 .registerType(JavaGame.class, "javagame",
                         TypeResolver.simple(window.getControllerChan()::getJavaGame),
                         PropertyResolver.create("mapname", String.class, JavaGame::getMapName),
@@ -60,8 +82,9 @@ public final class Commands {
                         PropertyResolver.create("rounds", int.class, JavaGame::numTurns),
                         PropertyResolver.create("canRedo", boolean.class, JavaGame::canRedo),
                         PropertyResolver.create("canUndo", boolean.class, JavaGame::canUndo),
-                        PropertyResolver.create("difficulty", Difficulty.class, JavaGame::getDifficulty))
-                ;
+                        PropertyResolver.create("difficulty", Difficulty.class, JavaGame::getDifficulty),
+                        PropertyResolver.create("previousaction", Action.class, JavaGame::getPreviousAction))
+        ;
     }
 
 }

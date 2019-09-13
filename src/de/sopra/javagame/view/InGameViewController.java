@@ -7,6 +7,8 @@ import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
@@ -29,78 +31,77 @@ import java.util.stream.IntStream;
  */
 public class InGameViewController extends AbstractViewController implements InGameViewAUI {
 
-    @FXML MapPane mapPane;
-
-    @FXML
-    WaterLevelView waterLevelView;
-
-    @FXML GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
-    artifactCardDicardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
-    @FXML Button endTurnButton;
-    @FXML ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
-    fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
     private static final int ACTIVE_CARD_SIZE = 150;
     private static final int PASSIVE_CARD_SIZE = 110;
-    final int SPINNER_SIZE = 250;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
+    private static double turnSpinnerCount;
+    final int SPINNER_SIZE = 250;
+    @FXML
+    MapPane mapPane;
+    @FXML
+    WaterLevelView waterLevelView;
+    @FXML
+    GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
+            artifactCardDicardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
+    @FXML
+    Button endTurnButton;
+    @FXML
+    ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
+            fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
 
     public void init() {
         //MapTile[][] tiles = this.getGameWindow().getControllerChan().getCurrentAction().getTiles();
-        
+
 //        /* TEMP */
 //        MapTile[][] tiles = new MapTile[9][12];
 //        IntStream.range(0, 24).forEach(i -> tiles[i/10 +1][i%10 +1] = MapTile.fromNumber(i));
 //        IntStream.range(0, 9).forEach(i -> { IntStream.range(0, 12).forEach(j -> System.out.print(tiles[i][j])); System.out.println();});
-        /* END TEMP */ 
+        /* END TEMP */
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
         mapPane.setIngameViewController(this);
         initGridPane();
 
-        activePlayerTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.DIVER));
+        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.DIVER));
         activePlayerTypeImageView.setPreserveRatio(true);
         activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         activePlayerTypeImageView.setVisible(true);
-        
-        playerOneTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.PILOT));
+
+        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.PILOT));
         playerOneTypeImageView.setPreserveRatio(true);
         playerOneTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setVisible(true);
-        
-        playerTwoTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.EXPLORER));
+
+        playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.EXPLORER));
         playerTwoTypeImageView.setPreserveRatio(true);
         playerTwoTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerTwoTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerTwoTypeImageView.setVisible(true);
-        
-        playerThreeTypeImageView.setImage(TextureLoader.getPlayerTexture(PlayerType.ENGINEER));
+
+        playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(PlayerType.ENGINEER));
         playerThreeTypeImageView.setPreserveRatio(true);
         playerThreeTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerThreeTypeImageView.setFitHeight(ACTIVE_CARD_SIZE);
         playerThreeTypeImageView.setVisible(true);
-        
+
         turnSpinnerWithoutMarkerImageView.setImage(TextureLoader.getTurnSpinner());
         turnSpinnerWithoutMarkerImageView.setPreserveRatio(true);
 
         turnSpinnerWithoutMarkerImageView.setFitWidth(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setFitHeight(SPINNER_SIZE);
         turnSpinnerWithoutMarkerImageView.setVisible(true);
-        //Bild um 72 Grad drehen
-        turnSpinnerWithoutMarkerImageView.setRotate(72.0);
         turnSpinnerWithoutMarkerImageView.getStyleClass().add("CardView");
         markerForSpinnerImageView.setImage(TextureLoader.getSpinnerMarker());
-        
+
         markerForSpinnerImageView.setPreserveRatio(true);
         markerForSpinnerImageView.setFitWidth(SPINNER_SIZE);
         markerForSpinnerImageView.setFitHeight(SPINNER_SIZE);
         markerForSpinnerImageView.setVisible(true);
         markerForSpinnerImageView.getStyleClass().add("CardView");
-        
-        
-        
-        
+
+
         fireArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.FIRE));
         fireArtefactImageView.setPreserveRatio(true);
         fireArtefactImageView.setFitWidth(ARTIFACT_SIZE);
@@ -108,7 +109,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         fireArtefactImageView.setVisible(true);
         fireArtefactImageView.getStyleClass().add("Artifact_Fire");
         //fireArtefactImageView.setEffect(DESATURATION);
-        
+
         waterArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.WATER));
         waterArtefactImageView.setPreserveRatio(true);
         waterArtefactImageView.setFitWidth(ARTIFACT_SIZE);
@@ -116,7 +117,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         waterArtefactImageView.setVisible(true);
         waterArtefactImageView.getStyleClass().add("Artifact_Water");
         //waterArtefactImageView.setEffect(DESATURATION);
-        
+
         earthArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.EARTH));
         earthArtefactImageView.setPreserveRatio(true);
         earthArtefactImageView.setFitWidth(ARTIFACT_SIZE);
@@ -124,7 +125,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         earthArtefactImageView.setVisible(true);
         earthArtefactImageView.getStyleClass().add("Artifact_Earth");
         //earthArtefactImageView.setEffect(DESATURATION);
-        
+
         airArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.AIR));
         airArtefactImageView.setPreserveRatio(true);
         airArtefactImageView.setFitWidth(ARTIFACT_SIZE);
@@ -136,7 +137,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
 
         /* Cards */
-        for(int i = 0; i < 9; i+=2) {
+        for (int i = 0; i < 9; i += 2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showFrontImage();
             cardGridPane.getChildren().add(v);
@@ -144,47 +145,45 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
 
 
-
-
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
             v.showFrontImage();
             handOneCardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
             v.showFrontImage();
             handTwoCardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], PASSIVE_CARD_SIZE);
             v.showFrontImage();
             handThreeCardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
 
-        
-        for(int i = 0; i < 10; i+=2) {
+
+        for (int i = 0; i < 10; i += 2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showBackImage();
             artifactCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        for(int i = 0; i < 10; i+=2) {
+        for (int i = 0; i < 10; i += 2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showFrontImage();
             artifactCardDicardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        for(int i = 0; i < 10; i+=2) {
+        for (int i = 0; i < 10; i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showBackImage();
             floodCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        for(int i = 0; i < 10; i+=2) {
+        for (int i = 0; i < 10; i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
@@ -193,16 +192,16 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         refreshWaterLevel(4);
     }
-    
+
     private void initGridPane() {
 //        IntStream.range(0, 21).forEach(i -> gridPane.getColumnConstraints().add(new ColumnConstraints(i%2==0 ? 5 : 130)));
 //        IntStream.range(0, 15).forEach(i -> gridPane.getRowConstraints().add(new RowConstraints(i%2==0 ? 5 : 130)));
 //
-        IntStream.range(0, 9).forEach(i -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(i%2==0 ? ACTIVE_CARD_SIZE : 5)));
+        IntStream.range(0, 9).forEach(i -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
 
-        IntStream.range(0, 5).forEach(i -> handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE/2)));
-        IntStream.range(0, 5).forEach(i -> handTwoCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE/2)));
-        IntStream.range(0, 5).forEach(i -> handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE/2)));
+        IntStream.range(0, 5).forEach(i -> handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
+        IntStream.range(0, 5).forEach(i -> handTwoCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
+        IntStream.range(0, 5).forEach(i -> handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2)));
 
         IntStream.range(0, 28).forEach(i -> artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
         IntStream.range(0, 28).forEach(i -> artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1)));
@@ -211,6 +210,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     }
 
+    public void rotateTurnSpinner() {
+        //Bild um 72 Grad drehen
+        turnSpinnerCount -= 72.0;
+        turnSpinnerCount %= 360;
+        turnSpinnerWithoutMarkerImageView.setRotate(turnSpinnerCount);
+    }
 
     public void onShowMovementOptionsClicked() {
         System.out.println("juch, ich bin der bewegungsindikator");
@@ -229,7 +234,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPlayerSelected() {
-        
+
     }
 
     public void onTransferCardClicked(int cardIndex) {
@@ -273,42 +278,38 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPauseClicked() {
-
+        //TEMP
+        rotateTurnSpinner();
+        //END TEMP
     }
 
     public void onSettingsClicked() {
-        this.getGameWindow().setState(ViewState.SETTINGS);
-    }
-    
-    public void onArtifactCardDiscardStackClicked(){
-        
-    }
-    
-    public void onFloodCardDiscardStackClicked(){
-        
-    }
-    
-    public void onArtifactCardDrawStackClicked(){
-        
-    }
-    
-    public void onFloodCardDrawStackClicked(){
-        
+        changeState(ViewState.IN_GAME_SETTINGS);
     }
 
+    public void onArtifactCardDiscardStackClicked() {
 
-    @Override
-    ViewState getType() {
-        return ViewState.IN_GAME;
     }
 
-    @Override
-    void reset() {
+    public void onFloodCardDiscardStackClicked() {
+
+    }
+
+    public void onArtifactCardDrawStackClicked() {
+
+    }
+
+    public void onFloodCardDrawStackClicked() {
 
     }
 
     @Override
-    void show(Stage stage) {
+    public void reset() {
+
+    }
+
+    @Override
+    public void show(Stage stage) {
 
     }
 

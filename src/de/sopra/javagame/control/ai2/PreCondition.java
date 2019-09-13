@@ -1,6 +1,6 @@
 package de.sopra.javagame.control.ai2;
 
-import de.sopra.javagame.control.ai2.decisions.Decision;
+import de.sopra.javagame.control.ai2.decisions.Condition;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -12,15 +12,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <h1>Projekt2</h1>
  *
  * @author Julius Korweck
- * @version 11.09.2019
- * @since 11.09.2019
+ * @version 12.09.2019
+ * @since 12.09.2019
  */
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface DoAfter {
+public @interface PreCondition {
 
-    Class<? extends Decision> value();
+    Condition[] allTrue() default {};
 
-    DecisionResult act();
+    Condition[] allFalse() default {};
 
 }
