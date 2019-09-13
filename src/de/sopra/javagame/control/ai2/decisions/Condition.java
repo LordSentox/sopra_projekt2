@@ -32,7 +32,7 @@ public enum Condition implements ICondition {
             return discoveredArtifacts.size() == 4;
         }
     },
-    GAME_LANDING_SIDE_IN_DANGER {
+    GAME_LANDING_SITE_IS_FLOODED {
         @Override
         public boolean isTrue(Decision decision) {
             return decision.control.getTile(PlayerType.PILOT).getRight().getState() == FLOODED;
@@ -117,5 +117,5 @@ public enum Condition implements ICondition {
             return decision.player().getActionsLeft() == 0;
         }
     }
-
+    
 }

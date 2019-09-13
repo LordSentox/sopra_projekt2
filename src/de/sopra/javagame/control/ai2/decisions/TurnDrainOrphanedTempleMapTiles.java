@@ -43,7 +43,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
-            //pürft, ob aktiver Spieler auf dem betroffenen Tempel steht
+            //prüft, ob aktiver Spieler auf dem betroffenen Tempel steht
             if (!activePlayerPosition.equals(orphanedTemplePoint)) {
                 return null;
             }

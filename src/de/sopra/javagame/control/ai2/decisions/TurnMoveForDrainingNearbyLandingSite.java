@@ -11,7 +11,7 @@ import de.sopra.javagame.util.Point;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
-import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SIDE_IN_DANGER;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SITE_IS_FLOODED;
 import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_MORE_THAN_1_ACTION_LEFT;
 
 /**
@@ -23,7 +23,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_MORE_
  */
 
 @DoAfter(act = TURN_ACTION, value = TurnStayOnLandingSiteWaitingForDeparture.class)
-@PreCondition(allTrue = {GAME_LANDING_SIDE_IN_DANGER, PLAYER_HAS_MORE_THAN_1_ACTION_LEFT})
+@PreCondition(allTrue = {GAME_LANDING_SITE_IS_FLOODED, PLAYER_HAS_MORE_THAN_1_ACTION_LEFT})
 public class TurnMoveForDrainingNearbyLandingSite extends Decision {
 
     /**

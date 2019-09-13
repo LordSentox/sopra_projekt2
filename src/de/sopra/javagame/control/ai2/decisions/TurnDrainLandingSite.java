@@ -10,7 +10,7 @@ import de.sopra.javagame.util.Point;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
-import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SIDE_IN_DANGER;
+import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SITE_IS_FLOODED;
 
 /**
  * <h1>projekt2</h1>
@@ -21,7 +21,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SID
  */
 
 @DoAfter(act = TURN_ACTION, value = TurnEndGame.class)
-@PreCondition(allTrue = GAME_LANDING_SIDE_IN_DANGER)
+@PreCondition(allTrue = GAME_LANDING_SITE_IS_FLOODED)
 public class TurnDrainLandingSite extends Decision {
 
     @Override
@@ -31,7 +31,7 @@ public class TurnDrainLandingSite extends Decision {
         Point landingSitePosition = informationLandingSite.getLeft();
 
         List<Point> drainablePositions = player().drainablePositions();
-        //pürfe, ob der aktive Spieler die LandingSite trockenlegen kann
+        //prüfe, ob der aktive Spieler die LandingSite zum trockenlegen erreichen kann
         if (drainablePositions.contains(landingSitePosition)) {
             return this;
         }
