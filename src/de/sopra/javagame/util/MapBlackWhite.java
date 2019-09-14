@@ -6,7 +6,7 @@ package de.sopra.javagame.util;
  * @author Arne Dußin
  */
 public class MapBlackWhite extends Map<Boolean> {
-    MapBlackWhite() {
+    public MapBlackWhite() {
         super();
     }
 

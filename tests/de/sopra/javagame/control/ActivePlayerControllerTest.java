@@ -184,7 +184,7 @@ public class ActivePlayerControllerTest {
         Assert.assertEquals("Explorer not on correct spawn location", new Point(6, 4), playerPos);
         activePlayerController.showSpecialAbility();
         List<Point> expectedDrainables = adjacentPoints(playerPos, true).stream()
-                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() == MapTileState.FLOODED)
+                .filter(p -> testMap.get(p) != null && testMap.get(p).getState() == MapTileState.FLOODED)
                 .collect(Collectors.toList());
         assertFalse("Dry tiles included in drainable positions. Must only be flooded", inGameView.getDrainPoints().size() > expectedDrainables.size());
         assertTrue("Explorer drainable tiles not displayed correctly", expectedDrainables.containsAll(inGameView.getDrainPoints()) && inGameView.getDrainPoints().containsAll(expectedDrainables));
@@ -210,9 +210,9 @@ public class ActivePlayerControllerTest {
         assertSame(activePlayer.getType(), PlayerType.PILOT);
         activePlayerController.showSpecialAbility();
         List<Point> movementPoints = inGameView.getMovementPoints();
-        for (int y = 1; y < testMap.length - 1; y++) {
-            for (int x = 1; x < testMap[y].length - 1; x++) {
-                MapTile tile = testMap[y][x];
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                MapTile tile = testMap.get(x, y);
                 if (tile != null && tile.getState() != MapTileState.FLOODED && !new Point(x, y).equals(playerPos.getLocation())) {
                     Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", x, y), movementPoints.contains(new Point(x, y)));
                 }
@@ -267,11 +267,11 @@ public class ActivePlayerControllerTest {
         Player activePlayer = action.getActivePlayer();
         Point playerPos = activePlayer.getPosition();
 
-        testMap[4][6].flood();
-        testMap[4][7].flood();
-        testMap[3][6].flood();
-        testMap[2][5].flood();
-        printMap(testMap);
+        testMap.get(5, 3).flood();
+        testMap.get(6, 3).flood();
+        testMap.get(5, 2).flood();
+        testMap.get(4, 1).flood();
+        printMap(testMap.raw());
 
         action.nextPlayerActive();
 
@@ -282,12 +282,12 @@ public class ActivePlayerControllerTest {
         activePlayerController.showSpecialAbility();
         activePlayerController.cancelSpecialAbility();
         List<Point> expectedDrainables = adjacentPoints(playerPos, true).stream()
-                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() == MapTileState.FLOODED)
+                .filter(p -> testMap.get(p) != null && testMap.get(p).getState() == MapTileState.FLOODED)
                 .collect(Collectors.toList());
         expectedDrainables.add(playerPos);
         assertEquals("Incorrect amount of drainable tiles for explorer", 3, expectedDrainables.size());
         List<Point> expectedMovePoints = adjacentPoints(playerPos, true).stream()
-                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() != MapTileState.GONE)
+                .filter(p -> testMap.get(p) != null && testMap.get(p).getState() != MapTileState.GONE)
                 .collect(Collectors.toList());
         assertEquals("Explorer incorrect amount of move tiles", 4, expectedMovePoints.size());
 
@@ -416,7 +416,7 @@ public class ActivePlayerControllerTest {
     public void testMove() throws Exception {
         Player activePlayer = action.getActivePlayer();
 
-        printMap(testMap);
+        printMap(testMap.raw());
 
         System.out.println(activePlayer.getActionsLeft());
 
@@ -443,13 +443,13 @@ public class ActivePlayerControllerTest {
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
 
-        testMap[3][6].flood();
-        testMap[3][7].flood();
-        testMap[3][7].flood();
+        testMap.get(5, 2).flood();
+        testMap.get(6, 2).flood();
+        testMap.get(6, 2).flood();
 
         activePlayer = action.getActivePlayer();
 
-        printMap(testMap);
+        printMap(testMap.raw());
 
         assertEquals(activePlayer.getType(), PlayerType.DIVER);
         assertEquals(activePlayer.getPosition(), new Point(5, 3));
@@ -522,15 +522,15 @@ public class ActivePlayerControllerTest {
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
 
-        testMap[3][7].flood();
-        testMap[3][3].flood();
-        testMap[3][2].flood();
-        testMap[2][4].flood();
-        testMap[2][4].flood();
-        testMap[2][1].flood();
-        testMap[3][5].flood();
+        testMap.get(6, 2).flood();
+        testMap.get(2, 2).flood();
+        testMap.get(1, 2).flood();
+        testMap.get(3, 1).flood();
+        testMap.get(1, 2).flood();
+        testMap.get(0, 1).flood();
+        testMap.get(4, 2).flood();
 
-        printMap(testMap);
+        printMap(testMap.raw());
 
         Player activePlayer = action.getActivePlayer();
         activePlayer.setActionsLeft(3);
@@ -539,10 +539,10 @@ public class ActivePlayerControllerTest {
         assertEquals(activePlayer.getType(), PlayerType.NAVIGATOR);
         assertEquals(activePlayer.getPosition(), new Point(2, 3));
         activePlayerController.drain(new Point(1, 2));
-        assertEquals("Invalid tile was drained by Navigator", MapTileState.FLOODED, testMap[2][1].getState());
+        assertEquals("Invalid tile was drained by Navigator", MapTileState.FLOODED, testMap.get(0, 1).getState());
         assertEquals("Navigator used action despite not draining tile", 3, activePlayer.getActionsLeft());
         activePlayerController.drain(new Point(2, 3));
-        assertEquals("Tile which the Navigator was standing on was not drained by Navigator", MapTileState.DRY, testMap[3][2].getState());
+        assertEquals("Tile which the Navigator was standing on was not drained by Navigator", MapTileState.DRY, testMap.get(1, 2).getState());
         assertEquals("Navigator did not use action despite draining tile", 2, activePlayer.getActionsLeft());
 
 
@@ -553,10 +553,10 @@ public class ActivePlayerControllerTest {
         assertEquals(activePlayer.getType(), PlayerType.EXPLORER);
         assertEquals(activePlayer.getPosition(), new Point(6, 4));
         activePlayerController.drain(new Point(6, 4));
-        assertEquals("Dry tile was modified by draining", MapTileState.DRY, testMap[4][6].getState());
+        assertEquals("Dry tile was modified by draining", MapTileState.DRY, testMap.get(5, 3).getState());
         assertEquals("Explorer used action despite not draining tile", 3, activePlayer.getActionsLeft());
         activePlayerController.drain(new Point(7, 3));
-        assertEquals("Valid tile was not drained by Explorer", MapTileState.DRY, testMap[3][7].getState());
+        assertEquals("Valid tile was not drained by Explorer", MapTileState.DRY, testMap.get(6, 2).getState());
         assertEquals("Explorer did not use action despite draining tile", 2, activePlayer.getActionsLeft());
 
 
@@ -567,14 +567,14 @@ public class ActivePlayerControllerTest {
         assertEquals(activePlayer.getType(), PlayerType.ENGINEER);
         assertEquals(activePlayer.getPosition(), new Point(4, 3));
         activePlayerController.drain(new Point(3, 3));
-        assertEquals("Valid tile was not drained by Engineer", MapTileState.DRY, testMap[3][3].getState());
+        assertEquals("Valid tile was not drained by Engineer", MapTileState.DRY, testMap.get(2, 2).getState());
 
         activePlayerController.drain(new Point(4, 2));
-        assertEquals("Engineer drained gone tile", MapTileState.GONE, testMap[2][4].getState());
+        assertEquals("Engineer drained gone tile", MapTileState.GONE, testMap.get(3, 1).getState());
         assertTrue("Engineer wasted extra drain on gone tile", ((Engineer) activePlayer).hasExtraDrain());
 
         activePlayerController.drain(new Point(5, 3));
-        assertEquals("Engineer did not drain valid tile", MapTileState.DRY, testMap[3][5].getState());
+        assertEquals("Engineer did not drain valid tile", MapTileState.DRY, testMap.get(4, 2).getState());
         assertEquals("Engineer did not use correct amount of actions", 2, activePlayer.getActionsLeft());
         assertFalse("Engineer still has extra drain after draining 2 tiles", ((Engineer) activePlayer).hasExtraDrain());
 

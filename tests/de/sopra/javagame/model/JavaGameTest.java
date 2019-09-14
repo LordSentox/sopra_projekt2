@@ -3,6 +3,7 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import org.junit.Assert;
@@ -19,7 +20,7 @@ import java.util.List;
 public class JavaGameTest {
 
     private ControllerChan controllerChan;
-    private MapTile[][] testMap;
+    private MapFull testMap;
     private String testMapString;
     private List<Pair<PlayerType, Boolean>> players;
 
@@ -27,8 +28,7 @@ public class JavaGameTest {
     public void setUp() throws Exception {
         controllerChan = TestDummy.getDummyControllerChan();
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readFullMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+        this.testMap = MapUtil.readFullMapFromString(testMapString);
         players = new ArrayList<Pair<PlayerType, Boolean>>() {{
             add(new Pair<>(PlayerType.EXPLORER, false));
             add(new Pair<>(PlayerType.NAVIGATOR, true));
@@ -44,7 +44,7 @@ public class JavaGameTest {
         JavaGame javaGame = newGame.getLeft();
 
         Assert.assertEquals("Das neue Spiel sollte den gleichen MapNamen beinhalten", testMapString, javaGame.getMapName());
-        Assert.assertEquals("Das neue Spiel sollte die gleiche Map beinhalten", testMap, javaGame.getPreviousAction().getTiles());
+        Assert.assertEquals("Das neue Spiel sollte die gleiche Map beinhalten", testMap, javaGame.getPreviousAction().getMap());
         Assert.assertEquals("Das neue Spiel sollte den gleichen Schwierigkeitsgrad haben ", Difficulty.NOVICE, javaGame.getDifficulty());
 
         Action action = javaGame.getPreviousAction();

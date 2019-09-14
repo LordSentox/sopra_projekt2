@@ -3,6 +3,7 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapCheckUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -104,7 +105,7 @@ public class MapControllerTest {
         }
 
         mapController.loadMapToEditor(name);
-        for (int y = 0; y < map.length; ++y) {
+        for (int y = 0; y < Map.SIZE_Y; ++y) {
             Assert.assertArrayEquals(map[y], mapEditorView.getTiles()[y]);
         }
         
