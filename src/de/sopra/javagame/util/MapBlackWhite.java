@@ -1,5 +1,7 @@
 package de.sopra.javagame.util;
 
+import java.util.Arrays;
+
 /**
  * Beschreibt eine Karte, die nur anzeigt, wo sich Wasser, und wo sich Land befindet.
  *
@@ -31,6 +33,12 @@ public class MapBlackWhite extends Map<Boolean> {
 
     @Override
     public Boolean[][] newEmptyRaw() {
-        return new Boolean[Map.SIZE_Y + 2][Map.SIZE_X + 2];
+        Boolean[][] atarashii = new Boolean[Map.SIZE_Y + 2][Map.SIZE_X + 2];
+
+        for (int y = 0; y < Map.SIZE_Y + 2; ++y) {
+            Arrays.fill(atarashii[y], false);
+        }
+
+        return atarashii;
     }
 }
