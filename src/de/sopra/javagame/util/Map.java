@@ -6,7 +6,7 @@ public abstract class Map<T> {
 
     T[][] raw;
 
-    Map() {
+    public Map() {
         this.raw = newEmptyRaw();
     }
 

@@ -4,9 +4,8 @@ import de.sopra.javagame.control.ai.*;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.AIActionTip;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.*;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -113,7 +112,7 @@ public class AIController {
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
      */
     public boolean isCurrentlyRescueingHimself() {
-        return getCurrentAction().getTile(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
+        return getCurrentAction().getMap().get(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
     }
 
     /**
@@ -349,14 +348,19 @@ public class AIController {
             return 0; // Nix zu tun
 
         // Initialisiere einen Array, um die Anzahl der Aktionen, die benötigt werden zu zählen.
-        MapTile[][] mapTiles = getCurrentAction().getTiles();
-        Integer[][] stepMap = new Integer[mapTiles.length][];
-        for (int y = 0; y < mapTiles.length; ++y) {
-            for (int x = 0; x < mapTiles[y].length; ++x) {
+        MapFull mapTiles = getCurrentAction().getMap();
+        Map<Integer> stepMap = new Map<Integer>() {
+            @Override
+            protected Integer[][] newEmptyRaw() {
+                return new Integer[Map.SIZE_Y][Map.SIZE_X];
+            }
+        };
+
+        // Die Startposition kann sofort erreicht werden, alle anderen müssen erst noch überprüft werden
+        for (int y = 0; y < Map.SIZE_Y; ++y) {
+            for (int x = 0; x < Map.SIZE_X; ++x) {
                 if (new Point(x, y).equals(startPosition)) {
-                    stepMap[y][x] = 0;
-                } else {
-                    stepMap[y][x] = null;
+                    stepMap.set(0, x, y);
                 }
             }
         }
@@ -370,11 +374,11 @@ public class AIController {
         do {
             somethingChanged = false;
 
-            for (int y = 0; y < stepMap.length; ++y) {
-                for (int x = 0; x < stepMap[y].length; ++x) {
+            for (int y = 0; y < Map.SIZE_Y; ++y) {
+                for (int x = 0; x < Map.SIZE_X; ++x) {
                     // Wenn die Position im letzten Zug noch nicht erreicht wurde, kann sie für's Erste
                     // übersprungen werden
-                    if (stepMap[y][x] == null)
+                    if (stepMap.get(x, y) == null)
                         continue;
 
                     // Aktualisiere die Step-Map mit der Anzahl der Aktionen, die benötigt werden
@@ -382,8 +386,8 @@ public class AIController {
                     List<Point> moves = player.legalMoves(false);
                     moves.addAll(player.legalMoves(true));
                     for (Point move : moves) {
-                        if (stepMap[move.yPos][move.xPos] == null) {
-                            stepMap[move.yPos][move.xPos] = stepMap[y][x] + 1;
+                        if (stepMap.get(move) == null) {
+                            stepMap.set(stepMap.get(x, y) + 1, move);
                             somethingChanged = true;
                         }
                     }
@@ -393,7 +397,7 @@ public class AIController {
         } while (somethingChanged);
 
         // Zurückgeben der benötigten Aktionen, bzw. Integer-Maximum, falls die Position gar nicht erreicht werden kann
-        Integer requiredSteps = stepMap[targetPosition.yPos][targetPosition.xPos];
+        Integer requiredSteps = stepMap.get(targetPosition);
         return requiredSteps != null ? requiredSteps : Integer.MAX_VALUE;
     }
 
