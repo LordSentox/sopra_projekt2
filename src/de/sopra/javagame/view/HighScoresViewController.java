@@ -1,6 +1,7 @@
 package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXListView;
 import de.sopra.javagame.control.HighScoresController;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.util.HighScore;
@@ -27,6 +28,8 @@ public class HighScoresViewController extends AbstractViewController implements 
     ImageView mainPane;
     @FXML
     JFXComboBox mapSelectionBox;
+    @FXML
+    JFXListView highScoreListView;
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
@@ -44,7 +47,9 @@ public class HighScoresViewController extends AbstractViewController implements 
     }
 
     public void onShowReplayClicked() {
-
+        HighScore selectedHighScore = (HighScore) highScoreListView.getSelectionModel().getSelectedItem();
+        changeState(ViewState.IN_GAME);
+        getGameWindow().getControllerChan().loadGame(selectedHighScore.getReplayname());
     }
 
     public void onCloseClicked() {

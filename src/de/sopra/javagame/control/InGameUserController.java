@@ -32,23 +32,29 @@ public class InGameUserController {
     public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players) {
         Action currentAction = controllerChan.getCurrentAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
+
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
-        if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null || handCards.get(handCardIndex).getType() != ArtifactCardType.HELICOPTER) {
-            throw new IllegalStateException("Es wurde keine Helikopter-Karte übergeben " +
-                    "aber die playHelicopterCard Methode aufgerufen!");
-        }
+        checkHandForCard(handCardIndex, handCards, ArtifactCardType.HELICOPTER);
+
         //prüfe, ob alle zu bewegenden Spieler auf ein und demselben Punkt stehen
-        boolean allOnFlightRouteStartPoint = playersOnPoint(flightRoute.getLeft(), players);
-        if (!allOnFlightRouteStartPoint) {
-            throw new IllegalStateException("Die übergebenen Spieler standen nicht auf einem Feld. " +
-                    "Sie hätten gar nicht gemeinsam übergeben werden dürfen!");
-        }
+        checkAllPlayersOnStartPoint(flightRoute, players);
+
         //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
         checkWonOnHelicopter(currentAction);
 
+        //XXX aktuell noch da, da nicht abgebrochen wird in checkWonOnHelicopter. Eventuell entfernen
+        //Methode nur zum Prüfen, ob das Spiel eigentlich bereits beendet war, dies nur noch nicht angekommen ist
         if (controllerChan.getCurrentAction() == null) {
             return;
         }
+
+        //Nur, wenn vorher nicht abgebrochen wurde waren alle Werte korrekt.
+        //Bewege die Spieler, wie vorgesehen
+        actuallyMovePlayers(sourcePlayer, handCardIndex, flightRoute, players, currentAction);
+        controllerChan.finishAction();
+    }
+
+    private void actuallyMovePlayers(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players, Action currentAction) {
         //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
         if (flightRoute.getLeft() == null || flightRoute.getRight() == null
                 || controllerChan.getCurrentAction().getMap().get(flightRoute.getRight()) == null
@@ -69,7 +75,23 @@ public class InGameUserController {
             currentPlayer.setPosition(flightRoute.getRight());
             controllerChan.getInGameViewAUI().refreshPlayerPosition(currentPlayer.getPosition(), currentPlayer.getType());
         }
-        controllerChan.finishAction();
+    }
+
+    private void checkAllPlayersOnStartPoint(Pair<Point, Point> flightRoute, List<PlayerType> players) {
+        boolean allOnFlightRouteStartPoint = playersOnPoint(flightRoute.getLeft(), players);
+        if (!allOnFlightRouteStartPoint) {
+            throw new IllegalStateException("Die übergebenen Spieler standen nicht auf einem Feld. " +
+                    "Sie hätten gar nicht gemeinsam übergeben werden dürfen!");
+        }
+    }
+
+    private void checkHandForCard(int handCardIndex, List<ArtifactCard> handCards, ArtifactCardType cardType) {
+        if (handCards.size() <= handCardIndex ||
+            handCards.get(handCardIndex) == null ||
+            handCards.get(handCardIndex).getType() != cardType) {
+            throw new IllegalStateException("Es wurde keine Helikopter-Karte übergeben " +
+                    "aber die playHelicopterCard Methode aufgerufen!");
+        }
     }
 
     /**
@@ -134,10 +156,7 @@ public class InGameUserController {
         MapTile tileToDrain = currentAction.getMap().get(destination);
 
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
-        if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null || handCards.get(handCardIndex).getType() != ArtifactCardType.SANDBAGS) {
-            throw new IllegalStateException("Es wurde keine Sandsack-Karte übergeben " +
-                    "aber die playSandbagCard Methode aufgerufen!");
-        }
+        checkHandForCard(handCardIndex, handCards, ArtifactCardType.SANDBAGS);
 
         if (tileToDrain.getState() == MapTileState.DRY) {
             throw new IllegalStateException("Das übergebene MapTile ist schon trocken. " +

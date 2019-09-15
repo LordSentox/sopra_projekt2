@@ -86,6 +86,10 @@ public class HighScoresController {
 
     }
 
+    public void saveHighScore(HighScore scoreToSave) {
+
+	}
+
     /**
      * Löscht die komplette Bestenliste.
      *
