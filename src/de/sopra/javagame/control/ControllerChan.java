@@ -121,7 +121,7 @@ public class ControllerChan {
 
     public void loadGame(String loadGameName) {
         this.gameName = loadGameName;
-        try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + this.gameName);
+        try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + this.gameName + ".save");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             this.javaGame = (JavaGame) objectInputStream.readObject();
         } catch (FileNotFoundException e) {
