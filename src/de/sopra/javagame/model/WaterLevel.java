@@ -1,12 +1,14 @@
 package de.sopra.javagame.model;
 
+import java.io.Serializable;
+
 /**
  * enthält die Informationen wie hoch der aktuelle Wasserpegel ist und wie viele
  * karten zu ziehen sind und die Information, ob das Spiel bereits verloren ist
  *
  * @author Lisa, Hannah
  */
-public class WaterLevel implements Copyable<WaterLevel> {
+public class WaterLevel implements Copyable<WaterLevel>, Serializable {
     public static final int LOSE_GAME_AT = 9;
     public static final int CONTINUE_GAME = 5;
 

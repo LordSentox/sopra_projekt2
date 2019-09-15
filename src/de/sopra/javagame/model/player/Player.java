@@ -4,6 +4,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
 
-public abstract class Player implements Copyable<Player> {
+public abstract class Player implements Copyable<Player>, Serializable {
 
     public static final int MAXIMUM_HANDCARDS = 5;
 

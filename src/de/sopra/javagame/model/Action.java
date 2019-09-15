@@ -3,6 +3,7 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 //FIXME Action umbenennen zu Action --> Action bedeutet genau eine Aktion von dem Spiel, dem aktiven oder einem anderen Spieler
 //    --> dazu alle Aufrufe, die Action beinhalten umbenennen
 
-public class Action implements Copyable<Action> {
+public class Action implements Copyable<Action>, Serializable {
 
     /**
      * Eine Menge aller Artefakte, die bereits gefunden wurden.

@@ -5,6 +5,7 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
 
@@ -12,7 +13,7 @@ import java.util.Stack;
  * Repräsentiert ein JavaSpiel im Gesamten bis zu dem letzten Zug, der gemacht wurde. Der momentane Zug kann verändert
  * werden mit undo und redo.
  */
-public class JavaGame {
+public class JavaGame implements Serializable {
     public static final int MAP_SIZE_X = 10;
     public static final int MAP_SIZE_Y =  7;
 
