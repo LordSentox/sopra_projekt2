@@ -110,7 +110,7 @@ public class TestDummy {
          *
          * @return <code>null</code> wenn die tiles nie gesetzt wurden
          */
-        public MapBlackWhite getTiles() {
+        public MapBlackWhite getMap() {
             return tiles;
         }
     }

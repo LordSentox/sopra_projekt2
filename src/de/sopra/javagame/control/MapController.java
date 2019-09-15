@@ -1,5 +1,6 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -79,40 +80,33 @@ public class MapController {
      * Speichert die Karte als Datei auf der Festplatte, sodass sie beim nächsten mal unter gleichem Namen wieder
      * geladen werden kann. Existiert die Datei bereits, überschreibt die Funktion sie. Kann die Datei nicht gespeichert
      * werden, wird eine Fehlermeldung im Karteneditor ausgegeben.
-     *
-     * @param name  Der Name der Karte, die gespeichert werden soll.
+     *  @param name  Der Name der Karte, die gespeichert werden soll.
      * @param tiles Die Tiles, die die Karte beschreiben.
      */
-    public void saveMap(String name, boolean[][] tiles) {
-        if (name == ""){
+    public void saveMap(String name, MapBlackWhite tiles) {
+        if (name.equals("")) {
             System.err.println("Die Karte muss einen Namen enthalten!");
         }
         try {
-            BufferedWriter out =new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name +".map"),  StandardCharsets.UTF_8));
-            String[][] mapTiles = new String[tiles.length][];
-            for (int y = 0; y < 12; y++){
-                for (int x = 0; x < 12; x++){
-                    if (tiles[y][x] == false){
-                        mapTiles[y][x] = "-";
-                    }else {
-                        mapTiles[y][x] = "X";
-                        
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name + ".map"), StandardCharsets.UTF_8));
+            for (int y = 0; y < Map.SIZE_Y; y++) {
+                for (int x = 0; x < Map.SIZE_X; x++) {
+                    if (tiles.get(x, y)) {
+                        out.write("X");
+                    } else {
+                        out.write("-");
                     }
-                    if (x != 11){
+                    if (x < Map.SIZE_X - 1) {
                         out.write(",");
                     }
                 }
                 out.newLine();
             }
-            out.close(); 
-            
+            out.close();
+
         } catch (IOException e) {
             System.err.println("Maps konnten nicht gelöscht werden.");
             e.printStackTrace();
         }
-        
-        
-        
-
     }
 }

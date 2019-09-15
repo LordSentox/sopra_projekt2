@@ -52,6 +52,22 @@ public abstract class Map<T> {
         this.set(value, position.xPos, position.yPos);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Map<?> map = (Map<?>) other;
+        for (int y = 0; y < Map.SIZE_Y; ++y) {
+            for (int x = 0; x < Map.SIZE_X; ++x) {
+                if (!this.get(x, y).equals(map.get(x, y))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public void set(T value, int xPos, int yPos) {
         this.raw[xPos + 1][yPos + 1] = value;
     }
