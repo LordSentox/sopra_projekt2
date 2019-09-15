@@ -2,6 +2,7 @@ package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.InGameViewController;
@@ -30,7 +31,7 @@ public class MapPane extends GridPane {
 
     public MapPane() throws IOException {
         super();
-        map = new StackPane[7][10];
+        map = new StackPane[Map.SIZE_Y][Map.SIZE_X];
 
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
@@ -38,18 +39,17 @@ public class MapPane extends GridPane {
     }
 
     public void buildMap(MapFull tiles){
-        // TODO: tiles.raw() muss nicht mehr benutzt werden, stattdessen kann tiles.get(x, y)/tiles.get(position) benutzt
-        // werden, allerdings habe ich mich da nicht herangetraut. ^^
-        for (int y = 1; y < map.length + 1; y++) {
-            for (int x = 1; x < map[y - 1].length + 1; x++) {
-                if (tiles.raw()[y][x] != null) {
-                    TileView v = new TileView(tiles.raw()[y][x].getTileIndex(), TILE_SIZE);
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                if (tiles.get(x, y) != null) {
+                    TileView v = new TileView(tiles.get(x, y).getTileIndex(), TILE_SIZE);
                     v.setPreserveRatio(true);
                     StackPane pane = new StackPane();
-                    map[y - 1][x - 1] = pane;
+
+                    map[y][x] = pane;
                     pane.getChildren().add(v);
                     this.getChildren().add(pane);
-                    GridPane.setConstraints(pane, x * 2 - 1, y * 2 - 1);
+                    GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                     final int newX = x, newY = y;
                     pane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onTileClicked(event, v, newX, newY));
                 } else {
@@ -58,10 +58,10 @@ public class MapPane extends GridPane {
                     v.setFitWidth(TILE_SIZE);
                     v.setFitHeight(TILE_SIZE);
                     StackPane pane = new StackPane();
-                    map[y - 1][x - 1] = pane;
+                    map[y][x] = pane;
                     pane.getChildren().add(v);
                     this.getChildren().add(pane);
-                    GridPane.setConstraints(pane, x * 2 - 1, y * 2 - 1);
+                    GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 }
             }
         }
@@ -80,14 +80,14 @@ public class MapPane extends GridPane {
     }
 
     /**
-     * Mit 1 indiziert
+     * Mit 0 indiziert
      *
      * @param x
      * @param y
      * @return
      */
     public StackPane getMapStackPane(int x, int y) {
-        return map[y - 1][x - 1];
+        return map[y][x];
     }
 
 
@@ -127,8 +127,8 @@ public class MapPane extends GridPane {
 
 
     public Optional<Point> playerPosition(PlayerType type) {
-        for (int y = 1; y < map.length + 1; y++) {
-            for (int x = 1; x < map[y - 1].length; x++) {
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
                 if (playerOnTile(x, y, type).isPresent()) return Optional.of(new Point(x, y));
             }
         }
