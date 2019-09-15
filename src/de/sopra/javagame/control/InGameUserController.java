@@ -46,6 +46,7 @@ public class InGameUserController {
         }
         //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
         checkWonOnHelicopter(currentAction);
+
         if (controllerChan.getCurrentAction() == null) {
             return;
         }
@@ -59,7 +60,6 @@ public class InGameUserController {
         //entferne die gespielte Karte von der Spieler-Hand
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
-        Player derHARTMUT = null;
         //bewege die players
         for (PlayerType currentPlayerType : players) {
             Player currentPlayer = currentAction.getPlayer(currentPlayerType);
@@ -68,15 +68,9 @@ public class InGameUserController {
                         "Fliegen ist so nicht möglich!");
             }
             currentPlayer.setPosition(flightRoute.getRight());
-            derHARTMUT = currentPlayer;
             controllerChan.getInGameViewAUI().refreshPlayerPosition(currentPlayer.getPosition(), currentPlayer.getType());
         }
-        if (derHARTMUT == currentAction.getPlayer(PlayerType.EXPLORER)){
-            System.out.println("U Serious?");
-        }
-        if (currentAction != controllerChan.getCurrentAction()) {
-           System.out.println("WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY?");
-        }
+
         Point hartmuht = controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER).getPosition();
         controllerChan.finishAction();
     }

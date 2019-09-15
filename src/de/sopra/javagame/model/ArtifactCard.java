@@ -1,13 +1,15 @@
 package de.sopra.javagame.model;
 
 
+import java.io.Serializable;
+
 /**
  * @author Max Hauke Georg Bühmann, Melanie Arnds
  * <p>
  * ArtifactCards repräsentieren die Artefaktkarten des Spieles. Sie können folgende Typen annehmen:
  * {@link ArtifactCardType}
  */
-public class ArtifactCard implements Copyable<ArtifactCard> {
+public class ArtifactCard implements Copyable<ArtifactCard>, Serializable {
 
     private final ArtifactCardType type;
 

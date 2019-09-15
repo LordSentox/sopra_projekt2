@@ -133,13 +133,14 @@ public class ControllerChan {
      * replayGame spielt ein beendetes Spiel ab, welches vorher geladen wurde
      */
     public void replayGame() {
-
+        //Alle 10 Sekunden einen Zug Wiederholen bis das Spiel beendet ist
     }
 
     /**
      * continueGame setzt ein gespeichertes Spiel nach dem zuletzt ausgeführten Spielzug (vor dem Speichern) fort
      */
     public void continueGame() {
+        //Das Spiel mit Namen mapName + ".aktuell" im Orner SAVE_GAME_FOLDER und alles refreshen
 
     }
 

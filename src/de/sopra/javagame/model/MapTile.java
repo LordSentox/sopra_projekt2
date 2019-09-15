@@ -2,6 +2,7 @@ package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.PlayerType;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import static de.sopra.javagame.model.MapTileState.*;
@@ -11,7 +12,7 @@ import static de.sopra.javagame.model.MapTileState.*;
  *
  * @author Hermann "Roxi" Bühmann, Melanie Arnds
  */
-public class MapTile implements Copyable<MapTile> {
+public class MapTile implements Copyable<MapTile>, Serializable {
     private MapTileProperties properties;
     private MapTileState state;
 

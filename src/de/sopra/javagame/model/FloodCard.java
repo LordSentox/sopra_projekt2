@@ -1,5 +1,6 @@
 package de.sopra.javagame.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import static de.sopra.javagame.model.MapTileState.*;
@@ -8,7 +9,7 @@ import static de.sopra.javagame.model.MapTileState.*;
  * Flutkarten können einen bestimmten Feldtyp fluten oder versenken, falls das
  * Inselfeld schon überflutet war.
  */
-public class FloodCard implements Copyable<FloodCard> {
+public class FloodCard implements Copyable<FloodCard>, Serializable {
     /**
      * Das Inselfeld, welches von dieser Karte überflutet wird.
      */
