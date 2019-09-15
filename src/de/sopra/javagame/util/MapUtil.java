@@ -3,7 +3,6 @@ package de.sopra.javagame.util;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -16,14 +15,12 @@ public class MapUtil {
         Random random = new Random();
         MapBlackWhite map = new MapBlackWhite();
 
+        // Die Karte wird von der Mitte aus aufgebaut
+        Point startPoint = new Point(Map.SIZE_X / 2, Map.SIZE_Y / 2);
+        map.set(true, startPoint);
         // Die Optionen, wo das nächste Tile generiert werden kann. Aus ihnen wird in jedem Schritt ein
         // zufälliges ausgewählt, wo ein Inselfeld hinkommt.
-        List<Point> nextTileOptions = new ArrayList<>();
-        // Generieren des Starttiles, dieses wird benutzt, um die Insel von hier aus aufzubauen.
-        int x = random.nextInt(Map.SIZE_X);
-        int y = random.nextInt(Map.SIZE_Y);
-        map.set(true, x, y);
-        nextTileOptions = new Point(x, y).getNeighbours(new Point(0, 0), new Point(Map.SIZE_X - 1, Map.SIZE_Y - 1));
+        List<Point> nextTileOptions = startPoint.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X - 1, Map.SIZE_Y - 1));
 
         int tilesGenerated = 0;
         while (tilesGenerated < MapTileProperties.values().length) {
