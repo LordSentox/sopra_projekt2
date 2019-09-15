@@ -1,6 +1,5 @@
 package de.sopra.javagame.control;
 
-import com.sun.xml.internal.bind.v2.runtime.output.StAXExStreamWriterOutput;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
@@ -12,9 +11,6 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 
 import java.io.*;
 import java.util.List;
@@ -120,20 +116,34 @@ public class ControllerChan {
      */
 
     public void loadGame(String loadGameName) {
-        this.gameName = loadGameName;
-        try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + this.gameName + ".save");
+        try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + loadGameName + ".save");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             this.javaGame = (JavaGame) objectInputStream.readObject();
+
+            // Falls das Spiel nicht bis zum letzten Zug vorgespult wurde, spule es vor.
+            while (this.javaGame.canRedo())
+                this.javaGame.redoAction();
+
+            // Setze die momentane Aktion auf die nächste des geladenen Spiels
+            // TODO: Hierfür sollte es vielleicht eine eigene Funktion im JavaGame geben, die es besser ersichtlich macht, was passiert
+            Action lastAction = this.javaGame.getPreviousAction();
+            this.javaGame.undoAction();
+            this.currentAction = this.javaGame.finishAction(lastAction);
+
+            // Spiel wurde erfolgreich geladen, der Name des momentanen Spiels kann gesetzt werden und
+            // das GUI kann informiert werden
+            this.gameName = loadGameName;
+            this.inGameViewAUI.refreshAll();
         } catch (FileNotFoundException e) {
             System.out.println("Es gab keine solche Datei.");
+            e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Beim Import ist ein Fehler aufgetreten!");
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             System.out.println("Die Klasse wurde nicht gefunden!");
+            e.printStackTrace();
         }
-        //schneide ".save" ab
-        this.gameName = this.gameName.substring(0, this.gameName.length() - 5);
-
     }
 
     /**
@@ -143,6 +153,8 @@ public class ControllerChan {
      */
 
     public void saveGame(String gameName) {
+        // FIXME: Funktioniert das wirklich so? Der Name müsste ja erst gesetzt worden sein. Vielleicht lieber auf null
+        // überprüfen?
         if (gameName.isEmpty()) {
             this.gameName = "current";
         } else {
@@ -151,7 +163,11 @@ public class ControllerChan {
         try (FileOutputStream fileOutputStream = new FileOutputStream(this.getGameName() + ".save");
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             objectOutputStream.writeObject(javaGame);
+
             //Wenn das Spiel beendet wurde, speichere es auch in den HighScores
+            // TODO: Sollte das Spiel wirklich hier gespeichert werden und nicht, wenn es beendet wird? Außerdem gibt es
+            // verschiedene Ordner für replays und für gespeicherte Spiele. Wenn es beendet wurde sollte es nur bei den
+            // replays, nicht bei den Spielen, die man weiterspielen kann landen.
             if (javaGame.getPreviousAction().isGameEnded()) {
                 while (javaGame.canUndo()) {
                     javaGame.undoAction();
@@ -165,8 +181,10 @@ public class ControllerChan {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Es gab keine solche Datei.");
+            e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Beim Export ist ein Fehler aufgetreten.");
+            e.printStackTrace();
         }
     }
 
@@ -176,6 +194,8 @@ public class ControllerChan {
     public void replayGame(String replayGameName) {
         inGameViewAUI.setIsReplayWindow(true);
         saveGame("");
+        // TODO: Bei der Erstellung des Strukturmodelles wurde noch keine Unterscheidung zwischen Replays und
+        // weiterspielbaren Spielen gemacht. Deshalb muss die loadGame/saveGame-Methode noch angepasst werden.
         loadGame(replayGameName);
         inGameViewAUI.refreshAll();
     }
@@ -184,23 +204,30 @@ public class ControllerChan {
      * continueGame setzt ein gespeichertes Spiel nach dem zuletzt ausgeführten Spielzug (vor dem Speichern) fort
      */
     public void continueGame() {
-        //Das Spiel mit Namen mapName + ".currentlyPlayed" im Orner SAVE_GAME_FOLDER und alles refreshen
-        try (FileInputStream fileInputStream = new FileInputStream("current.save");
+        //Das Spiel mit Namen mapName + ".save" im Data-Ordner laden und alles refreshen
+        try (FileInputStream fileInputStream = new FileInputStream("data/current.save");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             this.javaGame = (JavaGame) objectInputStream.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("Es gab keine solche Datei.");
+            e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Beim Import ist ein Fehler aufgetreten!");
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             System.out.println("Die Klasse wurde nicht gefunden!");
+            e.printStackTrace();
         }
+
+        // FIXME: Datei muss wahrscheinlich nicht gelöscht werden, da sie überschrieben werden kann und der letzte Save
+        // gerne behalten werden kann, falls das Spiel abstürzt etc.
         //lösche geladenes Spiel aus Speicher
         boolean delete = new File(gameName).delete();
         if (!delete) {
             System.out.println("Die Datei wurde nicht gelöscht!");
         }
         //schneide ".currentlyPlayed" ab
+        // FIXME: gameName wurde gar nicht gesetzt, nach Länge abschneiden ist nicht sicher. Lieber mittels Pattern oder gleich umgehen
         this.gameName = this.gameName.substring(0, this.gameName.length() - 16);
     }
 
