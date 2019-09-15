@@ -7,7 +7,7 @@ package de.sopra.javagame.util;
  * @version 05.09.2019
  * @since 05.09.2019
  */
-public class HighScore implements Comparable<HighScore>{
+public class HighScore implements Comparable<HighScore> {
 
     private String name;
     private String mapName;
@@ -33,10 +33,10 @@ public class HighScore implements Comparable<HighScore>{
         return mapName;
     }
 
-	public String getReplayname() {
-		return replayName;
-	}
-    
+    public String getReplayName() {
+        return replayName;
+    }
+
     public int compareTo(HighScore other) {
         return Integer.compareUnsigned(score, other.score);
     }
