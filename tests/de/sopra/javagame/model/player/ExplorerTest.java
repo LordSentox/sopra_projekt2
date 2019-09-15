@@ -65,12 +65,12 @@ public class ExplorerTest {
     public void legalMovesTest() {
 
         Set<Point> points = new HashSet<>();
+        points.add(new Point(5, 2));
         points.add(new Point(6, 3));
-        points.add(new Point(7, 4));
         Assert.assertEquals("Incorrect legal moves without special ability", points, new HashSet<>(action.getPlayer(PlayerType.EXPLORER).legalMoves(false)));
 
-        points.add(new Point(5, 3));
-        points.add(new Point(7, 3));
+        points.add(new Point(4, 2));
+        points.add(new Point(6, 2));
         Assert.assertEquals("Incorrect legal moves with special ability", points, new HashSet<>(action.getPlayer(PlayerType.EXPLORER).legalMoves(true)));
     }
 
