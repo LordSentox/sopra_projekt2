@@ -71,7 +71,7 @@ public class MapPane extends GridPane {
         if (e.getButton() == MouseButton.PRIMARY) {
             if(v.getHighlighted()){
                 System.out.println(x + " " + y);
-                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x - 1,y - 1), false);
+                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x, y), false);
                 System.out.println("ich sollte mich bewegen");
             }
         } else if (e.getButton() == MouseButton.SECONDARY){

@@ -5,7 +5,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapLoader;
+import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
@@ -109,7 +109,8 @@ public class GamePreparationsViewController extends AbstractViewController {
         //TODO Button disablen wenn die Bedingungen nicht erfüllt sind
         if(!playerList.isEmpty() && difficulty != null){
             changeState(ViewState.IN_GAME);
-            this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
+            // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
+            this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
         }
     }
         

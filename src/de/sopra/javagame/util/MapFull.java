@@ -28,10 +28,10 @@ public class MapFull extends Map<MapTile> {
             return null;
         }
 
-        for (int y = 0; y < raw.length; ++y) {
-            for (int x = 0; x < raw[y].length; ++x) {
-                if (raw[y][x] != null && raw[y][x].getProperties().getSpawn() == player) {
-                    return new Point(x - 1, y - 1);
+        for (int y = 0; y < SIZE_Y; ++y) {
+            for (int x = 0; x < SIZE_X; ++x) {
+                if (get(x, y) != null && get(x, y).getProperties().getSpawn() == player) {
+                    return new Point(x, y);
                 }
             }
         }
@@ -40,10 +40,10 @@ public class MapFull extends Map<MapTile> {
     }
 
     public Point getPositionForTile(MapTileProperties tileProperties) {
-        for (int y = 0; y < raw.length; ++y) {
-            for (int x = 0; x < raw[y].length; ++x) {
-                if (raw[y][x].getProperties() == tileProperties) {
-                    return new Point(x - 1, y - 1);
+        for (int y = 0; y < SIZE_Y; ++y) {
+            for (int x = 0; x < SIZE_X; ++x) {
+                if (get(x, y).getProperties() == tileProperties) {
+                    return new Point(x, y);
                 }
             }
         }

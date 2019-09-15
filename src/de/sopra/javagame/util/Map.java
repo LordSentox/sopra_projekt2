@@ -69,7 +69,7 @@ public abstract class Map<T> {
     }
 
     public void set(T value, int xPos, int yPos) {
-        this.raw[xPos + 1][yPos + 1] = value;
+        this.raw[yPos + 1][xPos + 1] = value;
     }
 
     public T[][] raw() {
