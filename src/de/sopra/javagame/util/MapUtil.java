@@ -2,18 +2,50 @@ package de.sopra.javagame.util;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
-import de.sopra.javagame.model.player.PlayerType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Enthält Helferfunktionen für Kartenerstellung und Kartenmanipulation
  */
 public class MapUtil {
-    public static boolean[][] generateRandomIsland() {
-        return null;
+    public static MapBlackWhite generateRandomIsland() {
+        Random random = new Random();
+        MapBlackWhite map = new MapBlackWhite();
+
+        // Die Optionen, wo das nächste Tile generiert werden kann. Aus ihnen wird in jedem Schritt ein
+        // zufälliges ausgewählt, wo ein Inselfeld hinkommt.
+        List<Point> nextTileOptions = new ArrayList<>();
+        // Generieren des Starttiles, dieses wird benutzt, um die Insel von hier aus aufzubauen.
+        int x = random.nextInt(Map.SIZE_X);
+        int y = random.nextInt(Map.SIZE_Y);
+        map.set(true, x, y);
+        nextTileOptions = new Point(x, y).getNeighbours(new Point(0, 0), new Point(Map.SIZE_X - 1, Map.SIZE_Y - 1));
+
+        int tilesGenerated = 0;
+        while (tilesGenerated < MapTileProperties.values().length) {
+            // Wähle das nächste Tile zufällig aus
+            int next = random.nextInt(nextTileOptions.size());
+            Point nextPos = nextTileOptions.get(next);
+            map.set(true, nextPos);
+
+            // Füge die Punkte, die mit diesem zusätlichene Punkt jetzt auch noch erreicht werden können in die
+            // bestehende Liste ein.
+            List<Point> neighbours = nextPos.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X - 1, Map.SIZE_Y - 1));
+            for (Point neighbour : neighbours) {
+                if (!map.get(neighbour) && !nextTileOptions.contains(neighbour)) {
+                    nextTileOptions.add(neighbour);
+                }
+            }
+
+            nextTileOptions.remove(next);
+            ++tilesGenerated;
+        }
+
+        return map;
     }
 
     public static boolean[][] generateRandomIsland(int seed) {
@@ -24,143 +56,93 @@ public class MapUtil {
      * Füllt die einfache Karte, die nur die Inselform enthält mit zufällig ausgewählten MapTiles und gibt die so
      * entstandene, spielbare Karte zurück.
      *
-     * @param tiles Die Inselform, die gefüllt werden soll
+     * @param blackWhiteMap Die Inselform, die gefüllt werden soll
      * @return Spielbare Karte
      */
-    public static MapTile[][] createAndFillMap(boolean[][] tiles) {
-        MapTile[][] mapTiles = new MapTile[tiles.length][12];
+    public static MapFull createAndFillMap(MapBlackWhite blackWhiteMap) {
+        MapFull full = new MapFull();
 
         Random random = new Random();
 
         // Damit Karten nicht öfters benutzt werden muss sich gemerkt werden, welche bereits benutzt wurden.
-        Boolean[] tilesUsed = new Boolean[24];
+        Boolean[] tilesUsed = new Boolean[MapTileProperties.values().length];
         Arrays.fill(tilesUsed, false);
         // Gehe durch alle tiles
-        for (int y = 0; y < tiles.length; ++y) {
-            for (int x = 0; x < tiles[y].length; ++x) {
+        for (int y = 0; y < Map.SIZE_Y; ++y) {
+            for (int x = 0; x < Map.SIZE_X; ++x) {
                 // Wenn es sich um eine Insel-Tile handelt muss sie mit einem zufälligen Tile gefüllt werden.
-                if (tiles[y][x]) {
-                    int nextTile = random.nextInt(24);
+                if (blackWhiteMap.get(x, y)) {
+                    int nextTile = random.nextInt(MapTileProperties.values().length);
                     do {
-                        nextTile = (nextTile + 1) % 24;
+                        nextTile = (nextTile + 1) % MapTileProperties.values().length;
                     } while (tilesUsed[nextTile]);
 
-                    mapTiles[y][x] = MapTile.fromNumber(nextTile);
+                    full.set(MapTile.fromNumber(nextTile), x, y);
                     tilesUsed[nextTile] = true;
 
                     // Beende die Funktion, wenn alle MapTiles benutzt wurden
                     if (!Arrays.asList(tilesUsed).contains(false)) {
-                        return mapTiles;
+                        return full;
                     }
                 }
             }
         }
 
         System.err.println("createAndFillMap wurde falsch benutzt. Die Insel besteht aus weniger als 24 Tiles.");
-        return mapTiles;
+        return full;
     }
 
     /**
-     * Gibt den Anfangspunkt der Spielerfigur auf der Karte zurück.
-     *
-     * @param tiles  Die Insel, auf der der Anfangspunkt gesucht wird.
-     * @param player Die Figur, dessen Anfangspunkt bestimmt werden soll.
-     * @return Der Anfangspunkt oder <code>null</code>, wenn kein Anfangspunkt für die Figur gefunden werden kann.
-     */
-    public static Point getPlayerSpawnPoint(MapTile[][] tiles, PlayerType player) {
-        if (player == PlayerType.NONE) {
-            return null;
-        }
-
-        for (int y = 0; y < tiles.length; ++y) {
-            for (int x = 0; x < tiles[y].length; ++x) {
-                if (tiles[y][x] != null && tiles[y][x].getProperties().getSpawn() == player) {
-                    return new Point(x, y);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Erstellt eine Karte aus den Daten wenn sie z.B. aus einer CSV-Datei gelesen wurden, wie sie für das KI-Turnier
-     * benutzt wird.
-     *
-     * @param numbers Die Kartendaten, nummernkodiert. -1 bedeutet eine leere Stelle, also Wasser.
-     * @return Die erstellte Karte, oder <code>null</code>, wenn die Nummerndaten nicht interpretiert werden konnten.
-     */
-    public static MapTile[][] createMapFromNumbers(int[][] numbers) {
-        // Gehe durch den numbers-array und fülle die MapTiles mit den den numbers entsprechenden Werten
-        MapTile[][] tiles = new MapTile[12][12];
-        for (int y = 0; y < numbers.length; ++y) {
-            tiles[y] = new MapTile[12];
-            for (int x = 0; x < numbers[y].length; ++x) {
-                if (numbers[y][x] != -1)
-                    tiles[y][x] = MapTile.fromNumber(numbers[y][x]);
-            }
-        }
-
-        return tiles;
-    }
-
-
-    /**
-     * Parst einen String als int[][], der als Karte interpretiert werden kann
+     * Parst einen String als voll gefüllte Karte
      *
      * @param toParse Die Eingabe aus der gelesen werden soll
-     * @return Die Nummern, die einzelnen Tiles entsprechen, bzw. -1, wo Wasser ist.
+     * @return Die gefüllte Karte
      */
-    public static int[][] readNumberMapFromString(String toParse) {
+    public static MapFull readFullMapFromString(String toParse) {
         String[][] map = splitCSVString(toParse);
 
-        // Set the width of the map to the maximum width present in the map and two for the buffer zone
-        Optional<Integer> maxLength = Arrays.stream(map).map(row -> row.length).max(Integer::compareTo);
-        Point size = new Point(maxLength.orElse(0), map.length);
-
-        // Erstelle eine leere Map mit Platz for einen leeren Rahmen
-        int[][] numbers = new int[size.yPos + 2][size.xPos + 2];
-        for (int[] line : numbers) {
-            Arrays.fill(line, -1);
-        }
+        // Erstelle eine leere Karte mit Platz für einen leeren Rahmen
+        MapFull full = new MapFull();
 
         // Fülle die Karte mit den aus dem String ausgelesenen Werten
         for (int y = 0; y < map.length; ++y) {
             for (int x = 0; x < map[y].length; ++x) {
+                if (x >= Map.SIZE_X || y >= Map.SIZE_Y) {
+                    System.err.println("Map konnte nicht eingelesen werden, da sie zu groß ist.");
+                    return null;
+                }
+
                 String sign = map[y][x].trim();
                 if (!sign.equals("-")) {
-                    // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
-                    numbers[y + 1][x + 1] = Integer.parseUnsignedInt(sign) % 24;
+                    final int number = Integer.parseUnsignedInt(sign) % MapTileProperties.values().length;
+                    full.set(MapTile.fromNumber(number), x, y);
                 }
             }
         }
 
-        return numbers;
+        return full;
     }
 
-    public static boolean[][] readBoolMapFromString(String toParse) {
+    public static MapBlackWhite readBlackWhiteMapFromString(String toParse) {
         String[][] map = splitCSVString(toParse);
 
-        // Set the width of the map to the maximum width present in the map and two for the buffer zone
-        Optional<Integer> maxLength = Arrays.stream(map).map(row -> row.length).max(Integer::compareTo);
-        Point size = new Point(maxLength.orElse(0), map.length);
-
-        // Erstelle eine leere Map mit Platz for einen leeren Rahmen
-        boolean[][] bools = new boolean[size.yPos + 2][size.xPos + 2];
-        for (boolean[] line : bools) {
-            Arrays.fill(line, false);
-        }
+        // Erstelle eine leere Karte
+        MapBlackWhite blackWhite = new MapBlackWhite();
 
         // Fülle die Karte mit den aus dem String ausgelesenen Werten
         for (int y = 0; y < map.length; ++y) {
             for (int x = 0; x < map[y].length; ++x) {
+                if (x >= Map.SIZE_X || y >= Map.SIZE_Y) {
+                    System.err.println("Map konnte nicht eingelesen werden, da sie zu groß ist.");
+                    return null;
+                }
+
                 String sign = map[y][x].trim();
-                // Indices werden um eins verschoben, damit der Rand um die Karte garantiert wird
                 if (sign.equalsIgnoreCase("x")) {
-                    bools[y + 1][x + 1] = true;
+                    blackWhite.set(true, x, y);
                 }
                 else if (sign.equals("-")) {
-                    bools[y + 1][x + 1] = false;
+                    blackWhite.set(false, y, x);
                 } else {
                     System.err.println("Karte ist korrumpiert und konnte nicht geladen werden");
                     return null;
@@ -168,19 +150,7 @@ public class MapUtil {
             }
         }
 
-        return bools;
-    }
-
-    public static Point getPositionForTile(MapTile[][] mapTiles, MapTileProperties tileProperties) {
-        for (int y = 0; y < mapTiles.length; ++y) {
-            for (int x = 0; x < mapTiles[y].length; ++x) {
-                if (mapTiles[y][x].getProperties() == tileProperties) {
-                    return new Point(x, y);
-                }
-            }
-        }
-
-        return null;
+        return blackWhite;
     }
 
     // Helferfunktionen ------------------------------------------------------------------------------------------------

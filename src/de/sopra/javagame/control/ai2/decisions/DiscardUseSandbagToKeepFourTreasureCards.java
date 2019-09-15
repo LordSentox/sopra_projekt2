@@ -5,7 +5,6 @@ import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Point;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
@@ -24,12 +23,12 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_SANDB
 @PreCondition(allTrue = {PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS, PLAYER_HAS_SANDBAGS_CARD})
 public class DiscardUseSandbagToKeepFourTreasureCards extends Decision {
     private Point drainable;
-    
+
     @Override
     public Decision decide() {
-        MapTile tile= control.anyTile(MapTileState.FLOODED);
+        MapTile tile = control.anyTile(MapTileState.FLOODED);
         if (tile != null) {
-            drainable= MapUtil.getPositionForTile(action().getTiles(), tile.getProperties());
+            drainable = action().getMap().getPositionForTile(tile.getProperties());
             return this;
         }
         return null;

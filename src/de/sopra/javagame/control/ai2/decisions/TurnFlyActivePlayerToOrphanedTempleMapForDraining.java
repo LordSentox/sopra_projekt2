@@ -34,7 +34,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
 
     @Override
-    public Decision decide() {      
+    public Decision decide() {
 
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
@@ -42,7 +42,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 
         return checkTemples(templeList) ? this : null;
     }
-    
+
     private boolean checkTemples(List<Pair<Point, MapTile>> temples){
         Point activePlayerPosition = player().getPosition();
         for (Pair<Point, MapTile> temple : temples) {
@@ -84,7 +84,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
             return true;
         }
         return false;
-        
+
     }
 
     @Override

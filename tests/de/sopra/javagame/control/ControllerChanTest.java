@@ -5,6 +5,8 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.Pair;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,9 +14,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,18 +29,17 @@ import static org.junit.Assert.fail;
 public class ControllerChanTest {
 
     private ControllerChan controllerChan;
-    private boolean[][] testMap;
+    private MapBlackWhite testMap;
     private TestDummy.InGameView inGameView;
 
     @Before
     public void setUp() throws IOException {
         this.controllerChan = TestDummy.getDummyControllerChan();
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
-        this.testMap = new boolean[12][12];
-        for (int y = 0; y < 12; ++y) {
-            for (int x = 0; x < 12; ++x) {
+        this.testMap = new MapBlackWhite();
+        for (int y = 0; y < Map.SIZE_Y; ++y) {
+            for (int x = 0; x < Map.SIZE_X; ++x) {
                 // Erstellen einer 6*4-Insel umgeben von Wasser
-                testMap[y][x] = x >= 2 && x < 8 && y >= 2 && y < 6;
+                testMap.set(x >= 1 && x < 7 && y >= 1 && y < 5, x, y);
             }
         }
 

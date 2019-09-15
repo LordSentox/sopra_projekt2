@@ -31,16 +31,16 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public Decision decide() {
-        
+
         List<Pair<Point, MapTile>> templeList = control.getTemples();
 
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
-        
-        return checkTemples(templeList) ? this : null;     
-        
+
+        return checkTemples(templeList) ? this : null;
+
     }
-    
+
     private boolean checkTemples(List<Pair<Point, MapTile>> temples){
         Point activePlayerPosition = player().getPosition();
         for (Pair<Point, MapTile> temple : temples) {

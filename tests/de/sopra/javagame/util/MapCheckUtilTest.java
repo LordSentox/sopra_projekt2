@@ -1,19 +1,28 @@
 package de.sopra.javagame.util;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.fail;
 
 public class MapCheckUtilTest {
     @Test
     public void checkMapValidity() throws IOException {
-        // Lade die Schwarz-Weißen Karten
-        String tooBig = new String(Files.readAllBytes(Paths.get("duke.java")), StandardCharsets.UTF_8);
+        // Teste mit unvollständiger map
+        MapBlackWhite map = new MapBlackWhite();
+        Assert.assertFalse("Unvolständige Karte wurde nicht erkannt", MapCheckUtil.checkMapValidity(map));
+
+        // Teste mit zu voller map
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                map.set(true, x, y);
+            }
+        }
+
+        // Teste unzusammenhängende map
+        fail("Nicht implementiert");
     }
 
     @Test

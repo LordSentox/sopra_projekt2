@@ -58,12 +58,12 @@ public class Navigator extends Player {
 
         // Ist das Feld, auf das der Spieler bewegt werden soll ein Inselfeld?
         Point newPosition = other.getPosition().add(direction);
-        MapTile destinationTile = this.action.getTile(newPosition);
+        MapTile destinationTile = this.action.getMap().get(newPosition);
         if (destinationTile == null || destinationTile.getState() == GONE) {
             return false;
         }
 
-        if (this.hasExtraPush)
+        if (!this.hasExtraPush)
             --this.actionsLeft;
         this.hasExtraPush = !this.hasExtraPush;
 

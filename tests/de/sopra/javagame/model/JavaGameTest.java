@@ -3,6 +3,7 @@ package de.sopra.javagame.model;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import org.junit.Assert;
@@ -19,7 +20,7 @@ import java.util.List;
 public class JavaGameTest {
 
     private ControllerChan controllerChan;
-    private MapTile[][] testMap;
+    private MapFull testMap;
     private String testMapString;
     private List<Pair<PlayerType, Boolean>> players;
 
@@ -27,8 +28,7 @@ public class JavaGameTest {
     public void setUp() throws Exception {
         controllerChan = TestDummy.getDummyControllerChan();
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+        this.testMap = MapUtil.readFullMapFromString(testMapString);
         players = new ArrayList<Pair<PlayerType, Boolean>>() {{
             add(new Pair<>(PlayerType.EXPLORER, false));
             add(new Pair<>(PlayerType.NAVIGATOR, true));
@@ -44,7 +44,7 @@ public class JavaGameTest {
         JavaGame javaGame = newGame.getLeft();
 
         Assert.assertEquals("Das neue Spiel sollte den gleichen MapNamen beinhalten", testMapString, javaGame.getMapName());
-        Assert.assertEquals("Das neue Spiel sollte die gleiche Map beinhalten", testMap, javaGame.getPreviousAction().getTiles());
+        Assert.assertEquals("Das neue Spiel sollte die gleiche Map beinhalten", testMap, javaGame.getPreviousAction().getMap());
         Assert.assertEquals("Das neue Spiel sollte den gleichen Schwierigkeitsgrad haben ", Difficulty.NOVICE, javaGame.getDifficulty());
 
         Action action = javaGame.getPreviousAction();
@@ -83,14 +83,14 @@ public class JavaGameTest {
         JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
         JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE,
                 Collections.emptyList());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void newGameTooManyPlayers() {
         players.add(new Pair<>(PlayerType.PILOT, false));
         //teste Erstellen mit 5+ Spielern
@@ -112,11 +112,13 @@ public class JavaGameTest {
         Assert.assertSame("Das Java-Game hätte einen neuen Previous Action haben sollen", javaGame.getPreviousAction(), currentAction);
         Assert.assertNotSame("Der neu erstellte Action hätte nicht gleich dem vorherigen sein dürfen", currentAction, nextAction);
 
-        //teste ob korrekr redo Stapel zurückgesetzt wird
-        controllerChan.getGameFlowController().undo();
-        controllerChan.getGameFlowController().undo();
+        nextAction = javaGame.finishAction(nextAction);
+        nextAction = javaGame.finishAction(nextAction);
+
+        //teste ob korrekt redo Stapel zurückgesetzt wird
+        javaGame.undoAction();
+        javaGame.undoAction();
         Assert.assertTrue("There should have been two redo turns", javaGame.canRedo());
-        currentAction = controllerChan.getCurrentAction();
         javaGame.finishAction(currentAction);
         Assert.assertFalse("There should have been no redo turns", javaGame.canRedo());
     }
@@ -171,7 +173,7 @@ public class JavaGameTest {
 
         secondNextAction.setGameWon(true);
         secondNextAction.setGameEnded(true);
-        secondNextAction = javaGame.finishAction(secondNextAction);
+        javaGame.finishAction(secondNextAction);
         Assert.assertEquals("Der score dieses Spiels hätte 120.000 sein müssen",
                 (1.0/turnCount * 10000.0 + (10000/turnCount * secondNextAction.getDiscoveredArtifacts().size())*actualDifficulty) + 100000,
                 javaGame.calculateScore(),

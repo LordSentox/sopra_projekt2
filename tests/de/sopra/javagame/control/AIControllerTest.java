@@ -7,6 +7,7 @@ import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import org.junit.Before;
@@ -40,7 +41,7 @@ public class AIControllerTest {
         aiControl = controllerChan.getAiController();
         aiControl.setAI(DECISION_BASED_AI); //getestet wird mit der DECISION_BASES_AI
         final String testMapString = new String(Files.readAllBytes(Paths.get("resources/maps/island_of_death.map")), StandardCharsets.UTF_8);
-        final boolean[][] tiles = MapUtil.readBoolMapFromString(testMapString);
+        final MapBlackWhite tiles = MapUtil.readBlackWhiteMapFromString(testMapString);
         List<Pair<PlayerType, Boolean>> players = new LinkedList<Pair<PlayerType, Boolean>>() {{
             add(new Pair<>(PlayerType.EXPLORER, true));
             add(new Pair<>(PlayerType.PILOT, true));
