@@ -168,6 +168,10 @@ public class JavaGame implements Serializable {
         return undoActions.peek();
     }
 
+    public int getUndoStackSize() {return this.undoActions.size();}
+
+    public int getRedoStackSize() {return this.redoActions.size();}
+
     public boolean canRedo() {
         return !redoActions.isEmpty();
     }

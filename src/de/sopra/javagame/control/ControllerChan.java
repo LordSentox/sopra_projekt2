@@ -1,5 +1,6 @@
 package de.sopra.javagame.control;
 
+import com.sun.xml.internal.bind.v2.runtime.output.StAXExStreamWriterOutput;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
@@ -11,8 +12,11 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
-import java.io.File;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -95,11 +99,11 @@ public class ControllerChan {
     /**
      * startNewGame erstellt ein neues JavaGame
      *
-     * @param map Die Karte mit der Inselform
+     * @param map        Die Karte mit der Inselform
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-        
+
     public void startNewGame(String mapName, MapBlackWhite map, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
         MapFull fullMap = MapUtil.createAndFillMap(map);
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
@@ -112,10 +116,23 @@ public class ControllerChan {
     /**
      * loadGame lädt ein gespeichertes JavaGame aus einer Datei
      *
-     * @param file ist die zu ladende Spieldatei
+     * @param loadGameName ist der Name der zu ladenden Spieldatei
      */
 
-    public void loadGame(File file) {
+    public void loadGame(String loadGameName) {
+        this.gameName = loadGameName;
+        try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + this.gameName);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            this.javaGame = (JavaGame) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Es gab keine solche Datei.");
+        } catch (IOException e) {
+            System.out.println("Beim Import ist ein Fehler aufgetreten!");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Die Klasse wurde nicht gefunden!");
+        }
+        //schneide ".save" ab
+        this.gameName = this.gameName.substring(0, this.gameName.length() - 5);
 
     }
 
@@ -126,22 +143,65 @@ public class ControllerChan {
      */
 
     public void saveGame(String gameName) {
-        this.gameName = gameName;
+        if (gameName.isEmpty()) {
+            this.gameName = "current";
+        } else {
+            this.gameName = gameName;
+        }
+        try (FileOutputStream fileOutputStream = new FileOutputStream(this.getGameName() + ".save");
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(javaGame);
+            //Wenn das Spiel beendet wurde, speichere es auch in den HighScores
+            if (javaGame.getPreviousAction().isGameEnded()) {
+                while (javaGame.canUndo()) {
+                    javaGame.undoAction();
+                }
+                try (FileOutputStream fileOutputStreamReplay =
+                     new FileOutputStream(HighScoresController.REPLAY_FOLDER + this.gameName + ".replay");
+                     ObjectOutputStream objectOutputStreamReplay =
+                     new ObjectOutputStream(fileOutputStreamReplay)) {
+                            objectOutputStream.writeObject(javaGame);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Es gab keine solche Datei.");
+        } catch (IOException e) {
+            System.out.println("Beim Export ist ein Fehler aufgetreten.");
+        }
     }
 
     /**
      * replayGame spielt ein beendetes Spiel ab, welches vorher geladen wurde
      */
-    public void replayGame() {
-        //Alle 10 Sekunden einen Zug Wiederholen bis das Spiel beendet ist
+    public void replayGame(String replayGameName) {
+        inGameViewAUI.setIsReplayWindow(true);
+        saveGame("");
+        loadGame(replayGameName);
+        inGameViewAUI.refreshAll();
     }
 
     /**
      * continueGame setzt ein gespeichertes Spiel nach dem zuletzt ausgeführten Spielzug (vor dem Speichern) fort
      */
     public void continueGame() {
-        //Das Spiel mit Namen mapName + ".aktuell" im Orner SAVE_GAME_FOLDER und alles refreshen
-
+        //Das Spiel mit Namen mapName + ".currentlyPlayed" im Orner SAVE_GAME_FOLDER und alles refreshen
+        try (FileInputStream fileInputStream = new FileInputStream("current.save");
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            this.javaGame = (JavaGame) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Es gab keine solche Datei.");
+        } catch (IOException e) {
+            System.out.println("Beim Import ist ein Fehler aufgetreten!");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Die Klasse wurde nicht gefunden!");
+        }
+        //lösche geladenes Spiel aus Speicher
+        boolean delete = new File(gameName).delete();
+        if (!delete) {
+            System.out.println("Die Datei wurde nicht gelöscht!");
+        }
+        //schneide ".currentlyPlayed" ab
+        this.gameName = this.gameName.substring(0, this.gameName.length() - 16);
     }
 
     public void finishAction() {

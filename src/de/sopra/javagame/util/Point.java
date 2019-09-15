@@ -1,11 +1,12 @@
 package de.sopra.javagame.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Point {
+public class Point implements Serializable {
     public int xPos;
     public int yPos;
 

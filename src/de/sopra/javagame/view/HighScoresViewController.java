@@ -27,10 +27,6 @@ public class HighScoresViewController extends AbstractViewController implements 
     ImageView mainPane;
     @FXML
     JFXComboBox mapSelectionBox;
-    private List<File> mapNameFileList;
-    private List<File> relpayNameFileList;
-    private final String REPLAY_GAMES_FOLDER = "data/highscores/replays";
-    private final String HIGHSCORES_FOLDER = "data/highscores/scores";
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());

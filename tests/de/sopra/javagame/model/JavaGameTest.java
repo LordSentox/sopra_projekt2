@@ -19,14 +19,12 @@ import java.util.List;
 
 public class JavaGameTest {
 
-    private ControllerChan controllerChan;
     private MapFull testMap;
     private String testMapString;
     private List<Pair<PlayerType, Boolean>> players;
 
     @Before
     public void setUp() throws Exception {
-        controllerChan = TestDummy.getDummyControllerChan();
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         this.testMap = MapUtil.readFullMapFromString(testMapString);
         players = new ArrayList<Pair<PlayerType, Boolean>>() {{

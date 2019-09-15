@@ -1,5 +1,6 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
@@ -10,7 +11,9 @@ import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.textures.TextureLoader;
+import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
@@ -50,6 +53,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @FXML
     ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
+    private Timeline timeline;
 
     public void init() {
         /* Set Background */
@@ -64,13 +68,19 @@ public class InGameViewController extends AbstractViewController implements InGa
         markerForSpinnerImageView.setImage(TextureLoader.getSpinnerMarker());
         markerForSpinnerImageView.setFitWidth(SPINNER_SIZE);
         markerForSpinnerImageView.getStyleClass().add("CardView");
-        
+
         initGridPane();
         initPlayerHands();
         initArtifactsFound();
-       
+
 
         refreshWaterLevel(4);
+
+        //setze Timeline für Replays
+        timeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
+            getGameWindow().getControllerChan().getGameFlowController().redo();
+            refreshAll();
+        }));
     }
 
     private void initArtifactsFound() {
@@ -100,23 +110,24 @@ public class InGameViewController extends AbstractViewController implements InGa
             handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
         });
 
-        IntStream.range(0, 28).forEach(item ->  {
+        IntStream.range(0, 28).forEach(item -> {
             artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
             artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-           
+
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
     }
 
-    private void initPlayerHands(){
+    private void initPlayerHands() {
         activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
         playerTwoTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
         playerThreeTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
     }
+
     public void rotateTurnSpinner(double degree) {
         RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1));
         rotateTransition.setToAngle(degree);
@@ -139,6 +150,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         System.out.println("juch, ich bin der specialindikator");
         getGameWindow().getControllerChan().getActivePlayerController().showSpecialAbility();
     }
+
     //TODO button zum abbrechen einbauen
     public void onSpecialAbilityCancelClicked() {
         getGameWindow().getControllerChan().getActivePlayerController().cancelSpecialAbility();
@@ -187,11 +199,16 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPlayClicked() {
-
+        ControllerChan controllerChan = getGameWindow().getControllerChan();
+        controllerChan.replayGame("");
+        //Alle 10 Sekunden einen Zug Wiederholen bis das Spiel beendet ist
+        timeline.setCycleCount(controllerChan.getJavaGame().getRedoStackSize());
+        timeline.setOnFinished(event -> setIsReplayWindow(false));
+        timeline.play();
     }
 
     public void onPauseClicked() {
-     
+        timeline.pause();
     }
 
     public void onSettingsClicked() {
@@ -226,7 +243,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void showNotification(String notification) {
-        
+
     }
 
     @Override
@@ -236,7 +253,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-        
+
         //DEBUG
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         mapPane.putPlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().xPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().yPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
@@ -244,13 +261,13 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshMovementOptions(List<Point> points) {
-        points.forEach(point -> mapPane.highlightMapTile(point,false));
+        points.forEach(point -> mapPane.highlightMapTile(point, false));
     }
 
     @Override
     public void refreshDrainOptions(List<Point> points) {
 
-        points.forEach(point -> mapPane.highlightMapTile(point,false));
+        points.forEach(point -> mapPane.highlightMapTile(point, false));
     }
 
     @Override
@@ -266,7 +283,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
-        if(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
+        if (getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
@@ -275,21 +292,21 @@ public class InGameViewController extends AbstractViewController implements InGa
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
                 index += 2;
-            }            
+            }
         } else {
             Action action = getGameWindow().getControllerChan().getCurrentAction();
             List<Player> players = action.getPlayers();
             GridPane pane = null;
-            
-            if(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
+
+            if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
                 pane = handOneCardGridPane;
-            if(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+            if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
                 pane = handTwoCardGridPane;
-            if(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+            if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
-            
+
             pane.getChildren().clear();
-            int index = 0;            
+            int index = 0;
             for (ArtifactCard card : cards) {
                 CardView v = new ArtifactCardView(card.getType(), PASSIVE_CARD_SIZE);
                 v.showFrontImage();
@@ -302,12 +319,12 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshArtifactsFound() {
         EnumSet<ArtifactType> artifacts = this.getGameWindow().getControllerChan().getCurrentAction().getDiscoveredArtifacts();
-        
+
         fireArtefactImageView.setEffect(artifacts.contains(ArtifactType.FIRE) ? null : DESATURATION);
         waterArtefactImageView.setEffect(artifacts.contains(ArtifactType.WATER) ? null : DESATURATION);
         earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
         airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
-        
+
         System.out.println(artifacts.contains(ArtifactType.FIRE));
         System.out.println(artifacts.contains(ArtifactType.WATER));
         System.out.println(artifacts.contains(ArtifactType.EARTH));
@@ -324,7 +341,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             artifactCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
-        
+
         List<ArtifactCard> discardPile = stack.getDiscardPile();
         int index = 0;
         artifactCardDicardGridPane.getChildren().clear();
@@ -333,7 +350,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             artifactCardDicardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index +=2;
+            index += 2;
         }
     }
 
@@ -355,7 +372,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index +=2;
+            index += 2;
         }
     }
 
@@ -373,24 +390,31 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshActivePlayer() {
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         List<Player> players = action.getPlayers();
-        
+
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
         playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
-        if(players.size() == 3){
+        if (players.size() == 3) {
             playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
-        } else if(players.size() == 4){
-            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));            
+        } else if (players.size() == 4) {
+            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
         }
     }
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
         switch (actionsLeft) {
-        case 1: this.rotateTurnSpinner(-144); break;
-        case 2: this.rotateTurnSpinner(-72); break;
-        case 3: this.rotateTurnSpinner(0);break;
-        default: this.rotateTurnSpinner(0);
-            break;
+            case 1:
+                this.rotateTurnSpinner(-144);
+                break;
+            case 2:
+                this.rotateTurnSpinner(-72);
+                break;
+            case 3:
+                this.rotateTurnSpinner(0);
+                break;
+            default:
+                this.rotateTurnSpinner(0);
+                break;
         }
     }
 
@@ -407,6 +431,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void showTip(ActionQueue queue) {
         // TODO Auto-generated method stub
-        
+
     }
 }

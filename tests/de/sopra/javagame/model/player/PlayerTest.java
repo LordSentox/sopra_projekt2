@@ -26,9 +26,6 @@ public class PlayerTest {
         this.testMap = MapUtil.readFullMapFromString(testMapString);
     }
 
-    int PilotStart = 1;
-    int NavigatorStart = 12;
-
     @Test
     public void legalMoves() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
@@ -39,7 +36,6 @@ public class PlayerTest {
         Player pilot = action.getPlayers().get(0);
         Player navigator = action.getPlayers().get(1);
         Point pilotPos = testMap.getPlayerSpawnPoint(PlayerType.PILOT);
-        Point navigatorPos = testMap.getPlayerSpawnPoint(PlayerType.PILOT);
 
         // teste Rückgabe von legalMoves mit 4 trockenen Inselfeldern
         List<Point> legalMovesPilotNoSpecial = pilot.legalMoves(false);
@@ -94,9 +90,7 @@ public class PlayerTest {
                 this.testMap);
 
         Player pilot = action.getPlayers().get(0);
-        Player navigator = action.getPlayers().get(1);
         Point pilotPos = testMap.getPlayerSpawnPoint(PlayerType.PILOT);
-        Point navigatorPos = testMap.getPlayerSpawnPoint(PlayerType.PILOT);
 
         assertEquals("", 3, pilot.getActionsLeft());
 

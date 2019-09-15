@@ -32,7 +32,6 @@ public class InGameUserController {
     public void playHelicopterCard(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players) {
         Action currentAction = controllerChan.getCurrentAction();
         List<ArtifactCard> handCards = currentAction.getPlayer(sourcePlayer).getHand();
-        Point heliPoint = currentAction.getMap().getPlayerSpawnPoint(PlayerType.PILOT);
         //Falls sich am handCardIndex des sourcePlayers keine Helicopter-Karte befindet war der Aufruf ungültig
         if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null || handCards.get(handCardIndex).getType() != ArtifactCardType.HELICOPTER) {
             throw new IllegalStateException("Es wurde keine Helikopter-Karte übergeben " +
@@ -70,8 +69,6 @@ public class InGameUserController {
             currentPlayer.setPosition(flightRoute.getRight());
             controllerChan.getInGameViewAUI().refreshPlayerPosition(currentPlayer.getPosition(), currentPlayer.getType());
         }
-
-        Point hartmuht = controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER).getPosition();
         controllerChan.finishAction();
     }
 

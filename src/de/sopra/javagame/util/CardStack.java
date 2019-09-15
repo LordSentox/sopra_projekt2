@@ -4,6 +4,7 @@ import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.Copyable;
 import de.sopra.javagame.model.FloodCard;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
  * <p>
  * Ein CardStack implementiert einen Zieh- sowie einen Ablagestapel eines Kartentyps.
  */
-public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> implements Copyable<CardStack<T>> {
+public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> implements Copyable<CardStack<T>>, Serializable {
 
     private Stack<T> drawStack;
 
