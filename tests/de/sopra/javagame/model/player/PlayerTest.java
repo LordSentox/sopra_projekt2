@@ -117,7 +117,7 @@ public class PlayerTest {
         //teste pilot bewegen ohne Special, gültiges Ziel, zwei GONE
         testMap.get(pilotPos.add(UP)).flood();
         testMap.get(pilotPos.add(DOWN)).flood();
-        destination = oldPilotPos.add(DOWN);
+        destination = oldPilotPos.add(RIGHT);
         pilot = action.getActivePlayer();
         assertTrue("Der Pilot hätte sich bewegen dürfen müssen", pilot.move(destination, true, false));
         assertEquals("Der Pilot hätte laufen müssen", destination, pilot.getPosition());
