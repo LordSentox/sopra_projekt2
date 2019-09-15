@@ -3,13 +3,14 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.TestDummy.InGameView;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.model.player.Engineer;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,112 +27,20 @@ public class ActivePlayerControllerTest {
 
     private ControllerChan controllerChan;
     private ActivePlayerController activePlayerController;
-    private JavaGame javaGame;
-    private int[][] testMapNumbers;
-    private MapTile[][] testMap;
-    private List<Player> moveablePlayers;
-    private MapController mapController;
+    private MapFull testMap;
     private Action action;
-    private ArtifactCard fireCard;
-    private ArtifactCard waterCard;
-    private ArtifactCard earthCard;
-    private ArtifactCard airCard;
-    private ArtifactCard sandCard;
-    private ArtifactCard heliCard;
-    private Courier courier;
-    private Explorer explorer;
-    private Navigator navigator;
-    private Pilot pilot;
-    private CardStack<ArtifactCard> artifactCardStack;
-    private List<ArtifactCard> handCardsExpected;
     private List<Pair<PlayerType, Boolean>> players;
 
     private InGameView inGameView;
 
-    public void setUp() throws IOException {
-        controllerChan = TestDummy.getDummyControllerChan();
-        activePlayerController = controllerChan.getActivePlayerController();
-        inGameView = (InGameView) controllerChan.getInGameViewAUI();
-        javaGame = controllerChan.getJavaGame();
-        action = controllerChan.getCurrentAction();
-
-        boolean [][] tiles = new boolean [12][12];
-        for (int y = 1; y < 3; y++) {
-            for (int x = 1; x < tiles[y].length-1; x++) {
-                tiles[y][x] = true;
-            }
-        }
-        for (int x = 1; x < 5; x++) {
-            tiles[3][x] = true;
-        }
-        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap", new String[]{})), StandardCharsets.UTF_8);
-        testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
-        players = Arrays.asList(
-                new Pair<>(PlayerType.COURIER, false),
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false));
-        controllerChan.startNewGame("TestMap", tiles, players, Difficulty.NORMAL);
-        mapController = controllerChan.getMapController();
-
-        artifactCardStack = action.getArtifactCardStack();
-        List<ArtifactCard> cardList = artifactCardStack.draw(28, false);
-
-        for (ArtifactCard cur : cardList) {
-            if (fireCard != null && waterCard != null && earthCard != null && airCard != null && sandCard != null && heliCard != null) {
-                break;
-            }
-
-            if (cur.getType() == ArtifactCardType.FIRE) {
-                fireCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.WATER) {
-                waterCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.EARTH) {
-                earthCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.AIR) {
-                airCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.SANDBAGS) {
-                sandCard = cur;
-            }
-            if (cur.getType() == ArtifactCardType.HELICOPTER) {
-                heliCard = cur;
-            }
-        }
-
-        pilot = new Pilot("pilot", new Point(4, 2), action);
-        courier = new Courier("courier", new Point(4, 2), action);
-        explorer = new Explorer("explorer", new Point(5, 2), action);
-        navigator = new Navigator("navigator", new Point(4, 2), action);
-
-        handCardsExpected = new ArrayList<>();
-        explorer.getHand().add(fireCard);
-        handCardsExpected.add(fireCard);
-        explorer.getHand().add(waterCard);
-        handCardsExpected.add(waterCard);
-        explorer.getHand().add(earthCard);
-        handCardsExpected.add(earthCard);
-        explorer.getHand().add(airCard);
-        handCardsExpected.add(airCard);
-
-
-        moveablePlayers = new ArrayList<Player>();
-        moveablePlayers.add(navigator);
-        moveablePlayers.add(courier);
-    }
-
     @Before
-    public void setUp2() throws Exception {
+    public void setUp() throws Exception {
         controllerChan = TestDummy.getDummyControllerChan();
         activePlayerController = controllerChan.getActivePlayerController();
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
 
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+        this.testMap = MapUtil.readFullMapFromString(testMapString);
 
         players = Arrays.asList(
                 new Pair<>(PlayerType.COURIER, false),
@@ -143,7 +52,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
@@ -212,9 +120,9 @@ public class ActivePlayerControllerTest {
 
         activePlayerController.showMovements(true);
         movementPoints = inGameView.getMovementPoints();
-        for (int y = 1; y < testMap.length - 1; y++) {
-            for (int x = 1; x < testMap[y].length - 1; x++) {
-                MapTile tile = testMap[y][x];
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                MapTile tile = testMap.get(x, y);
                 if (tile != null && tile.getState() != MapTileState.FLOODED && !new Point(x, y).equals(playerPos.getLocation())) {
                     Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", x, y), movementPoints.contains(new Point(x, y)));
                 }
@@ -228,9 +136,9 @@ public class ActivePlayerControllerTest {
     public void testShowDrainOptions() {
         Player activePlayer = action.getActivePlayer();
         Point playerPos = activePlayer.getPosition();
-        testMap[3][3].flood();
-        testMap[3][5].flood();
-        testMap[4][7].flood();
+        testMap.get(2, 2).flood();
+        testMap.get(4, 2).flood();
+        testMap.get(6, 3).flood();
 
 
         assertSame(activePlayer.getType(), PlayerType.COURIER);
@@ -259,9 +167,10 @@ public class ActivePlayerControllerTest {
         Player activePlayer = action.getActivePlayer();
         Point playerPos = activePlayer.getPosition();
 
-        testMap[4][6].flood();
-        testMap[2][5].flood();
-        printMap(testMap);
+        testMap.get(5, 3).flood();
+        testMap.get(4, 1).flood();
+
+        printMap(testMap.raw());
 
         assertSame(activePlayer.getType(), PlayerType.COURIER);
         activePlayerController.showSpecialAbility();
@@ -275,13 +184,13 @@ public class ActivePlayerControllerTest {
         Assert.assertEquals("Explorer not on correct spawn location", new Point(6, 4), playerPos);
         activePlayerController.showSpecialAbility();
         List<Point> expectedDrainables = adjacentPoints(playerPos, true).stream()
-                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() == MapTileState.FLOODED)
+                .filter(p -> testMap.get(p) != null && testMap.get(p).getState() == MapTileState.FLOODED)
                 .collect(Collectors.toList());
         assertFalse("Dry tiles included in drainable positions. Must only be flooded", inGameView.getDrainPoints().size() > expectedDrainables.size());
         assertTrue("Explorer drainable tiles not displayed correctly", expectedDrainables.containsAll(inGameView.getDrainPoints()) && inGameView.getDrainPoints().containsAll(expectedDrainables));
         assertTrue("Tile explorer is standing on, not marked as drainable", expectedDrainables.contains(playerPos));
         List<Point> expectedMovePoints = adjacentPoints(playerPos, true);
-        assertTrue("Explorer drainable tiles not displayed correctly", expectedMovePoints.containsAll(inGameView.getMovementPoints()) && inGameView.getMovementPoints().containsAll(moveablePlayers));
+        assertTrue("Explorer drainable tiles not displayed correctly", expectedMovePoints.containsAll(inGameView.getMovementPoints()) && inGameView.getMovementPoints().containsAll(expectedMovePoints));
 
 
         activePlayerController.cancelSpecialAbility();
@@ -301,9 +210,9 @@ public class ActivePlayerControllerTest {
         assertSame(activePlayer.getType(), PlayerType.PILOT);
         activePlayerController.showSpecialAbility();
         List<Point> movementPoints = inGameView.getMovementPoints();
-        for (int y = 1; y < testMap.length - 1; y++) {
-            for (int x = 1; x < testMap[y].length - 1; x++) {
-                MapTile tile = testMap[y][x];
+        for (int y = 0; y < Map.SIZE_Y; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                MapTile tile = testMap.get(x, y);
                 if (tile != null && tile.getState() != MapTileState.FLOODED && !new Point(x, y).equals(playerPos.getLocation())) {
                     Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", x, y), movementPoints.contains(new Point(x, y)));
                 }
@@ -325,7 +234,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
@@ -359,11 +267,11 @@ public class ActivePlayerControllerTest {
         Player activePlayer = action.getActivePlayer();
         Point playerPos = activePlayer.getPosition();
 
-        testMap[4][6].flood();
-        testMap[4][7].flood();
-        testMap[3][6].flood();
-        testMap[2][5].flood();
-        printMap(testMap);
+        testMap.get(5, 3).flood();
+        testMap.get(6, 3).flood();
+        testMap.get(5, 2).flood();
+        testMap.get(4, 1).flood();
+        printMap(testMap.raw());
 
         action.nextPlayerActive();
 
@@ -374,12 +282,12 @@ public class ActivePlayerControllerTest {
         activePlayerController.showSpecialAbility();
         activePlayerController.cancelSpecialAbility();
         List<Point> expectedDrainables = adjacentPoints(playerPos, true).stream()
-                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() == MapTileState.FLOODED)
+                .filter(p -> testMap.get(p) != null && testMap.get(p).getState() == MapTileState.FLOODED)
                 .collect(Collectors.toList());
         expectedDrainables.add(playerPos);
         assertEquals("Incorrect amount of drainable tiles for explorer", 3, expectedDrainables.size());
         List<Point> expectedMovePoints = adjacentPoints(playerPos, true).stream()
-                .filter(p -> testMap[p.yPos][p.xPos] != null && testMap[p.yPos][p.xPos].getState() != MapTileState.GONE)
+                .filter(p -> testMap.get(p) != null && testMap.get(p).getState() != MapTileState.GONE)
                 .collect(Collectors.toList());
         assertEquals("Explorer incorrect amount of move tiles", 4, expectedMovePoints.size());
 
@@ -406,7 +314,6 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
@@ -509,7 +416,7 @@ public class ActivePlayerControllerTest {
     public void testMove() throws Exception {
         Player activePlayer = action.getActivePlayer();
 
-        printMap(testMap);
+        printMap(testMap.raw());
 
         System.out.println(activePlayer.getActionsLeft());
 
@@ -532,18 +439,17 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
 
-        testMap[3][6].flood();
-        testMap[3][7].flood();
-        testMap[3][7].flood();
+        testMap.get(5, 2).flood();
+        testMap.get(6, 2).flood();
+        testMap.get(6, 2).flood();
 
         activePlayer = action.getActivePlayer();
 
-        printMap(testMap);
+        printMap(testMap.raw());
 
         assertEquals(activePlayer.getType(), PlayerType.DIVER);
         assertEquals(activePlayer.getPosition(), new Point(5, 3));
@@ -612,20 +518,19 @@ public class ActivePlayerControllerTest {
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();
-        javaGame = controllerChan.getJavaGame();
 
         inGameView = (InGameView) controllerChan.getInGameViewAUI();
         action.getActivePlayer().setActionsLeft(3);
 
-        testMap[3][7].flood();
-        testMap[3][3].flood();
-        testMap[3][2].flood();
-        testMap[2][4].flood();
-        testMap[2][4].flood();
-        testMap[2][1].flood();
-        testMap[3][5].flood();
+        testMap.get(6, 2).flood();
+        testMap.get(2, 2).flood();
+        testMap.get(1, 2).flood();
+        testMap.get(3, 1).flood();
+        testMap.get(1, 2).flood();
+        testMap.get(0, 1).flood();
+        testMap.get(4, 2).flood();
 
-        printMap(testMap);
+        printMap(testMap.raw());
 
         Player activePlayer = action.getActivePlayer();
         activePlayer.setActionsLeft(3);
@@ -634,10 +539,10 @@ public class ActivePlayerControllerTest {
         assertEquals(activePlayer.getType(), PlayerType.NAVIGATOR);
         assertEquals(activePlayer.getPosition(), new Point(2, 3));
         activePlayerController.drain(new Point(1, 2));
-        assertEquals("Invalid tile was drained by Navigator", MapTileState.FLOODED, testMap[2][1].getState());
+        assertEquals("Invalid tile was drained by Navigator", MapTileState.FLOODED, testMap.get(0, 1).getState());
         assertEquals("Navigator used action despite not draining tile", 3, activePlayer.getActionsLeft());
         activePlayerController.drain(new Point(2, 3));
-        assertEquals("Tile which the Navigator was standing on was not drained by Navigator", MapTileState.DRY, testMap[3][2].getState());
+        assertEquals("Tile which the Navigator was standing on was not drained by Navigator", MapTileState.DRY, testMap.get(1, 2).getState());
         assertEquals("Navigator did not use action despite draining tile", 2, activePlayer.getActionsLeft());
 
 
@@ -648,10 +553,10 @@ public class ActivePlayerControllerTest {
         assertEquals(activePlayer.getType(), PlayerType.EXPLORER);
         assertEquals(activePlayer.getPosition(), new Point(6, 4));
         activePlayerController.drain(new Point(6, 4));
-        assertEquals("Dry tile was modified by draining", MapTileState.DRY, testMap[4][6].getState());
+        assertEquals("Dry tile was modified by draining", MapTileState.DRY, testMap.get(5, 3).getState());
         assertEquals("Explorer used action despite not draining tile", 3, activePlayer.getActionsLeft());
         activePlayerController.drain(new Point(7, 3));
-        assertEquals("Valid tile was not drained by Explorer", MapTileState.DRY, testMap[3][7].getState());
+        assertEquals("Valid tile was not drained by Explorer", MapTileState.DRY, testMap.get(6, 2).getState());
         assertEquals("Explorer did not use action despite draining tile", 2, activePlayer.getActionsLeft());
 
 
@@ -662,14 +567,14 @@ public class ActivePlayerControllerTest {
         assertEquals(activePlayer.getType(), PlayerType.ENGINEER);
         assertEquals(activePlayer.getPosition(), new Point(4, 3));
         activePlayerController.drain(new Point(3, 3));
-        assertEquals("Valid tile was not drained by Engineer", MapTileState.DRY, testMap[3][3].getState());
+        assertEquals("Valid tile was not drained by Engineer", MapTileState.DRY, testMap.get(2, 2).getState());
 
         activePlayerController.drain(new Point(4, 2));
-        assertEquals("Engineer drained gone tile", MapTileState.GONE, testMap[2][4].getState());
+        assertEquals("Engineer drained gone tile", MapTileState.GONE, testMap.get(3, 1).getState());
         assertTrue("Engineer wasted extra drain on gone tile", ((Engineer) activePlayer).hasExtraDrain());
 
         activePlayerController.drain(new Point(5, 3));
-        assertEquals("Engineer did not drain valid tile", MapTileState.DRY, testMap[3][5].getState());
+        assertEquals("Engineer did not drain valid tile", MapTileState.DRY, testMap.get(4, 2).getState());
         assertEquals("Engineer did not use correct amount of actions", 2, activePlayer.getActionsLeft());
         assertFalse("Engineer still has extra drain after draining 2 tiles", ((Engineer) activePlayer).hasExtraDrain());
 
@@ -688,11 +593,7 @@ public class ActivePlayerControllerTest {
     }
 
     private static List<Point> adjacentPoints(Point point, boolean diagonal) {
-        List<Point> points = new ArrayList<>();
-        points.add(new Point(point.xPos, point.yPos - 1));
-        points.add(new Point(point.xPos, point.yPos + 1));
-        points.add(new Point(point.xPos - 1, point.yPos));
-        points.add(new Point(point.xPos + 1, point.yPos));
+        List<Point> points = new ArrayList<>(point.getNeighbours());
 
         if (diagonal) {
             points.add(new Point(point.xPos - 1, point.yPos - 1));

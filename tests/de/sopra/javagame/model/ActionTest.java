@@ -1,6 +1,8 @@
 package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import org.junit.Assert;
@@ -25,13 +27,12 @@ import static org.junit.Assert.*;
  * @since 05.09.2019
  */
 public class ActionTest {
-    private MapTile[][] testMap;
+    private MapFull testMap;
 
     @Before
     public void setUp() throws Exception {
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        int[][] testMapNumbers = MapUtil.readNumberMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+        this.testMap =  MapUtil.readFullMapFromString(testMapString);
     }
 
     @Test
@@ -45,11 +46,11 @@ public class ActionTest {
 
         Assert.assertEquals(0, action.getActivePlayerIndex());
         Assert.assertEquals(28, action.getArtifactCardStack().size());
-        Assert.assertEquals("", action.getDescription());
+        Assert.assertEquals("Spielstart", action.getDescription());
         Assert.assertEquals(new HashSet(), action.getDiscoveredArtifacts());
         Assert.assertEquals(4, action.getPlayers().size());
         Assert.assertEquals(TurnState.FLOOD, action.getState());
-        Assert.assertArrayEquals(this.testMap, action.getTiles());
+        Assert.assertArrayEquals(this.testMap.raw(), action.getMap().raw());
         Assert.assertEquals(0, action.getWaterLevel().getLevel());
         Assert.assertEquals(24, action.getFloodCardStack().size());
 
@@ -109,7 +110,7 @@ public class ActionTest {
                 this.testMap);
         Explorer explorer = (Explorer) action.getPlayer(PlayerType.EXPLORER);
         Navigator navigator = (Navigator) action.getPlayer(PlayerType.NAVIGATOR);
-        explorer.setPosition(MapUtil.getPlayerSpawnPoint(testMap, PlayerType.NAVIGATOR));
+        explorer.setPosition(testMap.getPlayerSpawnPoint(PlayerType.NAVIGATOR));
 
         //test mit beide stehen auf dem gleichen Feld, keine Hand zu voll
         explorer.getHand().add(fireCard);
@@ -187,7 +188,7 @@ public class ActionTest {
         EnumSet<ArtifactType> discoveredArtifactsOriginal = action.getDiscoveredArtifacts();
         List<Player> playersOriginal = action.getPlayers();
         Enum<TurnState> stateOriginal = action.getState();
-        MapTile[][] tilesOriginal = action.getTiles();
+        MapFull tilesOriginal = action.getMap();
 
         //inhaltliche Gleichheit
         assertEquals("Kopie sollte gleichen aktiven Spieler halten", activePlayerOriginal, actionCopy.getActivePlayerIndex());
@@ -199,9 +200,9 @@ public class ActionTest {
                     action.getPlayers().get(i).getType());
         }
         assertEquals("Kopie sollte gleichen Status haben", stateOriginal, actionCopy.getState());
-        for (int i = 0; i < tilesOriginal.length; i++) {
-            for (int j = 0; j < tilesOriginal[i].length; j++) {
-                assertEquals("Inhalt der Karte sollte gleich sein", tilesOriginal[i][j], actionCopy.getTiles()[i][j]);
+        for (int i = 0; i < Map.SIZE_Y; i++) {
+            for (int j = 0; j < Map.SIZE_X; j++) {
+                assertEquals("Inhalt der Karte sollte gleich sein", tilesOriginal.get(j, i), actionCopy.getMap().get(j, i));
             }
         }
 
@@ -209,7 +210,7 @@ public class ActionTest {
         assertNotSame("Kopie sollte andere gleiche Beschreibung halten", descriptionOriginal, actionCopy.getDescription());
         assertNotSame("Kopie sollte andere gleiche gefundene Artefakte halten", discoveredArtifactsOriginal, actionCopy.getDiscoveredArtifacts());
         assertNotSame("Kopie sollte andere gleich Liste enthalten", playersOriginal, actionCopy.getPlayers());
-        assertNotSame("Kopie sollte andere gleiche Karte halten", tilesOriginal, actionCopy.getTiles());
+        assertNotSame("Kopie sollte andere gleiche Karte halten", tilesOriginal, actionCopy.getMap());
 
 
         //teste ob Änderungen an Copy unabhängig vom Original sind
@@ -227,6 +228,6 @@ public class ActionTest {
                     action.getPlayers().get(i).getType());
         }
         assertNotEquals("Kopie sollte nicht mehr gleichen Status haben", stateOriginal, actionCopy.getState());
-        assertEquals("Kopie sollte gleiche Karte halten", tilesOriginal, actionCopy.getTiles());
+        assertEquals("Kopie sollte gleiche Karte halten", tilesOriginal, actionCopy.getMap());
     }
 }

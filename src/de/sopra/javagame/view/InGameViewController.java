@@ -1,13 +1,7 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ai.ActionQueue;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileProperties;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
@@ -240,7 +234,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshActivePlayer();
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
-        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getTiles());
+        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         
         //DEBUG
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));

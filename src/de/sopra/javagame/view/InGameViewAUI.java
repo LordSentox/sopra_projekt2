@@ -3,14 +3,12 @@ package de.sopra.javagame.view;
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
 
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -67,7 +65,6 @@ public interface InGameViewAUI {
     /**
      * aktualisiert die Anzeige der gefundenen Artefakte. Gefundene Artefakte sind nicht mehr ausgegraut.
      *
-     * @param artifacts Array der Größe 4, index gibt Art des Artefakt an, wenn true ist es gefunden
      */
     void refreshArtifactsFound();
 

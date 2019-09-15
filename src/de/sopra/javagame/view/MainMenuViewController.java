@@ -1,12 +1,6 @@
 package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXButton;
-
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapLoader;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -16,9 +10,6 @@ import javafx.stage.Stage;
 
 import static de.sopra.javagame.view.abstraction.ViewState.HIGH_SCORES;
 import static de.sopra.javagame.view.abstraction.ViewState.SETTINGS;
-
-import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  * GUI für das Hauptfenster

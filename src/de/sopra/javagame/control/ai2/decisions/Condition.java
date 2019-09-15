@@ -122,7 +122,7 @@ public enum Condition implements ICondition {
         @Override
         public boolean isTrue(Decision decision) {
             return decision.control.getMinimumActionsNeededToReachTarget
-                    (decision.player().getPosition(), decision.control.getTile(PlayerType.PILOT).getLeft()) < 7;
+                    (decision.player().getPosition(), decision.control.getTile(PlayerType.PILOT).getLeft(), decision.player().getType()) < 7;
         }
     }
 

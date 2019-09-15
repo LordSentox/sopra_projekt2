@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.model.MapTileState.DRY;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
@@ -54,8 +55,17 @@ public abstract class Player implements Copyable<Player> {
 
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> moves = this.position.getNeighbours();
+        List <Point> legalTiles = new ArrayList<>();
+        for (Point currentPoint : moves) {
+            MapTile tile = this.action.getMap().get(currentPoint);
+            if (tile != null && tile.getState() != GONE) {
+                legalTiles.add(currentPoint);
+            }
+
+        }
         moves = moves.stream().filter(point -> {
-            MapTile tile = this.action.getTile(point);
+            MapTile tile = this.action.getMap().get(point);
+            //System.out.println(tile.getProperties().getName());
             return tile != null && tile.getState() != GONE;
         }).collect(Collectors.toList());
 
@@ -71,10 +81,9 @@ public abstract class Player implements Copyable<Player> {
      *                    abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
-    // FIXME: Warum brauchen wir costsAction?!? Ist es nicht immer true?
     public boolean move(Point destination, boolean costsAction, boolean specialActive) {
-        List<Point> legelMovement = legalMoves(specialActive);
-        if (actionsLeft < 1 || !legelMovement.contains(destination)) {
+        List<Point> legalMovement = legalMoves(specialActive);
+        if ((costsAction && actionsLeft < 1) || !legalMovement.contains(destination)) {
             return false;
         } else {
             this.setPosition(destination);
@@ -116,7 +125,10 @@ public abstract class Player implements Copyable<Player> {
         // Entferne alle Positionen, wo die Map eigentlich keine Felder hat, oder sie nicht mehr trockengelegt werden
         // können
         // FIXME: Das wird bereits bei legalMoves getestet. Wie ist es besser?
-        drainable = drainable.stream().filter(point -> this.action.getTile(point) != null && this.action.getTile(point).getState() != GONE).collect(Collectors.toList());
+        drainable = drainable.stream().filter(point ->
+                this.action.getMap().get(point) != null &&
+                        this.action.getMap().get(point).getState() != GONE &&
+                        this.action.getMap().get(point).getState() != DRY).collect(Collectors.toList());
 
         return drainable;
     }
@@ -134,14 +146,14 @@ public abstract class Player implements Copyable<Player> {
             return false;
         }
 
-        MapTile toDrain = this.action.getTile(position);
+        MapTile toDrain = this.action.getMap().get(position);
 
         if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
             return false;
         }
         
         // Muss überhaupt noch etwas getan werden?
-        if (toDrain.getState() == MapTileState.DRY) {
+        if (toDrain.getState() == DRY) {
             return false;
         } else {
             toDrain.drain();
@@ -158,7 +170,7 @@ public abstract class Player implements Copyable<Player> {
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
     public ArtifactType collectArtifact() {
-        MapTile mapTile = this.action.getTile(this.position);
+        MapTile mapTile = this.action.getMap().get(this.position);
         ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
 
         // Abbrechen, falls hier gar kein Artefakt versteckt ist.
@@ -197,10 +209,10 @@ public abstract class Player implements Copyable<Player> {
      */
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList<>();
-        MapTile mapTile = this.action.getTiles()[position.yPos][position.xPos];
+        MapTile mapTile = this.action.getMap().get(position);
         List<Player> players = action.getPlayers();
         for (Player player : players) {
-            if (mapTile == this.action.getTiles()[player.position.yPos][player.position.xPos] && player != this) {
+            if (mapTile == this.action.getMap().get(player.position) && player != this) {
                 receivers.add(player.getType());
             }
         }

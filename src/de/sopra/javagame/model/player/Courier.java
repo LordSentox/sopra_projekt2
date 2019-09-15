@@ -15,9 +15,7 @@ import java.util.List;
 public class Courier extends Player {
 
     public Courier(String name, Point position, Action action) {
-        super(PlayerType.COURIER, name, action);
-        this.position = position;
-        this.isAI = false;
+        this(name, position, action, false);
     }
 
     public Courier(String name, Point position, Action action, boolean isAI) {

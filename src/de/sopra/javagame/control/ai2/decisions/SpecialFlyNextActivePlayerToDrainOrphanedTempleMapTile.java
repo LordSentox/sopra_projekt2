@@ -33,15 +33,15 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
 
     @Override
     public Decision decide() {
-        
-        
+
+
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
 
         return checkTemples(templeList) ? this : null;
     }
-    
+
     private boolean checkTemples(List<Pair<Point, MapTile>> temples){
         Player nextActivePlayer = action().getNextPlayer();
         Point nextActivePlayerPosition = nextActivePlayer.getPosition();

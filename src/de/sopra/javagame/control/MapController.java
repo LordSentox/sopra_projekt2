@@ -1,5 +1,10 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.MapBlackWhite;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.view.MapEditorViewAUI;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,17 +12,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.util.HighScore;
-import de.sopra.javagame.util.MapCheckUtil;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.view.MapEditorViewAUI;
 
 /**
  * Behandelt die Funktionen des Karteneditors, bzw. Funktionen auf einfache Karten, welche noch keine gesetzten Tiles
@@ -55,26 +49,7 @@ public class MapController {
      * zusammenhängende Insel.
      */
     public void generateMapToEditor() {
-        boolean[][] feldsUsed = new boolean[12][12];
-        for (int i = 0; i < feldsUsed[i].length; i++){ 
-        Arrays.fill(feldsUsed[i], false);
-        }
-        Random random = new Random();
-        boolean unqualified =true;
-        while (unqualified) {           
-            for (int i = 0; i<24; i++){
-                int x = random.nextInt(12);
-                int y = random.nextInt(12);
-                if (feldsUsed[x][y]){
-                    i--;
-                }else {
-                    feldsUsed[x][y] = true;
-                }
-            }
-            
-            unqualified = !MapCheckUtil.checkMapValidity(feldsUsed);
-        }
-        mapEditorViewAUI.setMap("Coole Insel!", feldsUsed);
+        mapEditorViewAUI.setMap("Coole Insel!", MapUtil.generateRandomIsland());
     }
 
     /**
@@ -84,35 +59,15 @@ public class MapController {
      * @param name Der Name der Karte, die geladen werden soll.
      */
     public void loadMapToEditor(String name) {
+        if (name.equals("")){
+            System.err.println("Man muss einen Name angeben!");
+        }
         try {
-            String scoresToString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
-             // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
-            String[] maps = scoresToString.split("\n");
-            String[][] mapcsv = new String[maps.length][];
-            for (int i = 0; i < maps.length; ++i) {
-                String[] split = maps[i].split(",");
-                mapcsv[i] = split;
-            }
-            
-            boolean[][] mapTile = new boolean[12][12];
-            
-            for (String[] row : mapcsv) {
-                if (row.length != 12) {
-                    System.err.println("Map für " + name + " konnten nicht gelesen werden. Eine Zeile ist korrumpiert.");
-                    return;
-                }    
-            }
-            for (int y = 0; y < 12; y++){
-                for (int x = 0; x < 12; x++){
-                    if (mapcsv[y][x] == "X"){
-                        mapTile[y][x] = false;
-                    }else {
-                        mapTile[y][x] = true;
-                    }
-                }
-            }
-            
-            mapEditorViewAUI.setMap(name, mapTile);
+            String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
+
+            MapBlackWhite map = MapUtil.readBlackWhiteMapFromString(mapString);
+
+            mapEditorViewAUI.setMap(name, map);
             
         } catch (IOException e) {
             System.err.println("Map konnten nicht eingelesen werden");
@@ -125,37 +80,33 @@ public class MapController {
      * Speichert die Karte als Datei auf der Festplatte, sodass sie beim nächsten mal unter gleichem Namen wieder
      * geladen werden kann. Existiert die Datei bereits, überschreibt die Funktion sie. Kann die Datei nicht gespeichert
      * werden, wird eine Fehlermeldung im Karteneditor ausgegeben.
-     *
-     * @param name  Der Name der Karte, die gespeichert werden soll.
+     *  @param name  Der Name der Karte, die gespeichert werden soll.
      * @param tiles Die Tiles, die die Karte beschreiben.
      */
-    public void saveMap(String name, boolean[][] tiles) {
+    public void saveMap(String name, MapBlackWhite tiles) {
+        if (name.equals("")) {
+            System.err.println("Die Karte muss einen Namen enthalten!");
+        }
         try {
-            BufferedWriter out =new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name +".map"),  StandardCharsets.UTF_8));
-            String[][] mapTiles = new String[tiles.length][];
-            for (int y = 0; y < 12; y++){
-                for (int x = 0; x < 12; x++){
-                    if (tiles[y][x] == false){
-                        mapTiles[y][x] = "X";
-                    }else {
-                        mapTiles[y][x] = "-";
-                        
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name + ".map"), StandardCharsets.UTF_8));
+            for (int y = 0; y < Map.SIZE_Y; y++) {
+                for (int x = 0; x < Map.SIZE_X; x++) {
+                    if (tiles.get(x, y)) {
+                        out.write("X");
+                    } else {
+                        out.write("-");
                     }
-                    if (x != 11){
+                    if (x < Map.SIZE_X - 1) {
                         out.write(",");
                     }
                 }
                 out.newLine();
             }
-            out.close(); 
-            
+            out.close();
+
         } catch (IOException e) {
             System.err.println("Maps konnten nicht gelöscht werden.");
             e.printStackTrace();
         }
-        
-        
-        
-
     }
 }

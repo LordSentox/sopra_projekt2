@@ -4,10 +4,8 @@ import de.sopra.javagame.control.ai.*;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.AIActionTip;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.*;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -105,7 +103,7 @@ public class AIController {
      * @see #getActivePlayer()
      */
     public boolean isCurrentlyDiscarding() {
-        return false; //TODO
+        return getActivePlayer().getHand().size() > Player.MAXIMUM_HANDCARDS;
     }
 
     /**
@@ -114,7 +112,7 @@ public class AIController {
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
      */
     public boolean isCurrentlyRescueingHimself() {
-        return false; //TODO
+        return getCurrentAction().getMap().get(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
     }
 
     /**
@@ -146,7 +144,7 @@ public class AIController {
      * @return ein Pair aus Punkt und MapTile
      */
     public Pair<Point, MapTile> getTile(PlayerType playerType) {
-        Point playerSpawnPoint = MapUtil.getPlayerSpawnPoint(getCurrentAction().getTiles(), playerType);
+        Point playerSpawnPoint = getCurrentAction().getMap().getPlayerSpawnPoint(playerType);
         return new Pair<>(playerSpawnPoint, getTile(playerSpawnPoint));
     }
 
@@ -162,9 +160,9 @@ public class AIController {
         for (MapTileProperties properties : MapTileProperties.values()) {
             if (properties.getHidden() == artifactType) {
                 if (point1 == null) {
-                    point1 = MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties);
+                    point1 = getCurrentAction().getMap().getPositionForTile(properties);
                 } else {
-                    point2 = MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties);
+                    point2 = getCurrentAction().getMap().getPositionForTile(properties);
                     break;
                 }
             }
@@ -172,7 +170,7 @@ public class AIController {
         return new Pair<>(new Pair<>(point1, getTile(point1)), new Pair<>(point2, getTile(point2)));
     }
 
-    /**
+   /**
      * Berechne eine Liste aller Tempelpunkte
      *
      * @return eine Liste aller Tempelpunkte (erwartete Länge: 4x2=8)
@@ -181,7 +179,7 @@ public class AIController {
         List<Point> templePoints = new LinkedList<>();
         for (MapTileProperties properties : MapTileProperties.values()) {
             if (properties.getHidden() != ArtifactType.NONE) {
-                templePoints.add(MapUtil.getPositionForTile(getCurrentAction().getTiles(), properties));
+                templePoints.add(getCurrentAction().getMap().getPositionForTile(properties));
             }
         }
         return templePoints.stream()
@@ -196,7 +194,7 @@ public class AIController {
      * @return das MapTile zu einem Punkt
      */
     public MapTile getTile(Point point) {
-        return getCurrentAction().getTile(point);
+        return getCurrentAction().getMap().get(point);
     }
 
     /**
@@ -270,9 +268,9 @@ public class AIController {
      * @return ein beliebiges Tile im gegebenen Zustand
      */
     public MapTile anyTile(MapTileState state) {
-        for (MapTile[] tileRow : getCurrentAction().getTiles()) {
+        for (MapTile[] tileRow : getCurrentAction().getMap().raw()) {
             for (MapTile tile : tileRow) {
-                if (tile.getState() == state) {
+                if (tile != null && tile.getState() == state) {
                     return tile;
                 }
             }
@@ -331,11 +329,11 @@ public class AIController {
      * @return <code>true</code> wenn der Landeplatz überflutet ist, sonst <code>false</code>
      */
     public boolean landingSiteIsFlooded() {
-        Point landingSite = MapUtil.getPositionForTile(getCurrentAction().getTiles(), MapTileProperties.FOOLS_LANDING);
+        Point landingSite = getCurrentAction().getMap().getPositionForTile(MapTileProperties.FOOLS_LANDING);
         if (landingSite == null)
             throw new IllegalStateException(); // Unerreichbar auf nicht korrumpierter map, sollte vorher gecheckt worden sein
 
-        return getCurrentAction().getTile(landingSite).getState() != MapTileState.DRY;
+        return getCurrentAction().getMap().get(landingSite).getState() != MapTileState.DRY;
     }
 
     /**
@@ -345,9 +343,62 @@ public class AIController {
      * @param targetPosition der Zielpunkt
      * @return die minimal Anzahl an Aktionen für den Weg
      */
-    public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition, PlayerType playerType) {
+        if (startPosition.equals(targetPosition))
+            return 0; // Nix zu tun
+
+        // Initialisiere einen Array, um die Anzahl der Aktionen, die benötigt werden zu zählen.
+        MapFull mapTiles = getCurrentAction().getMap();
+        Map<Integer> stepMap = new Map<Integer>() {
+            @Override
+            protected Integer[][] newEmptyRaw() {
+                return new Integer[Map.SIZE_Y][Map.SIZE_X];
+            }
+        };
+
+        // Die Startposition kann sofort erreicht werden, alle anderen müssen erst noch überprüft werden
+        for (int y = 0; y < Map.SIZE_Y; ++y) {
+            for (int x = 0; x < Map.SIZE_X; ++x) {
+                if (new Point(x, y).equals(startPosition)) {
+                    stepMap.set(0, x, y);
+                }
+            }
+        }
+
+        // Erstelle einen Fake-Spieler und eine Fake-Action, auf dem gearbeitet werden kann
+        Action action = getCurrentAction().copy();
+        Player player = action.getPlayer(playerType);
+
+        // Gehe solange durch die map, wie noch Möglichkeiten offen sind, die man gehen kann.
+        boolean somethingChanged;
+        do {
+            somethingChanged = false;
+
+            for (int y = 0; y < Map.SIZE_Y; ++y) {
+                for (int x = 0; x < Map.SIZE_X; ++x) {
+                    // Wenn die Position im letzten Zug noch nicht erreicht wurde, kann sie für's Erste
+                    // übersprungen werden
+                    if (stepMap.get(x, y) == null)
+                        continue;
+
+                    // Aktualisiere die Step-Map mit der Anzahl der Aktionen, die benötigt werden
+                    player.setPosition(new Point(x, y));
+                    List<Point> moves = player.legalMoves(false);
+                    moves.addAll(player.legalMoves(true));
+                    for (Point move : moves) {
+                        if (stepMap.get(move) == null) {
+                            stepMap.set(stepMap.get(x, y) + 1, move);
+                            somethingChanged = true;
+                        }
+                    }
+                }
+            }
+
+        } while (somethingChanged);
+
+        // Zurückgeben der benötigten Aktionen, bzw. Integer-Maximum, falls die Position gar nicht erreicht werden kann
+        Integer requiredSteps = stepMap.get(targetPosition);
+        return requiredSteps != null ? requiredSteps : Integer.MAX_VALUE;
     }
 
 }

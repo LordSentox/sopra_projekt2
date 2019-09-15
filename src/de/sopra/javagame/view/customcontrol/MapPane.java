@@ -2,6 +2,7 @@ package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -36,11 +37,13 @@ public class MapPane extends GridPane {
 
     }
 
-    public void buildMap(MapTile[][] tiles){
+    public void buildMap(MapFull tiles){
+        // TODO: tiles.raw() muss nicht mehr benutzt werden, stattdessen kann tiles.get(x, y)/tiles.get(position) benutzt
+        // werden, allerdings habe ich mich da nicht herangetraut. ^^
         for (int y = 1; y < map.length + 1; y++) {
             for (int x = 1; x < map[y - 1].length + 1; x++) {
-                if (tiles[y][x] != null) {
-                    TileView v = new TileView(tiles[y][x].getTileIndex(), TILE_SIZE);
+                if (tiles.raw()[y][x] != null) {
+                    TileView v = new TileView(tiles.raw()[y][x].getTileIndex(), TILE_SIZE);
                     v.setPreserveRatio(true);
                     StackPane pane = new StackPane();
                     map[y - 1][x - 1] = pane;
@@ -63,15 +66,16 @@ public class MapPane extends GridPane {
             }
         }
     }
+
     private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
         if (e.getButton() == MouseButton.PRIMARY) {
             if(v.getHighlighted()){
                 System.out.println(x + " " + y);
-                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x,y), false);
+                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x - 1,y - 1), false);
                 System.out.println("ich sollte mich bewegen");
             }
         } else if (e.getButton() == MouseButton.SECONDARY){
-            
+
         }
     }
 
@@ -150,7 +154,7 @@ public class MapPane extends GridPane {
             }
         }
     }
-    
+
     public void highlightMapTile (Point position,boolean isHighlighted){
         StackPane pane = this.getMapStackPane(position.xPos, position.yPos);
         for(Node node : pane.getChildren()){
@@ -162,7 +166,6 @@ public class MapPane extends GridPane {
                     tileView.deHighlight();
                 }
             }
-        }            
+        }
     }
-
 }

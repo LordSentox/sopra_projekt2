@@ -117,7 +117,7 @@ public abstract class Decision {
     }
 
     protected MapTile tile() {
-        return action().getTile(player().getPosition());
+        return action().getMap().get(player().getPosition());
     }
 
     protected boolean hasValidActions(Integer... validActions) {

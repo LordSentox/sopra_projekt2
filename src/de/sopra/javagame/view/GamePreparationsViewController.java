@@ -1,18 +1,14 @@
 package de.sopra.javagame.view;
 
-import java.util.LinkedList;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
-
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapLoader;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
-import de.sopra.javagame.view.customcontrol.MapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +17,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
+import java.util.LinkedList;
 
 /**
  * GUI für die Spielvorbereitung

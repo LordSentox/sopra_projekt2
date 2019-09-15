@@ -1,5 +1,6 @@
 package de.sopra.javagame.view;
 
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import javafx.stage.Stage;
 
@@ -42,7 +43,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     @Override
-    public void setMap(String mapName, boolean[][] tiles) {
+    public void setMap(String mapName, MapBlackWhite map) {
 
     }
 }

@@ -3,6 +3,7 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.Point;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Diver extends Player {
         List<Point> legalMoves = new ArrayList<>();
         for (int y = 0; y < reachable.length; ++y) {
             for (int x = 0; x < reachable[y].length; ++x) {
-                if (reachable[y][x] && this.action.getTile(x, y) != null && this.action.getTile(x, y).getState() == DRY) {
+                if (reachable[y][x] && this.action.getMap().get(x, y) != null && this.action.getMap().get(x, y).getState() == DRY) {
                     legalMoves.add(new Point(x, y));
                 }
             }
@@ -65,17 +66,19 @@ public class Diver extends Player {
      * @return Zweidimensionales Array, was über die Karte des Turns gelegt die vom Taucher erreichbaren Positionen anzeigt
      */
     private boolean[][] reachableDestinations() {
-        boolean[][] reachable = new boolean[this.action.getTiles().length][12];
+        boolean[][] reachable = new boolean[Map.SIZE_Y][Map.SIZE_X];
+
         // Initialisieren der Wasserwege, sofern es welche gibt
         this.setTrueAroundWithTargetPremise(reachable, this.position, tile -> tile != null && tile.getState() != DRY);
+
         // Suche dynamisch heraus, welche Positionen der Taucher alles erreichen kann. Dies beinhaltet allerdings
         // insbesondere alle Positionen auf untergegangenen Inselteilen, auf denen er nicht enden darf.
         boolean somethingChanged;
         do {
             somethingChanged = false;
-            for (int y = 0; y < reachable.length; ++y) {
-                for (int x = 0; x < reachable[y].length; ++x) {
-                    if (reachable[y][x] && this.action.getTile(x, y) != null && this.action.getTile(x, y).getState() != DRY) {
+            for (int y = 0; y < Map.SIZE_Y; ++y) {
+                for (int x = 0; x < Map.SIZE_X; ++x) {
+                    if (reachable[y][x] && this.action.getMap().get(x, y) != null && this.action.getMap().get(x, y).getState() != DRY) {
                         somethingChanged |= this.setTrueAround(reachable, new Point(x, y));
                     }
                 }
@@ -94,21 +97,11 @@ public class Diver extends Player {
      * @param premise Die Prämisse, die auf dem Zielfeld erfüllt sein muss.
      */
     private void setTrueAroundWithTargetPremise(boolean[][] reachable, Point around, Function<MapTile, Boolean> premise) {
-        MapTile upper = this.action.getTile(around.xPos, around.yPos - 1);
-        MapTile left = this.action.getTile(around.xPos - 1, around.yPos);
-        MapTile down = this.action.getTile(around.xPos, around.yPos + 1);
-        MapTile right = this.action.getTile(around.xPos + 1, around.yPos);
-        if (premise.apply(upper)) {
-            reachable[around.yPos - 1][around.xPos] = true;
-        }
-        if (left != null && left.getState() != DRY) {
-            reachable[around.yPos][around.xPos - 1] = true;
-        }
-        if (down != null && down.getState() != DRY) {
-            reachable[around.yPos + 1][around.xPos] = true;
-        }
-        if (right != null && right.getState() != DRY) {
-            reachable[around.yPos][around.xPos + 1] = true;
+        List<Point> neighbours = around.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X, Map.SIZE_Y));
+        for (Point neighbour : neighbours) {
+            if (premise.apply(this.action.getMap().get(neighbour))) {
+                reachable[neighbour.yPos][neighbour.xPos] = true;
+            }
         }
     }
 
@@ -122,21 +115,12 @@ public class Diver extends Player {
      */
     private boolean setTrueAround(boolean[][] reachable, Point around) {
         boolean somethingChanged = false;
-        if (!reachable[around.yPos - 1][around.xPos]) {
-            reachable[around.yPos - 1][around.xPos] = true;
-            somethingChanged = true;
-        }
-        if (!reachable[around.yPos][around.xPos - 1]) {
-            reachable[around.yPos][around.xPos - 1] = true;
-            somethingChanged = true;
-        }
-        if (!reachable[around.yPos + 1][around.xPos]) {
-            reachable[around.yPos + 1][around.xPos] = true;
-            somethingChanged = true;
-        }
-        if (!reachable[around.yPos][around.xPos + 1]) {
-            reachable[around.yPos][around.xPos + 1] = true;
-            somethingChanged = true;
+        List<Point> neighbours = around.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X, Map.SIZE_Y));
+        for (Point neighbour : neighbours) {
+            if (!reachable[neighbour.yPos][neighbour.xPos]) {
+                reachable[neighbour.yPos][neighbour.xPos] = true;
+                somethingChanged = true;
+            }
         }
 
         return somethingChanged;

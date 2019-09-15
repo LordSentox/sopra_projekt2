@@ -3,11 +3,10 @@ package de.sopra.javagame;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.Diver;
-import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.HighScore;
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
@@ -84,7 +83,7 @@ public class TestDummy {
     public static class MapEditorView implements MapEditorViewAUI {
 
         private List<String> notifications = new LinkedList<>();
-        private boolean[][] tiles;
+        private MapBlackWhite tiles;
 
         @Override
         public void showNotification(String notification) {
@@ -92,7 +91,7 @@ public class TestDummy {
         }
 
         @Override
-        public void setMap(String mapName, boolean[][] tiles) {
+        public void setMap(String mapName, MapBlackWhite tiles) {
             this.tiles = tiles;
         }
 
@@ -111,7 +110,7 @@ public class TestDummy {
          *
          * @return <code>null</code> wenn die tiles nie gesetzt wurden
          */
-        public boolean[][] getTiles() {
+        public MapBlackWhite getMap() {
             return tiles;
         }
     }
@@ -241,7 +240,7 @@ public class TestDummy {
 
         /**
          * @return <code>null</code> wenn niemals gesetzt
-         * @see #refreshArtifactsFound(EnumSet)
+         * @see #refreshArtifactsFound()
          */
         public EnumSet<ArtifactType> getArtifactsFound() {
             return artifactsFound;
