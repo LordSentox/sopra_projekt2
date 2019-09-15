@@ -59,7 +59,10 @@ public abstract class Map<T> {
         Map<?> map = (Map<?>) other;
         for (int y = 0; y < Map.SIZE_Y; ++y) {
             for (int x = 0; x < Map.SIZE_X; ++x) {
-                if (!this.get(x, y).equals(map.get(x, y))) {
+                if (this.get(x, y) == null && map.get(x, y) != null) {
+                    return false;
+                }
+                if (this.get(x, y) != null && !this.get(x, y).equals(map.get(x, y))) {
                     return false;
                 }
             }
