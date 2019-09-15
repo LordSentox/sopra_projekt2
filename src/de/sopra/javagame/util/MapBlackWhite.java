@@ -25,7 +25,7 @@ public class MapBlackWhite extends Map<Boolean> {
 
     }
 
-    MapBlackWhite(Boolean[][] raw) {
+    public MapBlackWhite(Boolean[][] raw) {
         super(raw);
     }
 

@@ -3,10 +3,7 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.*;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class InGameUserControllerTest {
 
@@ -40,29 +38,28 @@ public class InGameUserControllerTest {
     private List<ArtifactCard> handCardsExpected;
     //FIXME untypisierte liste. im Laufe der tests werden Player und PlayerType Objekte in die Liste eingefuegt
     private List moveablePlayers;
-    private int[][] testMapNumbers;
-    private MapTile[][] testMap;
+    private MapFull testMap;
 
     @Before
     public void setUp() throws IOException {
         controllerChan = TestDummy.getDummyControllerChan();
-        boolean[][] tiles = new boolean[12][12];
-        for (int y = 1; y < 3; y++) {
-            for (int x = 1; x < tiles[y].length - 1; x++) {
-                tiles[y][x] = true;
+        MapBlackWhite map = new MapBlackWhite();
+        for (int y = 0; y < 2; y++) {
+            for (int x = 0; x < Map.SIZE_X; x++) {
+                map.set(true, x, y);
             }
         }
-        for (int x = 1; x < 5; x++) {
-            tiles[3][x] = true;
+        for (int x = 0; x < 4; x++) {
+            map.set(true, x, 3);
         }
+
         String testMapName = "TestMap";
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        testMapNumbers = MapUtil.readFullMapFromString(testMapString);
-        this.testMap = MapUtil.createMapFromNumbers(testMapNumbers);
+        this.testMap = MapUtil.readFullMapFromString(testMapString);
         List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair<>(PlayerType.COURIER, false),
                 new Pair<>(PlayerType.EXPLORER, false),
                 new Pair<>(PlayerType.NAVIGATOR, false));
-        controllerChan.startNewGame(testMapName, tiles, players, Difficulty.NORMAL);
+        controllerChan.startNewGame(testMapName, map, players, Difficulty.NORMAL);
         mapController = controllerChan.getMapController();
         inGameCont = controllerChan.getInGameUserController();
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
@@ -122,25 +119,25 @@ public class InGameUserControllerTest {
     public void testPlayHelicopterCardNullMapTile() {
         //teste mit ungültigem Zielfeld(kein maptile)
         explorer.getHand().add(heliCard);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(navigator.getPosition(), new Point(5, 2)), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(navigator.getPosition(), new Point(4, 1)), moveablePlayers);
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                 explorer.getHand().contains(heliCard));
         Assert.assertEquals("Die Spieler hätten nicht bewegt werden dürfen",
-                new Point(5, 2),
+                new Point(4, 1),
                 navigator.getPosition());
         Assert.assertEquals("Die Spieler hätten nicht bewegt werden dürfen",
-                new Point(5, 2),
+                new Point(4, 1),
                 courier.getPosition());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testPlayHelicopterCardGONEMapTile() {
         //teste mit ungültigem Zielfeld(versunkenes maptile)
-        testMap[2][2].flood();
-        testMap[2][2].flood();
+        IntStream.range(0, 2).forEach(i -> testMap.get(1, 1).flood());
+
         explorer.getHand().add(heliCard);
         inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(navigator.getPosition(), new Point(2, 2)), moveablePlayers);
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
@@ -160,7 +157,7 @@ public class InGameUserControllerTest {
     public void testPlayHelicopterCardNoHeliCard() {
         //teste ohne helicard
         explorer.getHand().remove(heliCard);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 0, new Pair<>(navigator.getPosition(), new Point(1, 9)), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 0, new Pair<>(navigator.getPosition(), new Point(0, 8)), moveablePlayers);
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
@@ -172,14 +169,13 @@ public class InGameUserControllerTest {
     public void testPlayHelicopterCard() {
         action = controllerChan.getCurrentAction();
         //teste mit gültigen Daten und einem Spieler (Helicard wurde abgewofen)
-        testMap = MapUtil.createMapFromNumbers(testMapNumbers);
         navigator.getHand().add(heliCard);
         moveablePlayers.clear();
         moveablePlayers.add(PlayerType.EXPLORER);
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
-        inGameCont.playHelicopterCard(PlayerType.NAVIGATOR, 0, new Pair<>(explorer.getPosition(), new Point(2, 2)), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.NAVIGATOR, 0, new Pair<>(explorer.getPosition(), new Point(1, 1)), moveablePlayers);
         explorer = (Explorer) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.COURIER);
@@ -187,7 +183,7 @@ public class InGameUserControllerTest {
         Assert.assertFalse("Die Karte hätte gespielt werden müssen.",
                 navigator.getHand().contains(heliCard));
         Assert.assertEquals("Der Spieler hätte bewegt werden müssen",
-                new Point(2, 2),
+                new Point(1, 1),
                 explorer.getPosition());
 
         //teste mit gültigen Daten und mehreren Spielern (Helicard wurde abgewofen)
@@ -201,7 +197,7 @@ public class InGameUserControllerTest {
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(startPos, new Point(2, 3)), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(startPos, new Point(1, 2)), moveablePlayers);
         explorer = (Explorer) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.COURIER);
@@ -209,10 +205,10 @@ public class InGameUserControllerTest {
         Assert.assertFalse("Die Karte hätte gespielt werden müssen.",
                 explorer.getHand().contains(heliCard));
         Assert.assertEquals("Die Spieler hätten bewegt werden müssen",
-                new Point(2, 3),
+                new Point(1, 2),
                 navigator.getPosition());
         Assert.assertEquals("Die Spieler hätten bewegt werden müssen",
-                new Point(2, 3),
+                new Point(1, 2),
                 courier.getPosition());
 
         //teste mit Start = Ziel
@@ -239,7 +235,7 @@ public class InGameUserControllerTest {
 
         //teste mit HeliCard auf HeliPlatz und nicht alle Artefakte gefunden
         action = controllerChan.getCurrentAction();
-        Point heliPoint = MapUtil.getPlayerSpawnPoint(controllerChan.getCurrentAction().getTiles(), PlayerType.PILOT);
+        Point heliPoint = controllerChan.getCurrentAction().getMap().getPlayerSpawnPoint(PlayerType.PILOT);
         action.getDiscoveredArtifacts().clear();
         explorer.getHand().add(heliCard);
         moveablePlayers.clear();
@@ -269,7 +265,7 @@ public class InGameUserControllerTest {
         action.getDiscoveredArtifacts().add(ArtifactType.EARTH);
         action.getDiscoveredArtifacts().add(ArtifactType.AIR);
         explorer.getHand().add(heliCard);
-        heliPoint = MapUtil.getPlayerSpawnPoint(controllerChan.getCurrentAction().getTiles(), PlayerType.PILOT);
+        heliPoint = controllerChan.getCurrentAction().getMap().getPlayerSpawnPoint(PlayerType.PILOT);
         startPos = new Point (heliPoint);
         moveablePlayers.clear();
         moveablePlayers.add(PlayerType.NAVIGATOR);
@@ -297,14 +293,14 @@ public class InGameUserControllerTest {
     public void testPlaySandbagCardNoMapTile() {
         //teste mit ungültigem Zielfeld(kein maptile)
         explorer.getHand().add(sandCard);
-        testMap = controllerChan.getCurrentAction().getTiles();
-        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(1, 1));
+        testMap = controllerChan.getCurrentAction().getMap();
+        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(0, 0));
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
-        Assert.assertArrayEquals("Die Karte hätte sich nicht ändern dürfen.",
+        Assert.assertEquals("Die Karte hätte sich nicht ändern dürfen.",
                 testMap,
-                action.getTiles());
+                action.getMap());
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                 explorer.getHand().contains(sandCard));
     }
@@ -313,8 +309,8 @@ public class InGameUserControllerTest {
     public void testPlaySandbagCardDryMapTile() {
         //teste mit ungültigem Zielfeld(trockenes maptile)
 
-        testMap = controllerChan.getCurrentAction().getTiles();
-        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(2, 2));
+        testMap = controllerChan.getCurrentAction().getMap();
+        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(1, 1));
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
@@ -322,7 +318,7 @@ public class InGameUserControllerTest {
                 explorer.getHand().contains(sandCard));
         Assert.assertEquals("Das MapTile hätte trocken sein sollen",
                 MapTileState.DRY,
-                testMap[2][2].getState());
+                testMap.get(1, 1).getState());
 
     }
 
@@ -330,17 +326,17 @@ public class InGameUserControllerTest {
     public void testPlaySandbagCardGoneMapTile() {
         //teste mit ungültigem Zielfeld(versunkenes maptile)
         explorer.getHand().add(sandCard);
-        testMap = controllerChan.getCurrentAction().getTiles();
-        testMap[2][2].flood();
-        testMap[2][2].flood();
-        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(2, 2));
+        testMap = controllerChan.getCurrentAction().getMap();
+        IntStream.range(0, 2).forEach(i -> testMap.get(1, 1).flood());
+
+        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(1, 1));
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
         Assert.assertTrue("Die Karte hätte nicht gespielt werden dürfen.",
                 explorer.getHand().contains(sandCard));
         Assert.assertEquals("Das MapTile hätte versunken sein sollen",
-                testMap[2][2].getState(),
+                testMap.get(1, 1).getState(),
                 MapTileState.GONE);
     }
 
@@ -348,16 +344,16 @@ public class InGameUserControllerTest {
     public void testPlaySandbagCardNoCard() {
         //teste ohne Sandcard
         explorer.getHand().remove(sandCard);
-        testMap = controllerChan.getCurrentAction().getTiles();
-        testMap[2][3].flood();
-        inGameCont.playSandbagCard(PlayerType.EXPLORER, 0, new Point(3, 2));
+        testMap = controllerChan.getCurrentAction().getMap();
+        testMap.get(2, 1).flood();
+        inGameCont.playSandbagCard(PlayerType.EXPLORER, 0, new Point(2, 1));
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
         Assert.assertTrue("Das Feld hätte nicht trockengelegt werden dürfen",
                 inGameView.getNotifications().contains("Du hattest keine Sandsack Karte!"));
         Assert.assertEquals("Das Feld sollte weiterhin geflutet sein",
-                testMap[2][3].getState(),
+                testMap.get(2, 1).getState(),
                 MapTileState.FLOODED);
     }
 
@@ -365,9 +361,9 @@ public class InGameUserControllerTest {
     public void testPlaySandbagCard() {
         //teste mit gültigen Daten und einem Spieler (Sandcard wurde abgewofen)
         explorer.getHand().add(sandCard);
-        testMap = controllerChan.getCurrentAction().getTiles();
-        testMap[2][3].flood();
-        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(3, 2));
+        testMap = controllerChan.getCurrentAction().getMap();
+        testMap.get(2, 1).flood();
+        inGameCont.playSandbagCard(PlayerType.EXPLORER, 4, new Point(2, 1));
         explorer = (Explorer) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.COURIER);
@@ -375,7 +371,7 @@ public class InGameUserControllerTest {
         Assert.assertFalse("Die Sandsackkarte hätte von der Hand verschwinden müssen",
                 explorer.getHand().contains(sandCard));
         Assert.assertEquals("Das Feld sollte jetzt trockengelegt sein",
-                testMap[2][3].getState(),
+                testMap.get(2, 1).getState(),
                 MapTileState.DRY);
 
     }
