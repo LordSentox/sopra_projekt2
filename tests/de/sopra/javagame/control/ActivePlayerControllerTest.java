@@ -593,11 +593,7 @@ public class ActivePlayerControllerTest {
     }
 
     private static List<Point> adjacentPoints(Point point, boolean diagonal) {
-        List<Point> points = new ArrayList<>();
-        points.add(new Point(point.xPos, point.yPos - 1));
-        points.add(new Point(point.xPos, point.yPos + 1));
-        points.add(new Point(point.xPos - 1, point.yPos));
-        points.add(new Point(point.xPos + 1, point.yPos));
+        List<Point> points = new ArrayList<>(point.getNeighbours());
 
         if (diagonal) {
             points.add(new Point(point.xPos - 1, point.yPos - 1));

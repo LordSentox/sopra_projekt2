@@ -13,14 +13,9 @@ import static org.junit.Assert.fail;
 public class MapCheckUtilTest {
     @Test
     public void checkMapValidity() throws IOException {
-        // Lade die Schwarz-Weißen Karten
-        String tooBig = new String(Files.readAllBytes(Paths.get("duke.java")), StandardCharsets.UTF_8);
-
         // Teste mit unvollständiger map
-        mapController.saveMap(name, map);
-        Assert.assertTrue("Es hätte eine Meldung aufgerufen werden müssen",
-                mapEditorView.getNotifications().contains("Die Karte muss genau 24 Felder enthalten!"));
-
+        MapBlackWhite map = new MapBlackWhite();
+        Assert.assertFalse("Unvolständige Karte wurde nicht erkannt", MapCheckUtil.checkMapValidity(map));
 
         // Teste mit zu voller map
         mapEditorView.getNotifications().clear();

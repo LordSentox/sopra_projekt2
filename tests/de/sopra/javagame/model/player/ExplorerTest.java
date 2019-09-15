@@ -76,18 +76,17 @@ public class ExplorerTest {
 
     @Test
     public void drainablePositionsTest() {
-
-
-        action.getTile(6, 3).flood();
-        action.getTile(6, 4).flood();
-        action.getTile(7, 3).flood();
-
-        printMap(testMap);
-
         Set<Point> points = new HashSet<>();
-        points.add(new Point(6, 3));
-        points.add(new Point(7, 3));
-        points.add(new Point(6, 4));
+        points.add(new Point(5, 2));
+        points.add(new Point(5, 3));
+        points.add(new Point(6, 2));
+
+        for (Point point : points) {
+            action.getMap().get(point).flood();
+        }
+
+        printMap(testMap.raw());
+
         Assert.assertFalse("Dry tiles included in drainable positions. Only flooded allowed", points.size() < new HashSet<>(action.getPlayer(PlayerType.EXPLORER).drainablePositions()).size());
         Assert.assertEquals("Incorrect drainable positions", points, new HashSet<>(action.getPlayer(PlayerType.EXPLORER).drainablePositions()));
     }
