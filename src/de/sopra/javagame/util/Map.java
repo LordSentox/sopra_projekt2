@@ -60,7 +60,7 @@ public abstract class Map<T> {
      *
      * @param consumer die Funktion, welche alle Elemente der Map erhält, die nicht <code>null</code> sind
      */
-    public final void forEach(Consumer<T> consumer) {
+    public void forEach(Consumer<T> consumer) {
         for (T[] elementRow : raw) {
             for (T element : elementRow) {
                 if (element != null)
