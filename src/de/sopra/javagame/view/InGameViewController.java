@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -46,6 +47,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     
     private List<Point> highlightedPoints = new ArrayList<>();
     private boolean specialActive =  false;
+    //mal dem ganzen current-kram zwischenspeichern
     @FXML
     MapPane mapPane;
     @FXML
@@ -300,6 +302,11 @@ public class InGameViewController extends AbstractViewController implements InGa
             int index = 0;
             for (ArtifactCard card : cards) {
                 CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+                if(card.getType().equals(ArtifactCardType.HELICOPTER) || card.getType().equals(ArtifactCardType.SANDBAGS))
+                {
+                    final int newIndex = index;
+                    v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onSpecialCardClicked((ArtifactCardView)v, newIndex));
+                }
                 v.showFrontImage();
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
@@ -316,6 +323,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 pane = handTwoCardGridPane;
             if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
+            
 
             pane.getChildren().clear();
             int index = 0;
@@ -325,6 +333,15 @@ public class InGameViewController extends AbstractViewController implements InGa
                 pane.getChildren().add(v);
                 GridPane.setConstraints(v, index++, 0);
             }
+        }
+    }
+
+    private void onSpecialCardClicked(ArtifactCardView card, int index) {
+        // TODO Auto-generated method stub
+        if(card.getType().equals(ArtifactCardType.HELICOPTER)){
+            
+        } else if(card.getType().equals(ArtifactCardType.SANDBAGS)){
+            
         }
     }
 
