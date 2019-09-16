@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
+import de.sopra.javagame.model.player.PlayerType;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
 import static de.sopra.javagame.control.ai2.decisions.Condition.*;
@@ -38,7 +39,7 @@ public class SpecialUseSandbagToDrainLandingSite extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().sandbagCard(control.getTile(PlayerType.PILOT).getLeft());
     }
 
 }
