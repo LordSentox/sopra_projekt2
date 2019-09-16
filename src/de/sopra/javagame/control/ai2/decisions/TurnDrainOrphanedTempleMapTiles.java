@@ -29,6 +29,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 @PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainOrphanedTempleMapTiles extends Decision {
     private Point drainPoint;
+
     @Override
     public Decision decide() {
 
@@ -41,7 +42,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     }
 
-    private boolean checkTemples(List<Pair<Point, MapTile>> temples){
+    private boolean checkTemples(List<Pair<Point, MapTile>> temples) {
         Point activePlayerPosition = player().getPosition();
         for (Pair<Point, MapTile> temple : temples) {
             Point orphanedTemplePoint = temple.getLeft();
@@ -62,7 +63,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
-            drainPoint=orphanedTemplePoint;
+            drainPoint = orphanedTemplePoint;
             return true;
         }
         return false;

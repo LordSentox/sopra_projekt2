@@ -18,7 +18,8 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
 
 @DoAfter(act = DISCARD, value = DiscardSandbagRatherThanOneOfFourTreasureCards.class)
 public class DiscardRarestTreasureCards extends Decision {
-    private ArtifactCardType discarded; 
+    private ArtifactCardType discarded;
+
     @Override
     public Decision decide() {
         EnhancedPlayerHand activeHand = playerHand();
@@ -26,20 +27,20 @@ public class DiscardRarestTreasureCards extends Decision {
         int fire = activeHand.getAmount(FIRE);
         int earth = activeHand.getAmount(EARTH);
         int air = activeHand.getAmount(AIR);
-        if(all(water <= fire, water <= earth, water <= air)){
-            discarded= WATER;
+        if (all(water <= fire, water <= earth, water <= air)) {
+            discarded = WATER;
             return this;
         }
-        if(all(fire <= water, fire <= earth, fire <= air)){
-            discarded= FIRE;
+        if (all(fire <= water, fire <= earth, fire <= air)) {
+            discarded = FIRE;
             return this;
         }
-        if(all(earth <= fire, earth <= water, earth <= air)){
-            discarded= EARTH;
+        if (all(earth <= fire, earth <= water, earth <= air)) {
+            discarded = EARTH;
             return this;
         }
-        if(all(air <= fire, air <= earth, air <= water)){
-            discarded= AIR;
+        if (all(air <= fire, air <= earth, air <= water)) {
+            discarded = AIR;
             return this;
         }
         return null;

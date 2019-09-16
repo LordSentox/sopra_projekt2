@@ -25,7 +25,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION
 @DoAfter(act = TURN_ACTION, value = TurnEndGame.class)
 @PreCondition(allTrue = GAME_LANDING_SITE_IS_FLOODED, allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainLandingSite extends Decision {
-    
+
     @Override
     public Decision decide() {
 
