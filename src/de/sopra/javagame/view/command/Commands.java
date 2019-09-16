@@ -51,6 +51,7 @@ public final class Commands {
 
     private void loadCommands() {
         processor.register(DemonstrateOrdinaryRandomImplosionStrategies.class, DemonstrateOrdinaryRandomImplosionStrategies::new);
+        processor.register(DebugTools.class, DebugTools::new);
     }
 
     @SuppressWarnings("unchecked")
@@ -68,7 +69,9 @@ public final class Commands {
                 .registerType(PlayerType.class, "playertype",
                         TypeResolver.create(String.class, string -> PlayerType.valueOf(string.toUpperCase()), PlayerType::name))
                 .registerType(Difficulty.class, "difficulty",
-                        TypeResolver.create(String.class, string -> Difficulty.valueOf(string.toUpperCase()), Difficulty::name));
+                        TypeResolver.create(String.class, string -> Difficulty.valueOf(string.toUpperCase()), Difficulty::name))
+                .registerType(GameWindow.class, "gameWindow",
+                        TypeResolver.create(String.class, string -> window, window -> ""));
 
         processor.registerType(MapTile.class, "maptile",
                 PropertyResolver.create("state", MapTileState.class, MapTile::getState))

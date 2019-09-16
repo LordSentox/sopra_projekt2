@@ -64,6 +64,10 @@ public class GameWindow {
         mainStage.show();
     }
 
+    public Stage getMainStage() {
+        return mainStage;
+    }
+
     private void initMainMenu() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
         AnchorPane mainPane = fxmlLoader.load();

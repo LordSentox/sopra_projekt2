@@ -1,9 +1,5 @@
 package de.sopra.javagame.view.customcontrol;
 
-import java.util.Arrays;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -14,9 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import jfxtras.scene.menu.CirclePopupMenu;
+
+import java.util.Arrays;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class ActionPicker extends CirclePopupMenu {
@@ -24,7 +23,7 @@ public class ActionPicker extends CirclePopupMenu {
     private MapPaneTile mapPaneTile;
     private PlayerType movingPlayer;
     private PlayerType delegatingPlayer;
-    
+
     public ActionPicker(Node node, MouseButton mouseButton) {
         super(node, mouseButton);
     }
@@ -32,25 +31,26 @@ public class ActionPicker extends CirclePopupMenu {
     public void init(ActionButton... buttons) {
         this.getItems().clear();
         this.getItems().addAll(Arrays.stream(buttons).map(item -> item.apply(this)).collect(Collectors.toList()));
-        if(this.getItems().size() < 3)
+        if (this.getItems().size() < 3)
             setAnimationDuration(new Duration(1));
     }
-    
+
     public void setDelegatingPlayer(PlayerType delegatingPlayer) {
         this.delegatingPlayer = delegatingPlayer;
     }
-    
+
     public void setMovingPlayer(PlayerType movingPlayer) {
         this.movingPlayer = movingPlayer;
     }
-    
+
     public void setMapPaneTile(MapPaneTile mapPaneTile) {
         this.mapPaneTile = mapPaneTile;
     }
-    
-    public enum ActionButton implements Function<ActionPicker,CustomMenuItem> {
-        
-        MOVE{ //Bewegung direkt oder per spezial nach Position
+
+    public enum ActionButton implements Function<ActionPicker, CustomMenuItem> {
+
+        MOVE { //Bewegung direkt oder per spezial nach Position
+
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> moveHandler = new EventHandler<ActionEvent>() {
@@ -68,7 +68,7 @@ public class ActionPicker extends CirclePopupMenu {
                 return moveButtonMenuItem;
             }
         },
-        DRAIN{
+        DRAIN {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> drainHandler = new EventHandler<ActionEvent>() {
@@ -84,25 +84,18 @@ public class ActionPicker extends CirclePopupMenu {
                 return drainButtonMenuItem;
             }
         },
-        SPECIAL{
+        SPECIAL {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> specialHandler = new EventHandler<ActionEvent>() {
                     ActivePlayerController control = picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController();
+
                     @Override
                     public void handle(ActionEvent e) {
-                        if(picker.delegatingPlayer == picker.movingPlayer)
-                        switch(picker.delegatingPlayer) {                  
-                            case DIVER:   
-                            case EXPLORER:
-                            case PILOT:
-                                control.showSpecialAbility();
-                                break;
-                            default:
-                                break;
-                        
+                        if (picker.delegatingPlayer == picker.movingPlayer) {
+                            control.showSpecialAbility();
+                            picker.mapPaneTile.getControl().setSpecialActive(true);
                         }
-                        picker.mapPaneTile.getControl().setSpecialActive(true);
                     }
                 };
                 CustomMenuItem specialButtonMenuItem = new CustomMenuItem(new Button("move"));
@@ -112,7 +105,7 @@ public class ActionPicker extends CirclePopupMenu {
                 return specialButtonMenuItem;
             }
         },
-        GIVE_CARD{
+        GIVE_CARD {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> giveCardHandler = new EventHandler<ActionEvent>() {
@@ -128,7 +121,7 @@ public class ActionPicker extends CirclePopupMenu {
                 return giveCardButtonMenuItem;
             }
         },
-        COLLECT_ARTIFACT{
+        COLLECT_ARTIFACT {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> findArtifactHandler = new EventHandler<ActionEvent>() {
@@ -144,8 +137,8 @@ public class ActionPicker extends CirclePopupMenu {
                 return findArtifactButtonMenuItem;
             }
         };
-        
+
     }
-    
+
 
 }
