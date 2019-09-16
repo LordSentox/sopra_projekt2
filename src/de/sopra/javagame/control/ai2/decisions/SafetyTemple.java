@@ -45,7 +45,7 @@ public class SafetyTemple extends Decision {
             EnhancedPlayerHand activeHand = playerHand();
             for(ArtifactType type : remainingTypes)
             {
-                if (activeHand.getAmount(type) == 4) {
+                if (activeHand.getAmount(type) == FOUR_CARDS) {
                     targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
                             control.getTile(type).getLeft().getLeft(),
                             control.getActivePlayer().getType());
