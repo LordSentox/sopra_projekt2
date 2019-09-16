@@ -7,6 +7,7 @@ import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
 
@@ -159,6 +160,16 @@ public abstract class Decision {
         for (T object : objects)
             if (object != null && !checker.test(object)) return false;
         return true;
+    }
+
+    protected boolean needSpecialToMove(Point startPoint, Point targetPoint) {
+        Direction direction = startPoint.getPrimaryDirection(targetPoint);
+        return startPoint.add(direction).equals(targetPoint);
+    }
+
+    protected int minMovesWithoutSpecial(Point startPoint, Point targetPoint) {
+        //Courier um keine Spezialbewegungen zu haben
+        return control.getMinimumActionsNeededToReachTarget(startPoint, targetPoint, PlayerType.COURIER);
     }
 
     protected List<Point> surroundingPoints(Point center, boolean edges) {
