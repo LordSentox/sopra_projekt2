@@ -8,6 +8,7 @@ import de.sopra.javagame.model.player.Pilot;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
@@ -29,6 +30,7 @@ import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
 import static de.sopra.javagame.model.ArtifactCardType.WATER;
 import static de.sopra.javagame.model.MapTileState.FLOODED;
 import static de.sopra.javagame.model.player.PlayerType.PILOT;
+import static de.sopra.javagame.util.Direction.*;
 import static org.junit.Assert.*;
 
 /**
@@ -126,31 +128,74 @@ public class AIControllerTest {
     @Test
     public void getDrainablePositionsOneMoveAway() {
         
+        MapTile[][] completeCard = aiControl.getCurrentAction().getMap().raw();
         /*
          * Test für Explorer
          */
-//        Point explorersStartPosition = aiControl.getTile(PlayerType.EXPLORER).getLeft();
-//        MapTile explorerStart = aiControl.getTile(PlayerType.EXPLORER).getRight();
-//        List<Point> explorersNeighboursPositions = explorersStartPosition.getNeighbours();
-//        List<MapTile> explorersNeighbours = explorersStartPosition.getNeighbours().stream().map(aiControl::getTile).collect(Collectors.toList());
-//        for(MapTile neighbour : explorersNeighbours){
-//            if (neighbour != null) neighbour.drain();
-//        }
-//        for(Point explorersNeighboursPoint : explorersNeighboursPositions){
-//            List<MapTile> explorersNextNeighbours = explorersNeighboursPoint.getNeighbours().stream().map(aiControl::getTile).collect(Collectors.toList());
-//            for(MapTile explorersNextNeighbour : explorersNextNeighbours){
-//                if (explorersNextNeighbour != null) explorersNextNeighbour.drain();
-//                explorersNextNeighbour.drain();
-//            }
-//        }
+        Point explorersStartPosition = aiControl.getTile(PlayerType.EXPLORER).getLeft();
         
+        for (int i = 0; i < completeCard.length; i++){
+            for (int j = 0; j < completeCard[i].length; j++){
+                if (completeCard[i][j] != null){
+                    completeCard[i][j].drain();
+                }
+            }
+        }
+        if(explorersStartPosition.add(UP).add(LEFT) != null && explorersStartPosition.add(UP).add(UP).add(LEFT).add(LEFT) != null){
+            aiControl.getTile(explorersStartPosition.add(UP).add(LEFT)).setState(MapTileState.DRY);
+            MapTile northWesternNextNeighbour = aiControl.getTile(explorersStartPosition.add(UP).add(UP).add(LEFT).add(LEFT));
+            northWesternNextNeighbour.setState(MapTileState.FLOODED);
+            assertTrue("Explorer kann MapTile zwei Schritte nach Nordwest nicht im nächsten Zug trockenlegen", 
+            aiControl.getDrainablePositionsOneMoveAway(explorersStartPosition, PlayerType.EXPLORER).contains(northWesternNextNeighbour));
+        }
+        if(explorersStartPosition.add(UP).add(RIGHT) != null && explorersStartPosition.add(UP).add(UP).add(RIGHT).add(RIGHT) != null){
+            aiControl.getTile(explorersStartPosition.add(UP).add(RIGHT)).setState(MapTileState.DRY);
+            MapTile northEasternNextNeighbour = aiControl.getTile(explorersStartPosition.add(UP).add(UP).add(RIGHT).add(RIGHT));
+            northEasternNextNeighbour.setState(MapTileState.FLOODED);
+            assertTrue("Explorer kann MapTile zwei Schritte nach Nordost nicht im nächsten Zug trockenlegen", 
+            aiControl.getDrainablePositionsOneMoveAway(explorersStartPosition, PlayerType.EXPLORER).contains(northEasternNextNeighbour));
+        }
+        if(explorersStartPosition.add(DOWN).add(RIGHT) != null && explorersStartPosition.add(DOWN).add(DOWN).add(RIGHT).add(RIGHT) != null){
+            aiControl.getTile(explorersStartPosition.add(DOWN).add(RIGHT)).setState(MapTileState.DRY);
+            MapTile southEasternNextNeighbour = aiControl.getTile(explorersStartPosition.add(DOWN).add(DOWN).add(RIGHT).add(RIGHT));
+            southEasternNextNeighbour.setState(MapTileState.FLOODED);
+            assertTrue("Explorer kann MapTile zwei Schritte nach Südost nicht im nächsten Zug trockenlegen", 
+            aiControl.getDrainablePositionsOneMoveAway(explorersStartPosition, PlayerType.EXPLORER).contains(southEasternNextNeighbour));
+        }
+        if(explorersStartPosition.add(DOWN).add(LEFT) != null && explorersStartPosition.add(DOWN).add(DOWN).add(LEFT).add(LEFT) != null){
+            aiControl.getTile(explorersStartPosition.add(DOWN).add(LEFT)).setState(MapTileState.DRY);
+            MapTile southWesternNextNeighbour = aiControl.getTile(explorersStartPosition.add(DOWN).add(DOWN).add(LEFT).add(LEFT));
+            southWesternNextNeighbour.setState(MapTileState.FLOODED);
+            assertTrue("Explorer kann MapTile zwei Schritte nach Südost nicht im nächsten Zug trockenlegen", 
+            aiControl.getDrainablePositionsOneMoveAway(explorersStartPosition, PlayerType.EXPLORER).contains(southWesternNextNeighbour));
+        }
+        List<Point> explorersNeighboursPositions = explorersStartPosition.getSurrounding();
+        List<MapTile> explorersNeighbours = explorersStartPosition.getSurrounding().stream().map(aiControl::getTile).collect(Collectors.toList());
+        List<MapTile> testList = new LinkedList<>();
+        for(Point explorersNeighboursPoint : explorersNeighboursPositions){
+            List<MapTile> explorersNextNeighbours = explorersNeighboursPoint.getSurrounding().stream().map(aiControl::getTile).collect(Collectors.toList());
+            for(MapTile explorersNextNeighbour : explorersNextNeighbours){
+                if (explorersNextNeighbour != null){
+                    explorersNextNeighbour.setState(MapTileState.FLOODED);
+                    testList.add(explorersNextNeighbour);
+                }
+            }
+        }
+        for(MapTile neighbour : explorersNeighbours){
+            if (neighbour != null) 
+                neighbour.setState(MapTileState.DRY);
+                testList.remove(neighbour);
+        }
+        assertTrue(testList.containsAll(aiControl.getDrainablePositionsOneMoveAway(explorersStartPosition, PlayerType.EXPLORER)));
+        
+        //assert
         /*
          * Test für Pilot:
          * 
          */
         Point landingSitePosition = aiControl.getTile(PlayerType.PILOT).getLeft();
         MapTile landingSite = aiControl.getTile(PlayerType.PILOT).getRight();
-        MapTile[][] completeCard = aiControl.getCurrentAction().getMap().raw();
+        
         for (int i = 0; i < completeCard.length; i++){
             for (int j = 0; j < completeCard[i].length; j++){
                 if (completeCard[i][j] != null){
