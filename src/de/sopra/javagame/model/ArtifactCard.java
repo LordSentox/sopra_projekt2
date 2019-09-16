@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public class ArtifactCard implements Copyable<ArtifactCard>, Serializable {
 
+    private static final long serialVersionUID = -5759706144713323615L;
     private final ArtifactCardType type;
 
     public ArtifactCard(ArtifactCardType type) {

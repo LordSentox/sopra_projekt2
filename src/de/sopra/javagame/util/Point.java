@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Point implements Serializable {
+
+    private static final long serialVersionUID = 974151156673528867L;
     public int xPos;
     public int yPos;
 

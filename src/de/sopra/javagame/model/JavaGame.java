@@ -15,6 +15,8 @@ import java.util.Stack;
  * werden mit undo und redo.
  */
 public class JavaGame implements Serializable {
+
+    private static final long serialVersionUID = -5194350096601415362L;
     public static final int MAP_SIZE_X = 10;
     public static final int MAP_SIZE_Y =  7;
 

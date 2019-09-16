@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class Courier extends Player {
 
+    private static final long serialVersionUID = -946691231815112321L;
+
     public Courier(String name, Point position, Action action) {
         this(name, position, action, false);
     }

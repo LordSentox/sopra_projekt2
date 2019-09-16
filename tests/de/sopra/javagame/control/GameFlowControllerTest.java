@@ -4,7 +4,6 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.view.abstraction.GameWindow;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

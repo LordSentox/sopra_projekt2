@@ -4,8 +4,15 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -17,6 +24,8 @@ import java.util.stream.Collectors;
 //    --> dazu alle Aufrufe, die Action beinhalten umbenennen
 
 public class Action implements Copyable<Action>, Serializable {
+
+    private static final long serialVersionUID = -2000089597610909945L;
 
     /**
      * Eine Menge aller Artefakte, die bereits gefunden wurden.
@@ -139,8 +148,32 @@ public class Action implements Copyable<Action>, Serializable {
         action.floodCardStack = CardStackUtil.createFloodCardStack(map.raw());
         action.waterLevel = new WaterLevel(difficulty);
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
-        action.players = players.stream().map(triple -> createPlayerByType(triple.getFirst(), triple.getSecond(), map.getPlayerSpawnPoint(triple.getFirst()), action)).collect(Collectors.toList());
+        action.players = new LinkedList<>();
+        players.forEach(triple -> {
+            if(triple.getFirst() != PlayerType.NONE)
+                action.players.add(createPlayerByType(triple.getFirst(), triple.getSecond(), map.getPlayerSpawnPoint(triple.getFirst()), action));
+            else
+                action.players.add(null);
+        });
+        
+        
+        for (int i = 0; i < players.size(); i++) {
+            Player player = action.players.get(i);
+            if(player != null) continue;
+            Triple<PlayerType, String, Boolean> triple = players.get(i);
+            List<PlayerType> list = EnumSet.allOf(PlayerType.class).stream()
+                  .filter(pType -> !pType.equals(PlayerType.NONE))
+                  .filter(pType -> action.players.stream().filter(Objects::nonNull).noneMatch(p -> p.getType() == pType))
+                  .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList()); 
+                 
+            Collections.shuffle(list);
+            System.out.println(list.get(0));
+            Player p = createPlayerByType(list.get(0), triple.getSecond(), map.getPlayerSpawnPoint(list.get(0)), action);
+            action.players.set(i, p);
+        }
         action.state = TurnState.FLOOD;
+        
+        System.out.println(action.players);
         return action;
     }
     
@@ -159,7 +192,7 @@ public class Action implements Copyable<Action>, Serializable {
             case ENGINEER:
                 return new Engineer(name, start, action);
             default:
-                throw new IllegalArgumentException("Illegal Player Type: " + type);
+                return null;
         }
     }
 

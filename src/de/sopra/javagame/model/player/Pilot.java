@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class Pilot extends Player {
 
+    private static final long serialVersionUID = -3947447481072572845L;
     /**
      * Der Pilot kann seine Spezialfähigkeit nur einmal pro Zug nutzen, also
      * wird sie nach benutzen auf false gesetzt

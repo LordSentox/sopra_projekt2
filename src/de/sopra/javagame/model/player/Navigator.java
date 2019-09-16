@@ -15,6 +15,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  */
 public class Navigator extends Player {
 
+    private static final long serialVersionUID = -6674401618074399971L;
     /**
      * er kann zwei spieler (auch zweimal den gleichen) pro aktion pushen
      */

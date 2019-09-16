@@ -6,7 +6,6 @@ import com.jfoenix.controls.JFXComboBox;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
@@ -23,9 +22,6 @@ import javafx.stage.Stage;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * GUI für die Spielvorbereitung

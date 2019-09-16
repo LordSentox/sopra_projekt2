@@ -19,6 +19,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 
 public abstract class Player implements Copyable<Player>, Serializable {
 
+    private static final long serialVersionUID = -4230315355144349100L;
+
     public static final int MAXIMUM_HANDCARDS = 5;
 
     protected final PlayerType type;

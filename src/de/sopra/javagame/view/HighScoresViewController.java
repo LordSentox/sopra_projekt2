@@ -23,9 +23,9 @@ public class HighScoresViewController extends AbstractViewController implements 
     @FXML
     ImageView mainPane;
     @FXML
-    JFXComboBox mapSelectionBox;
+    JFXComboBox<String> mapSelectionBox;
     @FXML
-    JFXListView highScoreListView;
+    JFXListView<HighScore> highScoreListView;
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
