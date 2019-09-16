@@ -139,7 +139,7 @@ public class MapUtil {
                     blackWhite.set(true, x, y);
                 }
                 else if (sign.equals("-")) {
-                    blackWhite.set(false, y, x);
+                    blackWhite.set(false, x, y);
                 } else {
                     System.err.println("Karte ist korrumpiert und konnte nicht geladen werden");
                     return null;
