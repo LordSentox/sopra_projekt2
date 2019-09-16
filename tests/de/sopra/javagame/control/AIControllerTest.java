@@ -4,17 +4,9 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Explorer;
-import de.sopra.javagame.model.player.Pilot;
-import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Direction;
-import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
-
+import de.sopra.javagame.util.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +38,8 @@ public class AIControllerTest {
 
     private AIController aiControl;
     private ControllerChan controllerChan;
-    
+    private List<Triple<PlayerType,String, Boolean>> players;
+
     @Before
     public void setup() throws IOException {
         controllerChan = TestDummy.getDummyControllerChan();
@@ -54,7 +47,7 @@ public class AIControllerTest {
         aiControl.setAI(DECISION_BASED_AI); //getestet wird mit der DECISION_BASES_AI
         final String testMapString = new String(Files.readAllBytes(Paths.get("resources/maps/island_of_death.map")), StandardCharsets.UTF_8);
         final MapBlackWhite tiles = MapUtil.readBlackWhiteMapFromString(testMapString);
-        List<Triple<PlayerType,String, Boolean>> players = new LinkedList<Triple<PlayerType,String, Boolean>>() {{
+        players = new LinkedList<Triple<PlayerType,String, Boolean>>() {{
             add(new Triple<>(PlayerType.EXPLORER,"", true));
             add(new Triple<>(PlayerType.PILOT,"", true));
             add(new Triple<>(PlayerType.DIVER,"", true));
