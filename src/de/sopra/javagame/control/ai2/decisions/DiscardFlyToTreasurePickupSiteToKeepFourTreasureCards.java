@@ -37,18 +37,11 @@ public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decis
         EnhancedPlayerHand activeHand = playerHand();
         //Es wird der erste Tempel gewaehlt, da es zu aufwaendig waere, den optimalen Tempel zum 
         //Finden des Schatzes zu berechnen
-        if (activeHand.getAmount(ArtifactType.WATER) == 4) {
-            targetPoint = control.getTile(ArtifactType.WATER).getLeft().getLeft();
-            return this;
-        } else if (activeHand.getAmount(ArtifactType.EARTH) == 4) {
-            targetPoint = control.getTile(ArtifactType.EARTH).getLeft().getLeft();
-            return this;
-        } else if (activeHand.getAmount(ArtifactType.FIRE) == 4) {
-            targetPoint = control.getTile(ArtifactType.FIRE).getLeft().getLeft();
-            return this;
-        } else if (activeHand.getAmount(ArtifactType.AIR) == 4) {
-            targetPoint = control.getTile(ArtifactType.AIR).getLeft().getLeft();
-            return this;
+        for (ArtifactType type : ArtifactType.values()) {
+            if (activeHand.getAmount(type) == FOUR_CARDS) {
+                targetPoint = control.getTile(type).getLeft().getLeft();
+                return this;
+            }
         }
         return null;
     }
