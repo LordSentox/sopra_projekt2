@@ -1,10 +1,8 @@
 package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXButton;
-
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapCheckUtil;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
@@ -12,12 +10,10 @@ import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,12 +38,11 @@ public class MapEditorViewController extends AbstractViewController implements M
 
     private String chosenMapName;
 
-    public void init() throws IOException {
+    public void init() {
         /* Set Background */
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
 
-        editorMapPane = new EditorMapPane();
         editorMapPane.setMapEditorViewController(this);
         chosenMapName = "";
         comboBoxChooseGivenMap.valueProperty().addListener((options , oldValue, newValue) -> {
