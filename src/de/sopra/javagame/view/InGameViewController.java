@@ -453,6 +453,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             break;
         case FLOOD:
             this.rotateTurnSpinner(-288);
+            this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCards();
             break;
         default:
             this.rotateTurnSpinner(0);
