@@ -262,13 +262,12 @@ public class InGameViewController extends AbstractViewController implements InGa
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
 
         //DEBUG
-        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
+        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard(ArtifactCardType.AIR)));
         mapPane.putPlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().xPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().yPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
         getGameWindow()
         .getControllerChan()
         .getCurrentAction()
         .getPlayers()
-        .stream()
             .forEach(player -> mapPane.putPlayer(player.getPosition().xPos, player.getPosition().yPos, player.getType()));
     }
 
@@ -406,9 +405,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
         playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
-        if (players.size() == 3) {
+        if (players.size() >= 3) {
             playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
-        } else if (players.size() == 4) {
+        }
+        if (players.size() == 4) {
             playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
         }
     }
