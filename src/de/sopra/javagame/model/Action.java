@@ -123,7 +123,7 @@ public class Action implements Copyable<Action>, Serializable {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param map        Die Map des Spiels
      */
-    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
+    public static Action createInitialAction(Difficulty difficulty, List<Pair<Pair<PlayerType, String>, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
         if (map == null || difficulty == null || players == null)
             throw new IllegalArgumentException("Argument is null");
 
@@ -140,30 +140,49 @@ public class Action implements Copyable<Action>, Serializable {
         action.waterLevel = new WaterLevel(difficulty);
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
         action.players = players.stream().map(pair -> {
-            Point start = map.getPlayerSpawnPoint(pair.getLeft());
-            switch (pair.getLeft()) {
+            Point start = map.getPlayerSpawnPoint(pair.getLeft().getLeft());
+            boolean isHartmut = pair.getLeft().getRight() == null || pair.getLeft().getRight().isEmpty();
+            switch (pair.getLeft().getLeft()) {
             case COURIER:
-                Courier courier = new Courier("Hartmut Kurier", start, action);
+                String courierName;
+                if (isHartmut){courierName = "Hartmut Kurier";}
+                else {courierName = pair.getLeft().getRight();}
+                Courier courier = new Courier(courierName, start, action);
                 courier.setActionsLeft(3);
                 return courier;
             case DIVER:
-                Diver diver = new Diver("Hartmut im Spanienurlaub", start, action);
+                String diverName;
+                if (isHartmut){diverName = "Hartmut im Spanienurlaub";}
+                else {diverName = pair.getLeft().getRight();}
+                Diver diver = new Diver(diverName, start, action);
                 diver.setActionsLeft(3);
                 return diver;
             case PILOT:
-                Pilot pilot = new Pilot("Hartmut auf dem Weg in den Urlaub", start, action);
+                String pilotName;
+                if (isHartmut){pilotName = "Hartmut auf dem Weg in den Urlaub";}
+                else {pilotName = pair.getLeft().getRight();}
+                Pilot pilot = new Pilot(pilotName, start, action);
                 pilot.setActionsLeft(3);
                 return pilot;
             case NAVIGATOR:
-                Navigator navigator = new Navigator("Hartmut Verlaufen", start, action);
+                String navigatorName;
+                if (isHartmut){navigatorName = "Hartmut Verlaufen";}
+                else {navigatorName = pair.getLeft().getRight();}
+                Navigator navigator = new Navigator(navigatorName, start, action);
                 navigator.setActionsLeft(3);
                 return navigator;
             case EXPLORER:
-                Explorer explorer = new Explorer("Hartmut im Dschungel", start, action);
+                String explorerName;
+                if (isHartmut){explorerName = "Hartmut im Dschungel";}
+                else {explorerName = pair.getLeft().getRight();}
+                Explorer explorer = new Explorer(explorerName, start, action);
                 explorer.setActionsLeft(3);
                 return explorer;
             case ENGINEER:
-                Engineer engineer = new Engineer("Hartmut Auto Kaputt", start, action);
+                String engineerName;
+                if (isHartmut){engineerName = "Hartmut Auto kaputt";}
+                else {engineerName = pair.getLeft().getRight();}
+                Engineer engineer = new Engineer(engineerName, start, action);
                 engineer.setActionsLeft(3);
                 return engineer;
             default:

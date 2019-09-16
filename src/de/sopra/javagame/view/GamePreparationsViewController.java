@@ -95,19 +95,20 @@ public class GamePreparationsViewController extends AbstractViewController {
     public void onStartGameClicked() {
 
         
-        List<Pair<PlayerType, Boolean>> playerList = new LinkedList<>();
+        List<Pair<Pair<PlayerType,String>, Boolean>> playerList = new LinkedList<>();
         System.out.println(playerList);
         //Spielertypen hinzufügen
         System.out.println(playerOneChooseCharakterComboBox.getValue());
-        addPLayerType(playerOneChooseCharakterComboBox.getValue(),
+        addPlayerType(playerOneChooseCharakterComboBox.getValue(),
                 playerList,
-                !isPlayerOneKiCheckBox.isDisabled());
-        addPLayerType(playerTwoChooseCharakterComboBox.getValue(), playerList, !isPlayerTwoKiCheckBox.isDisabled());
+                !isPlayerOneKiCheckBox.isDisabled(),
+                playerOneNameTextField.getText());
+        addPlayerType(playerTwoChooseCharakterComboBox.getValue(), playerList, !isPlayerTwoKiCheckBox.isDisabled(), playerTwoNameTextField.getText());
         if(addPlayerThreeToggleButton.isSelected()){
-            addPLayerType(playerThreeChooseCharakterComboBox.getValue(), playerList, !isPlayerThreeKiCheckBox.isDisabled());
+            addPlayerType(playerThreeChooseCharakterComboBox.getValue(), playerList, !isPlayerThreeKiCheckBox.isDisabled(), playerThreeNameTextField.getText());
         }
         if(addPlayerFourToggleButton.isSelected()){
-            addPLayerType(playerFourChooseCharakterComboBox.getValue(), playerList, !isPlayerFourKiCheckBox.isDisabled());
+            addPlayerType(playerFourChooseCharakterComboBox.getValue(), playerList, !isPlayerFourKiCheckBox.isDisabled(), playerFourNameTextField.getText());
         }
         setDifficulty();
         
@@ -142,33 +143,33 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
     
     
-    public void addPLayerType(String type,  List<Pair<PlayerType, Boolean>> playerList, boolean isAi){
+    public void addPlayerType(String type,  List<Pair<Pair<PlayerType,String>, Boolean>> playerList, boolean isAi, String name){
         if(type == null){
             type = "";
         }
         //TODO zufällig soll zufällig sein
         switch (type) {
         case "Taucher":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
+            playerList.add(new Pair<>(new Pair<>(PlayerType.DIVER, name), isAi));
             System.out.println("i bims ein Taucher");
             break;
         case "Navigator":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, isAi));
+            playerList.add(new Triple<>(PlayerType.NAVIGATOR, name, isAi));
             break;
         case "Pilot":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, isAi));
+            playerList.add(new Pair<>(new Pair<>(PlayerType.PILOT, name), isAi));
             break;
         case "Entdecker":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, isAi));
+            playerList.add(new Pair<>(new Pair<>(PlayerType.EXPLORER, name), isAi));
             break;
         case "Bote":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.COURIER, isAi));
+            playerList.add(new Pair<>(new Pair<>(PlayerType.COURIER, name), isAi));
             break;
         case "Ingenieur":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, isAi));
+            playerList.add(new Pair<>(new Pair<>(PlayerType.ENGINEER, name), isAi));
             break;
         default:
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.NONE, isAi));
+            playerList.add(new Pair<>(new Pair<>(PlayerType.NONE, name), isAi));
             break;
         }
     }
