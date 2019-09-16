@@ -4,12 +4,14 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Explorer;
+import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai.GameAI.DECISION_BASED_AI;
 import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
@@ -48,7 +51,7 @@ public class AIControllerTest {
         final MapBlackWhite tiles = MapUtil.readBlackWhiteMapFromString(testMapString);
         List<Pair<PlayerType, Boolean>> players = new LinkedList<Pair<PlayerType, Boolean>>() {{
             add(new Pair<>(PlayerType.EXPLORER, true));
-            add(new Pair<>(PILOT, true));
+            add(new Pair<>(PlayerType.PILOT, true));
             add(new Pair<>(PlayerType.DIVER, true));
             add(new Pair<>(PlayerType.COURIER, true));
         }};
@@ -121,7 +124,89 @@ public class AIControllerTest {
 
     @Test
     public void getDrainablePositionsOneMoveAway() {
-        fail("Not yet implemented");
+        
+        /*
+         * Test für Explorer
+         */
+//        Point explorersStartPosition = aiControl.getTile(PlayerType.EXPLORER).getLeft();
+//        MapTile explorerStart = aiControl.getTile(PlayerType.EXPLORER).getRight();
+//        List<Point> explorersNeighboursPositions = explorersStartPosition.getNeighbours();
+//        List<MapTile> explorersNeighbours = explorersStartPosition.getNeighbours().stream().map(aiControl::getTile).collect(Collectors.toList());
+//        for(MapTile neighbour : explorersNeighbours){
+//            if (neighbour != null) neighbour.drain();
+//        }
+//        for(Point explorersNeighboursPoint : explorersNeighboursPositions){
+//            List<MapTile> explorersNextNeighbours = explorersNeighboursPoint.getNeighbours().stream().map(aiControl::getTile).collect(Collectors.toList());
+//            for(MapTile explorersNextNeighbour : explorersNextNeighbours){
+//                if (explorersNextNeighbour != null) explorersNextNeighbour.drain();
+//                explorersNextNeighbour.drain();
+//            }
+//        }
+        
+        /*Test für den Taucher ändert die komplette Map, um sicherzustellen, dass alle 
+         *erreichbaren Teile verändert werden
+         */
+        Point diversStartPosition = aiControl.getTile(PlayerType.DIVER).getLeft();
+        MapTile diversStart = aiControl.getTile(PlayerType.DIVER).getRight();
+        MapTile[][] completeCard = aiControl.getCurrentAction().getMap().raw();
+        for (int i = 0; i < completeCard.length; i++){
+            for (int j = 0; j < completeCard[i].length; j++){
+                if (completeCard[i][j] != null){
+                    completeCard[i][j].drain();
+                }
+            }
+        }
+        assertTrue("Taucher kann Felder trockenlegen, obwohl alle MapTiles DRY sind",
+                aiControl.getDrainablePositionsOneMoveAway(diversStartPosition, PlayerType.DIVER).isEmpty());        
+        for (int i = 0; i < completeCard.length; i++){
+            for (int j = 0; j < completeCard[i].length; j++){
+                if (completeCard[i][j] != null){
+                    completeCard[i][j].flood();
+                }
+            }
+        }        
+        assertTrue("Taucher kann Felder trockenlegen, obwohl er alle MapTiles sofort erreichen kann",
+                aiControl.getDrainablePositionsOneMoveAway(diversStartPosition, PlayerType.DIVER).isEmpty());
+        
+        for (int i = 0; i < completeCard.length; i++){
+            for (int j = 0; j < completeCard[i].length; j++){
+                if (completeCard[i][j] != null){
+                    completeCard[i][j].flood();
+                }
+            }
+        }
+        diversStart.drain();
+        assertTrue("Taucher kann Felder trockenlegen, obwohl alle MapTiles bis auf die Position des Tauchers GONE sind",
+                aiControl.getDrainablePositionsOneMoveAway(diversStartPosition, PlayerType.DIVER).isEmpty());
+        
+
+        
+        
+        
+//        for(MapTile neighbour : diversNeighbours){
+//            neighbour.flood();
+//        }
+//        for(Point diversNeighboursPoint : diversNeighboursPositions){
+//            List<MapTile> diversNextNeighbours = diversNeighboursPoint.getNeighbours().stream().map(aiControl::getTile).collect(Collectors.toList());
+//            for(MapTile diversNextNeighbour : diversNextNeighbours){
+//                diversNextNeighbour.flood();
+//            }
+//        }
+        
+        
+        
+//        for(MapTile neighbour : diversNeighbours){
+//            neighbour.flood();
+//        }
+//        for(Point diversNeighboursPoint : diversNeighboursPositions){
+//            List<MapTile> diversNextNeighbours = diversNeighboursPoint.getNeighbours().stream().map(aiControl::getTile).collect(Collectors.toList());
+//            for(MapTile diversNextNeighbour : diversNextNeighbours){
+//                diversNextNeighbour.flood();
+//            }
+//        }
+        
+        
+        
     }
 
     @Test
