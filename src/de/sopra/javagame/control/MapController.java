@@ -70,7 +70,7 @@ public class MapController {
             mapEditorViewAUI.setMap(name, map);
             
         } catch (IOException e) {
-            System.err.println("Map konnten nicht eingelesen werden");
+            System.out.println("Map konnten nicht eingelesen werden");
             e.printStackTrace();
         }
 
@@ -85,7 +85,8 @@ public class MapController {
      */
     public void saveMap(String name, MapBlackWhite tiles) {
         if (name.equals("")) {
-            System.err.println("Die Karte muss einen Namen enthalten!");
+            System.out.println("Die Karte muss einen Namen enthalten!");
+            getMapEditorViewAUI().showNotification("Die Karte muss einen Namen enthalten!");
         }
         try {
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name + ".map"), StandardCharsets.UTF_8));
@@ -105,7 +106,7 @@ public class MapController {
             out.close();
 
         } catch (IOException e) {
-            System.err.println("Maps konnten nicht gelöscht werden.");
+            System.out.println("Maps konnten nicht gelöscht werden.");
             e.printStackTrace();
         }
     }

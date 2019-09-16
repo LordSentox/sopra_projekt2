@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 
 public class MapControllerTest {
 
@@ -35,12 +36,12 @@ public class MapControllerTest {
         map = new MapBlackWhite();
         name = "hallo";
         mapString = "x,x,x,x,x,x,x,x,x,x\n"
-                + "x,x,x,x,x,x,x,x,x,x"
-                + "x,x,x,x,-,-,-,-,-,-"
-                + "-,-,-,-,-,-,-,-,-,-"
-                + "-,-,-,-,-,-,-,-,-,-"
-                + "-,-,-,-,-,-,-,-,-,-"
-                + "-,-,-,-,-,-,-,-,-,-";
+                + "x,x,x,x,x,x,x,x,x,x\n"
+                + "x,x,x,x,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-\n"
+                + "-,-,-,-,-,-,-,-,-,-\n";
     }
 
 
@@ -66,6 +67,8 @@ public class MapControllerTest {
         }
 
         mapController.loadMapToEditor(name);
+        System.out.println(map.toString() + "\n");
+        System.out.println(mapEditorView.getMap().toString());
         Assert.assertEquals(map, mapEditorView.getMap());
 
         outFile.delete();
@@ -95,8 +98,10 @@ public class MapControllerTest {
         for (int x = 0; x < 4; x++) {
             map.set(true, x, 3);
         }
-        mapController.saveMap(name, map);
-
+        mapController.saveMap("lisasNeuerTest.txt", map);
+        File savedMap = new File(MapController.MAP_FOLDER, "lisasNeuerTest.txt" + ".map");
+        Assert.assertTrue("", savedMap.exists());
+        savedMap.delete();
     }
 
 }
