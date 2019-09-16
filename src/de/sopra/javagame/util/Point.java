@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.util.Direction.*;
+
 public class Point implements Serializable {
     public int xPos;
     public int yPos;
@@ -44,6 +46,22 @@ public class Point implements Serializable {
     public void move(Point delta) {
         this.xPos += delta.xPos;
         this.yPos += delta.yPos;
+    }
+
+    public Direction getPrimaryDirection(Point target) {
+        if (this.equals(target)) return null;
+        int xDiff = target.xPos - this.xPos;
+        int yDiff = target.yPos - this.yPos;
+        //LEFT or RIGHT
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff > 0)
+                return RIGHT;
+            else return LEFT;
+        } else { //UP or DOWN
+            if (yDiff > 0)
+                return DOWN;
+            else return UP;
+        }
     }
 
     public Point add(int deltaX, int deltaY) {
@@ -93,6 +111,16 @@ public class Point implements Serializable {
                 point.yPos <= maximum.yPos).collect(Collectors.toList());
 
         return neighbours;
+    }
+
+    public List<Point> getSurrounding() {
+        List<Point> surrounding = this.getNeighbours();
+        surrounding.add(this.add(UP).add(LEFT));
+        surrounding.add(this.add(UP).add(RIGHT));
+        surrounding.add(this.add(DOWN).add(LEFT));
+        surrounding.add(this.add(DOWN).add(RIGHT));
+
+        return surrounding;
     }
 
     public boolean equals(Object other) {

@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.model.ArtifactType.NONE;
+
 /**
  * <h1>projekt2</h1>
  *
@@ -67,6 +69,11 @@ public class AIController {
         currentAction.getFloodCardStack().setObserver(floodCardStackTracker);
     }
 
+    public void setActivePlayerSupplier(Supplier<Player> supplier) {
+        if (supplier != null)
+            this.activePlayerSupplier = supplier;
+    }
+
     /**
      * Führt eine ActionQueue Schritt für Schritt durch.
      *
@@ -74,8 +81,95 @@ public class AIController {
      */
     public void doSteps(ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
+            Player player = getCurrentAction().getPlayer(queue.getPlayer());
+            int index = -1;
+            Player targetPlayer = null;
+            switch (action.getType()) {
+
+                case MOVE:
+                    boolean isRescuing = getTile(player.getPosition()).getState() == MapTileState.GONE;
+                    player.move(action.getTargetPoint(), !isRescuing, isRescuing);
+                    break;
+                case DRAIN:
+                    player.drain(action.getTargetPoint());
+                    break;
+                case DISCARD_CARD:
+                    index = -1;
+                    for (int i = 0; i < player.getHand().size(); i++) {
+                        if (player.getHand().get(i).getType() == action.getCardType())
+                            index = i;
+                    }
+                    controllerChan.getInGameUserController().discardCard(player.getType(), index);
+                    break;
+                case TRADE_CARD:
+                    ArtifactCard card = null;
+                    for (int i = 0; i < player.getHand().size(); i++) {
+                        if (player.getHand().get(i).getType() == action.getCardType())
+                            card = player.getHand().get(i);
+                    }
+                    targetPlayer = getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
+                    controllerChan.getCurrentAction().transferArtifactCard(card, player,
+                            targetPlayer);
+                    //geile refresh action
+                    controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
+                    controllerChan.getInGameViewAUI().refreshHand(targetPlayer.getType(), targetPlayer.getHand());
+                    controllerChan.getInGameViewAUI().refreshActionsLeft(getCurrentAction().getActivePlayer().getActionsLeft());
+                    break;
+                case SPECIAL_CARD:
+                    index = -1;
+                    for (int i = 0; i < player.getHand().size(); i++) {
+                        if (player.getHand().get(i).getType() == action.getCardType())
+                            index = i;
+                    }
+                    controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
+                            new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
+                            action.getTargetPlayers().stream().collect(Collectors.toList()));
+                    break;
+                case SPECIAL_ABILITY:
+                    switch (player.getType()) {
+
+                        case COURIER:
+                            ArtifactCard courierCard = null;
+                            for (int i = 0; i < player.getHand().size(); i++) {
+                                if (player.getHand().get(i).getType() == action.getCardType())
+                                    courierCard = player.getHand().get(i);
+                            }
+                            targetPlayer = getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
+                            controllerChan.getCurrentAction().transferArtifactCard(courierCard, player,
+                                    targetPlayer);
+                            //geile refresh action
+                            controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
+                            controllerChan.getInGameViewAUI().refreshHand(targetPlayer.getType(), targetPlayer.getHand());
+                            controllerChan.getInGameViewAUI().refreshActionsLeft(getCurrentAction().getActivePlayer().getActionsLeft());
+                            break;
+                        case DIVER:
+                        case PILOT:
+                        case EXPLORER:
+                            player.move(action.getTargetPoint(), true, true);
+                            break;
+                        case ENGINEER:
+                            player.drain(action.getTargetPoint());
+                            break;
+                        case NAVIGATOR:
+                            targetPlayer = getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
+                            Direction direction = targetPlayer.getPosition().getPrimaryDirection(action.getTargetPoint());
+                            player.forcePush(direction, targetPlayer);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case COLLECT_TREASURE:
+                    ArtifactType artifactType = player.collectArtifact();
+                    if (artifactType != NONE) {
+                        controllerChan.getInGameViewAUI().refreshArtifactsFound();
+                        controllerChan.getInGameViewAUI().refreshArtifactStack(getCurrentAction().getArtifactCardStack());
+                        controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
+                        controllerChan.getInGameViewAUI().refreshActionsLeft(getCurrentAction().getActivePlayer().getActionsLeft());
+                    }
+                    break;
+            }
         });
-        //TODO Alle Schritte in der queue nacheinander durchführen
     }
 
     /**
@@ -112,7 +206,7 @@ public class AIController {
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
      */
     public boolean isCurrentlyRescueingHimself() {
-        return getCurrentAction().getMap().get(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
+        return getTile(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
     }
 
     /**
@@ -134,7 +228,7 @@ public class AIController {
      * @return der für die KI aktive Spieler
      */
     public Player getActivePlayer() {
-        return activePlayerSupplier != null ? activePlayerSupplier.get() : controllerChan.getCurrentAction().getActivePlayer();
+        return activePlayerSupplier != null ? activePlayerSupplier.get() : getCurrentAction().getActivePlayer();
     }
 
     /**
@@ -170,7 +264,7 @@ public class AIController {
         return new Pair<>(new Pair<>(point1, getTile(point1)), new Pair<>(point2, getTile(point2)));
     }
 
-   /**
+    /**
      * Berechne eine Liste aller Tempelpunkte
      *
      * @return eine Liste aller Tempelpunkte (erwartete Länge: 4x2=8)
@@ -178,7 +272,7 @@ public class AIController {
     public List<Pair<Point, MapTile>> getTemples() {
         List<Point> templePoints = new LinkedList<>();
         for (MapTileProperties properties : MapTileProperties.values()) {
-            if (properties.getHidden() != ArtifactType.NONE) {
+            if (properties.getHidden() != NONE) {
                 templePoints.add(getCurrentAction().getMap().getPositionForTile(properties));
             }
         }
@@ -255,7 +349,6 @@ public class AIController {
      * @return Anzahl an insgesamt auf der Hand befindlichen gewünschten Artefaktkarten
      */
     public int getTotalAmountOfCardsOnHands(ArtifactCardType artifactCardType) {
-
         return getAllPlayers().stream()
                 .map(player -> EnhancedPlayerHand.ofPlayer(player).getAmount(artifactCardType))
                 .reduce(Integer::sum).get();
@@ -285,7 +378,7 @@ public class AIController {
      *               beinhaltet den Spieler, welche die Aktion durchführen soll
      */
     public void makeStep(Supplier<Player> player) {
-        this.activePlayerSupplier = player;
+        setActivePlayerSupplier(player);
         processor.makeStep(this);
     }
 
@@ -308,7 +401,7 @@ public class AIController {
      * @see AIActionTip
      */
     public ActionQueue getTip(Supplier<Player> player) {
-        this.activePlayerSupplier = player;
+        setActivePlayerSupplier(player);
         return processor.getTip(this);
     }
 
@@ -334,6 +427,29 @@ public class AIController {
             throw new IllegalStateException(); // Unerreichbar auf nicht korrumpierter map, sollte vorher gecheckt worden sein
 
         return getCurrentAction().getMap().get(landingSite).getState() != MapTileState.DRY;
+    }
+
+    /**
+     * Berechnet den Punkt aus der Liste, welcher am nächsten am gegebenen Zielpunkt liegt.
+     *
+     * @param pointList          eine Liste aller Punkte die als Ergebnis in Betracht gezogen werden sollen
+     * @param targetForDirection der Zielpunkt, welche angesteuert werden soll
+     * @param playerType         der Spieler, um die Bewegungsmöglichkeiten mit einzurechnen
+     * @return der Punkt aus der Liste, welcher am schnellsten zum Ziel führt
+     * @see #getMinimumActionsNeededToReachTarget(Point, Point, PlayerType)
+     */
+    public Point getClosestPointInDirectionOf(List<Point> pointList, Point targetForDirection, PlayerType playerType) {
+        if (pointList.contains(targetForDirection)) return targetForDirection;
+        Point point = null;
+        int min = 100; //just a higher value than we would expect
+        for (Point current : pointList) {
+            int minimum = getMinimumActionsNeededToReachTarget(current, targetForDirection, playerType);
+            if (point == null || minimum < min) {
+                point = current;
+                min = minimum;
+            }
+        }
+        return point;
     }
 
     /**
