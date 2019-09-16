@@ -11,19 +11,23 @@ import de.sopra.javagame.util.Point;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.SWIM_TO_SAFETY;
 
+import java.util.EnumSet;
+
 @DoAfter(act = SWIM_TO_SAFETY, value = SafetyLandingSite.class)
 public class SafetyTemple extends Decision {
     
     private Point targetPoint;
     @Override
     public Decision decide() {
-        //Es wird nicht ueberprueft, ob das Artefakt aus dem Tempel bereits geborgen ist
         if (condition(Condition.GAME_ANY_LAST_TEMPLE_IN_DANGER).isTrue()) {
             Point targetTemple=null;
             //Pair<Pair<Point, MapTile>,Pair<Point, MapTile>> templePair =control.getTile(artifactType);
             for(Pair<Point, MapTile> temple : control.getTemples()){
-                if(temple.getRight().getState()==MapTileState.FLOODED) {
+                ArtifactType templeType = temple.getRight().getProperties().getHidden();
+                EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
+                if(temple.getRight().getState()==MapTileState.FLOODED && !discoveredArtifacts.contains(templeType)) {
                     for(Pair<Point, MapTile> templeBro : control.getTemples()){
+                        
                         if(!temple.getLeft().equals(templeBro.getLeft()) && 
                            temple.getRight().getProperties().getHidden()==templeBro.getRight().getProperties().getHidden()&&
                            templeBro.getRight().getState()==MapTileState.GONE){
@@ -33,6 +37,7 @@ public class SafetyTemple extends Decision {
                 }
                 if(targetTemple==null){
                     targetTemple= control.getTemples().get(0).getLeft();
+                    return null;
                 }
             }    
             targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
