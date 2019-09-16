@@ -22,12 +22,14 @@ import static de.sopra.javagame.control.ai2.DecisionResult.*;
  * @version 09.09.2019
  * @since 09.09.2019
  */
+@SuppressWarnings("rawtypes")
 public class DecisionMaker implements AIProcessor {
 
     private List<Pair<DoAfter, Class<? extends Decision>>> decisionClasses;
 
     private HashMap<DecisionResult, Decision> decisionTowers;
 
+    @SuppressWarnings("unchecked")
     private void findDecisions() {
         try {
             List<Class> classes = ClassUtil.getClasses("de.sopra.javagame.control.ai2.decisions");

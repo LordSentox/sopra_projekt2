@@ -14,6 +14,7 @@ import de.sopra.javagame.util.Point;
  */
 public class Engineer extends Player {
 
+    private static final long serialVersionUID = 8456546335622125994L;
     private boolean hasExtraDrain;
 
     public Engineer(String name, Point position, Action action) {

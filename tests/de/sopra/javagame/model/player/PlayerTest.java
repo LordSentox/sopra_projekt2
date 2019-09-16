@@ -29,8 +29,8 @@ public class PlayerTest {
     @Test
     public void legalMoves() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
+                Arrays.asList(new Triple<>(PlayerType.PILOT,"", false),
+                        new Triple<>(PlayerType.NAVIGATOR,"", false)),
                 this.testMap);
 
         Player pilot = action.getPlayers().get(0);
@@ -85,8 +85,8 @@ public class PlayerTest {
     @Test
     public void move() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
+                Arrays.asList(new Triple<>(PlayerType.PILOT, "", false),
+                        new Triple<>(PlayerType.NAVIGATOR, "", false)),
                 this.testMap);
 
         Player pilot = action.getPlayers().get(0);
@@ -162,14 +162,14 @@ public class PlayerTest {
     @Test
     public void canMoveOthers() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
+                Arrays.asList(new Triple<>(PlayerType.PILOT, "", false),
+                        new Triple<>(PlayerType.NAVIGATOR, "", false)),
                 this.testMap);
         Action secondAction = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.COURIER, false),
-                        new Pair<>(PlayerType.DIVER, false),
-                        new Pair<>(PlayerType.ENGINEER, false),
-                        new Pair<>(PlayerType.EXPLORER, false)),
+                Arrays.asList(new Triple<>(PlayerType.COURIER,"", false),
+                        new Triple<>(PlayerType.DIVER,"", false),
+                        new Triple<>(PlayerType.ENGINEER,"", false),
+                        new Triple<>(PlayerType.EXPLORER,"", false)),
                 this.testMap);
 
         Pilot pilot = (Pilot) action.getPlayer(PlayerType.PILOT);
@@ -192,8 +192,8 @@ public class PlayerTest {
     @Test
     public void forcePush() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
+                Arrays.asList(new Triple<>(PlayerType.PILOT,"", false),
+                        new Triple<>(PlayerType.NAVIGATOR,"", false)),
                 this.testMap);
 
         Player pilot = action.getPlayers().get(0);
@@ -245,8 +245,8 @@ public class PlayerTest {
     @Test
     public void drainablePositions() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
+                Arrays.asList(new Triple<>(PlayerType.EXPLORER,"", false),
+                        new Triple<>(PlayerType.NAVIGATOR,"", false)),
                 this.testMap);
 
         Player explorer = action.getPlayers().get(0);
@@ -318,14 +318,14 @@ public class PlayerTest {
     @Test
     public void legalReceivers() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
+                Arrays.asList(new Triple<>(PlayerType.PILOT,"", false),
+                        new Triple<>(PlayerType.NAVIGATOR,"", false)),
                 this.testMap);
         Action secondAction = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.COURIER, false),
-                        new Pair<>(PlayerType.DIVER, false),
-                        new Pair<>(PlayerType.ENGINEER, false),
-                        new Pair<>(PlayerType.EXPLORER, false)),
+                Arrays.asList(new Triple<>(PlayerType.COURIER,"", false),
+                        new Triple<>(PlayerType.DIVER,"", false),
+                        new Triple<>(PlayerType.ENGINEER,"", false),
+                        new Triple<>(PlayerType.EXPLORER,"", false)),
                 this.testMap);
 
         Pilot pilot = (Pilot) action.getPlayer(PlayerType.PILOT);
@@ -399,14 +399,14 @@ public class PlayerTest {
     @Test
     public void getType() {
         Action action = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.NAVIGATOR, false)),
+                Arrays.asList(new Triple<>(PlayerType.PILOT,"", false),
+                        new Triple<>(PlayerType.NAVIGATOR,"", false)),
                 this.testMap);
         Action secondAction = Action.createInitialAction(Difficulty.NORMAL,
-                Arrays.asList(new Pair<>(PlayerType.COURIER, false),
-                        new Pair<>(PlayerType.DIVER, false),
-                        new Pair<>(PlayerType.ENGINEER, false),
-                        new Pair<>(PlayerType.EXPLORER, false)),
+                Arrays.asList(new Triple<>(PlayerType.COURIER,"", false),
+                        new Triple<>(PlayerType.DIVER,"", false),
+                        new Triple<>(PlayerType.ENGINEER,"", false),
+                        new Triple<>(PlayerType.EXPLORER,"", false)),
                 this.testMap);
 
         Pilot pilot = (Pilot) action.getPlayer(PlayerType.PILOT);

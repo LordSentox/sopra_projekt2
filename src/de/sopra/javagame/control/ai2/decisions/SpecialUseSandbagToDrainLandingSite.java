@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
+import de.sopra.javagame.model.player.PlayerType;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
 import static de.sopra.javagame.control.ai2.decisions.Condition.*;
@@ -27,18 +28,18 @@ public class SpecialUseSandbagToDrainLandingSite extends Decision {
          * nicht gezogen, wenn keine Flut-steigt-Karten mehr im Artefaktstapel sind
          * wäre zb 0% Wahrscheinlichkeit, zu versinken
          */
-        if (true) {
-            //TODO
-            //@see control.getFloodCardStackTracker()
-            //dort sind Methoden zum erhalten der gemerkten Karten oben auf dem Stapel
-            return this;
-        }
+//        if (true) {
+//            //TODO
+//            //@see control.getFloodCardStackTracker()
+//            //dort sind Methoden zum erhalten der gemerkten Karten oben auf dem Stapel
+//            return this;
+//        }
         return null;
     }
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().sandbagCard(control.getTile(PlayerType.PILOT).getLeft());
     }
 
 }

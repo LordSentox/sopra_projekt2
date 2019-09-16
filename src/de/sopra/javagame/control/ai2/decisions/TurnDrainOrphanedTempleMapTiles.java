@@ -28,7 +28,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 @DoAfter(act = TURN_ACTION, value = TurnGivePlayerTheFourthTreasureCard.class)
 @PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainOrphanedTempleMapTiles extends Decision {
-
+    private Point drainPoint;
     @Override
     public Decision decide() {
 
@@ -62,6 +62,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
+            drainPoint=orphanedTemplePoint;
             return true;
         }
         return false;
@@ -69,7 +70,7 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().drain(drainPoint);
     }
 
 }

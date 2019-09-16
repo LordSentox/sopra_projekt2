@@ -7,13 +7,15 @@ import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
-
-import static de.sopra.javagame.util.Direction.*;
 
 /**
  * <h1>Decision</h1>
@@ -152,6 +154,7 @@ public abstract class Decision {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> boolean checkAll(Predicate<T> checker, T... objects) {
         if (objects == null || objects.length == 0)
             return true;
@@ -160,21 +163,22 @@ public abstract class Decision {
         return true;
     }
 
+    protected boolean needSpecialToMove(Point startPoint, Point targetPoint) {
+        Direction direction = startPoint.getPrimaryDirection(targetPoint);
+        return startPoint.add(direction).equals(targetPoint);
+    }
+
+    protected int minMovesWithoutSpecial(Point startPoint, Point targetPoint) {
+        //Courier um keine Spezialbewegungen zu haben
+        return control.getMinimumActionsNeededToReachTarget(startPoint, targetPoint, PlayerType.COURIER);
+    }
+
     protected List<Point> surroundingPoints(Point center, boolean edges) {
-        List<Point> points = new LinkedList<>();
-        Point northernNeighbourPoint = translate(center, UP);
-        Point southernNeighbourPoint = translate(center, DOWN);
-        points.add(northernNeighbourPoint);
-        points.add(southernNeighbourPoint);
-        points.add(translate(center, LEFT));
-        points.add(translate(center, RIGHT));
         if (edges) {
-            points.add(translate(northernNeighbourPoint, RIGHT));
-            points.add(translate(southernNeighbourPoint, RIGHT));
-            points.add(translate(southernNeighbourPoint, LEFT));
-            points.add(translate(northernNeighbourPoint, LEFT));
+            return center.getSurrounding();
+        } else {
+            return center.getNeighbours();
         }
-        return points;
     }
 
     public final void setControl(AIController control) {

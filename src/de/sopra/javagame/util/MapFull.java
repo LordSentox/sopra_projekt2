@@ -42,7 +42,7 @@ public class MapFull extends Map<MapTile> {
     public Point getPositionForTile(MapTileProperties tileProperties) {
         for (int y = 0; y < SIZE_Y; ++y) {
             for (int x = 0; x < SIZE_X; ++x) {
-                if (get(x, y).getProperties() == tileProperties) {
+                if (get(x,y) != null && get(x, y).getProperties() == tileProperties) {
                     return new Point(x, y);
                 }
             }

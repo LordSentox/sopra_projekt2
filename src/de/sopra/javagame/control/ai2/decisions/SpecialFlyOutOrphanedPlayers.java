@@ -9,6 +9,7 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.PLAY_SPECIAL_CARD;
@@ -24,7 +25,9 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELIC
 @DoAfter(act = PLAY_SPECIAL_CARD, value = SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile.class)
 @PreCondition(allTrue = PLAYER_HAS_HELICOPTER_CARD)
 public class SpecialFlyOutOrphanedPlayers extends Decision {
-
+    private Point start;
+    private Point target;
+    private EnumSet<PlayerType> rescued;
     @Override
     public Decision decide() {
         List<Player> allPlayers = control.getAllPlayers();
@@ -38,6 +41,13 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
             }
             //prüfe, ob der Spieler sich noch selbst wegbewegen kann
             if (player.legalMoves(true).isEmpty()) {
+                start=player.getPosition();
+                target= control.getTile(PlayerType.PILOT).getLeft();
+                for(Player otherPlayer : control.getAllPlayers()) {
+                    if(otherPlayer.getPosition().equals(player.getPosition())) {
+                        rescued.add(otherPlayer.getType());
+                    }
+                }
                 return this;
             }
         }
@@ -46,7 +56,7 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().helicopterCard(start, target, rescued);
     }
 
 }

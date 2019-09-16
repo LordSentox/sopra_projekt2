@@ -55,13 +55,14 @@ public class MapCheckUtil {
         }
 
         // Überprüfe, ob die Map die richtige Anzahl an tiles hat
-        int numIslandTiles = 0;
-        for (int y = 0; y < Map.SIZE_Y; ++y) {
-            for (int x = 0; x < Map.SIZE_X; ++x) {
-                if (map.get(x, y))
-                    ++numIslandTiles;
-            }
-        }
+        int numIslandTiles = (int) map.stream().filter(element -> element).count();
+        //TODO remove if test still pass
+//        for (int y = 0; y < Map.SIZE_Y; ++y) {
+//            for (int x = 0; x < Map.SIZE_X; ++x) {
+//                if (map.get(x, y))
+//                    ++numIslandTiles;
+//            }
+//        }
 
         if (numIslandTiles != MapTileProperties.values().length)
             return false;

@@ -37,7 +37,7 @@ public class InGameUserControllerTest {
     private CardStack<ArtifactCard> artifactCardStack;
     private List<ArtifactCard> handCardsExpected;
     //FIXME untypisierte liste. im Laufe der tests werden Player und PlayerType Objekte in die Liste eingefuegt
-    private List moveablePlayers;
+    private List<PlayerType> moveablePlayers;
     private MapFull testMap;
 
     @Before
@@ -56,9 +56,9 @@ public class InGameUserControllerTest {
         String testMapName = "TestMap";
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         this.testMap = MapUtil.readFullMapFromString(testMapString);
-        List<Pair<PlayerType, Boolean>> players = Arrays.asList(new Pair<>(PlayerType.COURIER, false),
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false));
+        List<Triple<PlayerType,String, Boolean>> players = Arrays.asList(new Triple<>(PlayerType.COURIER,"", false),
+                new Triple<>(PlayerType.EXPLORER,"", false),
+                new Triple<>(PlayerType.NAVIGATOR,"", false));
         controllerChan.startNewGame(testMapName, map, players, Difficulty.NORMAL);
         mapController = controllerChan.getMapController();
         inGameCont = controllerChan.getInGameUserController();
@@ -109,7 +109,7 @@ public class InGameUserControllerTest {
         handCardsExpected.add(airCard);
         navigator.setPosition(courier.getPosition());
 
-        moveablePlayers = new ArrayList<Player>();
+        moveablePlayers = new ArrayList<>();
         moveablePlayers.add(PlayerType.NAVIGATOR);
         moveablePlayers.add(PlayerType.COURIER);
 

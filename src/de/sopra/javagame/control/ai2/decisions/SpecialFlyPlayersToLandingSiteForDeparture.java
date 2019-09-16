@@ -11,6 +11,7 @@ import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.decisions.Condition.*;
@@ -25,7 +26,10 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.*;
 @PreCondition(allTrue = {PLAYER_HAS_HELICOPTER_CARD, GAME_HAS_ALL_ARTIFACTS},
         allFalse = PLAYER_REACHES_LANDINGSITE_WITH_LESS_THAN_SEVEN_ACTIONS)
 public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
-
+    
+    private Point start;
+    private Point target;
+    private EnumSet<PlayerType> rescued;
     @Override
     public Decision decide() {
 
@@ -38,10 +42,33 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
         for(Player player : allPlayers){
             if (control.getMinimumActionsNeededToReachTarget
                     (player.getPosition(), landingSitePosition, player.getType())== Integer.MAX_VALUE){
+                start=player.getPosition();
+                target= control.getTile(PlayerType.PILOT).getLeft();
+                for(Player otherPlayer : control.getAllPlayers()) {
+                    if(otherPlayer.getPosition().equals(player.getPosition())) {
+                        rescued.add(otherPlayer.getType());
+                    }
+                }    
                 return this;
             }
         }
         if(control.getCurrentAction().getWaterLevel().getLevel() != WaterLevel.MAX_WATER_LEVEL){
+            int maxRange=0;
+            int currentRange=0;
+            for(Player player : allPlayers){
+                currentRange= control.getMinimumActionsNeededToReachTarget
+                (player.getPosition(), landingSitePosition, player.getType());
+                if (currentRange> maxRange){
+                    maxRange= currentRange;
+                    start=player.getPosition();
+                    target= control.getTile(PlayerType.PILOT).getLeft();
+                    for(Player otherPlayer : control.getAllPlayers()) {
+                        if(otherPlayer.getPosition().equals(player.getPosition())) {
+                            rescued.add(otherPlayer.getType());
+                        }
+                    }    
+                }
+            }
             return this;
         }
         
@@ -61,7 +88,7 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().helicopterCard(start, target, rescued);
     }
 
 }

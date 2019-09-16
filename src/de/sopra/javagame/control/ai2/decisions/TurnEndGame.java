@@ -9,6 +9,7 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
@@ -25,7 +26,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
 @DoAfter(act = TURN_ACTION, value = Decision.class)
 @PreCondition(allTrue = GAME_HAS_ALL_ARTIFACTS)
 public class TurnEndGame extends Decision {
-
+    private EnumSet<PlayerType> people;
     @Override
     public Decision decide() {
 
@@ -35,6 +36,7 @@ public class TurnEndGame extends Decision {
         List<Player> allPlayers = control.getAllPlayers();
 
         for (Player player : allPlayers) {
+            people.add(player.getType());
             Point playerPosition = player.getPosition();
             if (!playerPosition.equals(landingSitePosition)) {
                 return null;
@@ -46,7 +48,7 @@ public class TurnEndGame extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().finishTheGame(control.getTile(PlayerType.PILOT).getLeft(),people);
     }
 
 }

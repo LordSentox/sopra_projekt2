@@ -9,6 +9,8 @@ import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 public class CourierTest {
 
     private Action action;
-    private List<Pair<PlayerType, Boolean>> players;
+    private List<Triple<PlayerType,String, Boolean>> players;
 
     @Before
     public void setUp() throws Exception {
@@ -33,10 +35,10 @@ public class CourierTest {
         MapFull testMap = MapUtil.readFullMapFromString(testMapString);
 
         players = Arrays.asList(
-                new Pair<>(PlayerType.COURIER, false),
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false),
-                new Pair<>(PlayerType.PILOT, false));
+                new Triple<>(PlayerType.COURIER,"", false),
+                new Triple<>(PlayerType.EXPLORER,"", false),
+                new Triple<>(PlayerType.NAVIGATOR,"", false),
+                new Triple<>(PlayerType.PILOT,"", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
@@ -48,8 +50,8 @@ public class CourierTest {
 
     @Test
     public void constructorTest() {
-        Courier courier = new Courier("Bob", new Point(4, 4), action);
-        courier = new Courier("Bob", new Point(4, 4), action, false);
+        new Courier("Bob", new Point(4, 4), action);
+        new Courier("Bob", new Point(4, 4), action, false);
     }
 
     @Test
@@ -57,7 +59,7 @@ public class CourierTest {
         Courier courier = (Courier) action.getActivePlayer();
         List<PlayerType> receivers = courier.legalReceivers();
 
-        for (PlayerType type : players.stream().map(Pair::getLeft).collect(Collectors.toList())) {
+        for (PlayerType type : players.stream().map(Triple::getFirst).collect(Collectors.toList())) {
             if (type != PlayerType.COURIER) Assert.assertTrue("Player missing from legalReceivers: " + type, receivers.contains(type));
         }
     }

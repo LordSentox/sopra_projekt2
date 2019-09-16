@@ -4,6 +4,7 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Triple;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,9 +15,12 @@ import java.util.Stack;
  * werden mit undo und redo.
  */
 public class JavaGame implements Serializable {
+
+    private static final long serialVersionUID = -5194350096601415362L;
     public static final int MAP_SIZE_X = 10;
     public static final int MAP_SIZE_Y =  7;
 
+    //region Attribute
     /**
      * Wenn ein Spiel gestartet wird, ist diese Variable zunächst false. Sollte ein Spieler sich aber im Laufe des Spiels
      * einen Tipp holen oder einen Zug rückgängig machen wird sie auf true gesetzt und das Spiel kann nicht mehr in die
@@ -45,6 +49,7 @@ public class JavaGame implements Serializable {
      * Der Schwierigkeitsgrad mit dem das Spiel angefangen wurde. Bestimmt den Anfangswasserpegel.
      */
     private Difficulty difficulty;
+    //endregion
 
     private JavaGame() {
         this.cheetah = false;
@@ -62,7 +67,7 @@ public class JavaGame implements Serializable {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players)
             throws NullPointerException, IllegalArgumentException {
         JavaGame game = new JavaGame();
 
@@ -189,7 +194,6 @@ public class JavaGame implements Serializable {
         if (canUndo()) {
             Action undoneAction = this.undoActions.pop();
             this.redoActions.push(undoneAction);
-            markCheetah();
         }
     }
 
