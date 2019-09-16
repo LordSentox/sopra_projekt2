@@ -39,7 +39,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
         this.type = type;
         this.name = name;
         this.action = action;
-        this.actionsLeft = 0;
+        this.actionsLeft = 3;
         this.hand = new ArrayList<>();
     }
 

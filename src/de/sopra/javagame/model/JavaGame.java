@@ -4,6 +4,7 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Triple;
 
 import java.io.Serializable;
 import java.util.List;
@@ -64,7 +65,7 @@ public class JavaGame implements Serializable {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Pair<Pair<PlayerType, String>, Boolean>> players)
+    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players)
             throws NullPointerException, IllegalArgumentException {
         JavaGame game = new JavaGame();
 

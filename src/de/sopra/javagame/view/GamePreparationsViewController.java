@@ -7,6 +7,7 @@ import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -94,12 +95,9 @@ public class GamePreparationsViewController extends AbstractViewController {
 }
 
     public void onStartGameClicked() {
-
+        playerList.clear();
         
-        
-//        System.out.println(playerList);
         //Spielertypen hinzufügen
-        System.out.println(playerOneChooseCharakterComboBox.getValue());
         addPlayerType(playerOneChooseCharakterComboBox.getValue(),
                 !isPlayerOneKiCheckBox.isDisabled(),
                 playerOneNameTextField.getText());
@@ -114,6 +112,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         
         //PLayerList muss mind. zwei Spieler enthalten
         //TODO Button disablen wenn die Bedingungen nicht erfüllt sind
+        
         if(!playerList.stream().map(Triple::getFirst).filter(playerType -> !playerType.equals(PlayerType.NONE)).allMatch(new HashSet<PlayerType>()::add)){
             cannotStartGameLabel.setText("Mindestens zwei Spieler haben den gleichen Typ");
             return;
@@ -147,30 +146,29 @@ public class GamePreparationsViewController extends AbstractViewController {
         if(type == null){
             type = "";
         }
-        //TODO zufällig soll zufällig sein
+        
         switch (type) {
-        case "Taucher":
-            playerList.add(new Triple<>(PlayerType.DIVER, name, isAi));
-            System.out.println("i bims ein Taucher");
-            break;
-        case "Navigator":
-            playerList.add(new Triple<>(PlayerType.NAVIGATOR, name, isAi));
-            break;
-        case "Pilot":
-            playerList.add(new Triple<>(PlayerType.PILOT, name, isAi));
-            break;
-        case "Entdecker":
-            playerList.add(new Triple<>(PlayerType.EXPLORER, name, isAi));
-            break;
-        case "Bote":
-            playerList.add(new Triple<>(PlayerType.COURIER, name, isAi));
-            break;
-        case "Ingenieur":
-            playerList.add(new Triple<>(PlayerType.ENGINEER, name, isAi));
-            break;
-        default:
-            playerList.add(new Triple<>(PlayerType.NONE, name, isAi));
-            break;
+            case "Taucher":
+                playerList.add(new Triple<>(PlayerType.DIVER, name, isAi));
+                break;
+            case "Navigator":
+                playerList.add(new Triple<>(PlayerType.NAVIGATOR, name, isAi));
+                break;
+            case "Pilot":
+                playerList.add(new Triple<>(PlayerType.PILOT, name, isAi));
+                break;
+            case "Entdecker":
+                playerList.add(new Triple<>(PlayerType.EXPLORER, name, isAi));
+                break;
+            case "Bote":
+                playerList.add(new Triple<>(PlayerType.COURIER, name, isAi));
+                break;
+            case "Ingenieur":
+                playerList.add(new Triple<>(PlayerType.ENGINEER, name, isAi));
+                break;
+            default:
+                playerList.add(new Triple<>(PlayerType.NONE, name, isAi));
+                break;
         }
     }
     
@@ -179,21 +177,20 @@ public class GamePreparationsViewController extends AbstractViewController {
         if(diff == null){
             diff = "";
         }
+        
         switch (diff) {
-        case "Novice":
-            difficulty = Difficulty.NOVICE;
-            break;
-        case "Normal":
-            difficulty = Difficulty.NORMAL;
-            break;
-        case "Elite":
-            difficulty = Difficulty.ELITE;
-            break;
-        case "Legende":
-            difficulty = Difficulty.LEGENDARY;
-            break;
-        default:
-//            difficulty = Difficulty.LEGENDARY;
+            case "Novice":
+                difficulty = Difficulty.NOVICE;
+                break;
+            case "Normal":
+                difficulty = Difficulty.NORMAL;
+                break;
+            case "Elite":
+                difficulty = Difficulty.ELITE;
+                break;
+            case "Legende":
+                difficulty = Difficulty.LEGENDARY;
+                break;
         }
     }
 }

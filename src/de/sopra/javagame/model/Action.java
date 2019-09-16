@@ -123,14 +123,14 @@ public class Action implements Copyable<Action>, Serializable {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param map        Die Map des Spiels
      */
-    public static Action createInitialAction(Difficulty difficulty, List<Pair<Pair<PlayerType, String>, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
+    public static Action createInitialAction(Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
         if (map == null || difficulty == null || players == null)
             throw new IllegalArgumentException("Argument is null");
 
         if (players.isEmpty() || players.size() < 2 || players.size() > 4)
             throw new IllegalStateException();
         
-        //players.replaceAll(pair -> pair.getLeft().equals(other));
+        //players.replaceAll(pair -> pair.getFirst().equals(other));
         
         Action action = new Action();
         action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
@@ -139,59 +139,28 @@ public class Action implements Copyable<Action>, Serializable {
         action.floodCardStack = CardStackUtil.createFloodCardStack(map.raw());
         action.waterLevel = new WaterLevel(difficulty);
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
-        action.players = players.stream().map(pair -> {
-            Point start = map.getPlayerSpawnPoint(pair.getLeft().getLeft());
-            boolean isHartmut = pair.getLeft().getRight() == null || pair.getLeft().getRight().isEmpty();
-            switch (pair.getLeft().getLeft()) {
-            case COURIER:
-                String courierName;
-                if (isHartmut){courierName = "Hartmut Kurier";}
-                else {courierName = pair.getLeft().getRight();}
-                Courier courier = new Courier(courierName, start, action);
-                courier.setActionsLeft(3);
-                return courier;
-            case DIVER:
-                String diverName;
-                if (isHartmut){diverName = "Hartmut im Spanienurlaub";}
-                else {diverName = pair.getLeft().getRight();}
-                Diver diver = new Diver(diverName, start, action);
-                diver.setActionsLeft(3);
-                return diver;
-            case PILOT:
-                String pilotName;
-                if (isHartmut){pilotName = "Hartmut auf dem Weg in den Urlaub";}
-                else {pilotName = pair.getLeft().getRight();}
-                Pilot pilot = new Pilot(pilotName, start, action);
-                pilot.setActionsLeft(3);
-                return pilot;
-            case NAVIGATOR:
-                String navigatorName;
-                if (isHartmut){navigatorName = "Hartmut Verlaufen";}
-                else {navigatorName = pair.getLeft().getRight();}
-                Navigator navigator = new Navigator(navigatorName, start, action);
-                navigator.setActionsLeft(3);
-                return navigator;
-            case EXPLORER:
-                String explorerName;
-                if (isHartmut){explorerName = "Hartmut im Dschungel";}
-                else {explorerName = pair.getLeft().getRight();}
-                Explorer explorer = new Explorer(explorerName, start, action);
-                explorer.setActionsLeft(3);
-                return explorer;
-            case ENGINEER:
-                String engineerName;
-                if (isHartmut){engineerName = "Hartmut Auto kaputt";}
-                else {engineerName = pair.getLeft().getRight();}
-                Engineer engineer = new Engineer(engineerName, start, action);
-                engineer.setActionsLeft(3);
-                return engineer;
-            default:
-                throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
-            }
-        }).collect(Collectors.toList());
-
+        action.players = players.stream().map(triple -> createPlayerByType(triple.getFirst(), triple.getSecond(), map.getPlayerSpawnPoint(triple.getFirst()), action)).collect(Collectors.toList());
         action.state = TurnState.FLOOD;
         return action;
+    }
+    
+    public static Player createPlayerByType(PlayerType type, String name, Point start, Action action) {
+        switch (type) {
+            case COURIER:
+                return new Courier(name, start, action);
+            case DIVER:
+                return new Diver(name, start, action);
+            case PILOT:
+                return new Pilot(name, start, action);
+            case NAVIGATOR:
+                return new Navigator(name, start, action);
+            case EXPLORER:
+                return new Explorer(name, start, action);
+            case ENGINEER:
+                return new Engineer(name, start, action);
+            default:
+                throw new IllegalArgumentException("Illegal Player Type: " + type);
+        }
     }
 
     /**
