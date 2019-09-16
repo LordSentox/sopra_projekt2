@@ -25,6 +25,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
 public class TurnGivePlayerTheFourthTreasureCard extends Decision {
     private PlayerType target;
     private ArtifactCardType given; 
+    private boolean courier;
     @Override
     public Decision decide() {
 
@@ -46,21 +47,25 @@ public class TurnGivePlayerTheFourthTreasureCard extends Decision {
             if(all(air > ZERO_CARDS, air2 == THREE_CARDS)) {
                 given=AIR;
                 target= player.getType();
+                courier= !player.getPosition().equals(player().getPosition());
                 return this;
             }    
             if(all(earth > ZERO_CARDS, earth2 == THREE_CARDS)) {
                 given=EARTH;
                 target= player.getType();
+                courier= !player.getPosition().equals(player().getPosition());
                 return this;
             }    
             if(all(fire > ZERO_CARDS, fire2 == THREE_CARDS)){
                 given=FIRE;
                 target= player.getType();
+                courier= !player.getPosition().equals(player().getPosition());
                 return this;    
             }
             if(all(water > ZERO_CARDS, water2 == THREE_CARDS)) {
                 given=WATER;
                 target= player.getType();
+                courier= !player.getPosition().equals(player().getPosition());
                 return this;    
             }    
         }
@@ -69,7 +74,10 @@ public class TurnGivePlayerTheFourthTreasureCard extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().trade(given, target); //TODO
+        if(!courier){
+            return startActionQueue().trade(given, target);
+        }
+        return startActionQueue().courierTrade(given, target);
     }
 
 }
