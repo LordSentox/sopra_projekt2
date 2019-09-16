@@ -20,55 +20,37 @@ public class SafetyTemple extends Decision {
 
     @Override
     public Decision decide() {
+
+        EnumSet<ArtifactType> remainingTypes = EnumSet.complementOf(action().getDiscoveredArtifacts());
+        remainingTypes.remove(ArtifactType.NONE); //dont want this
+
         if (condition(Condition.GAME_ANY_LAST_TEMPLE_IN_DANGER).isTrue()) {
             Point targetTemple = null;
-            //Pair<Pair<Point, MapTile>,Pair<Point, MapTile>> templePair =control.getTile(artifactType);
-            for (Pair<Point, MapTile> temple : control.getTemples()) {
-                ArtifactType templeType = temple.getRight().getProperties().getHidden();
-                EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
-                if (temple.getRight().getState() == MapTileState.FLOODED && !discoveredArtifacts.contains(templeType)) {
-                    for (Pair<Point, MapTile> templeBro : control.getTemples()) {
+            for (ArtifactType type : remainingTypes) {
+                Pair<Pair<Point, MapTile>, Pair<Point, MapTile>> templePair = control.getTile(type);
+                Pair<Point, MapTile> firstTemple = templePair.getRight();
+                Pair<Point, MapTile> secondTemple = templePair.getLeft();
+                if (all(firstTemple.getRight().getState() == MapTileState.FLOODED, secondTemple.getRight().getState() == MapTileState.GONE)) {
+                    targetTemple = firstTemple.getLeft();
+                }
+                if (all(firstTemple.getRight().getState() == MapTileState.GONE, secondTemple.getRight().getState() == MapTileState.FLOODED)) {
+                    targetTemple = secondTemple.getLeft();
+                }
 
-                        if (!temple.getLeft().equals(templeBro.getLeft()) &&
-                                temple.getRight().getProperties().getHidden() == templeBro.getRight().getProperties().getHidden() &&
-                                templeBro.getRight().getState() == MapTileState.GONE) {
-                            targetTemple = temple.getLeft();
-                        }
-                    }
-                }
-                if (targetTemple == null) {
-                    targetTemple = control.getTemples().get(0).getLeft();
-                    return null;
-                }
             }
             targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
-                    targetTemple,
-                    control.getActivePlayer().getType());
+                    targetTemple, control.getActivePlayer().getType());
             return this;
-        }
-        if (condition(Condition.PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS).isTrue()) {
+        } else if (condition(Condition.PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS).isTrue()) {
             EnhancedPlayerHand activeHand = playerHand();
-
-            if (activeHand.getAmount(ArtifactType.WATER) == 4) {
-                targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
-                        control.getTile(ArtifactType.WATER).getLeft().getLeft(),
-                        control.getActivePlayer().getType());
-                return this;
-            } else if (activeHand.getAmount(ArtifactType.EARTH) == 4) {
-                targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
-                        control.getTile(ArtifactType.EARTH).getLeft().getLeft(),
-                        control.getActivePlayer().getType());
-                return this;
-            } else if (activeHand.getAmount(ArtifactType.FIRE) == 4) {
-                targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
-                        control.getTile(ArtifactType.FIRE).getLeft().getLeft(),
-                        control.getActivePlayer().getType());
-                return this;
-            } else if (activeHand.getAmount(ArtifactType.AIR) == 4) {
-                targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
-                        control.getTile(ArtifactType.AIR).getLeft().getLeft(),
-                        control.getActivePlayer().getType());
-                return this;
+            for(ArtifactType type : remainingTypes)
+            {
+                if (activeHand.getAmount(type) == 4) {
+                    targetPoint = control.getClosestPointInDirectionOf(control.getActivePlayer().legalMoves(true),
+                            control.getTile(type).getLeft().getLeft(),
+                            control.getActivePlayer().getType());
+                    return this;
+                }
             }
         }
 
