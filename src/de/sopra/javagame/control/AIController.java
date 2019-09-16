@@ -67,6 +67,11 @@ public class AIController {
         currentAction.getFloodCardStack().setObserver(floodCardStackTracker);
     }
 
+    public void setActivePlayerSupplier(Supplier<Player> supplier) {
+        if (supplier != null)
+            this.activePlayerSupplier = supplier;
+    }
+
     /**
      * Führt eine ActionQueue Schritt für Schritt durch.
      *
@@ -112,7 +117,7 @@ public class AIController {
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
      */
     public boolean isCurrentlyRescueingHimself() {
-        return getCurrentAction().getMap().get(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
+        return getTile(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
     }
 
     /**
@@ -134,7 +139,7 @@ public class AIController {
      * @return der für die KI aktive Spieler
      */
     public Player getActivePlayer() {
-        return activePlayerSupplier != null ? activePlayerSupplier.get() : controllerChan.getCurrentAction().getActivePlayer();
+        return activePlayerSupplier != null ? activePlayerSupplier.get() : getCurrentAction().getActivePlayer();
     }
 
     /**
@@ -170,7 +175,7 @@ public class AIController {
         return new Pair<>(new Pair<>(point1, getTile(point1)), new Pair<>(point2, getTile(point2)));
     }
 
-   /**
+    /**
      * Berechne eine Liste aller Tempelpunkte
      *
      * @return eine Liste aller Tempelpunkte (erwartete Länge: 4x2=8)
@@ -255,7 +260,6 @@ public class AIController {
      * @return Anzahl an insgesamt auf der Hand befindlichen gewünschten Artefaktkarten
      */
     public int getTotalAmountOfCardsOnHands(ArtifactCardType artifactCardType) {
-
         return getAllPlayers().stream()
                 .map(player -> EnhancedPlayerHand.ofPlayer(player).getAmount(artifactCardType))
                 .reduce(Integer::sum).get();
@@ -285,7 +289,7 @@ public class AIController {
      *               beinhaltet den Spieler, welche die Aktion durchführen soll
      */
     public void makeStep(Supplier<Player> player) {
-        this.activePlayerSupplier = player;
+        setActivePlayerSupplier(player);
         processor.makeStep(this);
     }
 
@@ -308,7 +312,7 @@ public class AIController {
      * @see AIActionTip
      */
     public ActionQueue getTip(Supplier<Player> player) {
-        this.activePlayerSupplier = player;
+        setActivePlayerSupplier(player);
         return processor.getTip(this);
     }
 
@@ -334,6 +338,11 @@ public class AIController {
             throw new IllegalStateException(); // Unerreichbar auf nicht korrumpierter map, sollte vorher gecheckt worden sein
 
         return getCurrentAction().getMap().get(landingSite).getState() != MapTileState.DRY;
+    }
+
+    public Point getClosestPointInDirectionOf(List<Point> pointList, Point targetForDirection)
+    {
+        return null;
     }
 
     /**
