@@ -4,10 +4,7 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.*;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -116,38 +113,45 @@ public class ControllerChan {
      */
 
     public void loadSaveGame(String loadGameName) {
-        try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + loadGameName + ".save");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            this.javaGame = (JavaGame) objectInputStream.readObject();
+        final JavaGame game = GameIOUtil.loadFromFile(new File(SAVE_GAME_FOLDER + loadGameName + ".save"));
 
-            // Falls das Spiel nicht bis zum letzten Zug vorgespult wurde, spule es vor.
-            while (this.javaGame.canRedo())
-                this.javaGame.redoAction();
-
-            // Setze die momentane Aktion auf die nächste des geladenen Spiels
-            this.currentAction = this.javaGame.getPreviousAction().copy();
-
-            // Spiel wurde erfolgreich geladen, der Name des momentanen Spiels kann gesetzt werden und
-            // das GUI kann informiert werden
-            this.gameName = loadGameName;
-            this.inGameViewAUI.refreshAll();
-        } catch (FileNotFoundException e) {
-            System.out.println("Es gab keine solche Datei.");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Beim Import ist ein Fehler aufgetreten!");
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Die Klasse wurde nicht gefunden!");
-            e.printStackTrace();
+        if (game == null) {
+            System.err.println("Spiel " + loadGameName + " konnte nicht geladen werden.");
+            return;
         }
+        this.javaGame = game;
+
+        // Falls das Spiel nicht bis zum letzten Zug vorgespult wurde, spule es vor.
+        while (this.javaGame.canRedo())
+            this.javaGame.redoAction();
+
+        // Setze die momentane Aktion auf die nächste des geladenen Spiels
+        this.currentAction = this.javaGame.getPreviousAction().copy();
+
+        // Spiel wurde erfolgreich geladen, der Name des momentanen Spiels kann gesetzt werden und
+        // das GUI kann informiert werden
+        this.gameName = loadGameName;
+        this.inGameViewAUI.refreshAll();
     }
 
-    public void loadReplay(String replayName){
+    public void loadReplay(String replayName) {
+        final JavaGame game = GameIOUtil.loadFromFile(new File(REPLAY_FOLDER + replayName + ".replay"));
+
+        if (game == null) {
+            System.err.println("Spielwiederholung " + replayName + " konnte nicht geladen werden.");
+            return;
+        }
+        this.javaGame = game;
+
+        // Spule das Spiel bis zum Anfang zurück
         while(this.javaGame.canUndo()) {
             this.javaGame.undoAction();
         }
+
+        // Setzen des Namens und starten des Replays in der View
         this.gameName = replayName;
+        this.inGameViewAUI.setIsReplayWindow(true);
+        this.inGameViewAUI.refreshAll();
     }
 
     /**
@@ -157,38 +161,30 @@ public class ControllerChan {
      */
 
     public void saveGame(String gameName) {
-        // FIXME: Funktioniert das wirklich so? Der Name müsste ja erst gesetzt worden sein. Vielleicht lieber auf null
-        // überprüfen?
-        if (gameName.isEmpty()) {
-            this.gameName = "current";
-        } else {
-            this.gameName = gameName;
+        // Überprüfe, ob das Spiel beendet wurde. Ist das der Fall ist es nur noch ein Replay, kein Spiel, das man
+        // laden kann.
+        while (javaGame.canRedo()) {
+            javaGame.redoAction();
         }
-        try (FileOutputStream fileOutputStream = new FileOutputStream(this.getGameName() + ".save");
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            objectOutputStream.writeObject(javaGame);
 
-            //Wenn das Spiel beendet wurde, speichere es auch in den HighScores
-            // TODO: Sollte das Spiel wirklich hier gespeichert werden und nicht, wenn es beendet wird? Außerdem gibt es
-            // verschiedene Ordner für replays und für gespeicherte Spiele. Wenn es beendet wurde sollte es nur bei den
-            // replays, nicht bei den Spielen, die man weiterspielen kann landen.
-            if (javaGame.getPreviousAction().isGameEnded()) {
-                while (javaGame.canUndo()) {
-                    javaGame.undoAction();
-                }
-                try (FileOutputStream fileOutputStreamReplay =
-                     new FileOutputStream(HighScoresController.REPLAY_FOLDER + this.gameName + ".replay");
-                     ObjectOutputStream objectOutputStreamReplay =
-                     new ObjectOutputStream(fileOutputStreamReplay)) {
-                            objectOutputStream.writeObject(javaGame);
-                }
+        boolean isReplay = javaGame.getPreviousAction().isGameEnded();
+        File saveFile;
+        if (isReplay) {
+            saveFile = new File(REPLAY_FOLDER + gameName + ".replay");
+
+            // Spiele das Spiel zurück, bevor es gespeichert wird
+            while (javaGame.canUndo()) {
+                javaGame.undoAction();
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Es gab keine solche Datei.");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Beim Export ist ein Fehler aufgetreten.");
-            e.printStackTrace();
+        }
+        else if (gameName == null || gameName.isEmpty()) {
+            saveFile = new File("data/current.save");
+        } else {
+            saveFile = new File(SAVE_GAME_FOLDER + gameName + ".save");
+        }
+
+        if (!GameIOUtil.saveToFile(this.javaGame, saveFile)) {
+            System.err.println("Spiel konnte nicht gespeichert werden!");
         }
     }
 
