@@ -71,11 +71,16 @@ public class MapPane extends GridPane {
         if (e.getButton() == MouseButton.PRIMARY) {
             if(v.getHighlighted()){
                 System.out.println(x + " " + y);
-                inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x, y), false);
+                if(inGameViewController.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType().equals(PlayerType.NAVIGATOR) && inGameViewController.isSpecialActive()){
+                    
+                } else {                    
+                    inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x, y), inGameViewController.isSpecialActive());
+                }
                 System.out.println("ich sollte mich bewegen");
             }
         } else if (e.getButton() == MouseButton.SECONDARY){
-
+            inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().drain(new Point(x, y));
+            System.out.println("ich sollte drainen");
         }
     }
 
@@ -102,7 +107,7 @@ public class MapPane extends GridPane {
         view.setPreserveRatio(true);
         view.setFitHeight(110);
         pane.getChildren().add(view);
-        ActionPicker ap = new ActionPicker(view, MouseButton.PRIMARY, this);
+        ActionPicker ap = new ActionPicker(view, MouseButton.PRIMARY, this, type);
     }
 
     public void removePlayer(int x, int y, PlayerType type) {

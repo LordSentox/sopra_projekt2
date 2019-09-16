@@ -1,5 +1,6 @@
 package de.sopra.javagame.view.customcontrol;
 
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.event.ActionEvent;
@@ -16,18 +17,36 @@ public class ActionPicker extends CirclePopupMenu {
 
     MapPane mapPane;
     InGameViewController inGameViewController;
+    PlayerType clickedOnType;
 
-    public ActionPicker(Node node, MouseButton mouseButton, MapPane mapPane) {
+    public ActionPicker(Node node, MouseButton mouseButton, MapPane mapPane, PlayerType type) {
         super(node, mouseButton);
         
         this.mapPane = mapPane;
-        this.init();
+        this.clickedOnType = type;
+        PlayerType activePlayerType = mapPane.getInGameViewController().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
+        if(activePlayerType.equals(type)){
+            this.initActive();
+            
+        } else if(!activePlayerType.equals(type) && activePlayerType.equals(PlayerType.NAVIGATOR)) {
+            this.initPassivAndNav();
+        } else {
+            this.initPassive();
+        }
     }
 
-    private void init() {
-
-
+    private void initPassive() {
         this.getItems().add(createGiveCardButton());
+        
+    }
+
+    private void initPassivAndNav() {
+        this.getItems().add(createGiveCardButton());
+        this.getItems().add(createMoveButton());
+    }
+
+    private void initActive() {
+
         this.getItems().add(createFindArtifactButton());
         this.getItems().add(createSpecialButton());
         this.getItems().add(createDrainButton());
@@ -76,6 +95,7 @@ public class ActionPicker extends CirclePopupMenu {
             @Override
             public void handle(ActionEvent e) {
                 System.out.println("Hello Special");
+                mapPane.getInGameViewController().setSpecialActive(true);
                 mapPane.getInGameViewController().onShowSpecialAbilityOptionsClicked();
             }
         };
@@ -93,7 +113,7 @@ public class ActionPicker extends CirclePopupMenu {
             @Override
             public void handle(ActionEvent e) {
                 System.out.println("Hello Transfer");
-                mapPane.getInGameViewController().onTransferCardClicked(1);
+                mapPane.getInGameViewController().getGameWindow().getControllerChan().getActivePlayerController().showTransferable(clickedOnType);
             }
         };
         giveCardButton.setOnAction(giveCardHandler);
