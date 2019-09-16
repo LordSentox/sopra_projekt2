@@ -8,7 +8,6 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SITE_IS_FLOODED;
@@ -38,22 +37,14 @@ public class TurnMoveForDrainingNearbyLandingSite extends Decision {
         Point landingSitePosition = control.getTile(PlayerType.PILOT).getLeft();
         Point playerPosition = player().getPosition();
         PlayerType playerType = player().getType();
-<<<<<<< HEAD
-        List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
-        for (Point possiblePosition : player().legalMoves(true)) {
-            //if(possiblePosition) {
-                
-            }
-        }
-        
-=======
-        List<Point> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType).stream().map(Pair::getRight).collect(Collectors.toList());
 
->>>>>>> branch 'master' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
-        if (drainablePositionslist.contains(landingSitePosition)) {
-            return this;
+        List<Pair<Point,Point>> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
+        for(Pair<Point,Point> possiblePosition : drainablePositionslist) {
+            if(possiblePosition.getRight().equals(landingSitePosition)){
+                move=possiblePosition.getLeft();
+                return this;
+            }        
         }
-
         return null;
     }
 
