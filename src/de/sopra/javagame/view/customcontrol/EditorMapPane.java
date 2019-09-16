@@ -49,10 +49,8 @@ public class EditorMapPane extends GridPane {
                 ImageView v;
                 if (this.booleanMap.get(x, y) != null && !this.booleanMap.get(x, y)) {
                     v = new ImageView(TextureLoader.getSea1());
-                    System.out.println("sea");
                 } else {
                     v = new ImageView(TextureLoader.getSea0());
-                    System.out.println("land");
                 }
                 v.setPreserveRatio(true);
                 v.setFitWidth(TILE_SIZE);
@@ -66,9 +64,9 @@ public class EditorMapPane extends GridPane {
     }
 
     private void onTileClicked(MouseEvent e, int x, int y) {
-        if (e.getButton() == MouseButton.PRIMARY) {
+        if (e.getButton() == MouseButton.PRIMARY && !booleanMap.get(x, y)) {
             setBooleanTile(new Point(x, y), true);
-        } else if (e.getButton() == MouseButton.SECONDARY) {
+        } else if (e.getButton() == MouseButton.SECONDARY && booleanMap.get(x, y)) {
             setBooleanTile(new Point(x, y), false);
         }
     }
@@ -84,9 +82,8 @@ public class EditorMapPane extends GridPane {
 
     public void setBooleanTile(Point position, boolean tile) {
         ImageView landView;
-        boolean oldTile = this.booleanMap.get(position);
         this.booleanMap.set(tile, position);
-        if (tile != oldTile) {
+        if (tile) {
             landView = new ImageView(TextureLoader.getSea0());
         } else {
             landView = new ImageView(TextureLoader.getSea1());

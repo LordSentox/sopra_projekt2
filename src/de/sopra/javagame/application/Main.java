@@ -24,6 +24,7 @@ public class Main extends Application {
             GameWindow window = new GameWindow(primaryStage);
             window.init();
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Das Spiel konnte nicht gestartet werden!");
         }
 //        window.setState(ViewState.MENU);
