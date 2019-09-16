@@ -340,9 +340,27 @@ public class AIController {
         return getCurrentAction().getMap().get(landingSite).getState() != MapTileState.DRY;
     }
 
-    public Point getClosestPointInDirectionOf(List<Point> pointList, Point targetForDirection)
-    {
-        return null;
+    /**
+     * Berechnet den Punkt aus der Liste, welcher am nächsten am gegebenen Zielpunkt liegt.
+     *
+     * @param pointList          eine Liste aller Punkte die als Ergebnis in Betracht gezogen werden sollen
+     * @param targetForDirection der Zielpunkt, welche angesteuert werden soll
+     * @param playerType         der Spieler, um die Bewegungsmöglichkeiten mit einzurechnen
+     * @return der Punkt aus der Liste, welcher am schnellsten zum Ziel führt
+     * @see #getMinimumActionsNeededToReachTarget(Point, Point, PlayerType)
+     */
+    public Point getClosestPointInDirectionOf(List<Point> pointList, Point targetForDirection, PlayerType playerType) {
+        if (pointList.contains(targetForDirection)) return targetForDirection;
+        Point point = null;
+        int min = 100; //just a higher value than we would expect
+        for (Point current : pointList) {
+            int minimum = getMinimumActionsNeededToReachTarget(current, targetForDirection, playerType);
+            if (point == null || minimum < min) {
+                point = current;
+                min = minimum;
+            }
+        }
+        return point;
     }
 
     /**
