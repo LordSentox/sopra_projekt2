@@ -378,6 +378,12 @@ public class TestDummy {
         public ActionQueue getLatestTip() {
             return latestTip;
         }
+
+        @Override
+        public void refreshTurnState(TurnState turnState) {
+            // TODO Auto-generated method stub
+            
+        }
     }
 
 }
