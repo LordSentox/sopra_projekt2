@@ -125,7 +125,7 @@ public class TextureLoader {
                 String name = playerEntry.getName();
                 String textureName = name.substring(name.lastIndexOf("/") + 1);
                 PlayerType type = PlayerType.valueOf(textureName.substring(0, textureName.length() - 4).toUpperCase());
-                PLAYER_ICON_TEXTURES.put(type, new PlayerTexture(playerCards.inputStreamByName(textureName), type));
+                PLAYER_ICON_TEXTURES.put(type, new PlayerTexture(playerIcons.inputStreamByName(textureName), type));
             }
 
             for (int i = 0; i < MapTileProperties.values().length; i++) {
