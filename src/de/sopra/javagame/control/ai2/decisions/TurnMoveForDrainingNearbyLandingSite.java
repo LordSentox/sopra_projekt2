@@ -33,7 +33,6 @@ public class TurnMoveForDrainingNearbyLandingSite extends Decision {
      */
     @Override
     public Decision decide() {
-        
         Point landingSitePosition = control.getTile(PlayerType.PILOT).getLeft();
         Point playerPosition = player().getPosition();
         PlayerType playerType = player().getType();
