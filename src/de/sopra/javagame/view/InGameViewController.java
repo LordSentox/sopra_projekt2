@@ -42,6 +42,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
     private static final int SPINNER_SIZE = 250;
+    ControllerChan chan;
     @FXML
     MapPane mapPane;
     @FXML
@@ -55,6 +56,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
     private Timeline timeline;
+    
 
     public void init() {
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
@@ -130,7 +132,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         activePlayerTypeImageView.setFitWidth(ACTIVE_CARD_SIZE);
         playerOneTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
         playerTwoTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
-        playerThreeTypeImageView.setFitWidth(PASSIVE_CARD_SIZE);
+        playerThreeTypeImageView.setFitWidth(PASSIVE_CARD_SIZE); 
     }
 
     public void rotateTurnSpinner(double degree) {
@@ -221,7 +223,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDiscardStackClicked() {
-
+        
     }
 
     public void onFloodCardDiscardStackClicked() {
