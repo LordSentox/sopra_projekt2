@@ -36,8 +36,8 @@ public class DecisionMaker implements AIProcessor {
                     .map(clazz -> (Class<? extends Decision>) clazz)
                     .map(clazz -> new Pair<DoAfter, Class<? extends Decision>>(clazz.getDeclaredAnnotation(DoAfter.class), clazz))
                     .collect(Collectors.toList());
-            for (Pair<DoAfter, Class<? extends Decision>> clazz : decisionClasses)
-                System.out.println("> " + clazz.getRight().getSimpleName());
+//            for (Pair<DoAfter, Class<? extends Decision>> clazz : decisionClasses)
+//                System.out.println("> " + clazz.getRight().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
