@@ -266,9 +266,19 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         //DEBUG
+<<<<<<< HEAD
         this.rotateTurnSpinner(72.0);
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+=======
+        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard(ArtifactCardType.AIR)));
+        mapPane.putPlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().xPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().yPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+        getGameWindow()
+        .getControllerChan()
+        .getCurrentAction()
+        .getPlayers()
+            .forEach(player -> mapPane.putPlayer(player.getPosition().xPos, player.getPosition().yPos, player.getType()));
+>>>>>>> refs/remotes/origin/master
     }
 
     @Override
@@ -429,9 +439,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
         playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
-        if (players.size() == 3) {
+        if (players.size() >= 3) {
             playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
-        } else if (players.size() == 4) {
+        }
+        if (players.size() == 4) {
             playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
         }
     }

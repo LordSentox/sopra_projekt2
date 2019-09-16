@@ -4,11 +4,7 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.*;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -103,6 +99,10 @@ public class ControllerChan {
 
     public void startNewGame(String mapName, MapBlackWhite map, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
         MapFull fullMap = MapUtil.createAndFillMap(map);
+        startNewGame(mapName, fullMap, players, difficulty);
+    }
+    
+    public void startNewGame (String mapName, MapFull fullMap, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
         this.javaGame = pair.getLeft();
         this.currentAction = pair.getRight();

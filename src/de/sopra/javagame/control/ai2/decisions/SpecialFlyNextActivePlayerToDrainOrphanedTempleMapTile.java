@@ -64,7 +64,7 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
                 continue;
             }
             //prüfe, ob NextActivePlayer zum Tempel hin"gehen" kann
-            List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, nextActivePlayerType);
+            List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, nextActivePlayerType).stream().map(Pair::getRight).collect(Collectors.toList());
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
                 continue;
             }
