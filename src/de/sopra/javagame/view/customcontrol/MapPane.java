@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapFull;

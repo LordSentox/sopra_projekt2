@@ -17,7 +17,8 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  */
 @DoAfter(act = DISCARD, value = DiscardUseSandbagToKeepFourTreasureCards.class)
 public class DiscardOddTreasureCardWhenPlayerHasThreeOfSomething extends Decision {
-    private ArtifactCardType discarded; 
+    private ArtifactCardType discarded;
+
     @Override
     public Decision decide() {
         EnhancedPlayerHand activeHand = playerHand();
@@ -27,17 +28,17 @@ public class DiscardOddTreasureCardWhenPlayerHasThreeOfSomething extends Decisio
         int air = activeHand.getAmount(AIR);
         if (any(air == THREE_CARDS, earth == THREE_CARDS, fire == THREE_CARDS, water == THREE_CARDS)) {
             if (air <= TWO_CARDS) {
-                discarded=AIR;
+                discarded = AIR;
                 return this;
-            }else if(earth <= TWO_CARDS){
-                discarded=EARTH;
+            } else if (earth <= TWO_CARDS) {
+                discarded = EARTH;
                 return this;
-            }else if(fire <= TWO_CARDS){
-                discarded= FIRE;
+            } else if (fire <= TWO_CARDS) {
+                discarded = FIRE;
                 return this;
-            }else if(water<=TWO_CARDS){
-                discarded= WATER;
-                return this;           
+            } else if (water <= TWO_CARDS) {
+                discarded = WATER;
+                return this;
             }
         }
         return null;

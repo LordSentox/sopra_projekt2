@@ -36,9 +36,10 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
     private Point targetPoint;
     private EnumSet<PlayerType> dude;
     private Point start;
+
     @Override
     public Decision decide() {
-           
+
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
@@ -46,7 +47,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
         return checkTemples(templeList) ? this : null;
     }
 
-    private boolean checkTemples(List<Pair<Point, MapTile>> temples){
+    private boolean checkTemples(List<Pair<Point, MapTile>> temples) {
         Point activePlayerPosition = player().getPosition();
         for (Pair<Point, MapTile> temple : temples) {
 
@@ -83,8 +84,8 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
                     && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
                 continue;
             }
-            targetPoint=orphanedTemplePoint;
-            start= activePlayerPosition;
+            targetPoint = orphanedTemplePoint;
+            start = activePlayerPosition;
             dude.add(player().getType());
             return true;
         }
