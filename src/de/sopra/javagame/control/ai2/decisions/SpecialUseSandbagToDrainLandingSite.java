@@ -28,13 +28,13 @@ public class SpecialUseSandbagToDrainLandingSite extends Decision {
          * nicht gezogen, wenn keine Flut-steigt-Karten mehr im Artefaktstapel sind
          * wäre zb 0% Wahrscheinlichkeit, zu versinken
          */
-        if (true) {
+        //if (true) {
             //TODO
             //@see control.getFloodCardStackTracker()
             //dort sind Methoden zum erhalten der gemerkten Karten oben auf dem Stapel
             return this;
-        }
-        return null;
+        //}
+        //return null;
     }
 
     @Override
