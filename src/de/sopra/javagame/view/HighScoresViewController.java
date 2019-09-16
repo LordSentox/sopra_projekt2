@@ -23,9 +23,9 @@ public class HighScoresViewController extends AbstractViewController implements 
     @FXML
     ImageView mainPane;
     @FXML
-    JFXComboBox mapSelectionBox;
+    JFXComboBox<String> mapSelectionBox;
     @FXML
-    JFXListView highScoreListView;
+    JFXListView<HighScore> highScoreListView;
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
@@ -45,7 +45,7 @@ public class HighScoresViewController extends AbstractViewController implements 
     public void onShowReplayClicked() {
         HighScore selectedHighScore = (HighScore) highScoreListView.getSelectionModel().getSelectedItem();
         changeState(ViewState.IN_GAME);
-        getGameWindow().getControllerChan().loadGame(selectedHighScore.getReplayName());
+        getGameWindow().getControllerChan().loadSaveGame(selectedHighScore.getReplayName());
     }
 
     public void onCloseClicked() {

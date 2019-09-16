@@ -3,10 +3,12 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 
 public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
+    private Point target=null;
     @Override
     public Decision decide() {
         List<Pair<Point, MapTile>> templeList = control.getTemples();
@@ -39,6 +42,18 @@ public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
             //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
+            }  
+            for(Pair<Point, MapTile> otherTemple : control.getTemples()) {
+                EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
+                if(!discoveredArtifacts.contains(otherTemple.getRight().getProperties().getHidden())&&
+                   !otherTemple.getLeft().equals(temple.getLeft())&&
+                   otherTemple.getRight().getState() == GONE) {
+                    target= temple.getLeft();
+                }
+                
+            }
+            if(target==null){
+                return null;
             }
             return this;
         }
@@ -47,7 +62,7 @@ public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().sandbagCard(target); 
     }
 
 }

@@ -8,6 +8,8 @@ import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +28,7 @@ public class ExplorerTest {
     private ActivePlayerController activePlayerController;
     private MapFull testMap;
     private Action action;
-    private List<Pair<PlayerType, Boolean>> players;
+    private List<Triple<PlayerType,String, Boolean>> players;
 
     private TestDummy.InGameView inGameView;
 
@@ -40,10 +42,10 @@ public class ExplorerTest {
         this.testMap = MapUtil.readFullMapFromString(testMapString);
 
         players = Arrays.asList(
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.COURIER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false),
-                new Pair<>(PlayerType.PILOT, false));
+                new Triple<>(PlayerType.EXPLORER,"", false),
+                new Triple<>(PlayerType.COURIER,"", false),
+                new Triple<>(PlayerType.NAVIGATOR,"", false),
+                new Triple<>(PlayerType.PILOT,"", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());

@@ -19,6 +19,8 @@ import static de.sopra.javagame.model.MapTileState.DRY;
  */
 public class Diver extends Player {
 
+    private static final long serialVersionUID = 4717041817678039034L;
+
     public Diver(String name, Point position, Action action) {
         super(PlayerType.DIVER, name, action);
         this.position = position;

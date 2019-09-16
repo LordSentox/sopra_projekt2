@@ -9,6 +9,8 @@ import java.io.Serializable;
  * @author Lisa, Hannah
  */
 public class WaterLevel implements Copyable<WaterLevel>, Serializable {
+
+    private static final long serialVersionUID = -8464925024053529651L;
     public static final int LOSE_GAME_AT = 9;
     public static final int CONTINUE_GAME = 5;
 

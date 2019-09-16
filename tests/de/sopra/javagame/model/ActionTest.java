@@ -4,7 +4,8 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Triple;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,16 +39,16 @@ public class ActionTest {
     @Test
     public void createInitialAction() {
         Action action = Action.createInitialAction(Difficulty.NOVICE,
-                Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
-                        new Pair<>(PlayerType.NAVIGATOR, true),
-                        new Pair<>(PlayerType.DIVER, false),
-                        new Pair<>(PlayerType.COURIER, true)),
-                this.testMap);
+                Arrays.asList(new Triple<>(PlayerType.EXPLORER, "Forscher", false),
+                        new Triple<>(PlayerType.NAVIGATOR, "Navigator", true),
+                        new Triple<>(PlayerType.DIVER, "Taucher", false),
+                        new Triple<>(PlayerType.COURIER, "Kurier", true)), 
+                        this.testMap);
 
         Assert.assertEquals(0, action.getActivePlayerIndex());
         Assert.assertEquals(28, action.getArtifactCardStack().size());
         Assert.assertEquals("Spielstart", action.getDescription());
-        Assert.assertEquals(new HashSet(), action.getDiscoveredArtifacts());
+        Assert.assertEquals(new HashSet<>(), action.getDiscoveredArtifacts());
         Assert.assertEquals(4, action.getPlayers().size());
         Assert.assertEquals(TurnState.FLOOD, action.getState());
         Assert.assertArrayEquals(this.testMap.raw(), action.getMap().raw());
@@ -56,8 +57,8 @@ public class ActionTest {
 
         // Einen weiteren Action mit den letzten beiden Klassen erstellen
         Action action2 = Action.createInitialAction(Difficulty.ELITE,
-                Arrays.asList(new Pair<>(PlayerType.PILOT, false),
-                        new Pair<>(PlayerType.ENGINEER, false)),
+                Arrays.asList(new Triple<>(PlayerType.PILOT, "Pilot", false),
+                        new Triple<>(PlayerType.ENGINEER, "Ingenieur" , false)),
                 this.testMap);
 
         Assert.assertEquals(2, action2.getPlayers().size());
@@ -65,24 +66,26 @@ public class ActionTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void createInitialActionIllegalPlayerType() {
-        Action.createInitialAction(Difficulty.LEGENDARY, Arrays.asList(new Pair<>(PlayerType.NONE, true), new Pair<>(PlayerType.NONE, true)), this.testMap);
+        Action.createInitialAction(Difficulty.LEGENDARY, Arrays.asList(new Triple<>(PlayerType.NONE, "Random", true), new Triple<>(PlayerType.NONE, "Random", true)), this.testMap);
     }
     
     @Test (expected = NullPointerException.class)
     public void createInitialActionNoDifficulty() {
-        Action.createInitialAction(null, Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.NAVIGATOR, true),
-                new Pair<>(PlayerType.DIVER, false),
-                new Pair<>(PlayerType.COURIER, true)), this.testMap);
+        Action.createInitialAction(null, 
+                Arrays.asList(new Triple<>(PlayerType.EXPLORER, "Forscher", false),
+                new Triple<>(PlayerType.NAVIGATOR, "Navigator", true),
+                new Triple<>(PlayerType.DIVER, "Taucher", false),
+                new Triple<>(PlayerType.COURIER, "Kurier", true)), 
+                this.testMap);
     }
     
     @Test
     public void getPlayer() {
         Action action = Action.createInitialAction(Difficulty.NOVICE,
-                Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
-                        new Pair<>(PlayerType.NAVIGATOR, true),
-                        new Pair<>(PlayerType.DIVER, false),
-                        new Pair<>(PlayerType.COURIER, true)),
+                Arrays.asList(new Triple<>(PlayerType.EXPLORER, "Forscher", false),
+                new Triple<>(PlayerType.NAVIGATOR, "Navigator", true),
+                new Triple<>(PlayerType.DIVER, "Taucher", false),
+                new Triple<>(PlayerType.COURIER, "Kurier", true)), 
                 this.testMap);
 
         Assert.assertEquals("Der Spielertyp des geholten Spielers hätte Explorer sein müssen",
@@ -103,10 +106,10 @@ public class ActionTest {
         ArtifactCard earthCard2 = new ArtifactCard(ArtifactCardType.EARTH);
         ArtifactCard airCard = new ArtifactCard(ArtifactCardType.AIR);
         Action action = Action.createInitialAction(Difficulty.NOVICE,
-                Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
-                        new Pair<>(PlayerType.NAVIGATOR, true),
-                        new Pair<>(PlayerType.DIVER, false),
-                        new Pair<>(PlayerType.COURIER, true)),
+                Arrays.asList(new Triple<>(PlayerType.EXPLORER, "Forscher", false),
+                new Triple<>(PlayerType.NAVIGATOR, "Navigator", true),
+                new Triple<>(PlayerType.DIVER, "Taucher", false),
+                new Triple<>(PlayerType.COURIER, "Kurier", true)), 
                 this.testMap);
         Explorer explorer = (Explorer) action.getPlayer(PlayerType.EXPLORER);
         Navigator navigator = (Navigator) action.getPlayer(PlayerType.NAVIGATOR);
@@ -175,10 +178,10 @@ public class ActionTest {
     @Test
     public void copy() {
         Action action = Action.createInitialAction(Difficulty.NOVICE,
-                Arrays.asList(new Pair<>(PlayerType.EXPLORER, false),
-                        new Pair<>(PlayerType.NAVIGATOR, true),
-                        new Pair<>(PlayerType.DIVER, false),
-                        new Pair<>(PlayerType.COURIER, true)),
+                Arrays.asList(new Triple<>(PlayerType.EXPLORER, "Forscher", false),
+                new Triple<>(PlayerType.NAVIGATOR, "Navigator", true),
+                new Triple<>(PlayerType.DIVER, "Taucher", false),
+                new Triple<>(PlayerType.COURIER, "Kurier", true)), 
                 this.testMap);
         Action actionCopy = action.copy();
 

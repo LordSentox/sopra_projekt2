@@ -10,6 +10,7 @@ import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
+import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
@@ -24,11 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -43,9 +40,10 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final int PASSIVE_CARD_SIZE = 110;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
-    final int SPINNER_SIZE = 250;
+    private static final int SPINNER_SIZE = 250;
     
-    private List<Point> highlightedPoints = new ArrayList<>();
+    private List<Point> drainablePoints = new ArrayList<>();
+    private List<Point> movePoints = new ArrayList<>();
     private boolean specialActive =  false;
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
@@ -63,6 +61,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     private Timeline timeline;
 
     public void init() {
+        waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
+        waterLevelView.setProgress(7);
+
         /* Set Background */
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
@@ -80,7 +81,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         initPlayerHands();
         initArtifactsFound();
 
-
+        //debug
         refreshWaterLevel(4);
 
         //setze Timeline für Replays
@@ -260,24 +261,24 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-        //DEBUG
+
         this.rotateTurnSpinner(72.0);
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
-        mapPane.putPlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().xPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().yPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
     }
 
     @Override
     public void refreshMovementOptions(List<Point> points) {
-        highlightedPoints.forEach(point -> mapPane.highlightMapTile(point, true));
-        highlightedPoints = points;
-        points.forEach(point -> mapPane.highlightMapTile(point, false));
+        movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
+        movePoints = points;
+        points.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(true));
     }
 
     @Override
     public void refreshDrainOptions(List<Point> points) {
-        highlightedPoints.forEach(point -> mapPane.highlightMapTile(point, true));
-        highlightedPoints = points;
-        points.forEach(point -> mapPane.highlightMapTile(point, false));
+        drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
+        drainablePoints = points;
+        points.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(true));
     }
 
     @Override
@@ -362,7 +363,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
-        this.refreshActionsLeft(-216);
         artifactCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -385,7 +385,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshFloodStack(CardStack<FloodCard> stack) {
-        this.refreshActionsLeft(-288);
         floodCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -407,9 +406,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
-        highlightedPoints.forEach(point -> mapPane.highlightMapTile(point, true));
-        highlightedPoints = new ArrayList<>();
-        mapPane.putPlayer(position.xPos, position.yPos, player);
+        movePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
+        movePoints = new ArrayList<>();
+        drainablePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
+        drainablePoints = new ArrayList<>();
+        mapPane.movePlayer(position, player);
     }
 
     @Override
@@ -424,9 +425,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
         playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
-        if (players.size() == 3) {
+        if (players.size() >= 3) {
             playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
-        } else if (players.size() == 4) {
+        }
+        if (players.size() == 4) {
             playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
         }
     }

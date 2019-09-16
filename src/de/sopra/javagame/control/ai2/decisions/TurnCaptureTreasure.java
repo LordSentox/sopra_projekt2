@@ -27,6 +27,6 @@ public class TurnCaptureTreasure extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().collectTreasure();
     }
 }

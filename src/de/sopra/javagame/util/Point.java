@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import static de.sopra.javagame.util.Direction.*;
 
 public class Point implements Serializable {
+
+    private static final long serialVersionUID = 974151156673528867L;
     public int xPos;
     public int yPos;
 
@@ -119,6 +121,17 @@ public class Point implements Serializable {
         surrounding.add(this.add(UP).add(RIGHT));
         surrounding.add(this.add(DOWN).add(LEFT));
         surrounding.add(this.add(DOWN).add(RIGHT));
+
+        return surrounding;
+    }
+    
+    public List<Point> getSurrounding(Point minimum, Point maximum) {
+        List<Point> surrounding = this.getSurrounding();
+        
+        surrounding = surrounding.stream().filter(point -> point.xPos >= minimum.xPos &&
+                point.yPos >= minimum.yPos &&
+                point.xPos <= maximum.xPos &&
+                point.yPos <= maximum.yPos).collect(Collectors.toList());
 
         return surrounding;
     }

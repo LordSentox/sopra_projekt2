@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class Pilot extends Player {
 
+    private static final long serialVersionUID = -3947447481072572845L;
     /**
      * Der Pilot kann seine Spezialfähigkeit nur einmal pro Zug nutzen, also
      * wird sie nach benutzen auf false gesetzt
@@ -100,6 +101,10 @@ public class Pilot extends Player {
         }
     }
 
+    public boolean hasSpecialMove() {
+        return hasSpecialMove;
+    }
+   
     @Override
     public Player copy() {
         Pilot player = new Pilot(CopyUtil.copy(this.name), new Point(position), null);

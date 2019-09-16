@@ -19,6 +19,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  */
 public class Explorer extends Player {
 
+    private static final long serialVersionUID = 7481348616495871899L;
+
     public Explorer(String name, Point position, Action action) {
         super(PlayerType.EXPLORER, name, action);
         this.position = position;

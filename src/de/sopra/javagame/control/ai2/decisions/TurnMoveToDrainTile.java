@@ -3,9 +3,11 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 
@@ -25,7 +27,7 @@ public class TurnMoveToDrainTile extends Decision {
             return null;
         }
         List<Point> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
-                activePlayer.getType());
+                activePlayer.getType()).stream().map(Pair::getRight).collect(Collectors.toList());
         if (!drainablePositionsOneMoveAway.isEmpty()) {
             return this;
         }

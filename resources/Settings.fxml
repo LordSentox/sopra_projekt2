@@ -1,13 +1,7 @@
-
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
-
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="222" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.SettingsViewController">
    <children>
    	   <ImageView fx:id="mainPane"/>
@@ -15,7 +9,7 @@
    	   <JFXButton styleClass="close-Button" fx:id="closeButton" layoutX="165" layoutY="5" prefHeight="30" prefWidth="30" text="x" onAction="#onCloseClicked"/>
    	   
    	   <Label fx:id="effectVolumeLabel" layoutX="27" layoutY="20" text="Effektlautstärke" />
-   	   <JFXSlider fx:id="effectVolumeSlider" layoutX="27" layoutY="40"/>
+   	   <JFXSlider fx:id="effectVolumeSlider" layoutX="27" layoutY="40" />
    	   
    	   <Label fx:id="musicVolumeLabel" layoutX="27" layoutY="75" text="Musiklautstärke" />
    	   <JFXSlider fx:id="musicVolumeSlider" layoutX="27" layoutY="95"/>

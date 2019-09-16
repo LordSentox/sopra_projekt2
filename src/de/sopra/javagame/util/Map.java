@@ -46,8 +46,7 @@ public abstract class Map<T> {
      */
     public T get(int posX, int posY) {
         if (posX >= SIZE_X || posY >= SIZE_Y)
-            throw new IndexOutOfBoundsException();
-
+            return null;        
         return this.raw[posY + 1][posX + 1];
     }
 
