@@ -154,6 +154,7 @@ public abstract class Decision {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> boolean checkAll(Predicate<T> checker, T... objects) {
         if (objects == null || objects.length == 0)
             return true;

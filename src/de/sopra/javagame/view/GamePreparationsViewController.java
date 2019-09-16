@@ -6,19 +6,22 @@ import com.jfoenix.controls.JFXComboBox;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * GUI für die Spielvorbereitung
@@ -34,8 +37,10 @@ public class GamePreparationsViewController extends AbstractViewController {
     @FXML ToggleButton addPlayerThreeToggleButton, addPlayerFourToggleButton;
     @FXML JFXButton addPlayerThreeButton,addPlayerFourButton;
     @FXML JFXCheckBox isPlayerOneKiCheckBox, isPlayerTwoKiCheckBox, isPlayerThreeKiCheckBox, isPlayerFourKiCheckBox;
+    @FXML Label cannotStartGameLabel;
     
     private Difficulty difficulty;
+    private List<Triple<PlayerType,String, Boolean>> playerList = new LinkedList<>();
     
     public void init(){
         mainPane.setImage(TextureLoader.getBackground());
@@ -65,7 +70,6 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerFourButton.setDisable(true);
         isPlayerThreeKiCheckBox.setDisable(true);
         isPlayerFourKiCheckBox.setDisable(true);
-//        addPlayerThreeToggleButton. 
         
     }
 
@@ -74,10 +78,10 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
     
     public void onAddPlayerThreeClicked(){
-            playerThreeNameTextField.setDisable(!addPlayerThreeToggleButton.isSelected());
-            playerThreeChooseCharakterComboBox.setDisable(!addPlayerThreeToggleButton.isSelected());
-            addPlayerThreeButton.setDisable(!addPlayerThreeToggleButton.isSelected());
-            isPlayerThreeKiCheckBox.setDisable(!addPlayerThreeToggleButton.isSelected());
+        playerThreeNameTextField.setDisable(!addPlayerThreeToggleButton.isSelected());
+        playerThreeChooseCharakterComboBox.setDisable(!addPlayerThreeToggleButton.isSelected());
+        addPlayerThreeButton.setDisable(!addPlayerThreeToggleButton.isSelected());
+        isPlayerThreeKiCheckBox.setDisable(!addPlayerThreeToggleButton.isSelected());
     }
     public void onAddPlayerFourClicked(){
         playerFourNameTextField.setDisable(!addPlayerFourToggleButton.isSelected());
@@ -87,31 +91,35 @@ public class GamePreparationsViewController extends AbstractViewController {
 }
 
     public void onStartGameClicked() {
-
+        playerList.clear();
         
-        LinkedList<Pair<PlayerType, Boolean>> playerList = new LinkedList<>();
-        System.out.println(playerList);
         //Spielertypen hinzufügen
-        System.out.println(playerOneChooseCharakterComboBox.getValue());
-        addPLayerType(playerOneChooseCharakterComboBox.getValue(),
-                playerList,
-                !isPlayerOneKiCheckBox.isDisabled());
-        addPLayerType(playerTwoChooseCharakterComboBox.getValue(), playerList, !isPlayerTwoKiCheckBox.isDisabled());
+        addPlayerType(playerOneChooseCharakterComboBox.getValue(),
+                !isPlayerOneKiCheckBox.isDisabled(),
+                playerOneNameTextField.getText());
+        addPlayerType(playerTwoChooseCharakterComboBox.getValue(), !isPlayerTwoKiCheckBox.isDisabled(), playerTwoNameTextField.getText());
         if(addPlayerThreeToggleButton.isSelected()){
-            addPLayerType(playerThreeChooseCharakterComboBox.getValue(), playerList, !isPlayerThreeKiCheckBox.isDisabled());
+            addPlayerType(playerThreeChooseCharakterComboBox.getValue(), !isPlayerThreeKiCheckBox.isDisabled(), playerThreeNameTextField.getText());
         }
         if(addPlayerFourToggleButton.isSelected()){
-            addPLayerType(playerFourChooseCharakterComboBox.getValue(), playerList, !isPlayerFourKiCheckBox.isDisabled());
+            addPlayerType(playerFourChooseCharakterComboBox.getValue(), !isPlayerFourKiCheckBox.isDisabled(), playerFourNameTextField.getText());
         }
         setDifficulty();
         
         //PLayerList muss mind. zwei Spieler enthalten
         //TODO Button disablen wenn die Bedingungen nicht erfüllt sind
-        if(!playerList.isEmpty() && difficulty != null){
-            changeState(ViewState.IN_GAME);
-            // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
-            this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
+        
+        if(!playerList.stream().map(Triple::getFirst).filter(playerType -> !playerType.equals(PlayerType.NONE)).allMatch(new HashSet<PlayerType>()::add)){
+            cannotStartGameLabel.setText("Mindestens zwei Spieler haben den gleichen Typ");
+            return;
+        }        
+        if(playerList.isEmpty() || difficulty == null){
+            cannotStartGameLabel.setText("es sind nicht alle Felder ausgefüllt");            
+            return;
         }
+        changeState(ViewState.IN_GAME);
+        // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
+        this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
     }
         
 
@@ -130,38 +138,33 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
     
     
-    public void addPLayerType(String type,  LinkedList<Pair<PlayerType, Boolean>> playerList, boolean isAi){
+    public void addPlayerType(String type, boolean isAi, String name){
         if(type == null){
             type = "";
         }
-        //TODO zufällig soll zufällig sein, und jeder playertype darf nur einmal benutzt werden
+        
         switch (type) {
-        case "Taucher":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
-            System.out.println("i bims ein Taucher");
-            break;
-        case "Navigator":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.NAVIGATOR, isAi));
-            break;
-        case "Pilot":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.PILOT, isAi));
-            break;
-        case "Entdecker":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.EXPLORER, isAi));
-            break;
-        case "Bote":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.COURIER, isAi));
-            break;
-        case "Ingenieur":
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, isAi));
-            break;
-        case "zufällig":
-            //TODO zufällige Verteilung
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
-            break;
-        default:
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, isAi));
-            break;
+            case "Taucher":
+                playerList.add(new Triple<>(PlayerType.DIVER, name, isAi));
+                break;
+            case "Navigator":
+                playerList.add(new Triple<>(PlayerType.NAVIGATOR, name, isAi));
+                break;
+            case "Pilot":
+                playerList.add(new Triple<>(PlayerType.PILOT, name, isAi));
+                break;
+            case "Entdecker":
+                playerList.add(new Triple<>(PlayerType.EXPLORER, name, isAi));
+                break;
+            case "Bote":
+                playerList.add(new Triple<>(PlayerType.COURIER, name, isAi));
+                break;
+            case "Ingenieur":
+                playerList.add(new Triple<>(PlayerType.ENGINEER, name, isAi));
+                break;
+            default:
+                playerList.add(new Triple<>(PlayerType.NONE, name, isAi));
+                break;
         }
     }
     
@@ -170,21 +173,20 @@ public class GamePreparationsViewController extends AbstractViewController {
         if(diff == null){
             diff = "";
         }
+        
         switch (diff) {
-        case "Novice":
-            difficulty = Difficulty.NOVICE;
-            break;
-        case "Normal":
-            difficulty = Difficulty.NORMAL;
-            break;
-        case "Elite":
-            difficulty = Difficulty.ELITE;
-            break;
-        case "Legende":
-            difficulty = Difficulty.LEGENDARY;
-            break;
-        default:
-            difficulty = Difficulty.LEGENDARY;
+            case "Novice":
+                difficulty = Difficulty.NOVICE;
+                break;
+            case "Normal":
+                difficulty = Difficulty.NORMAL;
+                break;
+            case "Elite":
+                difficulty = Difficulty.ELITE;
+                break;
+            case "Legende":
+                difficulty = Difficulty.LEGENDARY;
+                break;
         }
     }
 }

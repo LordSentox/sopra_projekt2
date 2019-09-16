@@ -40,6 +40,7 @@ public class HighScoresControllerTest {
         File outFile = new File(MapController.MAP_FOLDER + mapName + ".score");
         PrintWriter out = new PrintWriter(outFile);
         out.println(scoreData);
+        out.close();
 
         highScoresController.loadHighScores(mapName);
         Assert.assertTrue("Ein HighScore wurde gespeichert aber ist nicht vorhanden", highScoresView.getHighScores().contains(no1));
@@ -65,6 +66,7 @@ public class HighScoresControllerTest {
         File outFile = new File(MapController.MAP_FOLDER + mapName + ".score");
         PrintWriter out = new PrintWriter(outFile);
         out.println(scoreData);
+        out.close();
 
         highScoresController.resetHighScores(mapName);
         highScoresController.loadHighScores(mapName);

@@ -47,6 +47,8 @@
    	   -->
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="startGameButton" layoutX="240" layoutY="535" text="Spiel Starten" prefHeight="30"  prefWidth="120" onAction="#onStartGameClicked"/>
    	   
+   	   <Label fx:id="cannotStartGameLabel" layoutX="0" layoutY="575" prefWidth="600" textAlignment="center" textFill="#ff0000"/>
+   	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="chooseMapButton" layoutX="55" layoutY="535" prefHeight="30"  prefWidth="120" text="Map auswählen" onAction="#onMapEditorClicked" />
    	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="menuButton" layoutX="425" layoutY="535" text="Hauptmenü" prefHeight="30"  prefWidth="120" onAction="#onCloseClicked"/>

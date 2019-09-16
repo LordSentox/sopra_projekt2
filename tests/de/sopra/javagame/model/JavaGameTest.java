@@ -1,11 +1,11 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Triple;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,21 +17,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class JavaGameTest {
 
     private MapFull testMap;
     private String testMapString;
-    private List<Pair<PlayerType, Boolean>> players;
+    private List<Triple<PlayerType,String, Boolean>> players;
 
     @Before
     public void setUp() throws Exception {
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         this.testMap = MapUtil.readFullMapFromString(testMapString);
-        players = new ArrayList<Pair<PlayerType, Boolean>>() {{
-            add(new Pair<>(PlayerType.EXPLORER, false));
-            add(new Pair<>(PlayerType.NAVIGATOR, true));
-            add(new Pair<>(PlayerType.DIVER, false));
-            add(new Pair<>(PlayerType.COURIER, true));
+        players = new ArrayList<Triple<PlayerType,String, Boolean>>() {{
+            add(new Triple<>(PlayerType.EXPLORER,"", false));
+            add(new Triple<>(PlayerType.NAVIGATOR,"", true));
+            add(new Triple<>(PlayerType.DIVER,"", false));
+            add(new Triple<>(PlayerType.COURIER,"", true));
         }};
     }
 
@@ -90,7 +91,7 @@ public class JavaGameTest {
 
     @Test(expected = IllegalStateException.class)
     public void newGameTooManyPlayers() {
-        players.add(new Pair<>(PlayerType.PILOT, false));
+        players.add(new Triple<>(PlayerType.PILOT,"", false));
         //teste Erstellen mit 5+ Spielern
         JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
     }
@@ -115,7 +116,9 @@ public class JavaGameTest {
 
         //teste ob korrekt redo Stapel zurückgesetzt wird
         javaGame.undoAction();
+        javaGame.markCheetah();
         javaGame.undoAction();
+        javaGame.markCheetah();
         Assert.assertTrue("There should have been two redo turns", javaGame.canRedo());
         javaGame.finishAction(currentAction);
         Assert.assertFalse("There should have been no redo turns", javaGame.canRedo());

@@ -35,8 +35,12 @@ public class MapPane extends GridPane {
 
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
-
     }
+    
+    public void init() {
+        
+    }
+    
 
     public void buildMap(MapFull tiles){
         for (int y = 0; y < Map.SIZE_Y; y++) {

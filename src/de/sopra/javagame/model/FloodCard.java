@@ -10,6 +10,8 @@ import static de.sopra.javagame.model.MapTileState.*;
  * Inselfeld schon überflutet war.
  */
 public class FloodCard implements Copyable<FloodCard>, Serializable {
+
+    private static final long serialVersionUID = -3623493566759576687L;
     /**
      * Das Inselfeld, welches von dieser Karte überflutet wird.
      */

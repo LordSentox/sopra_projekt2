@@ -77,7 +77,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         initPlayerHands();
         initArtifactsFound();
 
-
+        //debug
         refreshWaterLevel(4);
 
         //setze Timeline für Replays
@@ -85,6 +85,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             getGameWindow().getControllerChan().getGameFlowController().redo();
             refreshAll();
         }));
+
     }
 
     private void initArtifactsFound() {
@@ -261,6 +262,12 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         mapPane.putPlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().xPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().yPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+        getGameWindow()
+        .getControllerChan()
+        .getCurrentAction()
+        .getPlayers()
+        .stream()
+            .forEach(player -> mapPane.putPlayer(player.getPosition().xPos, player.getPosition().yPos, player.getType()));
     }
 
     @Override

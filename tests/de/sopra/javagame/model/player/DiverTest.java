@@ -6,8 +6,9 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class DiverTest {
 
     @Test
     public void testLegalMoves() {
-        Action action = Action.createInitialAction(Difficulty.NORMAL, Arrays.asList(new Pair<>(PlayerType.DIVER, false), new Pair<>(PlayerType.COURIER, false)), this.testMap);
+        Action action = Action.createInitialAction(Difficulty.NORMAL, Arrays.asList(new Triple<>(PlayerType.DIVER, "", false), new Triple<>(PlayerType.COURIER, "", false)), this.testMap);
         Player diver = action.getPlayers().get(0);
         List<Point> testLegelMovesWithSpecial = diver.legalMoves(true);
         List<Point> testLegelMovesWithoutSpecial = diver.legalMoves(false);
@@ -52,7 +53,7 @@ public class DiverTest {
             Assert.assertEquals(tile.getState(), MapTileState.DRY);
         }
 
-        Action turnFullMapAction = Action.createInitialAction(Difficulty.NORMAL, Arrays.asList(new Pair<>(PlayerType.DIVER, false), new Pair<>(PlayerType.COURIER, false)), this.testMapFull);
+        Action turnFullMapAction = Action.createInitialAction(Difficulty.NORMAL, Arrays.asList(new Triple<>(PlayerType.DIVER, "", false), new Triple<>(PlayerType.COURIER, "", false)), this.testMapFull);
         diver = turnFullMapAction.getPlayer(PlayerType.DIVER);
         diver.setPosition(testMap.getPlayerSpawnPoint(PlayerType.DIVER));
         List<Point> testLegalMovesWithSpecialb = diver.legalMoves(true);

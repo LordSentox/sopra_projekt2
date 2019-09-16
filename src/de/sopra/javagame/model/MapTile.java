@@ -13,6 +13,8 @@ import static de.sopra.javagame.model.MapTileState.*;
  * @author Hermann "Roxi" Bühmann, Melanie Arnds
  */
 public class MapTile implements Copyable<MapTile>, Serializable {
+
+    private static final long serialVersionUID = 1566238406061622660L;
     private MapTileProperties properties;
     private MapTileState state;
 

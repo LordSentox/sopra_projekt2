@@ -61,6 +61,7 @@ public class ActivePlayerController {
      * @see PlayerType
      */
     public void showSpecialAbility() {
+
         // XXX: Nicht immer Spieler kopieren
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
