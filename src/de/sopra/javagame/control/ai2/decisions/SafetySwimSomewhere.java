@@ -8,11 +8,12 @@ import static de.sopra.javagame.control.ai2.DecisionResult.SWIM_TO_SAFETY;
 
 @DoAfter(act = SWIM_TO_SAFETY, value = SafetyTemple.class)
 public class SafetySwimSomewhere extends Decision {
-    
+
     private Point direction;
+
     @Override
     public Decision decide() {
-        direction=control.getActivePlayer().legalMoves(true).get(0);
+        direction = control.getActivePlayer().legalMoves(true).get(0);
         return this;
     }
 

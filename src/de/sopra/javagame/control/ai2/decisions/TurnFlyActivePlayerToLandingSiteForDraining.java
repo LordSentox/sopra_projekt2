@@ -11,12 +11,12 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
+
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_ANY_PLAYER_HAS_HELICOPTER;
 import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SITE_IS_FLOODED;
 import static de.sopra.javagame.model.ArtifactCardType.*;
-
-import java.util.EnumSet;
 
 
 /**
@@ -33,6 +33,7 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
     private Point targetPoint;
     private EnumSet<PlayerType> dude;
     private Point start;
+
     @Override
     public Decision decide() {
 
@@ -57,8 +58,8 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
             return null;
         }
         dude.add(player().getType());
-        start=player().getPosition();
-        targetPoint= control.getTile(PlayerType.PILOT).getLeft();
+        start = player().getPosition();
+        targetPoint = control.getTile(PlayerType.PILOT).getLeft();
         return this;
     }
 

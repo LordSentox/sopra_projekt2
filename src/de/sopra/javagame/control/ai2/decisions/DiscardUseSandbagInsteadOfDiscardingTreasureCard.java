@@ -22,9 +22,10 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_SANDB
 @PreCondition(allTrue = PLAYER_HAS_SANDBAGS_CARD)
 public class DiscardUseSandbagInsteadOfDiscardingTreasureCard extends Decision {
     private Point drainable;
+
     @Override
     public Decision decide() {
-        MapTile tile= control.anyTile(MapTileState.FLOODED);
+        MapTile tile = control.anyTile(MapTileState.FLOODED);
         if (tile != null) {
             drainable = action().getMap().getPositionForTile(tile.getProperties());
             return this;
