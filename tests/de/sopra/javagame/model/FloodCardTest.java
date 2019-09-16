@@ -4,7 +4,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.sopra.javagame.util.MapFull;
+import de.sopra.javagame.util.MapUtil;
+
 import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * <h1>projekt2</h1>
@@ -15,43 +23,41 @@ import static org.junit.Assert.assertEquals;
  */
 public class FloodCardTest {
 
-    private MapTile blubBlub;
+    private MapFull blubBlub;
     private FloodCard wannKommtDieFlut;
 
     @Before
-    public void setup() {
-        blubBlub = MapTile.fromNumber(5);
-        wannKommtDieFlut = new FloodCard(blubBlub);
+    public void setup() throws IOException {
+        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
+        this.blubBlub = MapUtil.readFullMapFromString(testMapString);
+        wannKommtDieFlut = new FloodCard(blubBlub.get(MapTileProperties.MISTY_MARSH).getProperties());
     }
 
     @Test
     public void testFlood() {        
-        wannKommtDieFlut.setTile(blubBlub);
-        assertEquals(MapTileState.DRY, wannKommtDieFlut.getTile().getState());
+        assertEquals(MapTileState.DRY, blubBlub.get(wannKommtDieFlut.getTile()).getState());
 
-        wannKommtDieFlut.flood();
-        assertEquals(MapTileState.FLOODED, wannKommtDieFlut.getTile().getState());
+        wannKommtDieFlut.flood(blubBlub);
+        assertEquals(MapTileState.FLOODED, blubBlub.get(wannKommtDieFlut.getTile()).getState());
 
-        wannKommtDieFlut.flood();
-        assertEquals(MapTileState.GONE, wannKommtDieFlut.getTile().getState());
+        wannKommtDieFlut.flood(blubBlub);
+        assertEquals(MapTileState.GONE, blubBlub.get(wannKommtDieFlut.getTile()).getState());
 
     }
 
     @Test(expected = IllegalStateException.class)
     public void testWrongFlood() {
-
-        wannKommtDieFlut = new FloodCard(blubBlub);
-        wannKommtDieFlut.flood();
-        wannKommtDieFlut.flood();
+        wannKommtDieFlut.flood(blubBlub);
+        wannKommtDieFlut.flood(blubBlub);
 
         //Test
-        wannKommtDieFlut.flood();
+        wannKommtDieFlut.flood(blubBlub);
     }
 
     @Test
     public void testEquals() {
-        FloodCard newWannKommtDieFlut = new FloodCard(MapTile.fromNumber(4));
-        FloodCard sameNumberWannKommtDieFlut = new FloodCard(MapTile.fromNumber(5));
+        FloodCard newWannKommtDieFlut = new FloodCard(MapTile.fromNumber(4).getProperties());
+        FloodCard sameNumberWannKommtDieFlut = new FloodCard(MapTile.fromNumber(5).getProperties());
         
         boolean isEqual = wannKommtDieFlut.equals(wannKommtDieFlut);
         Assert.assertTrue("Equals sollte bei ein und derselben Karte true ausgeben", isEqual);

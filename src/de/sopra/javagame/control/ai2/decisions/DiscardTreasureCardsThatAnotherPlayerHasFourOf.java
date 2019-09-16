@@ -22,7 +22,8 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
  */
 @DoAfter(act = DISCARD, value = DiscardTreasureCardsOfCollectedTreasures.class)
 public class DiscardTreasureCardsThatAnotherPlayerHasFourOf extends Decision {
-private ArtifactCardType discarded; 
+    private ArtifactCardType discarded;
+
     @Override
     public Decision decide() {
         List<Player> allPlayers = control.getAllPlayers();
@@ -38,22 +39,22 @@ private ArtifactCardType discarded;
                 int fire = hand.getAmount(FIRE);
                 int earth = hand.getAmount(EARTH);
                 int air = hand.getAmount(AIR);
-                if(all(water > 3, activeCard.getType() == ArtifactCardType.WATER)) {
-                    discarded=activeCard.getType();
-                    return this;
-                }    
-                if(all(fire > 3, activeCard.getType() == ArtifactCardType.FIRE)){
-                    discarded=activeCard.getType();
+                if (all(water > 3, activeCard.getType() == ArtifactCardType.WATER)) {
+                    discarded = activeCard.getType();
                     return this;
                 }
-                if(all(earth > 3, activeCard.getType() == ArtifactCardType.EARTH)){
-                    discarded=activeCard.getType();
+                if (all(fire > 3, activeCard.getType() == ArtifactCardType.FIRE)) {
+                    discarded = activeCard.getType();
                     return this;
                 }
-                if(all(air > 3, activeCard.getType() == ArtifactCardType.AIR)){
-                    discarded=activeCard.getType();
+                if (all(earth > 3, activeCard.getType() == ArtifactCardType.EARTH)) {
+                    discarded = activeCard.getType();
                     return this;
-                }    
+                }
+                if (all(air > 3, activeCard.getType() == ArtifactCardType.AIR)) {
+                    discarded = activeCard.getType();
+                    return this;
+                }
             }
         }
         return null;

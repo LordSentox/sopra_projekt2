@@ -28,6 +28,7 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
     private Point start;
     private Point target;
     private EnumSet<PlayerType> rescued;
+
     @Override
     public Decision decide() {
         List<Player> allPlayers = control.getAllPlayers();
@@ -41,10 +42,10 @@ public class SpecialFlyOutOrphanedPlayers extends Decision {
             }
             //prüfe, ob der Spieler sich noch selbst wegbewegen kann
             if (player.legalMoves(true).isEmpty()) {
-                start=player.getPosition();
-                target= control.getTile(PlayerType.PILOT).getLeft();
-                for(Player otherPlayer : control.getAllPlayers()) {
-                    if(otherPlayer.getPosition().equals(player.getPosition())) {
+                start = player.getPosition();
+                target = control.getTile(PlayerType.PILOT).getLeft();
+                for (Player otherPlayer : control.getAllPlayers()) {
+                    if (otherPlayer.getPosition().equals(player.getPosition())) {
                         rescued.add(otherPlayer.getType());
                     }
                 }

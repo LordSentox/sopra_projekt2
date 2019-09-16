@@ -78,8 +78,6 @@ public final class Commands {
                 .registerType(Point.class, "point")
                 .registerType(ArtifactCard.class, "artifactcard",
                         PropertyResolver.create("type", ArtifactCardType.class, ArtifactCard::getType))
-                .registerType(FloodCard.class, "floodcard",
-                        PropertyResolver.create("tile", MapTile.class, FloodCard::getTile))
                 .registerType(Player.class, "player",
                         TypeResolver.create(PlayerType.class, this::toPlayer, Player::getType))
                 .registerType(JavaGame.class, "javagame",

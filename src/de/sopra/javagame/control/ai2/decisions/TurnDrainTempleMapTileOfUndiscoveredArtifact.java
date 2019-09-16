@@ -27,6 +27,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_NO_ACTION
 @PreCondition(allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
     private Point drainPoint;
+
     @Override
     public Decision decide() {
         List<Pair<Point, MapTile>> templeList = control.getTemples();
@@ -50,7 +51,7 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
             if (!drainablePositions.contains(orphanedTemplePosition)) {
                 return null;
             }
-            drainPoint= orphanedTemplePosition.getLocation(); 
+            drainPoint = orphanedTemplePosition.getLocation();
             return this;
         }
         return null;

@@ -27,6 +27,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ART
 @PreCondition(allTrue = GAME_HAS_ALL_ARTIFACTS)
 public class TurnEndGame extends Decision {
     private EnumSet<PlayerType> people;
+
     @Override
     public Decision decide() {
 
@@ -48,7 +49,7 @@ public class TurnEndGame extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().finishTheGame(control.getTile(PlayerType.PILOT).getLeft(),people);
+        return startActionQueue().finishTheGame(control.getTile(PlayerType.PILOT).getLeft(), people);
     }
 
 }

@@ -370,7 +370,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         int index = 0;
         floodCardDiscardGridPane.getChildren().clear();
         for (FloodCard card : discardPile) {
-            CardView v = new FloodCardView(card.getTile().getProperties(), ACTIVE_CARD_SIZE);
+            CardView v = new FloodCardView(card.getTile(), ACTIVE_CARD_SIZE);
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
