@@ -123,22 +123,22 @@ public class Action implements Copyable<Action>, Serializable {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param map        Die Map des Spiels
      */
-    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapFull map)
-        throws NullPointerException, IllegalArgumentException {
-        Action action = new Action();
-        action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
-        action.description = "Spielstart";
+    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
         if (map == null || difficulty == null || players == null)
-            throw new NullPointerException();
+            throw new IllegalArgumentException("Argument is null");
 
         if (players.isEmpty() || players.size() < 2 || players.size() > 4)
             throw new IllegalStateException();
-
+        
+        //players.replaceAll(pair -> pair.getLeft().equals(other));
+        
+        Action action = new Action();
+        action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
+        action.description = "Spielstart";
         action.map = map;
         action.floodCardStack = CardStackUtil.createFloodCardStack(map.raw());
         action.waterLevel = new WaterLevel(difficulty);
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
-
         action.players = players.stream().map(pair -> {
             Point start = map.getPlayerSpawnPoint(pair.getLeft());
             switch (pair.getLeft()) {

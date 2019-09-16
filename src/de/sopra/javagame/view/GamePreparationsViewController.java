@@ -13,12 +13,18 @@ import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * GUI für die Spielvorbereitung
@@ -34,6 +40,7 @@ public class GamePreparationsViewController extends AbstractViewController {
     @FXML ToggleButton addPlayerThreeToggleButton, addPlayerFourToggleButton;
     @FXML JFXButton addPlayerThreeButton,addPlayerFourButton;
     @FXML JFXCheckBox isPlayerOneKiCheckBox, isPlayerTwoKiCheckBox, isPlayerThreeKiCheckBox, isPlayerFourKiCheckBox;
+    @FXML Label cannotStartGameLabel;
     
     private Difficulty difficulty;
     
@@ -65,7 +72,6 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerFourButton.setDisable(true);
         isPlayerThreeKiCheckBox.setDisable(true);
         isPlayerFourKiCheckBox.setDisable(true);
-//        addPlayerThreeToggleButton. 
         
     }
 
@@ -74,10 +80,10 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
     
     public void onAddPlayerThreeClicked(){
-            playerThreeNameTextField.setDisable(!addPlayerThreeToggleButton.isSelected());
-            playerThreeChooseCharakterComboBox.setDisable(!addPlayerThreeToggleButton.isSelected());
-            addPlayerThreeButton.setDisable(!addPlayerThreeToggleButton.isSelected());
-            isPlayerThreeKiCheckBox.setDisable(!addPlayerThreeToggleButton.isSelected());
+        playerThreeNameTextField.setDisable(!addPlayerThreeToggleButton.isSelected());
+        playerThreeChooseCharakterComboBox.setDisable(!addPlayerThreeToggleButton.isSelected());
+        addPlayerThreeButton.setDisable(!addPlayerThreeToggleButton.isSelected());
+        isPlayerThreeKiCheckBox.setDisable(!addPlayerThreeToggleButton.isSelected());
     }
     public void onAddPlayerFourClicked(){
         playerFourNameTextField.setDisable(!addPlayerFourToggleButton.isSelected());
@@ -89,7 +95,7 @@ public class GamePreparationsViewController extends AbstractViewController {
     public void onStartGameClicked() {
 
         
-        LinkedList<Pair<PlayerType, Boolean>> playerList = new LinkedList<>();
+        List<Pair<PlayerType, Boolean>> playerList = new LinkedList<>();
         System.out.println(playerList);
         //Spielertypen hinzufügen
         System.out.println(playerOneChooseCharakterComboBox.getValue());
@@ -107,11 +113,17 @@ public class GamePreparationsViewController extends AbstractViewController {
         
         //PLayerList muss mind. zwei Spieler enthalten
         //TODO Button disablen wenn die Bedingungen nicht erfüllt sind
-        if(!playerList.isEmpty() && difficulty != null){
-            changeState(ViewState.IN_GAME);
-            // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
-            this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
+        if(!playerList.stream().map(Pair::getLeft).filter(playerType -> !playerType.equals(PlayerType.NONE)).allMatch(new HashSet<PlayerType>()::add)){
+            cannotStartGameLabel.setText("Mindestens zwei Spieler haben den gleichen Typ");
+            return;
+        }        
+        if(playerList.isEmpty() || difficulty == null){
+            cannotStartGameLabel.setText("es sind nicht alle Felder ausgefüllt");            
+            return;
         }
+        changeState(ViewState.IN_GAME);
+        // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
+        this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
     }
         
 
@@ -130,11 +142,11 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
     
     
-    public void addPLayerType(String type,  LinkedList<Pair<PlayerType, Boolean>> playerList, boolean isAi){
+    public void addPLayerType(String type,  List<Pair<PlayerType, Boolean>> playerList, boolean isAi){
         if(type == null){
             type = "";
         }
-        //TODO zufällig soll zufällig sein, und jeder playertype darf nur einmal benutzt werden
+        //TODO zufällig soll zufällig sein
         switch (type) {
         case "Taucher":
             playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
@@ -155,12 +167,8 @@ public class GamePreparationsViewController extends AbstractViewController {
         case "Ingenieur":
             playerList.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, isAi));
             break;
-        case "zufällig":
-            //TODO zufällige Verteilung
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.DIVER, isAi));
-            break;
         default:
-            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.ENGINEER, isAi));
+            playerList.add(new Pair<PlayerType, Boolean>(PlayerType.NONE, isAi));
             break;
         }
     }
@@ -184,7 +192,7 @@ public class GamePreparationsViewController extends AbstractViewController {
             difficulty = Difficulty.LEGENDARY;
             break;
         default:
-            difficulty = Difficulty.LEGENDARY;
+//            difficulty = Difficulty.LEGENDARY;
         }
     }
 }
