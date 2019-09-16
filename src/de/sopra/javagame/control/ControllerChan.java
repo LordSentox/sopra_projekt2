@@ -8,6 +8,7 @@ import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -100,7 +101,7 @@ public class ControllerChan {
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
 
-    public void startNewGame(String mapName, MapBlackWhite map, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
+    public void startNewGame(String mapName, MapBlackWhite map, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
         MapFull fullMap = MapUtil.createAndFillMap(map);
         startNewGame(mapName, fullMap, players, difficulty);
     }
@@ -119,7 +120,7 @@ public class ControllerChan {
      * @param loadGameName ist der Name der zu ladenden Spieldatei
      */
 
-    public void loadGame(String loadGameName) {
+    public void loadSaveGame(String loadGameName) {
         try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + loadGameName + ".save");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             this.javaGame = (JavaGame) objectInputStream.readObject();
@@ -129,10 +130,7 @@ public class ControllerChan {
                 this.javaGame.redoAction();
 
             // Setze die momentane Aktion auf die nächste des geladenen Spiels
-            // TODO: Hierfür sollte es vielleicht eine eigene Funktion im JavaGame geben, die es besser ersichtlich macht, was passiert
-            Action lastAction = this.javaGame.getPreviousAction();
-            this.javaGame.undoAction();
-            this.currentAction = this.javaGame.finishAction(lastAction);
+            this.currentAction = this.javaGame.getPreviousAction().copy();
 
             // Spiel wurde erfolgreich geladen, der Name des momentanen Spiels kann gesetzt werden und
             // das GUI kann informiert werden
@@ -148,6 +146,13 @@ public class ControllerChan {
             System.out.println("Die Klasse wurde nicht gefunden!");
             e.printStackTrace();
         }
+    }
+
+    public void loadReplay(String replayName){
+        while(this.javaGame.canUndo()) {
+            this.javaGame.undoAction();
+        }
+        this.gameName = replayName;
     }
 
     /**
@@ -200,7 +205,7 @@ public class ControllerChan {
         saveGame("");
         // TODO: Bei der Erstellung des Strukturmodelles wurde noch keine Unterscheidung zwischen Replays und
         // weiterspielbaren Spielen gemacht. Deshalb muss die loadGame/saveGame-Methode noch angepasst werden.
-        loadGame(replayGameName);
+        loadSaveGame(replayGameName);
         inGameViewAUI.refreshAll();
     }
 
@@ -230,9 +235,9 @@ public class ControllerChan {
         if (!delete) {
             System.out.println("Die Datei wurde nicht gelöscht!");
         }
-        //schneide ".currentlyPlayed" ab
+        //schneide ".save" ab
         // FIXME: gameName wurde gar nicht gesetzt, nach Länge abschneiden ist nicht sicher. Lieber mittels Pattern oder gleich umgehen
-        this.gameName = this.gameName.substring(0, this.gameName.length() - 16);
+        this.gameName = this.gameName.substring(0, this.gameName.length() - 5);
     }
 
     public void finishAction() {

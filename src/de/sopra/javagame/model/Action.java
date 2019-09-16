@@ -4,8 +4,15 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -17,6 +24,8 @@ import java.util.stream.Collectors;
 //    --> dazu alle Aufrufe, die Action beinhalten umbenennen
 
 public class Action implements Copyable<Action>, Serializable {
+
+    private static final long serialVersionUID = -2000089597610909945L;
 
     /**
      * Eine Menge aller Artefakte, die bereits gefunden wurden.
@@ -123,56 +132,68 @@ public class Action implements Copyable<Action>, Serializable {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param map        Die Map des Spiels
      */
-    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapFull map)
-        throws NullPointerException, IllegalArgumentException {
-        Action action = new Action();
-        action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
-        action.description = "Spielstart";
+    public static Action createInitialAction(Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
         if (map == null || difficulty == null || players == null)
-            throw new NullPointerException();
+            throw new IllegalArgumentException("Argument is null");
 
         if (players.isEmpty() || players.size() < 2 || players.size() > 4)
             throw new IllegalStateException();
-
+        
+        //players.replaceAll(pair -> pair.getFirst().equals(other));
+        
+        Action action = new Action();
+        action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
+        action.description = "Spielstart";
         action.map = map;
         action.floodCardStack = CardStackUtil.createFloodCardStack(map.raw());
         action.waterLevel = new WaterLevel(difficulty);
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
-
-        action.players = players.stream().map(pair -> {
-            Point start = map.getPlayerSpawnPoint(pair.getLeft());
-            switch (pair.getLeft()) {
-            case COURIER:
-                Courier courier = new Courier("Hartmut Kurier", start, action);
-                courier.setActionsLeft(3);
-                return courier;
-            case DIVER:
-                Diver diver = new Diver("Hartmut im Spanienurlaub", start, action);
-                diver.setActionsLeft(3);
-                return diver;
-            case PILOT:
-                Pilot pilot = new Pilot("Hartmut auf dem Weg in den Urlaub", start, action);
-                pilot.setActionsLeft(3);
-                return pilot;
-            case NAVIGATOR:
-                Navigator navigator = new Navigator("Hartmut Verlaufen", start, action);
-                navigator.setActionsLeft(3);
-                return navigator;
-            case EXPLORER:
-                Explorer explorer = new Explorer("Hartmut im Dschungel", start, action);
-                explorer.setActionsLeft(3);
-                return explorer;
-            case ENGINEER:
-                Engineer engineer = new Engineer("Hartmut Auto Kaputt", start, action);
-                engineer.setActionsLeft(3);
-                return engineer;
-            default:
-                throw new IllegalArgumentException("Illegal Player Type: " + pair.getLeft());
-            }
-        }).collect(Collectors.toList());
-
+        action.players = new LinkedList<>();
+        players.forEach(triple -> {
+            if(triple.getFirst() != PlayerType.NONE)
+                action.players.add(createPlayerByType(triple.getFirst(), triple.getSecond(), map.getPlayerSpawnPoint(triple.getFirst()), action));
+            else
+                action.players.add(null);
+        });
+        
+        
+        for (int i = 0; i < players.size(); i++) {
+            Player player = action.players.get(i);
+            if(player != null) continue;
+            Triple<PlayerType, String, Boolean> triple = players.get(i);
+            List<PlayerType> list = EnumSet.allOf(PlayerType.class).stream()
+                  .filter(pType -> !pType.equals(PlayerType.NONE))
+                  .filter(pType -> action.players.stream().filter(Objects::nonNull).noneMatch(p -> p.getType() == pType))
+                  .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList()); 
+                 
+            Collections.shuffle(list);
+            System.out.println(list.get(0));
+            Player p = createPlayerByType(list.get(0), triple.getSecond(), map.getPlayerSpawnPoint(list.get(0)), action);
+            action.players.set(i, p);
+        }
         action.state = TurnState.FLOOD;
+        
+        System.out.println(action.players);
         return action;
+    }
+    
+    public static Player createPlayerByType(PlayerType type, String name, Point start, Action action) {
+        switch (type) {
+            case COURIER:
+                return new Courier(name, start, action);
+            case DIVER:
+                return new Diver(name, start, action);
+            case PILOT:
+                return new Pilot(name, start, action);
+            case NAVIGATOR:
+                return new Navigator(name, start, action);
+            case EXPLORER:
+                return new Explorer(name, start, action);
+            case ENGINEER:
+                return new Engineer(name, start, action);
+            default:
+                return null;
+        }
     }
 
     /**

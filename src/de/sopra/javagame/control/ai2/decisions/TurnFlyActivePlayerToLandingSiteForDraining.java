@@ -16,6 +16,8 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_ANY_PLAYER_
 import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_LANDING_SITE_IS_FLOODED;
 import static de.sopra.javagame.model.ArtifactCardType.*;
 
+import java.util.EnumSet;
+
 
 /**
  * <h1>projekt2</h1>
@@ -28,7 +30,9 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
 @DoAfter(act = TURN_ACTION, value = TurnMoveForDrainingNearbyLandingSite.class)
 @PreCondition(allTrue = {GAME_LANDING_SITE_IS_FLOODED, GAME_ANY_PLAYER_HAS_HELICOPTER})
 public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
-
+    private Point targetPoint;
+    private EnumSet<PlayerType> dude;
+    private Point start;
     @Override
     public Decision decide() {
 
@@ -52,13 +56,15 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
                 && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
         }
-
+        dude.add(player().getType());
+        start=player().getPosition();
+        targetPoint= control.getTile(PlayerType.PILOT).getLeft();
         return this;
     }
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().helicopterCard(start, targetPoint, dude).drain(targetPoint);
     }
 
 }

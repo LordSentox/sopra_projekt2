@@ -39,12 +39,11 @@ public class InGameUserController {
         //prüfe, ob alle zu bewegenden Spieler auf ein und demselben Punkt stehen
         checkAllPlayersOnStartPoint(flightRoute, players);
 
-        //Überprüfen, ob das Spiel gewonnen ist --> TODO refresh und weitere Funktionalitäten ergänzen
-        checkWonOnHelicopter(currentAction);
-
-        //XXX aktuell noch da, da nicht abgebrochen wird in checkWonOnHelicopter. Eventuell entfernen
-        //Methode nur zum Prüfen, ob das Spiel eigentlich bereits beendet war, dies nur noch nicht angekommen ist
-        if (controllerChan.getCurrentAction() == null) {
+        //Überprüfen, ob das Spiel gewonnen ist --> TODO inGameViewAUI.setGameEnded(gameWon = true) nutzen, Speichern abfangen!
+        if (checkWonOnHelicopter(currentAction)) {
+            controllerChan.getInGameViewAUI().showNotification("Herzlichen Glückwunsch! Ihr habt die Insel besiegt." +
+                    "Euch allen eine sichere und schnelle Heimreise " +
+                    "und auf ein baldiges Wiedersehen~");
             return;
         }
 
@@ -54,11 +53,19 @@ public class InGameUserController {
         controllerChan.finishAction();
     }
 
+    /**
+     * bewegt die Spieler, entfernt die gespielte Karte aus der Hand des Spielers und sendet refreshs an die AUI
+     * @param sourcePlayer Spieler, der die Helikopterkarte spielt
+     * @param handCardIndex der Index, an dem sich die Karte befindet
+     * @param flightRoute Start- und Endpunkt der Flugroute
+     * @param players die Spieler, die bewegt werden sollen
+     * @param currentAction die aktuelle Action, die dann beendet werden muss
+     */
     private void actuallyMovePlayers(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players, Action currentAction) {
         //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
         if (flightRoute.getLeft() == null || flightRoute.getRight() == null
-                || controllerChan.getCurrentAction().getMap().get(flightRoute.getRight()) == null
-                || controllerChan.getCurrentAction().getMap().get(flightRoute.getRight()).getState() == MapTileState.GONE) {
+                || currentAction.getMap().get(flightRoute.getRight()) == null
+                || currentAction.getMap().get(flightRoute.getRight()).getState() == MapTileState.GONE) {
             throw new IllegalStateException("Mindestens einer der übergebenen Points war null. " +
                     "Fliegen ist so nicht möglich!");
         }
@@ -77,6 +84,12 @@ public class InGameUserController {
         }
     }
 
+    /**
+     * prüft, ob alle Spieler, die bewegt werden sollen auch auf dem Startpunkt der Fugroute stehen
+     *
+     * @param flightRoute der Start- und Endpunkt der gewählten Route
+     * @param players die Spieler, die bewegt werden sollen
+     */
     private void checkAllPlayersOnStartPoint(Pair<Point, Point> flightRoute, List<PlayerType> players) {
         boolean allOnFlightRouteStartPoint = playersOnPoint(flightRoute.getLeft(), players);
         if (!allOnFlightRouteStartPoint) {
@@ -85,6 +98,12 @@ public class InGameUserController {
         }
     }
 
+    /**
+     * prüft, ob die Handkarten alle Bedingungen erfüllen, um gewählte Karte zu spielen
+     * @param handCardIndex der Index, an dem die Karte sich befinden soll
+     * @param handCards die Handkarten des Spielers
+     * @param cardType der Kartentyp, der gespielt werden soll
+     */
     private void checkHandForCard(int handCardIndex, List<ArtifactCard> handCards, ArtifactCardType cardType) {
         if (handCards.size() <= handCardIndex ||
             handCards.get(handCardIndex) == null ||
@@ -98,7 +117,7 @@ public class InGameUserController {
      * Prüft, ob die Gewinnbedingungen erfüllt sind (alle Artefakte gefunden, alle Spieler stehen auf dem Helikopter-Punkt)
      * @param currentAction aktuelle Aktion, in der die Helikopterkarte gespielt wurde
      */
-    private void checkWonOnHelicopter(Action currentAction) {
+    private boolean checkWonOnHelicopter(Action currentAction) {
         MapFull map = currentAction.getMap();
 
         Point heliPoint = map.getPlayerSpawnPoint(PlayerType.PILOT);
@@ -114,14 +133,9 @@ public class InGameUserController {
             currentAction.setGameEnded(true);
             currentAction.setGameWon(true);
             controllerChan.finishAction();
-            controllerChan.getInGameViewAUI().showNotification("Herzlichen Glückwunsch! Ihr habt die Insel besiegt." +
-                    "Euch allen eine sichere und schnelle Heimreise " +
-                    "und auf ein baldiges Wiedersehen~");
-            return;
-            //TODO in HighScoreIO Methode zum speichern von High-Scores
-            //dann View bescheid geben, dass Spiel vorbei (set as Replay)
-            //controllerChan.getHighScoresController().save;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -173,8 +187,7 @@ public class InGameUserController {
 
         //lege das gewählte MapTile trocken
         currentAction.getMap().get(destination).drain();
-        //fix point in View
-        //controllerChan.getInGameViewAUI().refreshMapTile(destination, tileToDrain);
+        controllerChan.getInGameViewAUI().refreshMapTile(destination, tileToDrain);
         controllerChan.finishAction();
     }
 

@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -59,10 +58,10 @@ public class TextureLoader {
         loadPack(packFileName);
     }
 
-    private static void removePack(String packName) {
-        if (packName.equals("default")) throw new IllegalArgumentException("Default textures cannot be removed");
-        if (PACKS.remove(packName + ".zip")) refreshTextures();
-    }
+//    private static void removePack(String packName) {
+//        if (packName.equals("default")) throw new IllegalArgumentException("Default textures cannot be removed");
+//        if (PACKS.remove(packName + ".zip")) refreshTextures();
+//    }
 
     private static void refreshTextures() {
         PACKS.forEach(TextureLoader::loadPack);
@@ -125,7 +124,7 @@ public class TextureLoader {
                 String name = playerEntry.getName();
                 String textureName = name.substring(name.lastIndexOf("/") + 1);
                 PlayerType type = PlayerType.valueOf(textureName.substring(0, textureName.length() - 4).toUpperCase());
-                PLAYER_ICON_TEXTURES.put(type, new PlayerTexture(playerCards.inputStreamByName(textureName), type));
+                PLAYER_ICON_TEXTURES.put(type, new PlayerTexture(playerIcons.inputStreamByName(textureName), type));
             }
 
             for (int i = 0; i < MapTileProperties.values().length; i++) {
@@ -143,9 +142,9 @@ public class TextureLoader {
         }
     }
 
-    private static List<String> getPacks() {
-        return Collections.unmodifiableList(PACKS.stream().map(s -> s.substring(s.length() - 4)).collect(Collectors.toList()));
-    }
+//    private static List<String> getPacks() {
+//        return Collections.unmodifiableList(PACKS.stream().map(s -> s.substring(s.length() - 4)).collect(Collectors.toList()));
+//    }
 
     public static Image getArtifactTexture(ArtifactType type) {
         return ARTIFACT_TEXTURES.get(type);

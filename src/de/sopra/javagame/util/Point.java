@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import static de.sopra.javagame.util.Direction.*;
 
 public class Point implements Serializable {
+
+    private static final long serialVersionUID = 974151156673528867L;
     public int xPos;
     public int yPos;
 
@@ -46,6 +48,22 @@ public class Point implements Serializable {
     public void move(Point delta) {
         this.xPos += delta.xPos;
         this.yPos += delta.yPos;
+    }
+
+    public Direction getPrimaryDirection(Point target) {
+        if (this.equals(target)) return null;
+        int xDiff = target.xPos - this.xPos;
+        int yDiff = target.yPos - this.yPos;
+        //LEFT or RIGHT
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff > 0)
+                return RIGHT;
+            else return LEFT;
+        } else { //UP or DOWN
+            if (yDiff > 0)
+                return DOWN;
+            else return UP;
+        }
     }
 
     public Point add(int deltaX, int deltaY) {

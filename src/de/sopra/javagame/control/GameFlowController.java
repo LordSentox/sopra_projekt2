@@ -102,6 +102,7 @@ public class GameFlowController {
         if (controllerChan.getJavaGame().canUndo()) {
             controllerChan.getJavaGame().markCheetah();
             controllerChan.getJavaGame().undoAction();
+            controllerChan.getJavaGame().markCheetah();
             controllerChan.getInGameViewAUI().refreshAll();
         }
     }

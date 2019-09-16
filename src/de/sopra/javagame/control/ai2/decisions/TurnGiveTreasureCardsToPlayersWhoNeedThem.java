@@ -4,6 +4,7 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 
@@ -21,6 +22,8 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
 @DoAfter(act = TURN_ACTION, value = TurnFlyActivePlayerToOrphanedTempleMapForDraining.class)
 @PreCondition(allTrue = PLAYER_HAS_ANY_ARTIFACT_CARD)
 public class TurnGiveTreasureCardsToPlayersWhoNeedThem extends Decision {
+    private PlayerType target;
+    private ArtifactCardType given;
     @Override
     public Decision decide() {
 
@@ -39,22 +42,33 @@ public class TurnGiveTreasureCardsToPlayersWhoNeedThem extends Decision {
             int fire2 = hand.getAmount(FIRE);
             int earth2 = hand.getAmount(EARTH);
             int air2 = hand.getAmount(AIR);
-
-            if (any(
-                    all(air > ZERO_CARDS, air < air2, air2 < FOUR_CARDS),
-                    all(earth > ZERO_CARDS, earth < earth2, earth2 < FOUR_CARDS),
-                    all(fire > ZERO_CARDS, fire < fire2, fire2 < FOUR_CARDS),
-                    all(water > ZERO_CARDS, water < water2, water2 < FOUR_CARDS)
-            )) {
-                return this;
-            }
+                    if(all(air > ZERO_CARDS, air < air2, air2 < FOUR_CARDS)) {
+                        given=AIR;
+                        target=player.getType();
+                        return this;
+                    }
+                    if(all(earth > ZERO_CARDS, earth < earth2, earth2 < FOUR_CARDS)) {
+                        given=EARTH;
+                        target=player.getType();
+                        return this;
+                    }
+                    if(all(fire > ZERO_CARDS, fire < fire2, fire2 < FOUR_CARDS)) {
+                        given=FIRE;
+                        target=player.getType();
+                        return this;
+                    }
+                    if(all(water > ZERO_CARDS, water < water2, water2 < FOUR_CARDS)) {
+                        given=WATER;
+                        target=player.getType();
+                        return this;
+                    }            
         }
         return null;
     }
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().trade(given, target);
     }
 
 }
