@@ -189,7 +189,6 @@ public class JavaGame implements Serializable {
         if (canUndo()) {
             Action undoneAction = this.undoActions.pop();
             this.redoActions.push(undoneAction);
-            markCheetah();
         }
     }
 

@@ -45,7 +45,7 @@ public class HighScoresViewController extends AbstractViewController implements 
     public void onShowReplayClicked() {
         HighScore selectedHighScore = (HighScore) highScoreListView.getSelectionModel().getSelectedItem();
         changeState(ViewState.IN_GAME);
-        getGameWindow().getControllerChan().loadGame(selectedHighScore.getReplayName());
+        getGameWindow().getControllerChan().loadSaveGame(selectedHighScore.getReplayName());
     }
 
     public void onCloseClicked() {

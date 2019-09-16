@@ -115,7 +115,9 @@ public class JavaGameTest {
 
         //teste ob korrekt redo Stapel zurückgesetzt wird
         javaGame.undoAction();
+        javaGame.markCheetah();
         javaGame.undoAction();
+        javaGame.markCheetah();
         Assert.assertTrue("There should have been two redo turns", javaGame.canRedo());
         javaGame.finishAction(currentAction);
         Assert.assertFalse("There should have been no redo turns", javaGame.canRedo());
