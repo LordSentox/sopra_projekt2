@@ -26,12 +26,12 @@ public class MapPane extends GridPane {
     //Dieses pane ist besser als alle anderen
 
     private static final int TILE_SIZE = 130;
-    private final StackPane[][] map;
+    private final MapPaneTile[][] map;
     private InGameViewController inGameViewController;
 
     public MapPane() throws IOException {
         super();
-        map = new StackPane[Map.SIZE_Y][Map.SIZE_X];
+        map = new MapPaneTile[Map.SIZE_Y][Map.SIZE_X];
 
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
@@ -44,10 +44,8 @@ public class MapPane extends GridPane {
                 if (tiles.get(x, y) != null) {
                     TileView v = new TileView(tiles.get(x, y).getTileIndex(), TILE_SIZE);
                     v.setPreserveRatio(true);
-                    StackPane pane = new StackPane();
-
+                    MapPaneTile pane = new MapPaneTile(v);
                     map[y][x] = pane;
-                    pane.getChildren().add(v);
                     this.getChildren().add(pane);
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                     final int newX = x, newY = y;
@@ -57,9 +55,8 @@ public class MapPane extends GridPane {
                     v.setPreserveRatio(true);
                     v.setFitWidth(TILE_SIZE);
                     v.setFitHeight(TILE_SIZE);
-                    StackPane pane = new StackPane();
+                    MapPaneTile pane = new MapPaneTile(v);
                     map[y][x] = pane;
-                    pane.getChildren().add(v);
                     this.getChildren().add(pane);
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 }
@@ -91,27 +88,24 @@ public class MapPane extends GridPane {
      * @param y
      * @return
      */
-    public StackPane getMapStackPane(int x, int y) {
-        return map[y][x];
+    public MapPaneTile getMapStackPane(Point point) {
+        return map[point.yPos][point.xPos];
     }
 
 
-    public void putPlayer(int x, int y, PlayerType type) {
-        StackPane pane = getMapStackPane(x, y);
+    public void movePlayer(Point point, PlayerType type) {
+        MapPaneTile pane = getMapStackPane(point);
         Optional<Point> playerPos = playerPosition(type);
         if (playerPos.isPresent()) {
             Point pos = playerPos.get();
-            removePlayer(pos.xPos, pos.yPos, type);
+            removePlayer(pos, type);
         }
-        ImageView view = new ImageView(TextureLoader.getPlayerCardTexture(type));
-        view.setPreserveRatio(true);
-        view.setFitHeight(110);
-        pane.getChildren().add(view);
-        ActionPicker ap = new ActionPicker(view, MouseButton.PRIMARY, this, type);
+        pane.putPlayer(type);
+//        ActionPicker ap = new ActionPicker(view, MouseButton.PRIMARY, this, type);
     }
 
-    public void removePlayer(int x, int y, PlayerType type) {
-        playerOnTile(x, y, type).ifPresent(getMapStackPane(x, y).getChildren()::remove);
+    public void removePlayer(Point p, PlayerType type) {
+        playerOnTile(p, type).ifPresent(getMapStackPane(p).getChildren()::remove);
     }
 
     /**
@@ -122,8 +116,8 @@ public class MapPane extends GridPane {
      * @param type der PlayerType, nach dem gesucht werden soll
      * @return Ein Optional, der die gesuchte ImageView enthält. Ein leerer Optional, falls der Player nicht auf diesem Feld steht
      */
-    public Optional<ImageView> playerOnTile(int x, int y, PlayerType type) {
-        return getMapStackPane(x, y).getChildren().stream()
+    public Optional<ImageView> playerOnTile(Point p, PlayerType type) {
+        return getMapStackPane(p).getChildren().stream()
                 .filter(child -> child instanceof ImageView)
                 .map(child -> (ImageView) child)
                 .filter(child -> child.getImage() instanceof PlayerTexture && ((PlayerTexture) child.getImage()).getPlayer() == type)
@@ -134,7 +128,7 @@ public class MapPane extends GridPane {
     public Optional<Point> playerPosition(PlayerType type) {
         for (int y = 0; y < Map.SIZE_Y; y++) {
             for (int x = 0; x < Map.SIZE_X; x++) {
-                if (playerOnTile(x, y, type).isPresent()) return Optional.of(new Point(x, y));
+                if (playerOnTile(new Point(x,y), type).isPresent()) return Optional.of(new Point(x, y));
             }
         }
         return Optional.empty();
@@ -151,7 +145,7 @@ public class MapPane extends GridPane {
     }
     
     public void setMapTile(Point position, MapTile tile){
-        StackPane pane = this.getMapStackPane(position.xPos, position.yPos);
+        StackPane pane = this.getMapStackPane(position);
         for(Node node : pane.getChildren()){
             if(node instanceof TileView){
                 TileView tileView = (TileView) node;
@@ -161,7 +155,7 @@ public class MapPane extends GridPane {
     }
 
     public void highlightMapTile (Point position,boolean isHighlighted){
-        StackPane pane = this.getMapStackPane(position.xPos, position.yPos);
+        StackPane pane = this.getMapStackPane(position);
         for(Node node : pane.getChildren()){
             if(node instanceof TileView){
                 TileView tileView = (TileView) node;

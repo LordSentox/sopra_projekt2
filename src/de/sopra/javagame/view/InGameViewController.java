@@ -263,7 +263,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
         this.rotateTurnSpinner(72.0);
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
-        mapPane.putPlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().xPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().yPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
     }
 
     @Override
@@ -362,7 +362,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
-        this.refreshActionsLeft(-216);
         artifactCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -385,7 +384,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshFloodStack(CardStack<FloodCard> stack) {
-        this.refreshActionsLeft(-288);
         floodCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
@@ -409,7 +407,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshPlayerPosition(Point position, PlayerType player) {
         highlightedPoints.forEach(point -> mapPane.highlightMapTile(point, true));
         highlightedPoints = new ArrayList<>();
-        mapPane.putPlayer(position.xPos, position.yPos, player);
+        mapPane.movePlayer(position, player);
     }
 
     @Override
