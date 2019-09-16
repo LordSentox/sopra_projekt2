@@ -43,6 +43,7 @@ public class GamePreparationsViewController extends AbstractViewController {
     @FXML Label cannotStartGameLabel;
     
     private Difficulty difficulty;
+    private List<Triple<PlayerType,String, Boolean>> playerList = new LinkedList<>();
     
     public void init(){
         mainPane.setImage(TextureLoader.getBackground());
@@ -95,26 +96,25 @@ public class GamePreparationsViewController extends AbstractViewController {
     public void onStartGameClicked() {
 
         
-        List<Pair<Pair<PlayerType,String>, Boolean>> playerList = new LinkedList<>();
-        System.out.println(playerList);
+        
+//        System.out.println(playerList);
         //Spielertypen hinzufügen
         System.out.println(playerOneChooseCharakterComboBox.getValue());
         addPlayerType(playerOneChooseCharakterComboBox.getValue(),
-                playerList,
                 !isPlayerOneKiCheckBox.isDisabled(),
                 playerOneNameTextField.getText());
-        addPlayerType(playerTwoChooseCharakterComboBox.getValue(), playerList, !isPlayerTwoKiCheckBox.isDisabled(), playerTwoNameTextField.getText());
+        addPlayerType(playerTwoChooseCharakterComboBox.getValue(), !isPlayerTwoKiCheckBox.isDisabled(), playerTwoNameTextField.getText());
         if(addPlayerThreeToggleButton.isSelected()){
-            addPlayerType(playerThreeChooseCharakterComboBox.getValue(), playerList, !isPlayerThreeKiCheckBox.isDisabled(), playerThreeNameTextField.getText());
+            addPlayerType(playerThreeChooseCharakterComboBox.getValue(), !isPlayerThreeKiCheckBox.isDisabled(), playerThreeNameTextField.getText());
         }
         if(addPlayerFourToggleButton.isSelected()){
-            addPlayerType(playerFourChooseCharakterComboBox.getValue(), playerList, !isPlayerFourKiCheckBox.isDisabled(), playerFourNameTextField.getText());
+            addPlayerType(playerFourChooseCharakterComboBox.getValue(), !isPlayerFourKiCheckBox.isDisabled(), playerFourNameTextField.getText());
         }
         setDifficulty();
         
         //PLayerList muss mind. zwei Spieler enthalten
         //TODO Button disablen wenn die Bedingungen nicht erfüllt sind
-        if(!playerList.stream().map(Pair::getLeft).filter(playerType -> !playerType.equals(PlayerType.NONE)).allMatch(new HashSet<PlayerType>()::add)){
+        if(!playerList.stream().map(Triple::getFirst).filter(playerType -> !playerType.equals(PlayerType.NONE)).allMatch(new HashSet<PlayerType>()::add)){
             cannotStartGameLabel.setText("Mindestens zwei Spieler haben den gleichen Typ");
             return;
         }        
@@ -143,33 +143,33 @@ public class GamePreparationsViewController extends AbstractViewController {
     }
     
     
-    public void addPlayerType(String type,  List<Pair<Pair<PlayerType,String>, Boolean>> playerList, boolean isAi, String name){
+    public void addPlayerType(String type, boolean isAi, String name){
         if(type == null){
             type = "";
         }
         //TODO zufällig soll zufällig sein
         switch (type) {
         case "Taucher":
-            playerList.add(new Pair<>(new Pair<>(PlayerType.DIVER, name), isAi));
+            playerList.add(new Triple<>(PlayerType.DIVER, name, isAi));
             System.out.println("i bims ein Taucher");
             break;
         case "Navigator":
             playerList.add(new Triple<>(PlayerType.NAVIGATOR, name, isAi));
             break;
         case "Pilot":
-            playerList.add(new Pair<>(new Pair<>(PlayerType.PILOT, name), isAi));
+            playerList.add(new Triple<>(PlayerType.PILOT, name, isAi));
             break;
         case "Entdecker":
-            playerList.add(new Pair<>(new Pair<>(PlayerType.EXPLORER, name), isAi));
+            playerList.add(new Triple<>(PlayerType.EXPLORER, name, isAi));
             break;
         case "Bote":
-            playerList.add(new Pair<>(new Pair<>(PlayerType.COURIER, name), isAi));
+            playerList.add(new Triple<>(PlayerType.COURIER, name, isAi));
             break;
         case "Ingenieur":
-            playerList.add(new Pair<>(new Pair<>(PlayerType.ENGINEER, name), isAi));
+            playerList.add(new Triple<>(PlayerType.ENGINEER, name, isAi));
             break;
         default:
-            playerList.add(new Pair<>(new Pair<>(PlayerType.NONE, name), isAi));
+            playerList.add(new Triple<>(PlayerType.NONE, name, isAi));
             break;
         }
     }
