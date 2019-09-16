@@ -161,6 +161,12 @@ public abstract class Decision {
     }
 
     protected List<Point> surroundingPoints(Point center, boolean edges) {
+        if (edges) {
+            return center.getSurrounding();
+        } else {
+            return center.getNeighbours();
+        }
+
         List<Point> points = new LinkedList<>();
         Point northernNeighbourPoint = translate(center, UP);
         Point southernNeighbourPoint = translate(center, DOWN);
