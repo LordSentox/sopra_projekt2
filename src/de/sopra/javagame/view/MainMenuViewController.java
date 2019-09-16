@@ -8,8 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import static de.sopra.javagame.view.abstraction.ViewState.HIGH_SCORES;
-import static de.sopra.javagame.view.abstraction.ViewState.SETTINGS;
+import static de.sopra.javagame.view.abstraction.ViewState.*;
 
 /**
  * GUI für das Hauptfenster
@@ -39,7 +38,7 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onMapEditorClicked() {
-
+        changeState(MAP_EDITOR);
     }
 
     public void onHighscoresClicked() {
