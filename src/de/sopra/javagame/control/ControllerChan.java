@@ -102,6 +102,10 @@ public class ControllerChan {
 
     public void startNewGame(String mapName, MapBlackWhite map, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
         MapFull fullMap = MapUtil.createAndFillMap(map);
+        startNewGame(mapName, fullMap, players, difficulty);
+    }
+    
+    public void startNewGame (String mapName, MapFull fullMap, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
         this.javaGame = pair.getLeft();
         this.currentAction = pair.getRight();

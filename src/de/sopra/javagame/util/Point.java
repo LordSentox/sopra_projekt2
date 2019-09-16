@@ -106,6 +106,17 @@ public class Point implements Serializable {
 
         return surrounding;
     }
+    
+    public List<Point> getSurrounding(Point minimum, Point maximum) {
+        List<Point> surrounding = this.getSurrounding();
+        
+        surrounding = surrounding.stream().filter(point -> point.xPos >= minimum.xPos &&
+                point.yPos >= minimum.yPos &&
+                point.xPos <= maximum.xPos &&
+                point.yPos <= maximum.yPos).collect(Collectors.toList());
+
+        return surrounding;
+    }
 
     public boolean equals(Object other) {
         if (!(other instanceof Point)) {
