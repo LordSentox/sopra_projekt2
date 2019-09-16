@@ -46,7 +46,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
     private static final int SPINNER_SIZE = 250;
     
-    private List<Point> highlightedPoints = new ArrayList<>();
+    private List<Point> drainablePoints = new ArrayList<>();
+    private List<Point> movePoints = new ArrayList<>();
     private boolean specialActive =  false;
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
@@ -272,16 +273,16 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshMovementOptions(List<Point> points) {
-        highlightedPoints.forEach(point -> mapPane.highlightMapTile(point, true));
-        highlightedPoints = points;
-        points.forEach(point -> mapPane.highlightMapTile(point, false));
+        movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
+        movePoints = points;
+        points.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(true));
     }
 
     @Override
     public void refreshDrainOptions(List<Point> points) {
-        highlightedPoints.forEach(point -> mapPane.highlightMapTile(point, true));
-        highlightedPoints = points;
-        points.forEach(point -> mapPane.highlightMapTile(point, false));
+        drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
+        drainablePoints = points;
+        points.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(true));
     }
 
     @Override
@@ -409,8 +410,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
-        highlightedPoints.forEach(point -> mapPane.highlightMapTile(point, true));
-        highlightedPoints = new ArrayList<>();
+        movePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
+        movePoints = new ArrayList<>();
+        drainablePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
+        drainablePoints = new ArrayList<>();
         mapPane.movePlayer(position, player);
     }
 

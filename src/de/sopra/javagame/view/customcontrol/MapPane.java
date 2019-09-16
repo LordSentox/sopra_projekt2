@@ -15,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -28,6 +27,7 @@ public class MapPane extends GridPane {
     private static final int TILE_SIZE = 130;
     private final MapPaneTile[][] map;
     private InGameViewController inGameViewController;
+    
 
     public MapPane() throws IOException {
         super();
@@ -36,24 +36,17 @@ public class MapPane extends GridPane {
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
     }
-    
-    public void init() {
-        
-    }
-    
-
+  
     public void buildMap(MapFull tiles){
         for (int y = 0; y < Map.SIZE_Y; y++) {
             for (int x = 0; x < Map.SIZE_X; x++) {
                 if (tiles.get(x, y) != null) {
                     TileView v = new TileView(tiles.get(x, y).getTileIndex(), TILE_SIZE);
                     v.setPreserveRatio(true);
-                    MapPaneTile pane = new MapPaneTile(v);
+                    MapPaneTile pane = new MapPaneTile(inGameViewController,v, new Point(x,y));
                     map[y][x] = pane;
                     this.getChildren().add(pane);
-                    GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
-                    final int newX = x, newY = y;
-                    pane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onTileClicked(event, v, newX, newY));
+                    GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);    
                 } else {
                     ImageView v = new ImageView(TextureLoader.getSea1());
                     v.setPreserveRatio(true);
@@ -65,23 +58,6 @@ public class MapPane extends GridPane {
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 }
             }
-        }
-    }
-
-    private void onTileClicked(MouseEvent e, TileView v, int x, int y) {
-        if (e.getButton() == MouseButton.PRIMARY) {
-            if(v.getHighlighted()){
-                System.out.println(x + " " + y);
-                if(inGameViewController.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType().equals(PlayerType.NAVIGATOR) && inGameViewController.isSpecialActive()){
-                    
-                } else {                    
-                    inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().move(new Point(x, y), inGameViewController.isSpecialActive());
-                }
-                System.out.println("ich sollte mich bewegen");
-            }
-        } else if (e.getButton() == MouseButton.SECONDARY){
-            inGameViewController.getGameWindow().getControllerChan().getActivePlayerController().drain(new Point(x, y));
-            System.out.println("ich sollte drainen");
         }
     }
 
@@ -104,16 +80,7 @@ public class MapPane extends GridPane {
             Point pos = playerPos.get();
             removePlayer(pos, type);
         }
-<<<<<<< HEAD
         pane.putPlayer(type);
-//        ActionPicker ap = new ActionPicker(view, MouseButton.PRIMARY, this, type);
-=======
-        ImageView view = new ImageView(TextureLoader.getPlayerIconTexture(type));
-        view.setPreserveRatio(true);
-        view.setFitHeight(110);
-        pane.getChildren().add(view);
-        ActionPicker ap = new ActionPicker(view, MouseButton.PRIMARY, this);
->>>>>>> refs/remotes/origin/master
     }
 
     public void removePlayer(Point p, PlayerType type) {
@@ -157,7 +124,7 @@ public class MapPane extends GridPane {
     }
     
     public void setMapTile(Point position, MapTile tile){
-        StackPane pane = this.getMapStackPane(position);
+        MapPaneTile pane = this.getMapStackPane(position);
         for(Node node : pane.getChildren()){
             if(node instanceof TileView){
                 TileView tileView = (TileView) node;
@@ -165,18 +132,5 @@ public class MapPane extends GridPane {
             }
         }
     }
-
-    public void highlightMapTile (Point position,boolean isHighlighted){
-        StackPane pane = this.getMapStackPane(position);
-        for(Node node : pane.getChildren()){
-            if(node instanceof TileView){
-                TileView tileView = (TileView) node;
-                if(!isHighlighted){
-                    tileView.highlight();
-                } else {
-                    tileView.deHighlight();
-                }
-            }
-        }
-    }
+    
 }

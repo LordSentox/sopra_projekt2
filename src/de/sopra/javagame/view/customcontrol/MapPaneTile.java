@@ -5,29 +5,47 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
+import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.InGameViewController;
+import de.sopra.javagame.view.customcontrol.ActionPicker.ActionButton;
 import de.sopra.javagame.view.textures.TextureLoader;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
-public class MapPaneTile extends StackPane{
+public class MapPaneTile extends StackPane implements EventHandler<MouseEvent>{
     private final int PLAYERSIZE = 65;
     
+    private InGameViewController control;
+    private final Point position;
     private TileView base;
     private List<PlayerType> playersOnTile = new LinkedList<>();
     private GridPane fourPlayerPane= new GridPane();
+    private boolean canDrain;
+    private boolean canMoveTo;
+    private ActionPicker contextPicker;
     
-    public MapPaneTile (TileView base){
+    public MapPaneTile (InGameViewController control, TileView base, Point position){
+        this.control = control;
+        this.position = position;
         this.getChildren().add(base);
         this.getChildren().add(fourPlayerPane);
         this.base = base;
         this.initGridPane();
+        this.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
+        this.contextPicker = new ActionPicker(this, MouseButton.NONE);
     }
     
     public MapPaneTile (ImageView base) {
+        this.position = null;
         this.getChildren().add(base);
         this.base = null;
     }
@@ -44,11 +62,12 @@ public class MapPaneTile extends StackPane{
         fourPlayerPane.getChildren().clear();
         AtomicInteger x = new AtomicInteger(0), y = new AtomicInteger(0);
         playersOnTile.forEach(type -> {
-            PlayerImageView view = new PlayerImageView(type, TextureLoader.getPlayerCardTexture(type));
+            PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
             view.setPreserveRatio(true);
             view.setFitHeight(110);
             fourPlayerPane.getChildren().add(view);
             GridPane.setConstraints(view, x.get(), y.get());
+            view.addEventFilter(MouseEvent.MOUSE_CLICKED, view);
             if(!x.compareAndSet(0, 1))
                 if(!y.compareAndSet(0, 1))
                     if(!x.compareAndSet(1, 0))
@@ -66,6 +85,71 @@ public class MapPaneTile extends StackPane{
 
     public List<PlayerType> getPlayers() {
         return playersOnTile;
+    }
+
+    public void setCanMoveTo(boolean canMoveTo) {
+        this.canMoveTo = canMoveTo;
+        updateHighlight();
+    }
+    
+    public void setCanDrain(boolean canDrain) {
+        this.canDrain = canDrain;
+        updateHighlight();
+    }
+    
+    public boolean canDrain() {
+        return canDrain;
+    }
+    
+    public boolean canMoveTo() {
+        return canMoveTo;
+    }
+    
+    public void dehighlight(){
+        this.canDrain = false;
+        this.canMoveTo = false;
+        updateHighlight();
+    }
+    
+    private void updateHighlight(){
+        if(isHighlighted())
+            this.base.highlight();
+        else this.base.deHighlight();
+    }
+    
+    public boolean isHighlighted(){
+        return this.canDrain || this.canMoveTo;
+    }
+    
+    public Point getPosition() {
+        return position;
+    }
+    
+    public InGameViewController getControl() {
+        return control;
+    }
+    
+    public boolean canCollectTreasure(PlayerType playerType) {
+        Player player = control.getGameWindow().getControllerChan().getCurrentAction().getPlayer(playerType);
+        if(playersOnTile.contains(playerType)) {
+            return EnhancedPlayerHand.ofPlayer(player).getAmount(base.getType().getHidden()) >= 4;
+        }
+        return false;
+    }
+    
+    @Override
+    public void handle(MouseEvent event) {
+
+        List<ActionButton> buttons = new LinkedList<>();
+        if(canMoveTo)
+            buttons.add(ActionButton.MOVE);
+        if(canDrain)
+            buttons.add(ActionButton.DRAIN);
+        if(buttons.size() > 0) {
+            contextPicker.init(buttons.toArray(new ActionButton[buttons.size()]));
+            contextPicker.show(event); 
+        }
+
     }
 
 }

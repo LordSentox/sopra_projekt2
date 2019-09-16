@@ -216,6 +216,7 @@ public class ActivePlayerController {
      *            Die Positionen aller Felder die Trockengelegt werden sollen.
      */
     public void drain(Point... positions) {
+        //FIXME Es werden NIIEMALS mehrere Positionen gedraint, auch Engineer macht draint atomar beschees
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
         for (Point point : positions){
