@@ -143,27 +143,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         rotateTransition.play();
     }
 
-    public void onShowMovementOptionsClicked() {
-        System.out.println("juch, ich bin der bewegungsindikator");
-        getGameWindow().getControllerChan().getActivePlayerController().showMovements(false);
-    }
-
-    public void onShowDrainOptionsClicked() {
-        System.out.println("juch, ich bin der drainindikator");
-        getGameWindow().getControllerChan().getActivePlayerController().showDrainOptions();
-    }
-
-    public void onShowSpecialAbilityOptionsClicked() {
-
-        System.out.println("juch, ich bin der specialindikator");
-        getGameWindow().getControllerChan().getActivePlayerController().showSpecialAbility();
-    }
-
-    //TODO button zum abbrechen einbauen
-    public void onSpecialAbilityCancelClicked() {
-        getGameWindow().getControllerChan().getActivePlayerController().cancelSpecialAbility();
-    }
-
     public void onPlayerSelected() {
 
     }
@@ -190,11 +169,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void onDiscardSelectedCardsClicked() {
 
-    }
-
-    public void onCollectArtifactClicked() {
-        System.out.println("juch, ich bin der artefaktfinderotto");
-        getGameWindow().getControllerChan().getActivePlayerController().collectArtifact();
     }
 
     public void onRedoClicked() {
