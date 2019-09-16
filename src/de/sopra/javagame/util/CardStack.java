@@ -137,6 +137,9 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
         CardStack<T> stack = new CardStack<>();
         stack.discardPile = CopyUtil.copyAsList(this.discardPile);
         stack.drawStack = CopyUtil.copy(this.drawStack, Collectors.toCollection(Stack::new));
+        if (this.getObserver() == null) {
+            throw new IllegalStateException();
+        }
         stack.setObserver(this.getObserver());
         return stack;
     }

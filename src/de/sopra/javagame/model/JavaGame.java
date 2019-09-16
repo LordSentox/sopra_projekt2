@@ -64,7 +64,7 @@ public class JavaGame implements Serializable {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
+    public static Pair<JavaGame, Action> newGame(AIController aiController, String mapName, MapFull map, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
             throws NullPointerException, IllegalArgumentException {
         JavaGame game = new JavaGame();
 
@@ -84,6 +84,9 @@ public class JavaGame implements Serializable {
         }
 
         Action initialAction = Action.createInitialAction(difficulty, players, map);
+        //set CardStackTrackers for InitialTurn
+        initialAction.getArtifactCardStack().setObserver(aiController.getArtifactCardStackTracker());
+        initialAction.getFloodCardStack().setObserver(aiController.getFloodCardStackTracker());
 
         return new Pair<>(game, game.finishAction(initialAction));
     }

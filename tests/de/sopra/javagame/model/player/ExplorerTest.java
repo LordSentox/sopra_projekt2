@@ -45,7 +45,7 @@ public class ExplorerTest {
                 new Pair<>(PlayerType.NAVIGATOR, false),
                 new Pair<>(PlayerType.PILOT, false));
 
-        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        Pair<JavaGame, Action> pair = JavaGame.newGame(controllerChan.getAiController(), "test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();

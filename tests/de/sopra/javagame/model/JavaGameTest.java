@@ -1,6 +1,7 @@
 package de.sopra.javagame.model;
 
 import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapFull;
@@ -22,6 +23,7 @@ public class JavaGameTest {
     private MapFull testMap;
     private String testMapString;
     private List<Pair<PlayerType, Boolean>> players;
+    private AIController aiController;
 
     @Before
     public void setUp() throws Exception {
@@ -33,12 +35,13 @@ public class JavaGameTest {
             add(new Pair<>(PlayerType.DIVER, false));
             add(new Pair<>(PlayerType.COURIER, true));
         }};
+        aiController = TestDummy.getDummyControllerChan().getAiController();
     }
 
     @Test
     public void newGame() {
         //teste Erstellen vom Spiel mit korrekten Werten
-        Pair<JavaGame, Action> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        Pair<JavaGame, Action> newGame = JavaGame.newGame(aiController, testMapString, testMap, Difficulty.NOVICE, players);
         JavaGame javaGame = newGame.getLeft();
 
         Assert.assertEquals("Das neue Spiel sollte den gleichen MapNamen beinhalten", testMapString, javaGame.getMapName());
@@ -58,33 +61,33 @@ public class JavaGameTest {
     @Test (expected = NullPointerException.class)
     public void newGameNoMap() {
         //teste Erstellen mit leerer Map
-        JavaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
+        JavaGame.newGame(aiController,"emptyMap", null, Difficulty.NOVICE, players);
     }
 
     @Test(expected = NullPointerException.class)
     public void newGameNoMapName() {
-        JavaGame.newGame(null, testMap, Difficulty.NOVICE, players);
+        JavaGame.newGame(aiController,null, testMap, Difficulty.NOVICE, players);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void newGameEmptyMapName() {
-        JavaGame.newGame("", testMap, Difficulty.NOVICE, players);
+        JavaGame.newGame(aiController,"", testMap, Difficulty.NOVICE, players);
     }
 
     @Test(expected = NullPointerException.class)
     public void newGameNoDifficulty() {
-        JavaGame.newGame("TestMap", testMap, null, players);
+        JavaGame.newGame(aiController,"TestMap", testMap, null, players);
     }
 
     @Test(expected = NullPointerException.class)
     public void newGameNoPlayers() {
-        JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE, null);
+        JavaGame.newGame(aiController,"TestMap", testMap, Difficulty.NOVICE, null);
     }
 
     @Test(expected = IllegalStateException.class)
     public void newGameTooFewPlayers() {
         //teste Erstellen ohne Spieler
-        JavaGame.newGame("TestMap", testMap, Difficulty.NOVICE,
+        JavaGame.newGame(aiController,"TestMap", testMap, Difficulty.NOVICE,
                 Collections.emptyList());
     }
 
@@ -92,12 +95,12 @@ public class JavaGameTest {
     public void newGameTooManyPlayers() {
         players.add(new Pair<>(PlayerType.PILOT, false));
         //teste Erstellen mit 5+ Spielern
-        JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        JavaGame.newGame(aiController, testMapString, testMap, Difficulty.NOVICE, players);
     }
 
     @Test
     public void finishAction() {
-        Pair<JavaGame, Action> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        Pair<JavaGame, Action> newGame = JavaGame.newGame(aiController, testMapString, testMap, Difficulty.NOVICE, players);
         JavaGame javaGame = newGame.getLeft();
         Action currentAction = newGame.getRight();
 
@@ -142,7 +145,7 @@ public class JavaGameTest {
         //JavaGame javaGame = controllerChan.getJavaGame();
         Difficulty difficulty = Difficulty.NOVICE;
         int actualDifficulty = (difficulty.getInitialWaterLevel() + 1);
-        Pair<JavaGame, Action> newGame = JavaGame.newGame(mapString, testMap, difficulty, players);
+        Pair<JavaGame, Action> newGame = JavaGame.newGame(aiController, mapString, testMap, difficulty, players);
         JavaGame javaGame = newGame.getLeft();
         Action action = newGame.getRight();
         int turnCount = 1;
