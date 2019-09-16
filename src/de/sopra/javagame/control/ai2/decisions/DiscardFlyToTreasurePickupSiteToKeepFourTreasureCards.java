@@ -38,7 +38,7 @@ public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decis
         //Es wird der erste Tempel gewaehlt, da es zu aufwaendig waere, den optimalen Tempel zum 
         //Finden des Schatzes zu berechnen
         for (ArtifactType type : ArtifactType.values()) {
-            if (activeHand.getAmount(type) == 4) {
+            if (activeHand.getAmount(type) == FOUR_CARDS) {
                 targetPoint = control.getTile(type).getLeft().getLeft();
                 return this;
             }
