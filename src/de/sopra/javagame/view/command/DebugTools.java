@@ -16,8 +16,15 @@ import de.spaceparrots.api.command.annotation.Senior;
 public class DebugTools {
 
     @Command("fullscreen")
-    public void minimize(@Scope GameWindow window) {
+    public void fullscreen(@Scope GameWindow window) {
         window.getMainStage().setFullScreen(!window.getMainStage().isFullScreen());
+    }
+
+    @Command("minimize")
+    public void minimize(@Scope GameWindow window) {
+        if(window.getMainStage().isShowing())
+            window.getMainStage().hide();
+        else window.getMainStage().show();
     }
 
 }
