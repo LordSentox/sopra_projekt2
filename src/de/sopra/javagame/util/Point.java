@@ -48,6 +48,22 @@ public class Point implements Serializable {
         this.yPos += delta.yPos;
     }
 
+    public Direction getPrimaryDirection(Point target) {
+        if (this.equals(target)) return null;
+        int xDiff = target.xPos - this.xPos;
+        int yDiff = target.yPos - this.yPos;
+        //LEFT or RIGHT
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff > 0)
+                return RIGHT;
+            else return LEFT;
+        } else { //UP or DOWN
+            if (yDiff > 0)
+                return DOWN;
+            else return UP;
+        }
+    }
+
     public Point add(int deltaX, int deltaY) {
         return new Point(this.xPos + deltaX, this.yPos + deltaY);
     }
