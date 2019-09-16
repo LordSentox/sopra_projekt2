@@ -4,6 +4,7 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Explorer;
+import de.sopra.javagame.model.player.Pilot;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -143,12 +144,48 @@ public class AIControllerTest {
 //            }
 //        }
         
-        /*Test für den Taucher ändert die komplette Map, um sicherzustellen, dass alle 
-         *erreichbaren Teile verändert werden
+        /*
+         * Test für Pilot:
+         * 
+         */
+        Point landingSitePosition = aiControl.getTile(PlayerType.PILOT).getLeft();
+        MapTile landingSite = aiControl.getTile(PlayerType.PILOT).getRight();
+        MapTile[][] completeCard = aiControl.getCurrentAction().getMap().raw();
+        for (int i = 0; i < completeCard.length; i++){
+            for (int j = 0; j < completeCard[i].length; j++){
+                if (completeCard[i][j] != null){
+                    completeCard[i][j].drain();
+                }
+            }
+        }
+        assertTrue("Pilot kann Felder trockenlegen, obwohl alle MapTiles DRY sind",
+                aiControl.getDrainablePositionsOneMoveAway(landingSitePosition, PlayerType.PILOT).isEmpty());  
+        for (int i = 0; i < completeCard.length; i++){
+            for (int j = 0; j < completeCard[i].length; j++){
+                if (completeCard[i][j] != null){
+                    completeCard[i][j].flood();
+                }
+            }
+        }
+        assertTrue("Pilot kann Felder trockenlegen, obwohl er alle MapTiles sofort erreichen kann",
+                aiControl.getDrainablePositionsOneMoveAway(landingSitePosition, PlayerType.PILOT).isEmpty());
+        for (int i = 0; i < completeCard.length; i++){
+            for (int j = 0; j < completeCard[i].length; j++){
+                if (completeCard[i][j] != null){
+                    completeCard[i][j].flood();
+                }
+            }
+        }
+        landingSite.setState(MapTileState.DRY);
+        assertTrue("Pilot kann Felder trockenlegen, obwohl alle MapTiles bis auf die LandingSite GONE sind",
+                aiControl.getDrainablePositionsOneMoveAway(landingSitePosition, PlayerType.PILOT).isEmpty());
+        
+        /* Test für den Taucher ändert die komplette Map, um sicherzustellen, dass alle 
+         * erreichbaren Teile verändert werden
          */
         Point diversStartPosition = aiControl.getTile(PlayerType.DIVER).getLeft();
         MapTile diversStart = aiControl.getTile(PlayerType.DIVER).getRight();
-        MapTile[][] completeCard = aiControl.getCurrentAction().getMap().raw();
+        
         for (int i = 0; i < completeCard.length; i++){
             for (int j = 0; j < completeCard[i].length; j++){
                 if (completeCard[i][j] != null){
@@ -175,7 +212,7 @@ public class AIControllerTest {
                 }
             }
         }
-        diversStart.drain();
+        landingSite.setState(MapTileState.DRY);
         assertTrue("Taucher kann Felder trockenlegen, obwohl alle MapTiles bis auf die Position des Tauchers GONE sind",
                 aiControl.getDrainablePositionsOneMoveAway(diversStartPosition, PlayerType.DIVER).isEmpty());
         

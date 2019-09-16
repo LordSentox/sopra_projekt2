@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.util.Point;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 
@@ -16,10 +17,12 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 
 @DoAfter(act = TURN_ACTION, value = TurnMoveIfMovingCouldDrainTwoTiles.class)
 public class TurnDrainTile extends Decision {
+    private Point drainTile;
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
         if (!activePlayer.drainablePositions().isEmpty()) {
+            drainTile= activePlayer.drainablePositions().get(0);
             return this;
         }
         return null;
@@ -27,7 +30,7 @@ public class TurnDrainTile extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().drain(drainTile);
     }
 
 }

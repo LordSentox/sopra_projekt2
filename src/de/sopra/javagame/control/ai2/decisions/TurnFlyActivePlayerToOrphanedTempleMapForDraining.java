@@ -7,6 +7,7 @@ import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -32,10 +33,12 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 @DoAfter(act = TURN_ACTION, value = TurnDrainTempleMapTileOfUndiscoveredArtifact.class)
 @PreCondition(allTrue = GAME_ANY_PLAYER_HAS_HELICOPTER, allFalse = PLAYER_NO_ACTION_LEFT)
 public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision {
-
+    private Point targetPoint;
+    private EnumSet<PlayerType> dude;
+    private Point start;
     @Override
     public Decision decide() {
-
+           
         List<Pair<Point, MapTile>> templeList = control.getTemples();
         //filter non-flooded tiles
         templeList = templeList.stream().filter(pair -> pair.getRight().getState() == FLOODED).collect(Collectors.toList());
@@ -80,7 +83,9 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
                     && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
                 continue;
             }
-
+            targetPoint=orphanedTemplePoint;
+            start= activePlayerPosition;
+            dude.add(player().getType());
             return true;
         }
         return false;
@@ -89,7 +94,7 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().helicopterCard(start, targetPoint, dude).drain(targetPoint);
     }
 
 }

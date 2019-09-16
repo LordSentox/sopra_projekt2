@@ -1,5 +1,6 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactType;
@@ -60,6 +61,8 @@ public class ActivePlayerController {
      * @see PlayerType
      */
     public void showSpecialAbility() {
+
+        // XXX: Nicht immer Spieler kopieren
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
         InGameViewAUI aui = controllerChan.getInGameViewAUI();
@@ -209,7 +212,7 @@ public class ActivePlayerController {
     /**
      * Legt alle Felder trocken an den gegebenen Positionen.
      *
-     * @param positions
+     * @param positionsint next = 
      *            Die Positionen aller Felder die Trockengelegt werden sollen.
      */
     public void drain(Point... positions) {
@@ -227,24 +230,34 @@ public class ActivePlayerController {
     /**
      * Zeigt einen Spielhinweis an. Danach wird dieses Spiel nicht mehr in die
      * Bestenliste aufgenommen
+     * 
+     * @param PlayerType 
+     *            welche Spieler ruft showTip() auf.
      *
      * @see HighScore
      */
-    public void showTip() {
+    public void showTip(PlayerType playerType) {
         Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().markCheetah();
-        // TODO: KI nach Möglichkeiten fragen
-        // controllerChan.getAIController.getTip
-        controllerChan.getInGameViewAUI().showNotification("Tipps hier bitte!");
-        // TODO: refresh Maptile oder Karte in der Hand
-
+        ActionQueue tipps = controllerChan.getAiController().getTip(() -> currentAction.getPlayer(playerType));
+        
+        controllerChan.getInGameViewAUI().showTip(tipps);
     }
 
     /**
      * Beendet den Zug und startet den nächsten Zug.
      */
     public void endTurn() {
-        Action currentAction = controllerChan.getCurrentAction();
-        controllerChan.getJavaGame().finishAction(currentAction);
+            controllerChan.finishAction();
+            Action currentAktion = controllerChan.getCurrentAction();
+        
+            currentAktion.nextPlayerActive();
+            controllerChan.getInGameViewAUI().refreshActivePlayer();
+            controllerChan.getInGameViewAUI().refreshActionsLeft(currentAktion.getActivePlayer().getActionsLeft());
+            controllerChan.getInGameViewAUI().refreshHand(currentAktion.getActivePlayer().getType(), currentAktion.getActivePlayer().getHand());
+            //TODO:
+            //controllerChan.getInGameViewAUI().refreshTurnState();
+        
+      
     }
 }
