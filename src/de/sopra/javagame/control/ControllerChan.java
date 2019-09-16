@@ -97,11 +97,12 @@ public class ControllerChan {
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
 
-    public void startNewGame(String mapName, MapBlackWhite map, List<Pair<Pair<PlayerType, String>, Boolean>> players, Difficulty difficulty) {
+    public void startNewGame(String mapName, MapBlackWhite map, List<Pair<PlayerType, Boolean>> players, Difficulty difficulty) {
         MapFull fullMap = MapUtil.createAndFillMap(map);
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
         this.javaGame = pair.getLeft();
         this.currentAction = pair.getRight();
+        aiController.connectTrackers();
 
         this.inGameViewAUI.refreshAll();
     }

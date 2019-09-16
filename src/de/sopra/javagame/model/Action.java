@@ -123,7 +123,7 @@ public class Action implements Copyable<Action>, Serializable {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param map        Die Map des Spiels
      */
-    public static Action createInitialAction(Difficulty difficulty, List<Pair<Pair<PlayerType, String>, Boolean>> players, MapFull map)
+    public static Action createInitialAction(Difficulty difficulty, List<Pair<PlayerType, Boolean>> players, MapFull map)
         throws NullPointerException, IllegalArgumentException {
         Action action = new Action();
         action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
@@ -140,48 +140,48 @@ public class Action implements Copyable<Action>, Serializable {
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
 
         action.players = players.stream().map(pair -> {
-            Point start = map.getPlayerSpawnPoint(pair.getLeft().getLeft());
-            boolean isHartmut = pair.getLeft().getRight() == null || pair.getLeft().getRight().isEmpty();
-            switch (pair.getLeft().getLeft()) {
+            Point start = map.getPlayerSpawnPoint(pair.getLeft());
+            //boolean isHartmut = pair.getLeft() == null || pair.getLeft().isEmpty();
+            switch (pair.getLeft()) {
             case COURIER:
-                String courierName;
-                if (isHartmut){courierName = "Hartmut Kurier";}
-                else {courierName = pair.getLeft().getRight();}
+                String courierName = "";
+               // if (isHartmut){courierName = "Hartmut Kurier";}
+                //else {courierName = pair.getLeft().getRight();}
                 Courier courier = new Courier(courierName, start, action);
                 courier.setActionsLeft(3);
                 return courier;
             case DIVER:
-                String diverName;
-                if (isHartmut){diverName = "Hartmut im Spanienurlaub";}
-                else {diverName = pair.getLeft().getRight();}
+                String diverName = "";
+                //if (isHartmut){diverName = "Hartmut im Spanienurlaub";}
+                //else {diverName = pair.getLeft().getRight();}
                 Diver diver = new Diver(diverName, start, action);
                 diver.setActionsLeft(3);
                 return diver;
             case PILOT:
-                String pilotName;
-                if (isHartmut){pilotName = "Hartmut auf dem Weg in den Urlaub";}
-                else {pilotName = pair.getLeft().getRight();}
+                String pilotName = "";
+                //if (isHartmut){pilotName = "Hartmut auf dem Weg in den Urlaub";}
+                //else {pilotName = pair.getLeft().getRight();}
                 Pilot pilot = new Pilot(pilotName, start, action);
                 pilot.setActionsLeft(3);
                 return pilot;
             case NAVIGATOR:
-                String navigatorName;
-                if (isHartmut){navigatorName = "Hartmut Verlaufen";}
-                else {navigatorName = pair.getLeft().getRight();}
+                String navigatorName = "";
+                //if (isHartmut){navigatorName = "Hartmut Verlaufen";}
+                //else {navigatorName = pair.getLeft().getRight();}
                 Navigator navigator = new Navigator(navigatorName, start, action);
                 navigator.setActionsLeft(3);
                 return navigator;
             case EXPLORER:
-                String explorerName;
-                if (isHartmut){explorerName = "Hartmut im Dschungel";}
-                else {explorerName = pair.getLeft().getRight();}
+                String explorerName = "";
+                //if (isHartmut){explorerName = "Hartmut im Dschungel";}
+                //else {explorerName = pair.getLeft().getRight();}
                 Explorer explorer = new Explorer(explorerName, start, action);
                 explorer.setActionsLeft(3);
                 return explorer;
             case ENGINEER:
-                String engineerName;
-                if (isHartmut){engineerName = "Hartmut Auto kaputt";}
-                else {engineerName = pair.getLeft().getRight();}
+                String engineerName = "";
+                //if (isHartmut){engineerName = "Hartmut Auto kaputt";}
+                //else {engineerName = pair.getLeft().getRight();}
                 Engineer engineer = new Engineer(engineerName, start, action);
                 engineer.setActionsLeft(3);
                 return engineer;

@@ -64,11 +64,11 @@ public class JavaGame implements Serializable {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Pair<Pair<PlayerType, String>, Boolean>> players)
+    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Pair<PlayerType, Boolean>> players)
             throws NullPointerException, IllegalArgumentException {
         JavaGame game = new JavaGame();
 
-        // Erstellen des ersten Turns, der auf den undoActions-Stapel abgelegt wird.
+        // Erstellen der ersten Action, die auf den undoActions-Stapel abgelegt wird.
         if (mapName == null) {
             throw new NullPointerException();
         } else if (mapName.equals("")) {

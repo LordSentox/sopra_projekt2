@@ -197,7 +197,7 @@ public class InGameUserControllerTest {
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
-        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(startPos, new Point(1, 2)), moveablePlayers);
+        inGameCont.playHelicopterCard(PlayerType.EXPLORER, 4, new Pair<>(startPos, new Point(0, 1)), moveablePlayers);
         explorer = (Explorer) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.NAVIGATOR);
         courier = (Courier) controllerChan.getJavaGame().getPreviousAction().getPlayer(PlayerType.COURIER);
@@ -205,10 +205,10 @@ public class InGameUserControllerTest {
         Assert.assertFalse("Die Karte hätte gespielt werden müssen.",
                 explorer.getHand().contains(heliCard));
         Assert.assertEquals("Die Spieler hätten bewegt werden müssen",
-                new Point(1, 2),
+                new Point(0, 1),
                 navigator.getPosition());
         Assert.assertEquals("Die Spieler hätten bewegt werden müssen",
-                new Point(1, 2),
+                new Point(0, 1),
                 courier.getPosition());
 
         //teste mit Start = Ziel
