@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.abstraction;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.util.GameSettings;
 import de.sopra.javagame.view.*;
 import de.sopra.javagame.view.command.Commands;
 import de.spaceparrots.api.command.interfaces.CommandResult;
@@ -31,12 +32,14 @@ public class GameWindow {
 
     private Stage mainStage;
 
+    private GameSettings settings;
 
     private Map<ViewState, AbstractViewController> views;
 
     private ViewState currentViewState;
 
     public GameWindow(Stage stage) {
+        this.settings = GameSettings.load();
         this.controllerChan = new ControllerChan();
         this.views = new HashMap<>();
         this.mainStage = stage;
@@ -195,5 +198,13 @@ public class GameWindow {
 
     public ControllerChan getControllerChan() {
         return this.controllerChan;
+    }
+
+    public GameSettings getSettings() {
+        return settings;
+    }
+
+    public void resetSettings() {
+        settings = new GameSettings();
     }
 }
