@@ -63,7 +63,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             if (discoveredArtifacts.contains(templeType)) {
                 continue;
             }
-            List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType);
+            List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType).stream().map(Pair::getRight).collect(Collectors.toList());
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
                 continue; 
             }
