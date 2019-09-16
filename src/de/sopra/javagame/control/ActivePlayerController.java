@@ -60,8 +60,6 @@ public class ActivePlayerController {
      * @see PlayerType
      */
     public void showSpecialAbility() {
-        // TODO: ergänzen die Methode später.
-        // XXX: Nicht immer Spieler kopieren
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
         InGameViewAUI aui = controllerChan.getInGameViewAUI();
