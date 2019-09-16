@@ -56,6 +56,7 @@ public class ZipWrapper implements Iterable<ZipEntry> {
 
     public static class ZipEntryList extends ArrayList<ZipEntry> {
 
+        private static final long serialVersionUID = 3230098602232873227L;
         private ZipFile zipFile;
         private String subPath;
 
@@ -86,6 +87,8 @@ public class ZipWrapper implements Iterable<ZipEntry> {
     }
 
     static class EntryNotFoundException extends Exception {
+
+        private static final long serialVersionUID = 2948010840865508906L;
 
         EntryNotFoundException(String path) {
             super(String.format("'%s' does not exist", path));

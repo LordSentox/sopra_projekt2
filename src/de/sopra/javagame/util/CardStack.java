@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
  */
 public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> implements Copyable<CardStack<T>>, Serializable {
 
+    private static final long serialVersionUID = 8572616465854559809L;
+
     private Stack<T> drawStack;
 
     private List<T> discardPile;
@@ -116,6 +118,7 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
      *
      * @param card ist ein varargs mit beliebiger Anzahl an Karten vom Typ T.
      */
+    @SuppressWarnings("unchecked")
     public void discard(T... card) {
         discard(Arrays.asList(card));
     }

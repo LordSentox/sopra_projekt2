@@ -10,6 +10,7 @@ import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
+import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
@@ -40,7 +41,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final int PASSIVE_CARD_SIZE = 110;
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
-    final int SPINNER_SIZE = 250;
+    private static final int SPINNER_SIZE = 250;
     @FXML
     MapPane mapPane;
     @FXML
@@ -56,6 +57,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     private Timeline timeline;
 
     public void init() {
+        waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
+        waterLevelView.setProgress(7);
+
         /* Set Background */
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
@@ -73,7 +77,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         initPlayerHands();
         initArtifactsFound();
 
-
+        //debug
         refreshWaterLevel(4);
 
         //setze Timeline für Replays
@@ -81,6 +85,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             getGameWindow().getControllerChan().getGameFlowController().redo();
             refreshAll();
         }));
+
     }
 
     private void initArtifactsFound() {
@@ -257,6 +262,12 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         mapPane.putPlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().xPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition().yPos, getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+        getGameWindow()
+        .getControllerChan()
+        .getCurrentAction()
+        .getPlayers()
+        .stream()
+            .forEach(player -> mapPane.putPlayer(player.getPosition().xPos, player.getPosition().yPos, player.getType()));
     }
 
     @Override

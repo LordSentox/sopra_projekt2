@@ -14,6 +14,7 @@ import java.util.List;
  * @version 11.09.2019
  * @since 11.09.2019
  */
+@SuppressWarnings("rawtypes")
 public class ClassUtil {
 
     /**

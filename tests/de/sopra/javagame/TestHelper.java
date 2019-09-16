@@ -11,14 +11,15 @@ import java.lang.reflect.Field;
  */
 public class TestHelper {
 
+    @SuppressWarnings("unchecked")
     public static <T, C> T getAttribute(String fieldName, Class<C> fromClass, Class<T> typeCast, C instance) {
         try {
             Field declaredField = fromClass.getDeclaredField(fieldName);
             boolean accessible = declaredField.isAccessible();
             declaredField.setAccessible(true);
-            Object content = declaredField.get(instance);
+            T content = (T)declaredField.get(instance);
             declaredField.setAccessible(accessible);
-            return (T) content;
+            return content;
         } catch (Exception e) {
             e.printStackTrace();
         }

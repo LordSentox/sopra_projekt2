@@ -1,15 +1,10 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.TestDummy.InGameView;
-import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.Engineer;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,11 +12,32 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.TestDummy.InGameView;
+import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.Difficulty;
+import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.model.player.Engineer;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.MapFull;
+import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
 
 public class ActivePlayerControllerTest {
 
@@ -29,7 +45,7 @@ public class ActivePlayerControllerTest {
     private ActivePlayerController activePlayerController;
     private MapFull testMap;
     private Action action;
-    private List<Pair<PlayerType, Boolean>> players;
+    private List<Triple<PlayerType, String, Boolean>> players;
 
     private InGameView inGameView;
 
@@ -43,10 +59,10 @@ public class ActivePlayerControllerTest {
         this.testMap = MapUtil.readFullMapFromString(testMapString);
 
         players = Arrays.asList(
-                new Pair<>(PlayerType.COURIER, false),
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false),
-                new Pair<>(PlayerType.PILOT, false));
+                new Triple<>(PlayerType.COURIER, "", false),
+                new Triple<>(PlayerType.EXPLORER, "", false),
+                new Triple<>(PlayerType.NAVIGATOR, "", false),
+                new Triple<>(PlayerType.PILOT, "", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
@@ -225,10 +241,10 @@ public class ActivePlayerControllerTest {
         activePlayerController.cancelSpecialAbility();
 
         players = Arrays.asList(
-                new Pair<>(PlayerType.DIVER, false),
-                new Pair<>(PlayerType.ENGINEER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false),
-                new Pair<>(PlayerType.PILOT, false));
+                new Triple<>(PlayerType.DIVER, "",false),
+                new Triple<>(PlayerType.ENGINEER, "", false),
+                new Triple<>(PlayerType.NAVIGATOR, "", false),
+                new Triple<>(PlayerType.PILOT, "", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
@@ -305,10 +321,10 @@ public class ActivePlayerControllerTest {
 
 
         players = Arrays.asList(
-                new Pair<>(PlayerType.DIVER, false),
-                new Pair<>(PlayerType.ENGINEER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false),
-                new Pair<>(PlayerType.PILOT, false));
+                new Triple<>(PlayerType.DIVER, "", false),
+                new Triple<>(PlayerType.ENGINEER,  "",false),
+                new Triple<>(PlayerType.NAVIGATOR, "", false),
+                new Triple<>(PlayerType.PILOT, "", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
@@ -430,10 +446,10 @@ public class ActivePlayerControllerTest {
         assertEquals("Courier did not use action after moving", 2, activePlayer.getActionsLeft());
 
         players = Arrays.asList(
-                new Pair<>(PlayerType.DIVER, false),
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.NAVIGATOR, false),
-                new Pair<>(PlayerType.PILOT, false));
+                new Triple<>(PlayerType.DIVER, "", false),
+                new Triple<>(PlayerType.EXPLORER, "", false),
+                new Triple<>(PlayerType.NAVIGATOR, "", false),
+                new Triple<>(PlayerType.PILOT, "", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
@@ -509,10 +525,10 @@ public class ActivePlayerControllerTest {
     @Test
     public void testDrain() throws Exception {
         players = Arrays.asList(
-                new Pair<>(PlayerType.NAVIGATOR, false),
-                new Pair<>(PlayerType.EXPLORER, false),
-                new Pair<>(PlayerType.ENGINEER, false),
-                new Pair<>(PlayerType.PILOT, false));
+                new Triple<>(PlayerType.NAVIGATOR, "", false),
+                new Triple<>(PlayerType.EXPLORER, "", false),
+                new Triple<>(PlayerType.ENGINEER, "", false),
+                new Triple<>(PlayerType.PILOT, "", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
@@ -605,13 +621,13 @@ public class ActivePlayerControllerTest {
         return points;
     }
 
-    private static Set<Point> pointsWithDistance(Point point, int distance) {
-        Stream<Point> points = Stream.of(point);
-        for (int i = 0; i < distance; i++) {
-            points = points.flatMap(p -> adjacentPoints(p, false).stream());
-        }
-        return points.filter(p -> !p.equals(point)).collect(Collectors.toSet());
-    }
+//    private static Set<Point> pointsWithDistance(Point point, int distance) {
+//        Stream<Point> points = Stream.of(point);
+//        for (int i = 0; i < distance; i++) {
+//            points = points.flatMap(p -> adjacentPoints(p, false).stream());
+//        }
+//        return points.filter(p -> !p.equals(point)).collect(Collectors.toSet());
+//    }
 
     private static void printMap(MapTile[][] tiles) {
         for (MapTile[] row : tiles) {
