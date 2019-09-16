@@ -306,9 +306,9 @@ public class AIController {
      *
      * @param position   der Startpunkt
      * @param playerType der Spielertyp, welcher die legalMoves berechnen soll
-     * @return eine Liste aller drainable positions nach einem Schritt
+     * @return Eine Liste mit den Positionen, die trockengelegt werden können (rechts) und die Positionen von der aus das getan werden kann (links)
      */
-    public List<Point> getDrainablePositionsOneMoveAway(Point position, PlayerType playerType) {
+    public List<Pair<Point, Point>> getDrainablePositionsOneMoveAway(Point position, PlayerType playerType) {
         // Erstelle eine Kopie der momentanen Action, auf der gearbeitet werden kann
         Action currentAction = getCurrentAction().copy();
 
@@ -318,13 +318,13 @@ public class AIController {
 
         // Liste der Positionen, die der Spieler schon vom Startpunkt aus trockenlegen kann.
         // Diese wird später zum Abgleich benutzt, um sicherzustellen, dass diese Positionen nicht Teil der Rückgabe sind.
-        List<Point> drainableFromStart = player.drainablePositions();
+        List<Pair<Point, Point>> drainableFromStart = player.drainablePositions().stream().map(pos -> new Pair<>(position, pos)).collect(Collectors.toList());
 
         // Bewege den Spieler zu allen Positionen, zu denen er darf und schaue, welche Felder er dann trockenlegen darf
-        Set<Point> drainableOneMoveAway = new HashSet<>();
+        Set<Pair<Point, Point>> drainableOneMoveAway = new HashSet<>();
         for (Point possiblePosition : player.legalMoves(true)) {
             player.setPosition(possiblePosition);
-            drainableOneMoveAway.addAll(player.drainablePositions());
+            drainableOneMoveAway.addAll(player.drainablePositions().stream().map(pos -> new Pair<>(possiblePosition, pos)).collect(Collectors.toList()));
         }
 
         // Entferne die Felder, die er auch ohne zusätzliche Bewegung trockenlegen konnte und gib die Übrigen zurück
@@ -464,7 +464,6 @@ public class AIController {
             return 0; // Nix zu tun
 
         // Initialisiere einen Array, um die Anzahl der Aktionen, die benötigt werden zu zählen.
-        MapFull mapTiles = getCurrentAction().getMap();
         Map<Integer> stepMap = new Map<Integer>() {
             @Override
             protected Integer[][] newEmptyRaw() {
