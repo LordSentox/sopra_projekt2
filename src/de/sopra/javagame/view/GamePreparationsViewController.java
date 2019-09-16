@@ -113,8 +113,8 @@ public class GamePreparationsViewController extends AbstractViewController {
             cannotStartGameLabel.setText("Mindestens zwei Spieler haben den gleichen Typ");
             return;
         }        
-        if(playerList.isEmpty() || difficulty == null){
-            cannotStartGameLabel.setText("es sind nicht alle Felder ausgefüllt");            
+        if(playerList.isEmpty() || difficulty == null || playerOneNameTextField.getText().isEmpty() || playerTwoNameTextField.getText().isEmpty() || playerThreeNameTextField.getText().isEmpty() || playerFourNameTextField.getText().isEmpty() ){
+            cannotStartGameLabel.setText("Es sind nicht alle Felder ausgefüllt");            
             return;
         }
         changeState(ViewState.IN_GAME);
@@ -189,4 +189,5 @@ public class GamePreparationsViewController extends AbstractViewController {
                 break;
         }
     }
+    
 }
