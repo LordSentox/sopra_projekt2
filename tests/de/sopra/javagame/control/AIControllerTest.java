@@ -1,10 +1,9 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.Difficulty;
+import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.Explorer;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -25,6 +24,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai.GameAI.DECISION_BASED_AI;
+import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
+import static de.sopra.javagame.model.ArtifactCardType.WATER;
+import static de.sopra.javagame.model.MapTileState.FLOODED;
+import static de.sopra.javagame.model.player.PlayerType.PILOT;
 import static org.junit.Assert.*;
 
 /**
@@ -91,42 +94,32 @@ public class AIControllerTest {
 
     @Test
     public void isCurrentlyRescueingHimself() {
-        fail("Not yet implemented");
+        Player activePlayer = aiControl.getActivePlayer();
+        MapTile tile = aiControl.getTile(activePlayer.getPosition());
+        tile.flood();
+        tile.flood();
+        assertTrue(aiControl.isCurrentlyRescueingHimself());
     }
 
     @Test
-    public void getCurrentAction() {Point landingSitePosition = control.getTile(PlayerType.PILOT).getLeft();
-        fail("Not yet implemented");
+    public void getCurrentAction() {
+        assertSame(aiControl.getCurrentAction(), controllerChan.getCurrentAction());
     }
 
     @Test
     public void getActivePlayer() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void getTile() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testGetTileByPlayerStart() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void getTemples() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testGetTileByPoint() {
-        fail("Not yet implemented");
+        assertSame(aiControl.getActivePlayer(), controllerChan.getCurrentAction().getActivePlayer());
+        Explorer otherExplorer = new Explorer("otherExplorer", new Point(0, 0), aiControl.getCurrentAction(), true);
+        aiControl.setActivePlayerSupplier(() -> otherExplorer);
+        assertSame(aiControl.getActivePlayer(), otherExplorer);
     }
 
     @Test
     public void getAllPlayers() {
-        fail("Not yet implemented");
+        List<Player> allPlayers = aiControl.getAllPlayers();
+        List<Player> players = controllerChan.getCurrentAction().getPlayers();
+        assertEquals(allPlayers.size(), players.size());
+        assertArrayEquals(allPlayers.toArray(), players.toArray());
     }
 
     @Test
@@ -218,42 +211,25 @@ public class AIControllerTest {
 
     @Test
     public void anyPlayerHasCard() {
-        fail("Not yet implemented");
+        aiControl.getActivePlayer().getHand().add(new ArtifactCard(SANDBAGS));
+        assertTrue(aiControl.anyPlayerHasCard(SANDBAGS));
     }
 
     @Test
     public void getTotalAmountOfCardsOnHands() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void anyTile() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void makeStep() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testMakeStep() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void getTip() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testGetTip() {
-        fail("Not yet implemented");
+        int cards = 0;
+        aiControl.getActivePlayer().getHand().add(new ArtifactCard(WATER));
+        for (Player player : aiControl.getAllPlayers()) {
+            cards += EnhancedPlayerHand.ofPlayer(player).getAmount(WATER);
+        }
+        assertEquals(aiControl.getTotalAmountOfCardsOnHands(WATER), cards);
     }
 
     @Test
     public void landingSiteIsFlooded() {
-        fail("Not yet implemented");
+        Pair<Point, MapTile> tile = aiControl.getTile(PILOT);
+        tile.getRight().setState(FLOODED);
+        assertTrue(aiControl.landingSiteIsFlooded());
     }
 
     @Test
