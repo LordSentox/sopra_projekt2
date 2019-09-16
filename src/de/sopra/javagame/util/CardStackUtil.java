@@ -24,7 +24,7 @@ public class CardStackUtil {
         for (MapTile[] row : tiles) {
             for (MapTile tile : row) {
                 if (tile != null) {
-                    cards.add(new FloodCard(tile));
+                    cards.add(new FloodCard(tile.getProperties()));
                 }
             }
         }
