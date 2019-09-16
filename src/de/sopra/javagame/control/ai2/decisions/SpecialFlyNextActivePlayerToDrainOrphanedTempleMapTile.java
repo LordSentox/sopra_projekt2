@@ -31,6 +31,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 
 public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Decision {
 
+    private Player nextActivePlayer;
+    private Point targetTemple;
     @Override
     public Decision decide() {
 
@@ -43,11 +45,12 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
     }
 
     private boolean checkTemples(List<Pair<Point, MapTile>> temples){
-        Player nextActivePlayer = action().getNextPlayer();
+        nextActivePlayer = action().getNextPlayer();
         Point nextActivePlayerPosition = nextActivePlayer.getPosition();
         PlayerType nextActivePlayerType = nextActivePlayer.getType();
         for (Pair<Point, MapTile> temple : temples) {
             Point orphanedTemplePoint = temple.getLeft();
+            targetTemple = orphanedTemplePoint;
             MapTile orphanedTemple = temple.getRight();
             //prüfe, ob NextPlayer auf betroffenem Tempel steht
             if (orphanedTemplePoint.equals(nextActivePlayerPosition)) {
@@ -78,7 +81,7 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().helicopterCard(nextActivePlayer.getPosition(), targetTemple, EnumSet.of(nextActivePlayer.getType()));
     }
 
 }
