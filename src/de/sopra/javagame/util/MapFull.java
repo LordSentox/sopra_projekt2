@@ -38,6 +38,10 @@ public class MapFull extends Map<MapTile> {
 
         return null;
     }
+    
+    public MapTile get(MapTileProperties tileProperties) {
+        return this.get(this.getPositionForTile(tileProperties));
+    }
 
     public Point getPositionForTile(MapTileProperties tileProperties) {
         for (int y = 0; y < SIZE_Y; ++y) {
