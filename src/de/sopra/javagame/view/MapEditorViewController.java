@@ -1,7 +1,10 @@
 package de.sopra.javagame.view;
 
+import com.jfoenix.controls.JFXButton;
+
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
 /**
@@ -10,6 +13,8 @@ import javafx.stage.Stage;
  * @author Lisa, Hannah
  */
 public class MapEditorViewController extends AbstractViewController implements MapEditorViewAUI {
+    
+    @FXML JFXButton saveButton, loadMapButton, generateButton, closeButton;
 
     public void onSaveClicked() {
 
