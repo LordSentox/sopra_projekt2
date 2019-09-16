@@ -41,7 +41,13 @@ public enum Condition implements ICondition {
         @Override
         public boolean isTrue(Decision decision) {
             AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-            List<MapTile> templeTiles = decision.control.getTemples().stream().map(Pair::getRight).collect(Collectors.toList());
+            EnumSet<ArtifactType> discoveredArtifacts = decision.action().getDiscoveredArtifacts();
+            List<MapTile> templeTiles = decision.control.getTemples()
+                    .stream()
+                    .map(Pair::getRight)
+                    //Nur Tempel, deren Artefakt noch nicht gefunden wurde
+                    .filter(mapTile -> !discoveredArtifacts.contains(mapTile.getProperties().getHidden()))
+                    .collect(Collectors.toList());
             templeTiles.forEach(new Consumer<MapTile>() {
                 List<ArtifactType> sunkenTemples = templeTiles.stream()
                         .filter(tile -> tile.getState() == MapTileState.GONE)
