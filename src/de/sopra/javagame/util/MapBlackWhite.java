@@ -1,5 +1,8 @@
 package de.sopra.javagame.util;
 
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
+
 import java.util.Arrays;
 
 /**
@@ -40,5 +43,30 @@ public class MapBlackWhite extends Map<Boolean> {
         }
 
         return atarashii;
+    }
+
+     public static String toString(MapTile[][] tiles) {
+         final String[] mapString = {""};
+        for (MapTile[] row : tiles) {
+            for (MapTile tile : row) {
+                if (tile == null) {
+                    mapString[0] = mapString[0] + "   ☐   ";
+                } else {
+                    mapString[0] = mapString[0] + (tile.getState() == MapTileState.DRY ? "  d" : (tile.getState() == MapTileState.FLOODED ? "  f" : "  g")) + tile.getProperties().getIndex() + "  ";
+                }
+            }
+            /*
+            Arrays.stream(row).map(t -> {
+                if (t == null)
+                    mapString[0] = mapString[0] + "  ☐  ";
+                else
+                    mapString[0] = mapString[0] + (t.getState() == MapTileState.DRY ? "  d" : (t.getState() == MapTileState.FLOODED ? "  f" : "  g")) + t.getProperties().getIndex() + "  ";
+                return null;
+            }).forEach(t -> mapString[0] = mapString[0] + t);
+            */
+            mapString[0] = mapString[0] + "\n";
+
+        }
+        return mapString[0];
     }
 }

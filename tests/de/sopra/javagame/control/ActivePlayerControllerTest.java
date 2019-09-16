@@ -170,7 +170,8 @@ public class ActivePlayerControllerTest {
         testMap.get(5, 3).flood();
         testMap.get(4, 1).flood();
 
-        printMap(testMap.raw());
+        //printMap(testMap.raw());
+        System.out.println(MapBlackWhite.toString(testMap.raw()));
 
         assertSame(activePlayer.getType(), PlayerType.COURIER);
         activePlayerController.showSpecialAbility();
@@ -271,7 +272,8 @@ public class ActivePlayerControllerTest {
         testMap.get(6, 3).flood();
         testMap.get(5, 2).flood();
         testMap.get(4, 1).flood();
-        printMap(testMap.raw());
+        //printMap(testMap.raw());
+        System.out.println(MapBlackWhite.toString(testMap.raw()));
 
         action.nextPlayerActive();
 
@@ -416,7 +418,8 @@ public class ActivePlayerControllerTest {
     public void testMove() throws Exception {
         Player activePlayer = action.getActivePlayer();
 
-        printMap(testMap.raw());
+        //printMap(testMap.raw());
+        System.out.println(MapBlackWhite.toString(testMap.raw()));
 
         System.out.println(activePlayer.getActionsLeft());
 
@@ -449,7 +452,8 @@ public class ActivePlayerControllerTest {
 
         activePlayer = action.getActivePlayer();
 
-        printMap(testMap.raw());
+        //printMap(testMap.raw());
+        System.out.println(MapBlackWhite.toString(testMap.raw()));
 
         assertEquals(activePlayer.getType(), PlayerType.DIVER);
         assertEquals(activePlayer.getPosition(), new Point(5, 3));
@@ -530,7 +534,8 @@ public class ActivePlayerControllerTest {
         testMap.get(0, 1).flood();
         testMap.get(4, 2).flood();
 
-        printMap(testMap.raw());
+        //printMap(testMap.raw());
+        System.out.println(MapBlackWhite.toString(testMap.raw()));
 
         Player activePlayer = action.getActivePlayer();
         activePlayer.setActionsLeft(3);
@@ -613,15 +618,5 @@ public class ActivePlayerControllerTest {
         return points.filter(p -> !p.equals(point)).collect(Collectors.toSet());
     }
 
-    private static void printMap(MapTile[][] tiles) {
-        for (MapTile[] row : tiles) {
-            Arrays.stream(row).map(t -> {
-                if (t == null)
-                    return "☐";
-                else
-                    return (t.getState() == MapTileState.DRY ? "d" : (t.getState() == MapTileState.FLOODED ? "f" : "g")) + t.getProperties().getIndex();
-            }).forEach(t -> System.out.printf("%4s", t));
-            System.out.println();
-        }
-    }
+
 }
