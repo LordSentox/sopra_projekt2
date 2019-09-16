@@ -22,9 +22,7 @@ public class DebugTools {
 
     @Command("minimize")
     public void minimize(@Scope GameWindow window) {
-        if(window.getMainStage().isShowing())
-            window.getMainStage().hide();
-        else window.getMainStage().show();
+        window.getMainStage().toBack();
     }
 
 }
