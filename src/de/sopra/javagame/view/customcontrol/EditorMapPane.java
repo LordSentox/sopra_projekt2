@@ -75,6 +75,7 @@ public class EditorMapPane extends GridPane {
 
     public void setMapEditorViewController(MapEditorViewController mapEditorViewController) {
         this.mapEditorViewController = mapEditorViewController;
+        System.out.println("map editor View Controller gesetzt");
     }
 
     public MapEditorViewController getMapEditorViewController() {
@@ -83,8 +84,9 @@ public class EditorMapPane extends GridPane {
 
     public void setBooleanTile(Point position, boolean tile) {
         ImageView landView;
+        boolean oldTile = this.booleanMap.get(position);
         this.booleanMap.set(tile, position);
-        if (tile) {
+        if (tile != oldTile) {
             landView = new ImageView(TextureLoader.getSea0());
         } else {
             landView = new ImageView(TextureLoader.getSea1());
@@ -93,7 +95,7 @@ public class EditorMapPane extends GridPane {
         landView.setFitWidth(TILE_SIZE);
         landView.setFitHeight(TILE_SIZE);
         this.getChildren().add(landView);
-        GridPane.setConstraints(landView, position.xPos, position.yPos);
+        GridPane.setConstraints(landView, position.xPos * 2 + 1, position.yPos * 2 + 1);
         getMapEditorViewController().setSaveButtonDisabled(!MapCheckUtil.checkMapValidity(this.booleanMap));
     }
 
