@@ -41,17 +41,16 @@ public class InGameSettingsViewController extends AbstractViewController {
 
 
     public void onCloseClicked() {
-        changeState(ViewState.IN_GAME);
+        changeState(ViewState.IN_GAME_SETTINGS, ViewState.IN_GAME);
     }
 
     public void onSaveClicked() {
         getGameWindow().getSettings().save();
     }
 
-    public void onBackToMenuClicked()
-    {
+    public void onBackToMenuClicked() {
         getGameWindow().getSettings().save();
-        changeState(ViewState.MENU);
+        changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
     }
 
     @Override

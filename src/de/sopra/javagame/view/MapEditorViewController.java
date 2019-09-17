@@ -110,7 +110,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     public void onCloseClicked() {
-        changeState(ViewState.MENU);
+        changeState(ViewState.MAP_EDITOR, ViewState.MENU);
     }
 
     @Override

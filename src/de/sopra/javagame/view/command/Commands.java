@@ -1,5 +1,6 @@
 package de.sopra.javagame.view.command;
 
+import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -69,9 +70,7 @@ public final class Commands {
                 .registerType(PlayerType.class, "playertype",
                         TypeResolver.create(String.class, string -> PlayerType.valueOf(string.toUpperCase()), PlayerType::name))
                 .registerType(Difficulty.class, "difficulty",
-                        TypeResolver.create(String.class, string -> Difficulty.valueOf(string.toUpperCase()), Difficulty::name))
-                .registerType(GameWindow.class, "gameWindow",
-                        TypeResolver.create(String.class, string -> window, window -> ""));
+                        TypeResolver.create(String.class, string -> Difficulty.valueOf(string.toUpperCase()), Difficulty::name));
 
         processor.registerType(MapTile.class, "maptile",
                 PropertyResolver.create("state", MapTileState.class, MapTile::getState))
@@ -89,7 +88,21 @@ public final class Commands {
                         PropertyResolver.create("canRedo", boolean.class, JavaGame::canRedo),
                         PropertyResolver.create("canUndo", boolean.class, JavaGame::canUndo),
                         PropertyResolver.create("difficulty", Difficulty.class, JavaGame::getDifficulty),
-                        PropertyResolver.create("previousaction", Action.class, JavaGame::getPreviousAction))
+                        PropertyResolver.create("previousaction", Action.class, JavaGame::getPreviousAction),
+                        PropertyResolver.create("undo", JavaGame.class, game -> {
+                            game.undoAction();
+                            return game;
+                        }),
+                        PropertyResolver.create("redo", JavaGame.class, game -> {
+                            game.redoAction();
+                            return game;
+                        }))
+                .registerType(ControllerChan.class, "controllerchan",
+                        TypeResolver.create(String.class, string -> window.getControllerChan(), chan -> ""),
+                        PropertyResolver.create("game", JavaGame.class, ControllerChan::getJavaGame))
+                .registerType(GameWindow.class, "gameWindow",
+                        TypeResolver.create(String.class, string -> window, window -> ""),
+                        PropertyResolver.create("controllerchan", ControllerChan.class, GameWindow::getControllerChan))
         ;
     }
 

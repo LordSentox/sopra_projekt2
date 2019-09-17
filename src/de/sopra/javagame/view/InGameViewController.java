@@ -9,6 +9,7 @@ import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
@@ -199,11 +200,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
 
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
-        map.forEach(mapTile ->System.out.println(mapTile.getState()));
+        map.forEach(mapTile -> System.out.println(mapTile.getState()));
     }
 
     public void onSettingsClicked() {
-        changeState(ViewState.IN_GAME_SETTINGS);
+        changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
     }
 
     public void onArtifactCardDiscardStackClicked() {
@@ -233,8 +234,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void showNotification(String notification) {
-
+    public void showNotification(Notification notification) {
+        //TODO auf Benachrichtigung reagieren
     }
 
     @Override
@@ -244,11 +245,16 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-
         //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
 //        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+    }
+
+    public void resetHighlighting() {
+        movePoints = new LinkedList<>();
+        drainablePoints = new LinkedList<>();
+        mapPane.forEach(tile -> tile.dehighlight());
     }
 
     @Override
@@ -299,10 +305,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
             if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
                 pane = handOneCardGridPane;
-          
+
             else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
                 pane = handTwoCardGridPane;
-            
+
             else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
 
@@ -386,11 +392,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
-        movePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
-        movePoints = new ArrayList<>();
-        drainablePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
-        drainablePoints = new ArrayList<>();
         mapPane.movePlayer(position, player);
+        resetHighlighting();
     }
 
     @Override
@@ -411,11 +414,16 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (players.size() == 4) {
             playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
         }
+        resetHighlighting();
     }
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
+        System.out.println(actionsLeft);
         switch (actionsLeft) {
+            case 0:
+                //TODO wenn keine aktionen mehr übrig, dann spezialkarten spielen oder zug beenden
+                break;
             case 1:
                 this.rotateTurnSpinner(-144);
                 break;
@@ -461,6 +469,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshTurnState(TurnState turnState) {
+        resetHighlighting();
         switch (turnState) {
             case PLAYER_ACTION:
                 this.rotateTurnSpinner(0);

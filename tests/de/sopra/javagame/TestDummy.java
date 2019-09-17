@@ -11,12 +11,14 @@ import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
+import de.sopra.javagame.view.abstraction.Notification;
 
 import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <h1>projekt2</h1>
@@ -26,7 +28,7 @@ import java.util.List;
  * @since 05.09.2019
  */
 public class TestDummy {
-    
+
 
     public static ControllerChan getDummyControllerChan() {
         ControllerChan controllerChan = new ControllerChan();
@@ -119,7 +121,7 @@ public class TestDummy {
 
         private List<Point> movementPoints;
         private List<Point> drainPoints;
-        private List<String> notifications = new LinkedList<>();
+        private List<Notification> notifications = new LinkedList<>();
         private Boolean transferable;
         private Integer waterlevel;
         private HashMap<PlayerType, List<ArtifactCard>> playerHands = new HashMap<>();
@@ -146,7 +148,7 @@ public class TestDummy {
         }
 
         @Override
-        public void showNotification(String notification) {
+        public void showNotification(Notification notification) {
             notifications.add(notification);
         }
 
@@ -227,6 +229,16 @@ public class TestDummy {
          * @return ist leer, wenn keine Notifications erfolgt sind
          */
         public List<String> getNotifications() {
+            return notifications.stream().map(Notification::message).collect(Collectors.toList());
+        }
+
+        /**
+         * Gibt die Liste vergangener Notifications zurück.
+         * Die Neueste ist die Letzte in der Liste
+         *
+         * @return ist leer, wenn keine Notifications erfolgt sind
+         */
+        public List<Notification> getNotificationObjects() {
             return notifications;
         }
 
@@ -382,7 +394,7 @@ public class TestDummy {
         @Override
         public void refreshTurnState(TurnState turnState) {
             // TODO Auto-generated method stub
-            
+
         }
     }
 
