@@ -1,15 +1,19 @@
 package de.sopra.javagame.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import de.sopra.javagame.model.player.*;
-import de.sopra.javagame.util.Map;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Triple;
-
+import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.serialize.deserializer.*;
+import de.sopra.javagame.util.serialize.serializer.ArtifactCardStackSerializer;
+import de.sopra.javagame.util.serialize.serializer.FloodCardStackSerializer;
+import de.sopra.javagame.util.serialize.serializer.MapTileSerializer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -62,6 +66,36 @@ public class ActionTest {
                 this.testMap);
 
         Assert.assertEquals(2, action2.getPlayers().size());
+    }
+
+    @Test
+    public void serialize() throws IOException {
+        Action action = Action.createInitialAction(Difficulty.NOVICE,
+                Arrays.asList(new Triple<>(PlayerType.EXPLORER, "Forscher", false),
+                        new Triple<>(PlayerType.NAVIGATOR, "Navigator", true),
+                        new Triple<>(PlayerType.DIVER, "Taucher", false),
+                        new Triple<>(PlayerType.COURIER, "Kurier", true)),
+                this.testMap);
+
+        action.getDiscoveredArtifacts().add(ArtifactType.FIRE);
+        GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
+        gsonBuilder.registerTypeAdapter(new TypeToken<CardStack<FloodCard>>(){}.getType(), new FloodCardStackSerializer());
+        gsonBuilder.registerTypeAdapter(new TypeToken<CardStack<ArtifactCard>>(){}.getType(), new ArtifactCardStackSerializer());
+        gsonBuilder.registerTypeAdapter(MapTile.class, new MapTileSerializer());
+
+        gsonBuilder.registerTypeAdapter(new TypeToken<CardStack<FloodCard>>(){}.getType(), new FloodCardStackDeserializer());
+        gsonBuilder.registerTypeAdapter(new TypeToken<CardStack<ArtifactCard>>(){}.getType(), new ArtifactCardStackDeserializer());
+        gsonBuilder.registerTypeAdapter(MapTile.class, new MapTileDeserializer());
+        gsonBuilder.registerTypeAdapter(Player.class, new PlayerDeserializer());
+        gsonBuilder.registerTypeAdapter(Action.class, new ActionDeserializer());
+
+        Gson gson = gsonBuilder.create();
+
+        String serialized = gson.toJson(action);
+        Action action1 = gson.fromJson(serialized, Action.class);
+        String serialized2 = gson.toJson(action1);
+
+        Assert.assertEquals(serialized, serialized2);
     }
 
     @Test (expected = IllegalArgumentException.class)
