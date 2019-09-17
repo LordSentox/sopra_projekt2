@@ -70,7 +70,7 @@ public class GameFlowController {
      * Zieht die Menge an Flutkarten, die laut {@link de.sopra.javagame.model.WaterLevel} gezogen werden müssen und
      * überflutet bzw. versenkt die entsprechenden Felder.
      */
-	public void drawFloodCards() {
+	public void drawFloodCard() {
         WaterLevel waterLevel = controllerChan.getCurrentAction().getWaterLevel();
         CardStack<FloodCard> floodCardCardStack = controllerChan.getCurrentAction().getFloodCardStack();
         List<FloodCard> floodCards = floodCardCardStack.draw(waterLevel.getDrawAmount(), true);

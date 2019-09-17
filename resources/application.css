@@ -30,6 +30,9 @@
 .highlighting{
 	-fx-effect: dropshadow(three-pass-box, rgba(75,255,0,1), 10, 0.6, 0, 0);
 }
+.playerIsKI{
+	-fx-effect: dropshadow(three-pass-box, rgba(200,200,200,1), 10, 0.6, 0, 0);
+}
 .mainmenuJFXButton {
 	-fx-text-fill: "#000000";
 	-fx-background-color: "#c9af06";
@@ -54,7 +57,6 @@
 }
 
 .jfx-combo-box {
-	
 	-jfx-unfocus-color: transparent;
 	-jfx-focus-color: "#c9af06";
 	-fx-background-color: rgb(102,62,3);
@@ -84,4 +86,30 @@
 .list-cell:even {
     -fx-cell-hover-color: #0093ff;
     -fx-background-color: rgb(164,133,87);
+}
+
+.label {
+	-fx-text-fill: white;
+}
+
+.jfx-check-box {
+    -fx-text-fill: white;
+	-jfx-checked-color: rgb(164,133,87);
+	-jfx-unchecked-color: rgb(248,235,217);
+    
+}
+
+.jfx-check-box:selected .mark {
+    -fx-text-fill: white;
+}
+
+.jfx-check-box:selected .box {
+    -fx-text-fill: white;
+}
+
+.jfx-toggle-button {
+	-jfx-toggle-line-color: rgb(164,133,87);
+	-jfx-untoggle-line-color: rgb(102,62,3);
+	-jfx-untoggle-color: rgb(164,133,87);
+	-jfx-toggle-color: rgb(102,62,3);
 }
