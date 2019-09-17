@@ -46,8 +46,8 @@ public abstract class AbstractViewController {
      *
      * @param next Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
      */
-    protected void changeState(ViewState next) {
-        gameWindow.setState(next);
+    protected void changeState(ViewState previous, ViewState next) {
+        gameWindow.setState(previous, next);
     }
 
 }

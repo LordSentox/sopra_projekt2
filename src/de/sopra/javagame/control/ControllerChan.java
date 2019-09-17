@@ -1,11 +1,6 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
 import de.sopra.javagame.view.HighScoresViewAUI;

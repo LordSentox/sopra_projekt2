@@ -25,7 +25,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -199,11 +202,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
 
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
-        map.forEach(mapTile ->System.out.println(mapTile.getState()));
+        map.forEach(mapTile -> System.out.println(mapTile.getState()));
     }
 
     public void onSettingsClicked() {
-        changeState(ViewState.IN_GAME_SETTINGS);
+        changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
     }
 
     public void onArtifactCardDiscardStackClicked() {
@@ -249,6 +252,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
 //        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+    }
+
+    public void resetVisuals() {
+        movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
+        drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
     }
 
     @Override
@@ -299,10 +307,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
             if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
                 pane = handOneCardGridPane;
-          
+
             else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
                 pane = handTwoCardGridPane;
-            
+
             else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
 
