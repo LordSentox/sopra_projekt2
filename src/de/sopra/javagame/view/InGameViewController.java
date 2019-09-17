@@ -9,6 +9,7 @@ import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
@@ -233,8 +234,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void showNotification(String notification) {
-
+    public void showNotification(Notification notification) {
+        //TODO auf Benachrichtigung reagieren
     }
 
     @Override
