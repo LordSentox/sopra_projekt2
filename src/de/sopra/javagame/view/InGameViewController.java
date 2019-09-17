@@ -229,10 +229,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void setFloodCardStackHighlighted(boolean highlight) {
         ObservableList<String> styleClass = floodCardDiscardGridPane.getStyleClass();
-        if (styleClass.contains("highlightmapTile") && highlight)
-            styleClass.add("highlightmapTile");
+        if (styleClass.contains(HIGHLIGHT) && highlight)
+            styleClass.add(HIGHLIGHT);
         else if (!highlight)
-            styleClass.removeIf(s -> s.equals("highlightmapTile"));
+            styleClass.removeIf(s -> s.equals(HIGHLIGHT));
     }
 
     @Override
@@ -303,7 +303,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (transferable) {
             List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
                     .filter(cardView -> (cardView.getType().equals(ArtifactCardType.HELICOPTER) || cardView.getType().equals(ArtifactCardType.SANDBAGS) || cardView.getType().equals(ArtifactCardType.WATERS_RISE))).collect(Collectors.toList());
-            cardsTohighLight.forEach(view -> view.getStyleClass().add("highlightmapTile"));
+            cardsTohighLight.forEach(view -> view.getStyleClass().add(HIGHLIGHT));
         }
     }
 

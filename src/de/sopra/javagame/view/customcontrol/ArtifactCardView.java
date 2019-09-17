@@ -5,6 +5,8 @@ import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
+import static de.sopra.javagame.view.abstraction.AbstractViewController.HIGHLIGHT;
+
 public class ArtifactCardView extends CardView implements EventHandler<MouseEvent> {
 
     private ArtifactCardType type;
@@ -23,10 +25,10 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
 
     public void updateHighlight() {
         if (selected) {
-            if (!this.getStyleClass().contains("highlightmapTile"))
-                this.getStyleClass().add("highlightmapTile");
+            if (!this.getStyleClass().contains(HIGHLIGHT))
+                this.getStyleClass().add(HIGHLIGHT);
         } else {
-            this.getStyleClass().removeIf(s -> s.equals("highlightmapTile"));
+            this.getStyleClass().removeIf(s -> s.equals(HIGHLIGHT));
         }
     }
 
