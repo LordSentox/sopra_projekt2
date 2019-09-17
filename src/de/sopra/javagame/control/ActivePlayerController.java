@@ -234,6 +234,6 @@ public class ActivePlayerController {
         Action currentAktion = controllerChan.getCurrentAction();
         currentAktion.setState(TurnState.DRAW_ARTIFACT_CARD);
         controllerChan.getGameFlowController().drawArtifactCards();
-        controllerChan.getInGameViewAUI().refreshAll();
+        controllerChan.getInGameViewAUI().refreshSome();
     }
 }
