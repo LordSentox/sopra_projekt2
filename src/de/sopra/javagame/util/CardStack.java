@@ -69,6 +69,7 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
     public T draw (boolean discard) {
          return draw(1, discard).get(0);
     }
+    
     /**
      * @return die Anzahl an Karten im Ziehstapel
      */
