@@ -142,7 +142,7 @@ public interface InGameViewAUI {
      * Aktualisiert die Ansicht mittels der kompletten Aktion.
      * Ist mit Vorsicht zu genießen!
      */
-    void refreshCompleteView(Action action);
+    void refreshHopefullyAll(Action action);
 
     /**
      * setzt das Fenster auf ein Replay Fenster um vergangene Partien anzusehen
