@@ -16,6 +16,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     public ArtifactCardView(ArtifactCardType type, int size) {
         super(TextureLoader.getArtifactCardTexture(type), TextureLoader.getArtifactCardBack(), size);
         this.type = type;
+        this.selected = false;
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
     }
 
@@ -41,8 +42,10 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
 
     @Override
     public void handle(MouseEvent event) {
-        selected = !selected;
-        updateHighlight();
+        if (isFrontShown()) {
+            selected = !selected;
+            updateHighlight();
+        }
     }
 
     @Override
