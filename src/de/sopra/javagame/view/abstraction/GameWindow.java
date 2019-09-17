@@ -79,7 +79,7 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
-    
+
     private void initGamePreparations() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GamePreparations.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -179,6 +179,9 @@ public class GameWindow {
         });
     }
 
+    public AbstractViewController getView(ViewState state) {
+        return views.get(state);
+    }
 
     /**
      * Wechselt die aktuelle {@link ViewState} zur Übergebenen
