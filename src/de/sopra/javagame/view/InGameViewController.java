@@ -224,12 +224,13 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDrawStackClicked() {
-
+        if (getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD)
+            this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
     }
 
     public void setFloodCardStackHighlighted(boolean highlight) {
         ObservableList<String> styleClass = floodCardDiscardGridPane.getStyleClass();
-        if (styleClass.contains(HIGHLIGHT) && highlight)
+        if (!styleClass.contains(HIGHLIGHT) && highlight)
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
@@ -511,7 +512,6 @@ public class InGameViewController extends AbstractViewController implements InGa
             case FLOOD:
                 this.rotateTurnSpinner(-288);
                 setFloodCardStackHighlighted(true);
-                this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
                 break;
             default:
                 this.rotateTurnSpinner(0);
