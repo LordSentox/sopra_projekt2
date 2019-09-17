@@ -9,6 +9,8 @@ import de.sopra.javagame.model.TurnState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.abstraction.Notification;
+import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.List;
 
@@ -34,11 +36,20 @@ public interface InGameViewAUI {
     void refreshDrainOptions(List<Point> points);
 
     /**
+     * gibt dem Spieler eine Mitteilung in dem dafür vorgesehenen Fenster
+     *
+     * @param notification Mitteilung an den Spieler
+     */
+    void showNotification(Notification notification);
+
+    /**
      * zeigt dem Spieler die übergebene Nachricht in dem dafür vorgesehenen Fenster
      *
-     * @param notification Nachricht an den Spieler
+     * @param infoMessage Nachricht an den Spieler
      */
-    void showNotification(String notification);
+    default void showNotification(String infoMessage) {
+        showNotification(Notifications.info(infoMessage));
+    }
 
     /**
      * aktualisiert die Anzeige, ob Karten abgegeben werden können
@@ -65,7 +76,6 @@ public interface InGameViewAUI {
 
     /**
      * aktualisiert die Anzeige der gefundenen Artefakte. Gefundene Artefakte sind nicht mehr ausgegraut.
-     *
      */
     void refreshArtifactsFound();
 
@@ -139,10 +149,10 @@ public interface InGameViewAUI {
      * @param queue die queue an Aktionen, welche als Tipp ausgeführt würden (KI erstellt den Tipp)
      */
     void showTip(ActionQueue queue);
-    
+
     /**
      * Soll den aktuellen Turnstate anzeigen.
-     * 
+     *
      * @param turnState der aktuelle state, der angezeigt werden soll.
      */
     void refreshTurnState(TurnState turnState);

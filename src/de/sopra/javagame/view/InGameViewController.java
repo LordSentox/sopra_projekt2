@@ -9,6 +9,8 @@ import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.DialogPack;
+import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
@@ -16,13 +18,16 @@ import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -54,7 +59,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     WaterLevelView waterLevelView;
     @FXML
     GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
-            artifactCardDicardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
+            artifactCardDiscardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
     @FXML
     Button endTurnButton;
     @FXML
@@ -125,7 +130,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         IntStream.range(0, 28).forEach(item -> {
             artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
-            artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+            artifactCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
         IntStream.range(0, 24).forEach(item -> {
@@ -222,6 +227,14 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     }
 
+    public void setFloodCardStackHighlighted(boolean highlight) {
+        ObservableList<String> styleClass = floodCardDiscardGridPane.getStyleClass();
+        if (styleClass.contains(HIGHLIGHT) && highlight)
+            styleClass.add(HIGHLIGHT);
+        else if (!highlight)
+            styleClass.removeIf(s -> s.equals(HIGHLIGHT));
+    }
+
     @Override
     public void reset() {
 
@@ -233,8 +246,23 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void showNotification(String notification) {
-
+    public void showNotification(Notification notification) {
+        if (notification.isError()) {
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Es ist ein Fehler aufgetreten: ", notification.message());
+            pack.setAlertType(Alert.AlertType.ERROR);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+        } else if (notification.isGameWon()) {
+            //TODO
+        } else if (notification.isGameLost()) {
+            //TODO
+        } else if (notification.hasMessage()) {
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Das Spiel informiert:", notification.message());
+            pack.setAlertType(Alert.AlertType.INFORMATION);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+            System.out.println("info: " + notification.message());
+        }
     }
 
     @Override
@@ -275,7 +303,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (transferable) {
             List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
                     .filter(cardView -> (cardView.getType().equals(ArtifactCardType.HELICOPTER) || cardView.getType().equals(ArtifactCardType.SANDBAGS) || cardView.getType().equals(ArtifactCardType.WATERS_RISE))).collect(Collectors.toList());
-            cardsTohighLight.forEach(view -> view.getStyleClass().add("highlightmapTile"));
+            cardsTohighLight.forEach(view -> view.getStyleClass().add(HIGHLIGHT));
         }
     }
 
@@ -358,11 +386,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         List<ArtifactCard> discardPile = stack.getDiscardPile();
         int index = 0;
-        artifactCardDicardGridPane.getChildren().clear();
+        artifactCardDiscardGridPane.getChildren().clear();
         for (ArtifactCard card : discardPile) {
             CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
             v.showFrontImage();
-            artifactCardDicardGridPane.getChildren().add(v);
+            artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
         }

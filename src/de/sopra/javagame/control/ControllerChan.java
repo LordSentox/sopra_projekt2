@@ -264,6 +264,9 @@ public class ControllerChan {
     public void finishAction() {
         this.currentAction = this.javaGame.finishAction(this.currentAction);
     }
+    void setAction(Action action){
+        this.currentAction = action;
+    }
 
     public Action getCurrentAction() {
         return this.currentAction;

@@ -52,7 +52,7 @@
    		<!-- Draw Stacks -->
    		<GridPane fx:id="artifactCardDrawStackGridPane" layoutX="20" layoutY="720.0"/>
 
-   		<GridPane fx:id="artifactCardDicardGridPane" layoutX="200" layoutY="720"/>
+   		<GridPane fx:id="artifactCardDiscardGridPane" layoutX="200" layoutY="720"/>
    		
    		<GridPane fx:id="floodCardDrawStackGridPane" layoutX="20" layoutY="960.0"/><!-- 800 -->
    		
