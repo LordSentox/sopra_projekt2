@@ -92,6 +92,7 @@ public class ActionPicker extends CirclePopupMenu {
 
                     @Override
                     public void handle(ActionEvent e) {
+                        //player clicked on himself
                         if (picker.delegatingPlayer == picker.movingPlayer) {
                             control.showSpecialAbility();
                             picker.mapPaneTile.getControl().setSpecialActive(true);

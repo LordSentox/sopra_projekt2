@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -41,10 +42,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     private static final int ARTIFACT_SIZE = 100;
     private static final ColorAdjust DESATURATION = new ColorAdjust(0, -1, 0, 0);
     private static final int SPINNER_SIZE = 250;
-    
+
     private List<Point> drainablePoints = new ArrayList<>();
     private List<Point> movePoints = new ArrayList<>();
-    private boolean specialActive =  false;
+    private boolean specialActive = false;
+    private Supplier<Player> targetPlayer;
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
     MapPane mapPane;
@@ -258,10 +260,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshCardsTransferable(boolean transferable) {
-        if(transferable) {
-             List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
-                .filter(cardView -> (cardView.getType().equals(ArtifactCardType.HELICOPTER) || cardView.getType().equals(ArtifactCardType.SANDBAGS) ||cardView.getType().equals(ArtifactCardType.WATERS_RISE))).collect(Collectors.toList());
-             cardsTohighLight.forEach(view -> view.getStyleClass().add("highlightmapTile"));
+        if (transferable) {
+            List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
+                    .filter(cardView -> (cardView.getType().equals(ArtifactCardType.HELICOPTER) || cardView.getType().equals(ArtifactCardType.SANDBAGS) || cardView.getType().equals(ArtifactCardType.WATERS_RISE))).collect(Collectors.toList());
+            cardsTohighLight.forEach(view -> view.getStyleClass().add("highlightmapTile"));
         }
     }
 
@@ -278,10 +280,9 @@ public class InGameViewController extends AbstractViewController implements InGa
             int index = 0;
             for (ArtifactCard card : cards) {
                 CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
-                if(card.getType().equals(ArtifactCardType.HELICOPTER) || card.getType().equals(ArtifactCardType.SANDBAGS))
-                {
+                if (card.getType().equals(ArtifactCardType.HELICOPTER) || card.getType().equals(ArtifactCardType.SANDBAGS)) {
                     final int newIndex = index;
-                    v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onSpecialCardClicked((ArtifactCardView)v, newIndex));
+                    v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onSpecialCardClicked((ArtifactCardView) v, newIndex));
                 }
                 v.showFrontImage();
                 cardGridPane.getChildren().add(v);
@@ -299,7 +300,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 pane = handTwoCardGridPane;
             if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
-            
+
 
             pane.getChildren().clear();
             int index = 0;
@@ -314,10 +315,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     private void onSpecialCardClicked(ArtifactCardView card, int index) {
         // TODO Auto-generated method stub
-        if(card.getType().equals(ArtifactCardType.HELICOPTER)){
-            
-        } else if(card.getType().equals(ArtifactCardType.SANDBAGS)){
-            
+        if (card.getType().equals(ArtifactCardType.HELICOPTER)) {
+
+        } else if (card.getType().equals(ArtifactCardType.SANDBAGS)) {
+
         }
     }
 
@@ -425,8 +426,18 @@ public class InGameViewController extends AbstractViewController implements InGa
                 break;
         }
     }
-    
-    
+
+    public Player getTargetPlayer() {
+        return targetPlayer.get();
+    }
+
+    public void resetTargetPlayer() {
+        targetPlayer = () -> getGameWindow().getControllerChan().getCurrentAction().getActivePlayer();
+    }
+
+    public void setTargetPlayer(PlayerType type) {
+        targetPlayer = () -> getGameWindow().getControllerChan().getCurrentAction().getPlayer(type);
+    }
 
     @Override
     public void refreshPlayerName(String name, PlayerType player) {
@@ -443,24 +454,25 @@ public class InGameViewController extends AbstractViewController implements InGa
         // TODO Auto-generated method stub
 
     }
+
     @Override
     public void refreshTurnState(TurnState turnState) {
         switch (turnState) {
-        case PLAYER_ACTION:
-            this.rotateTurnSpinner(0);
-            break;
-        case DRAW_ARTIFACT_CARD:
-            this.rotateTurnSpinner(-216);
-            break;
-        case FLOOD:
-            this.rotateTurnSpinner(-288);
-            this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCards();
-            break;
-        default:
-            this.rotateTurnSpinner(0);
-            break;
-    }
-        
+            case PLAYER_ACTION:
+                this.rotateTurnSpinner(0);
+                break;
+            case DRAW_ARTIFACT_CARD:
+                this.rotateTurnSpinner(-216);
+                break;
+            case FLOOD:
+                this.rotateTurnSpinner(-288);
+                this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCards();
+                break;
+            default:
+                this.rotateTurnSpinner(0);
+                break;
+        }
+
     }
 
     public boolean isSpecialActive() {
