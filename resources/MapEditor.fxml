@@ -24,7 +24,7 @@
         
         <JFXComboBox fx:id="comboBoxChooseGivenMap" layoutX="55" layoutY="190" prefWidth="350" />
         
-        <Label fx:id="labelShowMessages" layoutX="55" layoutY="230" prefWidth="350"/>
+        <Label fx:id="labelShowMessages" layoutX="55" layoutY="230" prefWidth="350" prefHeight="100"/>
 
         <JFXButton styleClass="mainmenuJFXButton" fx:id="saveButton" layoutX="55.0" layoutY="920.0" text="Speichern"
                    prefHeight="30" prefWidth="150" onAction="#onSaveClicked"/>

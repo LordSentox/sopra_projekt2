@@ -15,6 +15,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class HighScoresViewController extends AbstractViewController implements 
     @FXML
     Label highScoreListViewLabel, chooseMapLabel;
 
-    public void init() {
+    public void init() throws IOException {
         mainPane.setImage(TextureLoader.getBackground());
         /*
         String[] arr = new String[]{"arch_of_destiny", "atoll_of_judgement", "bone", "bridge_of_horrors", "coral_reef",
@@ -47,10 +48,27 @@ public class HighScoresViewController extends AbstractViewController implements 
         File[] files = mapFile.listFiles();
         List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
-        for(String currentName : mapNames) {
-            mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length()-4));
-        }
 
+        File scoreFile = new File (HighScoresController.SCORE_FOLDER);
+        File[] scoreFiles = scoreFile.listFiles();
+        List<String> scoreNames = Arrays.stream(scoreFiles).map(File::getName).collect(Collectors.toList());
+        
+        for (String currentMap : mapNames) {
+            if (!scoreNames.contains((currentMap.substring(0, currentMap.length()-4)) + ".score")) {
+                new File(HighScoresController.SCORE_FOLDER + (currentMap.substring(0, currentMap.length()-4)) + ".score").createNewFile();
+            }
+        }        
+
+        scoreFile = new File (HighScoresController.SCORE_FOLDER);
+        scoreFiles = scoreFile.listFiles();
+        scoreNames = Arrays.stream(scoreFiles).map(File::getName).collect(Collectors.toList());
+        for(String currentName : scoreNames) {
+            mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length()-6));
+            mapSelectionComboBox.getItems().sort(null);
+            System.out.println(currentName + "\n");
+        }
+        
+        
         highScoreListViewLabel.setTextFill( Paint.valueOf("#FFFFFF"));
         chooseMapLabel.setTextFill( Paint.valueOf("#FFFFFF"));
         
