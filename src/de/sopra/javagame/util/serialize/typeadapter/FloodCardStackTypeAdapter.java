@@ -1,9 +1,6 @@
-package de.sopra.javagame.util.serialize.deserializer;
+package de.sopra.javagame.util.serialize.typeadapter;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.util.CardStack;
@@ -15,7 +12,27 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-public class FloodCardStackDeserializer implements JsonDeserializer<CardStack<FloodCard>> {
+public class FloodCardStackTypeAdapter implements JsonSerializer<CardStack<FloodCard>>, JsonDeserializer<CardStack<FloodCard>> {
+    @Override
+    public JsonElement serialize(CardStack<FloodCard> src, Type typeOfSrc, JsonSerializationContext context) {
+        try {
+            Field stackField = CardStack.class.getDeclaredField("drawStack");
+
+            stackField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            Stack<FloodCard> cards = (Stack<FloodCard>) stackField.get(src);
+            stackField.setAccessible(false);
+
+            JsonObject json = new JsonObject();
+            json.addProperty("drawStack", cards.stream().map(FloodCard::getTile).map(MapTileProperties::getIndex).map(String::valueOf).collect(Collectors.joining(",")));
+            json.addProperty("discardPile", src.getDiscardPile().stream().map(FloodCard::getTile).map(MapTileProperties::getIndex).map(String::valueOf).collect(Collectors.joining(",")));
+            return json;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public CardStack<FloodCard> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String stackJson = json.getAsJsonObject().getAsJsonPrimitive("drawStack").getAsString();

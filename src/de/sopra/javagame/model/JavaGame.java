@@ -20,6 +20,7 @@ public class JavaGame implements Serializable {
     public static final int MAP_SIZE_X = 10;
     public static final int MAP_SIZE_Y =  7;
 
+
     //region Attribute
     /**
      * Wenn ein Spiel gestartet wird, ist diese Variable zunächst false. Sollte ein Spieler sich aber im Laufe des Spiels

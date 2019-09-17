@@ -24,6 +24,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -229,7 +230,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void setFloodCardStackHighlighted(boolean highlight) {
-        ObservableList<String> styleClass = floodCardDiscardGridPane.getStyleClass();
+        ObservableList<String> styleClass = floodCardDrawStackGridPane.getStyleClass();
         if (!styleClass.contains(HIGHLIGHT) && highlight)
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
@@ -285,7 +286,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         drainablePoints = new LinkedList<>();
         setFloodCardStackHighlighted(false);
         mapPane.forEach(tile -> tile.dehighlightAll());
-
     }
 
     @Override
@@ -407,6 +407,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showBackImage();
+            v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onFloodCardDrawStackClicked());
             floodCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
