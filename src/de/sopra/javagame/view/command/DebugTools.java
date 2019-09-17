@@ -26,7 +26,9 @@ public class DebugTools {
     }
 
     @Command("get")
-    public Object get(Object element) {
+    public String get(@Scope GameWindow window, String element) {
+        if (element != null)
+            window.getControllerChan().getInGameViewAUI().showNotification("command result: " + element);
         return element;
     }
 

@@ -172,9 +172,12 @@ public class GameWindow {
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
                     CommandResult commandResult = Commands.processCommand(this, result.get());
-                    if (!commandResult.wasSuccessful())
+                    if (!commandResult.wasSuccessful()) {
                         System.out.println(commandResult.getResultMessage());
-                    else System.out.println("result: " + commandResult.get());
+                        if (commandResult.get() instanceof Exception)
+                            ((Exception) commandResult.get()).printStackTrace();
+                        else System.err.println("error result: " + commandResult.get());
+                    } else System.out.println("result: " + commandResult.get());
                 }
             }
         });
