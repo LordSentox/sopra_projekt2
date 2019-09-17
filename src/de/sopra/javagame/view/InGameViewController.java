@@ -247,14 +247,15 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-
+        //dehighlight all
+        resetHighlighting();
         //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
 //        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
     }
 
-    public void resetVisuals() {
+    public void resetHighlighting() {
         movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
         drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
     }
