@@ -195,7 +195,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onPauseClicked() {
 //        timeline.pause();
         //DEBUG
-        
+
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
         map.forEach(mapTile ->System.out.println(mapTile.getState()));
     }
@@ -209,7 +209,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-        
+
     }
 
     public void onArtifactCardDrawStackClicked() {
@@ -242,7 +242,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-        
+
         //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
