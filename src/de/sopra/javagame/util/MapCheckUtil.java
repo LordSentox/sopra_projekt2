@@ -94,7 +94,7 @@ public class MapCheckUtil {
             }
         }
 
-        return null;
+        return singleCopy;
     }
 
     private static void tryWalkingEntireIsland(MapBlackWhite map, MapBlackWhite reachedMap) {
