@@ -45,7 +45,8 @@ public class TileView extends ImageView {
     }
 
     public void highlight() {
-        this.getStyleClass().add("highlightmapTile");
+        if (!this.getStyleClass().contains("highlightmapTile"))
+            this.getStyleClass().add("highlightmapTile");
     }
 
     public void deHighlight() {

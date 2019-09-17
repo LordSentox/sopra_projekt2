@@ -9,6 +9,7 @@ import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
@@ -25,10 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -236,8 +234,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void showNotification(String notification) {
-
+    public void showNotification(Notification notification) {
+        //TODO auf Benachrichtigung reagieren
     }
 
     @Override
@@ -247,8 +245,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-        //dehighlight all
-        resetHighlighting();
         //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
@@ -256,8 +252,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void resetHighlighting() {
-        movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
-        drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
+        movePoints = new LinkedList<>();
+        drainablePoints = new LinkedList<>();
+        mapPane.forEach(tile -> tile.dehighlight());
     }
 
     @Override
@@ -395,11 +392,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
-        movePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
-        movePoints = new ArrayList<>();
-        drainablePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
-        drainablePoints = new ArrayList<>();
         mapPane.movePlayer(position, player);
+        resetHighlighting();
     }
 
     @Override
@@ -420,6 +414,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (players.size() == 4) {
             playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
         }
+        resetHighlighting();
     }
 
     @Override
@@ -474,6 +469,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshTurnState(TurnState turnState) {
+        resetHighlighting();
         switch (turnState) {
             case PLAYER_ACTION:
                 this.rotateTurnSpinner(0);
