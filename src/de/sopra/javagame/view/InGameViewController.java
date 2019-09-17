@@ -301,9 +301,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
             if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
                 pane = handOneCardGridPane;
-            if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+          
+            else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
                 pane = handTwoCardGridPane;
-            if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+            
+            else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
 
 
@@ -319,7 +321,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void onSpecialCardClicked(ArtifactCardView card, int index) {
-        // TODO Auto-generated method stub
         if (card.getType().equals(ArtifactCardType.HELICOPTER)) {
 
         } else if (card.getType().equals(ArtifactCardType.SANDBAGS)) {
