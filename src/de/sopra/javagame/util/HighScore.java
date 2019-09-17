@@ -38,7 +38,11 @@ public class HighScore implements Comparable<HighScore> {
     }
 
     public int compareTo(HighScore other) {
-        return Integer.compareUnsigned(score, other.score);
+        return Integer.compareUnsigned(other.score, score);
+    }
+    @Override
+    public String toString(){
+        return "Spielername: " + name + " | "  + "Punktzahl: " + score + " | " + replayName;
     }
 
 }
