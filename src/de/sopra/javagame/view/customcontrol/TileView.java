@@ -6,6 +6,8 @@ import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import static de.sopra.javagame.view.abstraction.AbstractViewController.HIGHLIGHT;
+
 public class TileView extends ImageView {
 
     private final Image dryImage, floodedImage, goneImage;
@@ -45,11 +47,11 @@ public class TileView extends ImageView {
     }
 
     public void highlight() {
-        if (!this.getStyleClass().contains("highlightmapTile"))
-            this.getStyleClass().add("highlightmapTile");
+        if (!this.getStyleClass().contains(HIGHLIGHT))
+            this.getStyleClass().add(HIGHLIGHT);
     }
 
     public void deHighlight() {
-        this.getStyleClass().removeIf(s -> s.equals("highlightmapTile"));
+        this.getStyleClass().removeIf(s -> s.equals(HIGHLIGHT));
     }
 }

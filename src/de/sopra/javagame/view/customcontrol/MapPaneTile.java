@@ -67,7 +67,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         playersOnTile.forEach(type -> {
             PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
             view.setPreserveRatio(true);
-            view.setFitHeight(110);
+            view.setFitHeight(PLAYERSIZE);
             fourPlayerPane.getChildren().add(view);
             GridPane.setConstraints(view, x.get(), y.get());
             view.addEventFilter(MouseEvent.MOUSE_CLICKED, view);
