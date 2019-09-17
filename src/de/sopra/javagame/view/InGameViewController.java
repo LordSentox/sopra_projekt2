@@ -224,12 +224,13 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDrawStackClicked() {
-
+        if (getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD)
+            this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
     }
 
     public void setFloodCardStackHighlighted(boolean highlight) {
         ObservableList<String> styleClass = floodCardDiscardGridPane.getStyleClass();
-        if (styleClass.contains(HIGHLIGHT) && highlight)
+        if (!styleClass.contains(HIGHLIGHT) && highlight)
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
@@ -510,7 +511,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 break;
             case FLOOD:
                 this.rotateTurnSpinner(-288);
-                this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCards();
+                setFloodCardStackHighlighted(true);
                 break;
             default:
                 this.rotateTurnSpinner(0);
@@ -550,7 +551,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         {
             refreshHand(player.getType(), player.getHand());
             refreshPlayerName(player.getName(), player.getType());
-            refreshPlayerPosition(player.getPosition(), player.getType());
+            mapPane.movePlayer(player.getPosition(), player.getType());
         });
         refreshWaterLevel(action.getWaterLevel().getLevel());
     }

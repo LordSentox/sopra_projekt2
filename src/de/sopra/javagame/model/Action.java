@@ -264,4 +264,6 @@ public class Action implements Copyable<Action>, Serializable {
     public MapFull getMap() {
         return this.map;
     }
+
+
 }

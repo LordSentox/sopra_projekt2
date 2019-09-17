@@ -261,8 +261,9 @@ public class ControllerChan {
         this.gameName = this.gameName.substring(0, this.gameName.length() - 5);
     }
 
-    public void finishAction() {
+    public Action finishAction() {
         this.currentAction = this.javaGame.finishAction(this.currentAction);
+        return this.currentAction;
     }
     void setAction(Action action){
         this.currentAction = action;

@@ -242,8 +242,15 @@ public class InGameUserController {
         //Falls alle Bedingungen korrekt wirf gewählte Karte ab
         currentAction.getArtifactCardStack().discard(handCards.get(handCardIndex));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
-        controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
         controllerChan.finishAction();
-    }
 
+        // Wenn der Spieler gerade Artefaktkarten gezogen und abgeworfen hat muss nun mit der Flutphase fortgefahren
+        // werden.
+        if (!controllerChan.getGameFlowController().isPausedToDiscard() && controllerChan.getCurrentAction().getState() == TurnState.DRAW_ARTIFACT_CARD) {
+            currentAction.setState(TurnState.FLOOD);
+            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
+        }
+
+        controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
+    }
 }

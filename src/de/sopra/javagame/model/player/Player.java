@@ -23,11 +23,11 @@ public abstract class Player implements Copyable<Player>, Serializable {
 
     public static final int MAXIMUM_HANDCARDS = 5;
 
-    protected final PlayerType type;
+    protected PlayerType type;
 
-    protected final String name;
+    protected String name;
 
-    protected Action action;
+    protected transient Action action;
 
     protected Point position;
 

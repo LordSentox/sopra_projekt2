@@ -1,10 +1,7 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.control.ai.ActionQueue;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
@@ -233,16 +230,16 @@ public class ActivePlayerController {
      * Beendet den Zug und startet den nächsten Zug.
      */
     public void endTurn() {
-            controllerChan.finishAction();
-            Action currentAktion = controllerChan.getCurrentAction();
-        
-            currentAktion.nextPlayerActive();
-            controllerChan.getInGameViewAUI().refreshActivePlayer();
-            controllerChan.getInGameViewAUI().refreshActionsLeft(currentAktion.getActivePlayer().getActionsLeft());
-            controllerChan.getInGameViewAUI().refreshHand(currentAktion.getActivePlayer().getType(), currentAktion.getActivePlayer().getHand());
-            //TODO:
-            //controllerChan.getInGameViewAUI().refreshTurnState();
-        
-      
+        Action currentAction = controllerChan.finishAction();
+        currentAction.setState(TurnState.DRAW_ARTIFACT_CARD);
+        controllerChan.getGameFlowController().drawArtifactCards();
+
+        // Wenn keine Karten abgeworfen werden müssen, kann direkt in den Flutkartenziehstatus gewechselt werden
+        if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
+            currentAction = controllerChan.finishAction();
+            currentAction.setState(TurnState.FLOOD);
+        }
+
+        controllerChan.getInGameViewAUI().refreshSome();
     }
 }
