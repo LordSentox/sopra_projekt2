@@ -26,22 +26,6 @@ public class ActivePlayerController {
     }
 
     /**
-     * Zeigt alle Bewegungsmöglichkeiten des aktiven Spieler an.
-     *
-     * @param specialActive
-     *            Falls <code>true</code>, werden die
-     *            Spezialbewegungsfähigkeiten des jeweiligen Spielers
-     *            miteinberechnet. Sonst. weiden nur die
-     *            Standardbewegungsmöglichkeiten angezeigt.
-     */
-    public void showMovements(boolean specialActive) {
-        Action currentAction = controllerChan.getCurrentAction();
-        Player player = currentAction.getActivePlayer();
-        List<Point> movements = player.legalMoves(specialActive);
-        controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
-    }
-
-    /**
      * Zeigt alle Felder an, die vom aktiven Spieler trockengelegt werden
      * können.
      */
@@ -80,7 +64,7 @@ public class ActivePlayerController {
 
             aui.refreshMovementOptions(movements);
             aui.refreshDrainOptions(drainables);
-            aui.showNotification("Der Abenteurer kann sich diagonal bewegen und diagonal Felder trockenlegen!");
+            //aui.showNotification("Der Abenteurer kann sich diagonal bewegen und diagonal Felder trockenlegen!");
         }
         else if (player.getType() == PlayerType.ENGINEER) {
             aui.showNotification("Der Ingenieur darf gleichzeitig zwei Insel-Felder trocken legen!");
@@ -212,7 +196,7 @@ public class ActivePlayerController {
     /**
      * Legt alle Felder trocken an den gegebenen Positionen.
      *
-     * @param positionsint next = 
+     * @param positions next =
      *            Die Positionen aller Felder die Trockengelegt werden sollen.
      */
     public void drain(Point... positions) {
@@ -232,7 +216,7 @@ public class ActivePlayerController {
      * Zeigt einen Spielhinweis an. Danach wird dieses Spiel nicht mehr in die
      * Bestenliste aufgenommen
      * 
-     * @param PlayerType 
+     * @param playerType
      *            welche Spieler ruft showTip() auf.
      *
      * @see HighScore

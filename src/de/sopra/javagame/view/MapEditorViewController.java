@@ -3,6 +3,7 @@ package de.sopra.javagame.view;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapCheckUtil;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
@@ -49,7 +50,7 @@ public class MapEditorViewController extends AbstractViewController implements M
             chosenMapName = newValue;
         });
 
-        File mapFile = new File ("resources/maps");
+        File mapFile = new File (MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
         List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
@@ -59,14 +60,17 @@ public class MapEditorViewController extends AbstractViewController implements M
 
         textFieldCreatedMapName.textProperty().addListener((options, oldValue, newValue) ->{
             boolean isValid = MapCheckUtil.checkMapValidity(editorMapPane.getBooleanMap());
-            setSaveButtonDisabled(isValid);
+            setSaveButtonDisabled(!isValid);
         });
+
+        setSaveButtonDisabled(true);
     }
 
     public void onSaveClicked() {
         boolean isValid = MapCheckUtil.checkMapValidity(editorMapPane.getBooleanMap());
         if (isValid && !textFieldCreatedMapName.getText().isEmpty()) {
             getGameWindow().getControllerChan().getMapController().saveMap(textFieldCreatedMapName.getText(), editorMapPane.getBooleanMap());
+            System.out.println("speichern~");
         } else {
             if (textFieldCreatedMapName.getText().isEmpty()) {
                 showNotification("Bitte gib der neuen Karte einen Namen!");
@@ -85,7 +89,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     public void onCloseClicked() {
-        changeState(ViewState.MENU);
+        changeState(ViewState.MAP_EDITOR, ViewState.MENU);
     }
 
     @Override
@@ -112,6 +116,6 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     public void setSaveButtonDisabled(boolean disable) {
-        saveButton.setDisable(disable && !textFieldCreatedMapName.getText().isEmpty());
+        saveButton.setDisable(disable || textFieldCreatedMapName.getText().isEmpty());
     }
 }

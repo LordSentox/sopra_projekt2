@@ -24,7 +24,10 @@ public class GameSettings {
 
 
     public void save() {
-        new SerializedSettings(this).serialize();
+        SerializedSettings settings = new SerializedSettings(this);
+        String serialized = settings.serialize();
+
+        System.out.println("Saved Settings: " + serialized);
     }
 
 
@@ -106,14 +109,17 @@ public class GameSettings {
             devTools = settings.devTools.get();
         }
 
-        private void serialize() {
+        private String serialize() {
             File settingsFile = ControllerChan.SETTINGS_FILE;
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(settingsFile))) {
-                writer.write(gson.toJson(this));
+                String serialized = gson.toJson(this);
+                writer.write(serialized);
+                return serialized;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return "";
         }
 
         private static SerializedSettings deserialize() {

@@ -8,6 +8,7 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -55,10 +56,11 @@ public class InGameUserController {
 
     /**
      * bewegt die Spieler, entfernt die gespielte Karte aus der Hand des Spielers und sendet refreshs an die AUI
-     * @param sourcePlayer Spieler, der die Helikopterkarte spielt
+     *
+     * @param sourcePlayer  Spieler, der die Helikopterkarte spielt
      * @param handCardIndex der Index, an dem sich die Karte befindet
-     * @param flightRoute Start- und Endpunkt der Flugroute
-     * @param players die Spieler, die bewegt werden sollen
+     * @param flightRoute   Start- und Endpunkt der Flugroute
+     * @param players       die Spieler, die bewegt werden sollen
      * @param currentAction die aktuelle Action, die dann beendet werden muss
      */
     private void actuallyMovePlayers(PlayerType sourcePlayer, int handCardIndex, Pair<Point, Point> flightRoute, List<PlayerType> players, Action currentAction) {
@@ -85,10 +87,32 @@ public class InGameUserController {
     }
 
     /**
+     * Zeigt alle Bewegungsmöglichkeiten des gegebenen Spieler an.
+     * Wenn der gegebene Spieler nicht der aktive Spieler ist und der aktive Spieler der Navigator ist,
+     * dann werden zustätzlich die aktuellen drain-options zurückgesetzt.
+     *
+     * @param playerType    Der Zielspieler, wessen Movement gezeigt werden soll
+     * @param specialActive Falls <code>true</code>, werden die
+     *                      Spezialbewegungsfähigkeiten des jeweiligen Spielers
+     *                      miteinberechnet. Sonst. weiden nur die
+     *                      Standardbewegungsmöglichkeiten angezeigt.
+     */
+    public void showMovements(PlayerType playerType, boolean specialActive) {
+        Action currentAction = controllerChan.getCurrentAction();
+        Player player = currentAction.getPlayer(playerType);
+        List<Point> movements = player.legalMoves(specialActive);
+        controllerChan.getInGameViewAUI().refreshMovementOptions(movements);
+        if (currentAction.getActivePlayer().getType() == PlayerType.NAVIGATOR
+                && currentAction.getActivePlayer().getType() != playerType) {
+            controllerChan.getInGameViewAUI().refreshDrainOptions(Collections.emptyList()); //reset drain-options
+        }
+    }
+
+    /**
      * prüft, ob alle Spieler, die bewegt werden sollen auch auf dem Startpunkt der Fugroute stehen
      *
      * @param flightRoute der Start- und Endpunkt der gewählten Route
-     * @param players die Spieler, die bewegt werden sollen
+     * @param players     die Spieler, die bewegt werden sollen
      */
     private void checkAllPlayersOnStartPoint(Pair<Point, Point> flightRoute, List<PlayerType> players) {
         boolean allOnFlightRouteStartPoint = playersOnPoint(flightRoute.getLeft(), players);
@@ -100,14 +124,15 @@ public class InGameUserController {
 
     /**
      * prüft, ob die Handkarten alle Bedingungen erfüllen, um gewählte Karte zu spielen
+     *
      * @param handCardIndex der Index, an dem die Karte sich befinden soll
-     * @param handCards die Handkarten des Spielers
-     * @param cardType der Kartentyp, der gespielt werden soll
+     * @param handCards     die Handkarten des Spielers
+     * @param cardType      der Kartentyp, der gespielt werden soll
      */
     private void checkHandForCard(int handCardIndex, List<ArtifactCard> handCards, ArtifactCardType cardType) {
         if (handCards.size() <= handCardIndex ||
-            handCards.get(handCardIndex) == null ||
-            handCards.get(handCardIndex).getType() != cardType) {
+                handCards.get(handCardIndex) == null ||
+                handCards.get(handCardIndex).getType() != cardType) {
             throw new IllegalStateException("Es wurde keine Helikopter-Karte übergeben " +
                     "aber die playHelicopterCard Methode aufgerufen!");
         }
@@ -115,6 +140,7 @@ public class InGameUserController {
 
     /**
      * Prüft, ob die Gewinnbedingungen erfüllt sind (alle Artefakte gefunden, alle Spieler stehen auf dem Helikopter-Punkt)
+     *
      * @param currentAction aktuelle Aktion, in der die Helikopterkarte gespielt wurde
      */
     private boolean checkWonOnHelicopter(Action currentAction) {
@@ -124,10 +150,10 @@ public class InGameUserController {
         EnumSet<ArtifactType> artifactsFound = currentAction.getDiscoveredArtifacts();
         List<Player> players = controllerChan.getCurrentAction().getPlayers();
         List<PlayerType> allPlayersTypes = new ArrayList<>();
-        for(Player currentPlayer : players) {
+        for (Player currentPlayer : players) {
             allPlayersTypes.add(currentPlayer.getType());
         }
-        boolean allOnHeliPoint =  playersOnPoint(heliPoint, allPlayersTypes);
+        boolean allOnHeliPoint = playersOnPoint(heliPoint, allPlayersTypes);
 
         if (artifactsFound.size() == 4 && !artifactsFound.contains(ArtifactType.NONE) && allOnHeliPoint) {
             currentAction.setGameEnded(true);
@@ -140,7 +166,8 @@ public class InGameUserController {
 
     /**
      * Überprüft, ob die übergebenen Spieler alle auf dem übergebenen Punkt stehen
-     * @param positionToCheck Der übergebene Punkt, auf dem die übergebenen Spieler stehen sollen
+     *
+     * @param positionToCheck    Der übergebene Punkt, auf dem die übergebenen Spieler stehen sollen
      * @param playerTypesToCheck Die übergebenen Spieler, die alle auf dem übergebenen Punkt stehen sollen
      * @return
      */

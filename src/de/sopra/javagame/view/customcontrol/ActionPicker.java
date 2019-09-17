@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.control.ActivePlayerController;
+import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.event.ActionEvent;
@@ -57,8 +58,16 @@ public class ActionPicker extends CirclePopupMenu {
                     @Override
                     public void handle(ActionEvent e) {
                         //TODO
-//                        picker.mapPaneTile.getControl().getGameWindow().getControllerChan()
-//                        .getActivePlayerController().move(picker.mapPaneTile.getPosition(), picker.mapPaneTile.getControl().isSpecialActive());
+                        picker.mapPaneTile.getControl()
+                                .getGameWindow()
+                                .getControllerChan()
+                                .getActivePlayerController()
+                                .move(picker
+                                        .mapPaneTile
+                                        .getPosition(), picker
+                                        .mapPaneTile
+                                        .getControl()
+                                        .isSpecialActive());
                     }
                 };
                 CustomMenuItem moveButtonMenuItem = new CustomMenuItem(new Button("move"));
@@ -87,15 +96,18 @@ public class ActionPicker extends CirclePopupMenu {
         SPECIAL {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
-                EventHandler<ActionEvent> specialHandler = new EventHandler<ActionEvent>() {
-                    ActivePlayerController control = picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController();
+                ControllerChan controllerChan = picker.mapPaneTile.getControl().getGameWindow().getControllerChan();
+                ActivePlayerController control = controllerChan.getActivePlayerController();
+                EventHandler<ActionEvent> specialHandler = e -> {
+                    //Immer show damit Nachrichten oder ähnliches gezeigt werden
+                    control.showSpecialAbility();
+                    //player clicked on himself
+                    if (picker.delegatingPlayer == picker.movingPlayer) {
+                        picker.mapPaneTile.getControl().setSpecialActive(true);
+                    }
+                    //Navigator hat auf einen anderen Spieler geklickt
+                    else if (picker.mapPaneTile.getControl().isSpecialActive() && picker.delegatingPlayer == PlayerType.NAVIGATOR) {
 
-                    @Override
-                    public void handle(ActionEvent e) {
-                        if (picker.delegatingPlayer == picker.movingPlayer) {
-                            control.showSpecialAbility();
-                            picker.mapPaneTile.getControl().setSpecialActive(true);
-                        }
                     }
                 };
                 CustomMenuItem specialButtonMenuItem = new CustomMenuItem(new Button("move"));

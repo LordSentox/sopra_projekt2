@@ -89,12 +89,14 @@ public class MapCheckUtil {
         MapBlackWhite singleCopy = new MapBlackWhite();
         for (int y = 0; y < Map.SIZE_Y; ++y) {
             for (int x = 0; x < Map.SIZE_X; ++x) {
-                if (map.get(x, y))
+                if (map.get(x, y)) {
                     singleCopy.set(true, x, y);
+                    return singleCopy;
+                }
             }
         }
 
-        return null;
+        return singleCopy;
     }
 
     private static void tryWalkingEntireIsland(MapBlackWhite map, MapBlackWhite reachedMap) {

@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,12 +36,13 @@ public class GameWindow {
 
     private Map<ViewState, AbstractViewController> views;
 
+    private ViewState previousViewState;
     private ViewState currentViewState;
 
     public GameWindow(Stage stage) {
         this.settings = GameSettings.load();
         this.controllerChan = new ControllerChan();
-        this.views = new HashMap<>();
+        this.views = new EnumMap<>(ViewState.class);
         this.mainStage = stage;
         stage.centerOnScreen();
     }
@@ -60,7 +61,7 @@ public class GameWindow {
 
         mainStage.setResizable(false);
         mainStage.initStyle(StageStyle.UNDECORATED);
-        this.setState(ViewState.MENU);
+        this.setState(ViewState.CLOSE, ViewState.MENU);
         mainStage.show();
     }
 
@@ -79,7 +80,7 @@ public class GameWindow {
         mainMenuViewController.init();
         views.put(ViewState.MENU, mainMenuViewController);
     }
-    
+
     private void initGamePreparations() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GamePreparations.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -171,21 +172,27 @@ public class GameWindow {
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
                     CommandResult commandResult = Commands.processCommand(this, result.get());
-                    if (!commandResult.wasSuccessful())
+                    if (!commandResult.wasSuccessful()) {
                         System.out.println(commandResult.getResultMessage());
-                    else System.out.println("result: " + commandResult.get());
+                        if (commandResult.get() instanceof Exception)
+                            ((Exception) commandResult.get()).printStackTrace();
+                        else System.err.println("error result: " + commandResult.get());
+                    } else System.out.println("result: " + commandResult.get());
                 }
             }
         });
     }
 
+    public AbstractViewController getView(ViewState state) {
+        return views.get(state);
+    }
 
     /**
      * Wechselt die aktuelle {@link ViewState} zur Übergebenen
      *
      * @param state Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
      */
-    void setState(ViewState state) {
+    void setState(ViewState previous, ViewState state) {
         if (currentViewState == state)
             return;
 
@@ -198,6 +205,9 @@ public class GameWindow {
         mainStage.setFullScreen(state.isFullscreen());
         mainStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); //Spieler soll den Fullscreen nicht beenden können
         mainStage.centerOnScreen();
+
+        this.previousViewState = previous;
+        this.currentViewState = state;
     }
 
     public ControllerChan getControllerChan() {
@@ -210,5 +220,9 @@ public class GameWindow {
 
     public void resetSettings() {
         settings = new GameSettings();
+    }
+
+    public ViewState getPreviousViewState() {
+        return previousViewState;
     }
 }
