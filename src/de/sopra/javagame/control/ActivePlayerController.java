@@ -238,6 +238,7 @@ public class ActivePlayerController {
         if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
             currentAction = controllerChan.finishAction();
             currentAction.setState(TurnState.FLOOD);
+            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getDrawAmount());
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
         }
 

@@ -248,6 +248,7 @@ public class InGameUserController {
         // werden.
         if (!controllerChan.getGameFlowController().isPausedToDiscard() && controllerChan.getCurrentAction().getState() == TurnState.DRAW_ARTIFACT_CARD) {
             currentAction.setState(TurnState.FLOOD);
+            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getDrawAmount());
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
         }
 
