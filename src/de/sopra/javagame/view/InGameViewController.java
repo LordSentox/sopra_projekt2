@@ -82,7 +82,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         initArtifactsFound();
 
         //debug
-        refreshWaterLevel(4);
 
         //setze Timeline für Replays
         timeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
