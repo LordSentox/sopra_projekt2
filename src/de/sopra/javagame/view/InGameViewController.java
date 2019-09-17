@@ -267,6 +267,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
+    public void refreshCompleteView(Action action) {
+
+    }
+
+    @Override
     public void refreshSome() {
         refreshArtifactsFound();
         refreshActivePlayer();
