@@ -415,7 +415,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
+        System.out.println(actionsLeft);
         switch (actionsLeft) {
+            case 0:
+                //TODO wenn keine aktionen mehr übrig, dann spezialkarten spielen oder zug beenden
+                break;
             case 1:
                 this.rotateTurnSpinner(-144);
                 break;
