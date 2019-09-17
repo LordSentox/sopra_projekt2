@@ -31,7 +31,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     }
 
     public void onCloseClicked() {
-        changeState(ViewState.IN_GAME);
+        changeState(ViewState.IN_GAME_SETTINGS, ViewState.IN_GAME);
     }
 
     public void onSaveClicked() {
@@ -39,7 +39,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     }
 
     public void onBackToMenuClicked() {
-        changeState(ViewState.MENU);
+        changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
     }
 
     @Override

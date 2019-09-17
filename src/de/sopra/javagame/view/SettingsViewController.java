@@ -47,7 +47,7 @@ public class SettingsViewController extends AbstractViewController {
 
     public void onCloseClicked() {
         getGameWindow().getSettings().save();
-        changeState(ViewState.MENU);
+        changeState(ViewState.SETTINGS, ViewState.MENU);
     }
 
     @Override

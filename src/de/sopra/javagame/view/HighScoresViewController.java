@@ -11,9 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import java.awt.event.ItemEvent;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -56,18 +54,18 @@ public class HighScoresViewController extends AbstractViewController implements 
 
     public void onShowReplayClicked() {
         HighScore selectedHighScore = (HighScore) highScoreListView.getSelectionModel().getSelectedItem();
-        changeState(ViewState.IN_GAME);
+        changeState(ViewState.HIGH_SCORES, ViewState.IN_GAME);
         getGameWindow().getControllerChan().loadSaveGame(selectedHighScore.getReplayName());
     }
 
     public void onCloseClicked() {
-        changeState(ViewState.MENU);
+        changeState(ViewState.HIGH_SCORES, ViewState.MENU);
         
         
     }
     
     public void onMainMenuClicked() {
-        changeState(ViewState.MENU);
+        changeState(ViewState.HIGH_SCORES, ViewState.MENU);
     }
     
     @Override
