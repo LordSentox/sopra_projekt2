@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -38,7 +39,13 @@ public class TurnMoveToDrainTile extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().move(move);
+        if(player().getType()==PlayerType.PILOT && needSpecialToMove(player().getPosition(), move)){
+            return startActionQueue().pilotFlyTo(move);    
+        }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), move)){
+            return startActionQueue().diverDiveTo(move); 
+        }else{
+            return startActionQueue().move(move);
+        }
     }
 
 }

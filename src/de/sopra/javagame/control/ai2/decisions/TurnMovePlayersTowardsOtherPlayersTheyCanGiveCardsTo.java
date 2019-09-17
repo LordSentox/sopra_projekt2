@@ -61,7 +61,13 @@ public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decisi
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().move(moveTowards);
+        if(player().getType()==PlayerType.PILOT && needSpecialToMove(player().getPosition(), moveTowards)){
+            return startActionQueue().pilotFlyTo(moveTowards);    
+        }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), moveTowards)){
+            return startActionQueue().diverDiveTo(moveTowards); 
+        }else{
+            return startActionQueue().move(moveTowards);
+        }
     }
 
 }
