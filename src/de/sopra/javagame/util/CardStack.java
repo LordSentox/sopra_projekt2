@@ -6,6 +6,7 @@ import de.sopra.javagame.model.FloodCard;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +33,7 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
         discardPile = new ArrayList<>();
     }
 //FIXME Tests überarbeiten und draw nur noch ohne amount benutzen!
+
     /**
      * draw nimmt die angegebene Anzahl Karten von oben vom Stack
      *
@@ -66,9 +68,23 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
         return draw(amount, false);
     }
 
-    public T draw (boolean discard) {
-         return draw(1, discard).get(0);
+    public T draw(boolean discard) {
+        return draw(1, discard).get(0);
     }
+
+    public T drawAndSkip(Predicate<T> skip) {
+        T drawn = null;
+        do {
+            if (drawn != null)
+                discard(drawn);
+            drawn = draw(false);
+        }
+        while (skip.test(drawn));
+        shuffleBack();
+        shuffleDrawStack();
+        return drawn;
+    }
+    
     /**
      * @return die Anzahl an Karten im Ziehstapel
      */

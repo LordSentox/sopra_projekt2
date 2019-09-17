@@ -28,7 +28,7 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 @DoAfter(act = TURN_ACTION, value = TurnDrainOrphanedTempleMapTiles.class)
 @PreCondition(allFalse = PLAYER_HAS_MORE_THAN_1_ACTION_LEFT)
 public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
-
+    private Point moveTowards;
     @Override
     public Decision decide() {
 
@@ -73,6 +73,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
             }
+            moveTowards=control.getClosestPointInDirectionOf(player().legalMoves(true), temple.getLeft(), player().getType());
             return true;
         }
         return false;
@@ -80,7 +81,13 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        if(player().getType()==PlayerType.PILOT && needSpecialToMove(player().getPosition(), moveTowards)){
+            return startActionQueue().pilotFlyTo(moveTowards);    
+        }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), moveTowards)){
+            return startActionQueue().diverDiveTo(moveTowards); 
+        }else{
+            return startActionQueue().move(moveTowards);
+        }
     }
 
 }

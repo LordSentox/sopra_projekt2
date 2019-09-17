@@ -81,7 +81,7 @@ public class ActivePlayerController {
 
             aui.refreshMovementOptions(movements);
             aui.refreshDrainOptions(drainables);
-            aui.showNotification("Der Abenteurer kann sich diagonal bewegen und diagonal Felder trockenlegen!");
+            //aui.showNotification("Der Abenteurer kann sich diagonal bewegen und diagonal Felder trockenlegen!");
         }
         else if (player.getType() == PlayerType.ENGINEER) {
             aui.showNotification("Der Ingenieur darf gleichzeitig zwei Insel-Felder trocken legen!");

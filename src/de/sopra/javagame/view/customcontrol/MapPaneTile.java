@@ -1,10 +1,5 @@
 package de.sopra.javagame.view.customcontrol;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
-
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -21,19 +16,24 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
-public class MapPaneTile extends StackPane implements EventHandler<MouseEvent>{
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
+
+public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     private final int PLAYERSIZE = 65;
-    
+
     private InGameViewController control;
     private final Point position;
     private TileView base;
     private List<PlayerType> playersOnTile = new LinkedList<>();
-    private GridPane fourPlayerPane= new GridPane();
+    private GridPane fourPlayerPane = new GridPane();
     private boolean canDrain;
     private boolean canMoveTo;
     private ActionPicker contextPicker;
-    
-    public MapPaneTile (InGameViewController control, TileView base, Point position){
+
+    public MapPaneTile(InGameViewController control, TileView base, Point position) {
         this.control = control;
         this.position = position;
         this.getChildren().add(base);
@@ -44,22 +44,24 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent>{
         this.contextPicker = new ActionPicker(this, MouseButton.NONE);
         this.contextPicker.setMapPaneTile(this);
     }
-    
-    public MapPaneTile (ImageView base) {
+
+    public MapPaneTile(ImageView base) {
         this.position = null;
         this.getChildren().add(base);
         this.base = null;
     }
-    
-    public void putPlayer(PlayerType type){
+
+    public void putPlayer(PlayerType type) {
         playersOnTile.add(type);
         this.refreshGridPane();
     }
-    public void unputPlayer(PlayerType type){
+
+    public void unputPlayer(PlayerType type) {
         playersOnTile.remove(type);
         this.refreshGridPane();
     }
-    public void refreshGridPane(){
+
+    public void refreshGridPane() {
         fourPlayerPane.getChildren().clear();
         AtomicInteger x = new AtomicInteger(0), y = new AtomicInteger(0);
         playersOnTile.forEach(type -> {
@@ -69,13 +71,14 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent>{
             fourPlayerPane.getChildren().add(view);
             GridPane.setConstraints(view, x.get(), y.get());
             view.addEventFilter(MouseEvent.MOUSE_CLICKED, view);
-            if(!x.compareAndSet(0, 1))
-                if(!y.compareAndSet(0, 1))
-                    if(!x.compareAndSet(1, 0))
-                        if(!y.compareAndSet(1, 0));            
+            if (!x.compareAndSet(0, 1))
+                if (!y.compareAndSet(0, 1))
+                    if (!x.compareAndSet(1, 0))
+                        if (!y.compareAndSet(1, 0)) ;
         });
     }
-    public void initGridPane(){
+
+    public void initGridPane() {
         IntStream.range(0, 2).forEach(i -> fourPlayerPane.getColumnConstraints().add(new ColumnConstraints(PLAYERSIZE)));
         IntStream.range(0, 2).forEach(i -> fourPlayerPane.getRowConstraints().add(new RowConstraints(PLAYERSIZE)));
     }
@@ -92,63 +95,65 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent>{
         this.canMoveTo = canMoveTo;
         updateHighlight();
     }
-    
+
     public void setCanDrain(boolean canDrain) {
         this.canDrain = canDrain;
         updateHighlight();
     }
-    
+
     public boolean canDrain() {
         return canDrain;
     }
-    
+
     public boolean canMoveTo() {
         return canMoveTo;
     }
-    
-    public void dehighlight(){
+
+    public void dehighlight() {
         this.canDrain = false;
         this.canMoveTo = false;
         updateHighlight();
     }
-    
-    private void updateHighlight(){
-        if(isHighlighted())
+
+    private void updateHighlight() {
+        if (isHighlighted())
             this.base.highlight();
         else this.base.deHighlight();
     }
-    
-    public boolean isHighlighted(){
+
+    public boolean isHighlighted() {
         return this.canDrain || this.canMoveTo;
     }
-    
+
     public Point getPosition() {
         return position;
     }
-    
+
     public InGameViewController getControl() {
         return control;
     }
-    
+
     public boolean canCollectTreasure(PlayerType playerType) {
         Player player = control.getGameWindow().getControllerChan().getCurrentAction().getPlayer(playerType);
-        if(playersOnTile.contains(playerType)) {
+        if (playersOnTile.contains(playerType)) {
             return EnhancedPlayerHand.ofPlayer(player).getAmount(base.getType().getHidden()) >= 4;
         }
         return false;
     }
-    
+
     @Override
     public void handle(MouseEvent event) {
 
         List<ActionButton> buttons = new LinkedList<>();
-        if(canMoveTo)
+        if (canMoveTo)
             buttons.add(ActionButton.MOVE);
-        if(canDrain)
+        if (canDrain)
             buttons.add(ActionButton.DRAIN);
-        if(buttons.size() > 0) {
+        if (buttons.size() > 0) {
+            contextPicker.setDelegatingPlayer(control.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+            contextPicker.setMovingPlayer(control.getTargetPlayer().getType());
             contextPicker.init(buttons.toArray(new ActionButton[buttons.size()]));
-            contextPicker.show(event); 
+            contextPicker.show(event);
         }
 
     }
