@@ -113,8 +113,8 @@ public class GamePreparationsViewController extends AbstractViewController {
             cannotStartGameLabel.setText("Mindestens zwei Spieler haben den gleichen Typ");
             return;
         }        
-        if(playerList.isEmpty() || difficulty == null){
-            cannotStartGameLabel.setText("es sind nicht alle Felder ausgefüllt");            
+        if(playerList.isEmpty() || difficulty == null || isTextFieldEmpty() ){
+            cannotStartGameLabel.setText("Es sind nicht alle Felder ausgefüllt");            
             return;
         }
         changeState(ViewState.IN_GAME);
@@ -187,6 +187,21 @@ public class GamePreparationsViewController extends AbstractViewController {
             case "Legende":
                 difficulty = Difficulty.LEGENDARY;
                 break;
+        }
+    }
+    
+    public boolean isTextFieldEmpty(){
+        if(addPlayerThreeToggleButton.isSelected() && addPlayerFourToggleButton.isSelected()){
+            return playerOneNameTextField.getText().isEmpty() || playerTwoNameTextField.getText().isEmpty() || playerThreeNameTextField.getText().isEmpty() || playerFourNameTextField.getText().isEmpty();
+        }
+        else if(addPlayerThreeToggleButton.isSelected()){
+            return playerOneNameTextField.getText().isEmpty() || playerTwoNameTextField.getText().isEmpty() || playerThreeNameTextField.getText().isEmpty();
+        }
+        else if(addPlayerFourToggleButton.isSelected()){
+            return playerOneNameTextField.getText().isEmpty() || playerTwoNameTextField.getText().isEmpty() || playerFourNameTextField.getText().isEmpty();
+        }
+        else{
+            return playerOneNameTextField.getText().isEmpty() || playerTwoNameTextField.getText().isEmpty();
         }
     }
 }

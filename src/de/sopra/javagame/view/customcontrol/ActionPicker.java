@@ -57,8 +57,16 @@ public class ActionPicker extends CirclePopupMenu {
                     @Override
                     public void handle(ActionEvent e) {
                         //TODO
-//                        picker.mapPaneTile.getControl().getGameWindow().getControllerChan()
-//                        .getActivePlayerController().move(picker.mapPaneTile.getPosition(), picker.mapPaneTile.getControl().isSpecialActive());
+                        picker.mapPaneTile.getControl()
+                        .getGameWindow()
+                        .getControllerChan()
+                        .getActivePlayerController()
+                        .move(picker
+                                .mapPaneTile
+                                .getPosition(), picker
+                                .mapPaneTile
+                                .getControl()
+                                .isSpecialActive());
                     }
                 };
                 CustomMenuItem moveButtonMenuItem = new CustomMenuItem(new Button("move"));
@@ -92,6 +100,7 @@ public class ActionPicker extends CirclePopupMenu {
 
                     @Override
                     public void handle(ActionEvent e) {
+                        //player clicked on himself
                         if (picker.delegatingPlayer == picker.movingPlayer) {
                             control.showSpecialAbility();
                             picker.mapPaneTile.getControl().setSpecialActive(true);
