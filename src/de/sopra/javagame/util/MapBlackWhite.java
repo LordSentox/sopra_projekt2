@@ -1,6 +1,11 @@
 package de.sopra.javagame.util;
 
+import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.MapTileState;
+
 import java.util.Arrays;
+
+import static de.sopra.javagame.model.MapTileState.*;
 
 /**
  * Beschreibt eine Karte, die nur anzeigt, wo sich Wasser, und wo sich Land befindet.
@@ -40,5 +45,20 @@ public class MapBlackWhite extends Map<Boolean> {
         }
 
         return atarashii;
+    }
+
+    public String toString () {
+        String mapString = "";
+        for (Boolean[] row : raw) {
+            for (Boolean tile : row) {
+                if (!tile) {
+                    mapString = mapString + "   ☐   ";
+                } else {
+                    mapString = mapString + "   L  ";
+                }
+            }
+            mapString = mapString + "\n";
+        }
+        return mapString;
     }
 }
