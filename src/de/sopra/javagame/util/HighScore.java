@@ -42,7 +42,7 @@ public class HighScore implements Comparable<HighScore> {
     }
     @Override
     public String toString(){
-        return "Spielername: " + name + " | "  + "Punktzahl: " + score + " | " + replayName;
+        return "Spielername: " + name + " | "  + "Punktzahl: " + score;
     }
 
 }

@@ -105,12 +105,11 @@ public class MapEditorViewController extends AbstractViewController implements M
 
     public void onGenerateClicked() {
         getGameWindow().getControllerChan().getMapController().generateMapToEditor();
-        //showUsedTiles.setTextFill(editorMapPane.GREEN);
-        //showUsedTiles.setText(editorMapPane.VALID_MAP_TILE_COUNT + "/" + editorMapPane.VALID_MAP_TILE_COUNT);
+        comboBoxChooseGivenMap.getSelectionModel().clearSelection();
     }
 
     public void onCloseClicked() {
-        changeState(ViewState.MAP_EDITOR, ViewState.MENU);
+        changeState(ViewState.MAP_EDITOR, getGameWindow().getPreviousViewState());
     }
 
     @Override
