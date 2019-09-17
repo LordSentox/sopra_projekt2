@@ -213,6 +213,11 @@ public class TestDummy {
         }
 
         @Override
+        public void refreshHopefullyAll(Action action) {
+            refreshedAll++;
+        }
+
+        @Override
         public void setIsReplayWindow(boolean replay) {
             this.isReplay = replay;
         }
