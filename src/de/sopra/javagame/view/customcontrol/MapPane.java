@@ -15,6 +15,7 @@ import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 
@@ -68,6 +69,11 @@ public class MapPane extends GridPane {
         return map[point.yPos][point.xPos];
     }
 
+    public void forEach(Consumer<MapPaneTile> consumer) {
+        for (MapPaneTile[] tiles : map)
+            for (MapPaneTile tile : tiles)
+                consumer.accept(tile);
+    }
 
     public void movePlayer(Point point, PlayerType type) {
         MapPaneTile pane = getMapStackPane(point);

@@ -251,10 +251,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void resetHighlighting() {
-        movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
-        drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
         movePoints = new LinkedList<>();
         drainablePoints = new LinkedList<>();
+        mapPane.forEach(tile -> tile.dehighlight());
     }
 
     @Override
@@ -392,10 +391,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
-        movePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
-        movePoints = new ArrayList<>();
-        drainablePoints.forEach(point -> mapPane.getMapStackPane(position).dehighlight());
-        drainablePoints = new ArrayList<>();
         mapPane.movePlayer(position, player);
         resetHighlighting();
     }
