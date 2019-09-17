@@ -72,7 +72,8 @@ public class MapPane extends GridPane {
     public void forEach(Consumer<MapPaneTile> consumer) {
         for (MapPaneTile[] tiles : map)
             for (MapPaneTile tile : tiles)
-                consumer.accept(tile);
+                if (tile != null)
+                    consumer.accept(tile);
     }
 
     public void movePlayer(Point point, PlayerType type) {
