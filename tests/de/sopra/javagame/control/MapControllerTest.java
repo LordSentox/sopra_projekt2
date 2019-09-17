@@ -5,6 +5,7 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapBlackWhite;
+import de.sopra.javagame.util.MapUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class MapControllerTest {
                 map.set(true, x, y);
             }
         }
-        for (int x = 1; x < 5; x++) {
+        for (int x = 0; x < 4; x++) {
             map.set(true, x, 2);
         }
 

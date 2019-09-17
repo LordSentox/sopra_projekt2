@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -20,15 +21,17 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
  */
 @DoAfter(act = TURN_ACTION, value = TurnMoveToDrainCorePositions.class)
 public class TurnMoveToDrainTile extends Decision {
+    private Point move;
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
         if (!activePlayer.drainablePositions().isEmpty()) {
             return null;
         }
-        List<Point> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
-                activePlayer.getType()).stream().map(Pair::getRight).collect(Collectors.toList());
+        List<Pair<Point,Point>> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
+                activePlayer.getType());
         if (!drainablePositionsOneMoveAway.isEmpty()) {
+            move = drainablePositionsOneMoveAway.get(0).getLeft();
             return this;
         }
         return null;
@@ -36,7 +39,13 @@ public class TurnMoveToDrainTile extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        if(player().getType()==PlayerType.PILOT && needSpecialToMove(player().getPosition(), move)){
+            return startActionQueue().pilotFlyTo(move);    
+        }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), move)){
+            return startActionQueue().diverDiveTo(move); 
+        }else{
+            return startActionQueue().move(move);
+        }
     }
 
 }
