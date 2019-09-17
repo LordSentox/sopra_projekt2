@@ -109,7 +109,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         return canMoveTo;
     }
 
-    public void dehighlight() {
+    public void dehighlightAll() {
         this.canDrain = false;
         this.canMoveTo = false;
         updateHighlight();
@@ -119,7 +119,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         if(this.base == null) return;
         if (isHighlighted())
             this.base.highlight();
-        else this.base.deHighlight();
+        else this.base.dehighlight();
     }
 
     public boolean isHighlighted() {

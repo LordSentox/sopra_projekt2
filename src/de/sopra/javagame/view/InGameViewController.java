@@ -52,6 +52,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private List<Point> movePoints = new ArrayList<>();
     private boolean specialActive = false;
     private Supplier<Player> targetPlayer;
+
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
     MapPane mapPane;
@@ -281,7 +282,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void resetHighlighting() {
         movePoints = new LinkedList<>();
         drainablePoints = new LinkedList<>();
-        mapPane.forEach(tile -> tile.dehighlight());
+        setFloodCardStackHighlighted(false);
+        mapPane.forEach(tile -> tile.dehighlightAll());
+
     }
 
     @Override

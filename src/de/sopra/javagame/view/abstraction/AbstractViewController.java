@@ -10,7 +10,7 @@ import javafx.stage.Stage;
  */
 public abstract class AbstractViewController {
 
-    public static final String HIGHLIGHT = "highlightmapTile";
+    public static final String HIGHLIGHT = "highlighting";
 
     private GameWindow gameWindow;
     private Scene scene;
