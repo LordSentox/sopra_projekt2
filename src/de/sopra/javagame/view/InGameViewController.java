@@ -448,17 +448,17 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshActionsLeft(int actionsLeft) {
         System.out.println(actionsLeft);
         switch (actionsLeft) {
-            case 0:
-                //TODO wenn keine aktionen mehr übrig, dann spezialkarten spielen oder zug beenden
-                break;
-            case 1:
-                this.rotateTurnSpinner(-144);
-                break;
-            case 2:
-                this.rotateTurnSpinner(-72);
-                break;
             case 3:
                 this.rotateTurnSpinner(0);
+                break;
+            case 2:
+                this.rotateTurnSpinner(-60);
+                break;
+            case 1:
+                this.rotateTurnSpinner(-120);
+                break;
+            case 0:
+                this.rotateTurnSpinner(-180);
                 break;
             default:
                 this.rotateTurnSpinner(0);
@@ -502,10 +502,10 @@ public class InGameViewController extends AbstractViewController implements InGa
                 this.rotateTurnSpinner(0);
                 break;
             case DRAW_ARTIFACT_CARD:
-                this.rotateTurnSpinner(-216);
+                this.rotateTurnSpinner(-240);
                 break;
             case FLOOD:
-                this.rotateTurnSpinner(-288);
+                this.rotateTurnSpinner(-300);
                 setFloodCardStackHighlighted(true);
                 break;
             default:
