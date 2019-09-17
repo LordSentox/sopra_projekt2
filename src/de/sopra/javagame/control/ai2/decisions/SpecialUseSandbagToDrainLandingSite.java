@@ -30,10 +30,10 @@ public class SpecialUseSandbagToDrainLandingSite extends Decision {
          */
 
         //if (true) {
-            //TODO
-            //@see control.getFloodCardStackTracker()
-            //dort sind Methoden zum erhalten der gemerkten Karten oben auf dem Stapel
-            return this;
+        //TODO
+        //@see control.getFloodCardStackTracker()
+        //dort sind Methoden zum erhalten der gemerkten Karten oben auf dem Stapel
+        return this;
         //}
         //return null;
 
@@ -42,8 +42,8 @@ public class SpecialUseSandbagToDrainLandingSite extends Decision {
 //            //@see control.getFloodCardStackTracker()
 //            //dort sind Methoden zum erhalten der gemerkten Karten oben auf dem Stapel
 //            return this;
-        }
-        //return null;
+    }
+    //return null;
 
 
     @Override

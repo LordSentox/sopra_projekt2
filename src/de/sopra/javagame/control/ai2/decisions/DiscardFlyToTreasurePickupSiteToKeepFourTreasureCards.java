@@ -15,7 +15,6 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_FOUR_
 import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELICOPTER_CARD;
 
 
-
 /**
  * <h1>projekt2</h1>
  *
@@ -26,35 +25,29 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_HELIC
 @DoAfter(act = DISCARD, value = DiscardUseSandbagInsteadOfDiscardingTreasureCard.class)
 @PreCondition(allTrue = {PLAYER_HAS_HELICOPTER_CARD, PLAYER_HAS_FOUR_IDENTICAL_TREASURE_CARDS})
 public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decision {
-    
+
     private Point startPoint;
     private Point targetPoint;
     private EnumSet<PlayerType> activePlayer;
+
     @Override
     public Decision decide() {
         activePlayer.add(control.getActivePlayer().getType());
-        startPoint=control.getActivePlayer().getPosition();
+        startPoint = control.getActivePlayer().getPosition();
         EnhancedPlayerHand activeHand = playerHand();
         //Es wird der erste Tempel gewaehlt, da es zu aufwaendig waere, den optimalen Tempel zum 
         //Finden des Schatzes zu berechnen
-        if(activeHand.getAmount(ArtifactType.WATER)==4) {
-            targetPoint=control.getTile(ArtifactType.WATER).getLeft().getLeft();
-            return this;
-        }else if(activeHand.getAmount(ArtifactType.EARTH)==4) {
-            targetPoint=control.getTile(ArtifactType.EARTH).getLeft().getLeft();
-            return this;
-        }else if(activeHand.getAmount(ArtifactType.FIRE)==4) {
-            targetPoint=control.getTile(ArtifactType.FIRE).getLeft().getLeft();
-            return this;
-        }else if(activeHand.getAmount(ArtifactType.AIR)==4) {
-            targetPoint=control.getTile(ArtifactType.AIR).getLeft().getLeft();
-            return this;
-        }    
-        return null;    
+        for (ArtifactType type : ArtifactType.values()) {
+            if (activeHand.getAmount(type) == FOUR_CARDS) {
+                targetPoint = control.getTile(type).getLeft().getLeft();
+                return this;
+            }
+        }
+        return null;
     }
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().helicopterCard(startPoint, targetPoint,activePlayer);
+        return startActionQueue().helicopterCard(startPoint, targetPoint, activePlayer);
     }
 }

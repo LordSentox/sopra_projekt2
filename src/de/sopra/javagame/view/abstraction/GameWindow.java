@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.abstraction;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.util.GameSettings;
 import de.sopra.javagame.view.*;
 import de.sopra.javagame.view.command.Commands;
 import de.spaceparrots.api.command.interfaces.CommandResult;
@@ -31,12 +32,14 @@ public class GameWindow {
 
     private Stage mainStage;
 
+    private GameSettings settings;
 
     private Map<ViewState, AbstractViewController> views;
 
     private ViewState currentViewState;
 
     public GameWindow(Stage stage) {
+        this.settings = GameSettings.load();
         this.controllerChan = new ControllerChan();
         this.views = new HashMap<>();
         this.mainStage = stage;
@@ -48,7 +51,7 @@ public class GameWindow {
         initGamePreparations();
         initHighScore();
         initInGame();
-//        initMapEditor();
+        initMapEditor();
         initInGameSettings();
         initSettings();
 
@@ -59,6 +62,10 @@ public class GameWindow {
         mainStage.initStyle(StageStyle.UNDECORATED);
         this.setState(ViewState.MENU);
         mainStage.show();
+    }
+
+    public Stage getMainStage() {
+        return mainStage;
     }
 
     private void initMainMenu() throws IOException {
@@ -112,18 +119,18 @@ public class GameWindow {
         controllerChan.setInGameViewAUI(inGameViewController);
     }
 
-    //TODO
+
     private void initMapEditor() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MapEditor.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
-        MapEditorViewController mainMenuViewController = fxmlLoader.getController();
-        Scene mainMenuScene = new Scene(mainPane);
-        mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
-        mainMenuViewController.setGameWindow(this);
-        mainMenuViewController.setScene(mainMenuScene);
-        //mainMenuViewController.init();
-        views.put(ViewState.MENU, mainMenuViewController);
-        controllerChan.setMapEditorViewAUI(mainMenuViewController);
+        MapEditorViewController mapEditorViewController = fxmlLoader.getController();
+        Scene mapEditorScene = new Scene(mainPane);
+        mapEditorScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
+        mapEditorViewController.setGameWindow(this);
+        mapEditorViewController.setScene(mapEditorScene);
+        mapEditorViewController.init();
+        views.put(ViewState.MAP_EDITOR, mapEditorViewController);
+        controllerChan.setMapEditorViewAUI(mapEditorViewController);
     }
 
     private void initSettings() throws IOException {
@@ -195,5 +202,13 @@ public class GameWindow {
 
     public ControllerChan getControllerChan() {
         return this.controllerChan;
+    }
+
+    public GameSettings getSettings() {
+        return settings;
+    }
+
+    public void resetSettings() {
+        settings = new GameSettings();
     }
 }

@@ -22,7 +22,8 @@ import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
  */
 @DoAfter(act = DISCARD, value = Decision.class)
 public class DiscardTreasureCardsOfCollectedTreasures extends Decision {
-private ArtifactCardType discarded; 
+    private ArtifactCardType discarded;
+
     @Override
     public Decision decide() {
         Action action = control.getCurrentAction();
@@ -31,7 +32,7 @@ private ArtifactCardType discarded;
         List<ArtifactCard> hand = activePlayer.getHand();
         for (ArtifactCard card : hand) {
             if (discoveredArtifacts.contains(card.getType().toArtifactType())) {
-                discarded=card.getType();
+                discarded = card.getType();
                 return this;
             }
         }

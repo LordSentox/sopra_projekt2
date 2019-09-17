@@ -19,7 +19,8 @@ import static de.sopra.javagame.control.ai2.DecisionResult.DISCARD;
  */
 @DoAfter(act = DISCARD, value = DiscardTreasureCardsThatAnotherPlayerHasFourOf.class)
 public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
-    private ArtifactCardType discarding;     
+    private ArtifactCardType discarding;
+
     @Override
     public Decision decide() {
         Collection<ArtifactCard> discardStack = control.getArtifactCardStackTracker().getDiscardPile();
@@ -34,7 +35,7 @@ public class DiscardTreasureCardOfWhichareTwoInDiscard extends Decision {
             }
             if (count > ONE_CARD) {
                 atomicBoolean.set(true);
-                discarding= activeCard.getType();
+                discarding = activeCard.getType();
             }
         });
         return atomicBoolean.get() ? this : null;

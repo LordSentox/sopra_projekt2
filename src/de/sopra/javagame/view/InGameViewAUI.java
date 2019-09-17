@@ -5,6 +5,7 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.TurnState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
@@ -138,5 +139,11 @@ public interface InGameViewAUI {
      * @param queue die queue an Aktionen, welche als Tipp ausgeführt würden (KI erstellt den Tipp)
      */
     void showTip(ActionQueue queue);
-
+    
+    /**
+     * Soll den aktuellen Turnstate anzeigen.
+     * 
+     * @param turnState der aktuelle state, der angezeigt werden soll.
+     */
+    void refreshTurnState(TurnState turnState);
 }

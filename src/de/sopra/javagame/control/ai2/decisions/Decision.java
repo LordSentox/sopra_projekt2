@@ -40,6 +40,20 @@ public abstract class Decision {
 
     private PreCondition preCondition;
 
+    public final static Decision empty() {
+        return new Decision() {
+            @Override
+            public Decision decide() {
+                return this;
+            }
+
+            @Override
+            public ActionQueue act() {
+                return startActionQueue();
+            }
+        };
+    }
+
     /**
      * Entscheidet, ob die mit diesem Objekt verbundene Aktion ausgeführt werden soll, oder nicht.
      *
@@ -196,20 +210,6 @@ public abstract class Decision {
         boolean allMatchFalse = Arrays.stream(preCondition.allFalse())
                 .allMatch(condition -> condition(condition).isFalse(this));
         return allMatchTrue && allMatchFalse;
-    }
-
-    public final static Decision empty() {
-        return new Decision() {
-            @Override
-            public Decision decide() {
-                return this;
-            }
-
-            @Override
-            public ActionQueue act() {
-                return startActionQueue();
-            }
-        };
     }
 
 }

@@ -55,7 +55,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             MapTile orphanedTemple = temple.getRight();
             //prüfe, ob Player auf betroffenem Tempel steht
             if (orphanedTemplePoint.equals(activePlayerPosition)) {
-                continue; 
+                continue;
             }
             //prüfe, ob Tempelartefakt bereits geborgen ist
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
@@ -65,7 +65,7 @@ public class TurnMoveToOrphanedTempleMapTileForDraining extends Decision {
             }
             List<Point> inOneMoveDrainablePositionslist = control.getDrainablePositionsOneMoveAway(orphanedTemplePoint, activePlayerType).stream().map(Pair::getRight).collect(Collectors.toList());
             if (!inOneMoveDrainablePositionslist.contains(orphanedTemplePoint)) {
-                continue; 
+                continue;
             }
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());

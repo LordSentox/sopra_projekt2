@@ -33,6 +33,7 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
 
     private Player nextActivePlayer;
     private Point targetTemple;
+
     @Override
     public Decision decide() {
 
@@ -44,7 +45,7 @@ public class SpecialFlyNextActivePlayerToDrainOrphanedTempleMapTile extends Deci
         return checkTemples(templeList) ? this : null;
     }
 
-    private boolean checkTemples(List<Pair<Point, MapTile>> temples){
+    private boolean checkTemples(List<Pair<Point, MapTile>> temples) {
         nextActivePlayer = action().getNextPlayer();
         Point nextActivePlayerPosition = nextActivePlayer.getPosition();
         PlayerType nextActivePlayerType = nextActivePlayer.getType();

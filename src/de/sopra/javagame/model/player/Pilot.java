@@ -101,6 +101,10 @@ public class Pilot extends Player {
         }
     }
 
+    public boolean hasSpecialMove() {
+        return hasSpecialMove;
+    }
+   
     @Override
     public Player copy() {
         Pilot player = new Pilot(CopyUtil.copy(this.name), new Point(position), null);

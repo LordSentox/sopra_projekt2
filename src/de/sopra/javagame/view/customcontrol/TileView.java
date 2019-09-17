@@ -9,11 +9,13 @@ import javafx.scene.image.ImageView;
 public class TileView extends ImageView {
 
     private final Image dryImage, floodedImage, goneImage;
-    private boolean isHighlighted = false;
 
+    private final MapTileProperties type;
+    
     public TileView(int id, int size) {
         //System.out.println(id);
-        this.dryImage = TextureLoader.getTileTextureDry(MapTileProperties.getByIndex(id));
+        type = MapTileProperties.getByIndex(id);
+        this.dryImage = TextureLoader.getTileTextureDry(type);
         this.floodedImage = TextureLoader.getTileTextureFlooded(MapTileProperties.getByIndex(id));
         this.goneImage = TextureLoader.getGone();
         this.setImage(dryImage);
@@ -37,19 +39,15 @@ public class TileView extends ImageView {
         }
 
     }
+    
+    public MapTileProperties getType() {
+        return type;
+    }
+    
     public void highlight(){
-        if(!isHighlighted){
-            this.getStyleClass().add("highlightmapTile");
-            isHighlighted = true;
-        }
+        this.getStyleClass().add("highlightmapTile");
     }
     public void deHighlight(){
-        if(isHighlighted){
-            this.getStyleClass().remove("highlightmapTile");
-            isHighlighted = false;
-        }
-    }
-    public boolean getHighlighted(){
-        return isHighlighted;
+        this.getStyleClass().remove("highlightmapTile");
     }
 }
