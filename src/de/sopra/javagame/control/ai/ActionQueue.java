@@ -65,9 +65,9 @@ public final class ActionQueue {
         };
     }
 
-    public void waitAndDrinkTea()
-    {
-
+    public ActionQueue waitAndDrinkTea() {
+        nextAction(new SimpleAction(WAIT_AND_DRINK_TEA, null));
+        return this;
     }
 
     public ActionQueue move(Point targetPoint) {

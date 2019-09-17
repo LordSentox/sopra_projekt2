@@ -105,7 +105,7 @@ public class ControllerChan {
         this.javaGame = pair.getLeft();
         this.currentAction = pair.getRight();
 
-        this.inGameViewAUI.refreshAll();
+        this.inGameViewAUI.refreshSome();
         //6 MapTiles zu beginn fluten
         CardStack<FloodCard> floodCardCardStack = this.getCurrentAction().getFloodCardStack();
         for(int i = 0; i < 6; i++) {
@@ -156,7 +156,7 @@ public class ControllerChan {
             // Spiel wurde erfolgreich geladen, der Name des momentanen Spiels kann gesetzt werden und
             // das GUI kann informiert werden
             this.gameName = loadGameName;
-            this.inGameViewAUI.refreshAll();
+            this.inGameViewAUI.refreshSome();
         } catch (FileNotFoundException e) {
             System.out.println("Es gab keine solche Datei.");
             e.printStackTrace();
@@ -227,7 +227,7 @@ public class ControllerChan {
         // TODO: Bei der Erstellung des Strukturmodelles wurde noch keine Unterscheidung zwischen Replays und
         // weiterspielbaren Spielen gemacht. Deshalb muss die loadGame/saveGame-Methode noch angepasst werden.
         loadSaveGame(replayGameName);
-        inGameViewAUI.refreshAll();
+        inGameViewAUI.refreshSome();
     }
 
     /**
