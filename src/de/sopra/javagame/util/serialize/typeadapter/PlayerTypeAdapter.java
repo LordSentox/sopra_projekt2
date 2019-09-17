@@ -1,4 +1,4 @@
-package de.sopra.javagame.util.serialize.deserializer;
+package de.sopra.javagame.util.serialize.typeadapter;
 
 import com.google.gson.*;
 import de.sopra.javagame.model.player.*;
@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerDeserializer implements JsonDeserializer<Player> {
+public class PlayerTypeAdapter implements JsonDeserializer<Player> {
 
     private static final Map<String, Class<? extends Player>> PLAYER_TYPES = new HashMap<>();
 

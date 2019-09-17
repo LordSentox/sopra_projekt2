@@ -3,6 +3,8 @@ package de.sopra.javagame.view;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
+
+import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapUtil;
@@ -19,9 +21,14 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import static de.sopra.javagame.view.abstraction.ViewState.MAP_EDITOR;
+
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * GUI für die Spielvorbereitung
@@ -36,7 +43,7 @@ public class GamePreparationsViewController extends AbstractViewController {
     TextField playerOneNameTextField, playerTwoNameTextField, playerThreeNameTextField, playerFourNameTextField;
     @FXML
     JFXComboBox<String> playerOneChooseCharakterComboBox, playerTwoChooseCharakterComboBox, playerThreeChooseCharakterComboBox,
-            playerFourChooseCharakterComboBox, editDifficultyComboBox;
+            playerFourChooseCharakterComboBox, editDifficultyComboBox, chooseMapComboBox;
     @FXML
     ToggleButton addPlayerThreeToggleButton, addPlayerFourToggleButton;
     @FXML
@@ -69,7 +76,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         playerThreeChooseCharakterComboBox.getItems().addAll(playerTypesList);
         playerFourChooseCharakterComboBox.getItems().addAll(playerTypesList);
 
-        editDifficultyComboBox.getItems().addAll("Novice", "Normal", "Elite", "Legende");
+        editDifficultyComboBox.getItems().addAll("Novize", "Normal", "Elite", "Legende");
         editDifficultyComboBox.getSelectionModel().select(0);
 
         playerThreeNameTextField.setDisable(true);
@@ -80,11 +87,20 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerFourButton.setDisable(true);
         isPlayerThreeKiCheckBox.setDisable(true);
         isPlayerFourKiCheckBox.setDisable(true);
+        
+        File mapFile = new File (MapController.MAP_FOLDER);
+        File[] files = mapFile.listFiles();
+        List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+
+        for(String currentName : mapNames) {
+            chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length()-4));
+            chooseMapComboBox.getItems().sort(null);
+        }
 
     }
 
     public void onMapEditorClicked() {
-
+        changeState(ViewState.GAME_PREPARATIONS, MAP_EDITOR);
     }
 
     public void onAddPlayerThreeClicked() {
@@ -188,7 +204,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         }
 
         switch (diff) {
-            case "Novice":
+            case "Novize":
                 difficulty = Difficulty.NOVICE;
                 break;
             case "Normal":
