@@ -126,12 +126,7 @@ public class MapPane extends GridPane {
     
     public void setMapTile(Point position, MapTile tile){
         MapPaneTile pane = this.getMapStackPane(position);
-        for(Node node : pane.getChildren()){
-            if(node instanceof TileView){
-                TileView tileView = (TileView) node;
-                tileView.showImage(tile.getState());
-            }
-        }
+        pane.getBase().showImage(tile.getState());
     }
     
 }

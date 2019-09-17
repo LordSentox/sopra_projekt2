@@ -42,6 +42,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent>{
         this.initGridPane();
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
         this.contextPicker = new ActionPicker(this, MouseButton.NONE);
+        this.contextPicker.setMapPaneTile(this);
     }
     
     public MapPaneTile (ImageView base) {
