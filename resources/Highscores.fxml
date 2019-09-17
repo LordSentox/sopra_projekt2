@@ -17,6 +17,7 @@
    	<Label fx:id="chooseMapLabel" layoutX="10" layoutY="20" text="Map auswählen:"/>
    	<JFXComboBox fx:id="mapSelectionComboBox" layoutX="10" layoutY="40" prefWidth="290"/>
    	<JFXListView fx:id="highScoreListView" layoutX="10.0" layoutY="80.0" prefHeight="450.0" prefWidth="380.0"/>
+   	<Label fx:id="highScoreListViewLabel" layoutX="10.0" layoutY="80.0" prefHeight="50.0" prefWidth="380.0" text="Noch keine Highscores vorhanden"/>
    	<JFXButton styleClass="mainmenuJFXButton" fx:id="backToMenu" layoutX="10" layoutY="550" prefHeight="30" text="Hauptmenü" onAction="#onMainMenuClicked" />
    </children>
 </AnchorPane>

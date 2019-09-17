@@ -45,3 +45,43 @@
 .circlePopUp {
 	-fx-background-color: transparent;
 }
+
+.jfx-text-field {
+	-fx-background-color: rgb(102,62,3);
+	-fx-text-fill: white;
+	-jfx-unfocus-color: transparent;
+	-jfx-focus-color: "#c9af06";
+}
+
+.jfx-combo-box {
+	
+	-jfx-unfocus-color: transparent;
+	-jfx-focus-color: "#c9af06";
+	-fx-background-color: rgb(102,62,3);
+	-fx-text-fill: white;
+}
+
+.jfx-combo-box .list-cell {	
+	-fx-background-color: rgb(102,62,3);
+	-fx-text-fill: white;
+}
+
+.jfx-combo-box .list-view .list-cell{	
+	-fx-background-color: rgb(102,62,3);
+	-fx-text-fill: white;
+}
+
+.jfx-list-view {
+	-fx-background-color: rgb(102,62,3);
+	-fx-text-fill: white;
+}
+
+.list-cell:odd {
+    -fx-cell-hover-color: #0093ff;
+    -fx-background-color: rgb(248,235,217);
+}
+
+.list-cell:even {
+    -fx-cell-hover-color: #0093ff;
+    -fx-background-color: rgb(164,133,87);
+}
