@@ -34,7 +34,7 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onLoadGameClicked() {
-
+        
     }
 
     public void onMapEditorClicked() {

@@ -236,6 +236,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
 
         this.rotateTurnSpinner(72.0);
+        this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
         refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
         mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
     }
@@ -452,6 +453,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             break;
         case FLOOD:
             this.rotateTurnSpinner(-288);
+            this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCards();
             break;
         default:
             this.rotateTurnSpinner(0);
