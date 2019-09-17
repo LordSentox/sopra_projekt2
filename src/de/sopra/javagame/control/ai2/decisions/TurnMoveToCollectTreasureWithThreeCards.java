@@ -8,6 +8,7 @@ import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -88,7 +89,13 @@ public class TurnMoveToCollectTreasureWithThreeCards extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().move(moveTowards);
+        if(player().getType()==PlayerType.PILOT && needSpecialToMove(player().getPosition(), moveTowards)){
+            return startActionQueue().pilotFlyTo(moveTowards);    
+        }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), moveTowards)){
+            return startActionQueue().diverDiveTo(moveTowards); 
+        }else{
+            return startActionQueue().move(moveTowards);
+        }
     }
 
 }

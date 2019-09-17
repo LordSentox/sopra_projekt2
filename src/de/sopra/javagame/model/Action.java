@@ -161,13 +161,13 @@ public class Action implements Copyable<Action>, Serializable {
                   .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList()); 
                  
             Collections.shuffle(list);
-            System.out.println(list.get(0));
             Player p = createPlayerByType(list.get(0), triple.getSecond(), map.getPlayerSpawnPoint(list.get(0)), action);
             action.players.set(i, p);
         }
-        action.state = TurnState.FLOOD;
+        //TODO darf nicht initial auf FLOOD stehen, sondern soll ordentlich die 6 felder zu beginn fluten
         
-        System.out.println(action.players);
+        action.state = TurnState.PLAYER_ACTION;
+        
         return action;
     }
     
