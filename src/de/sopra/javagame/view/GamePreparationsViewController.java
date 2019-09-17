@@ -117,14 +117,16 @@ public class GamePreparationsViewController extends AbstractViewController {
             cannotStartGameLabel.setText("Es sind nicht alle Felder ausgefüllt");            
             return;
         }
-        changeState(ViewState.IN_GAME);
+        changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
         this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
+
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(0);
     }
         
 
     public void onCloseClicked() {
-        changeState(ViewState.MENU);
+        changeState(ViewState.GAME_PREPARATIONS, ViewState.MENU);
     }
     
     @Override

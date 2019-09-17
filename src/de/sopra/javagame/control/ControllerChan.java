@@ -1,9 +1,6 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
 import de.sopra.javagame.view.HighScoresViewAUI;
@@ -123,9 +120,18 @@ public class ControllerChan {
             this.inGameViewAUI.refreshFloodStack(floodCardCardStack);
              
         }
+        //player auf map packen
+        this.currentAction.getPlayers().forEach(player -> {
+            this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType());
+        });
         
         //2 Artefaktkarten ziehen
-        
+        this.currentAction.getPlayers().forEach(player -> {
+            
+            player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
+            player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
+            this.inGameViewAUI.refreshHand(player.getType(), player.getHand());
+        });
         
     }
 
