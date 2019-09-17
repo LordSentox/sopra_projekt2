@@ -20,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -95,6 +94,9 @@ public class InGameViewController extends AbstractViewController implements InGa
             getGameWindow().getControllerChan().getGameFlowController().redo();
             refreshAll();
         }));
+
+        resetTargetPlayer();
+
     }
 
     private void initArtifactsFound() {
@@ -198,7 +200,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onPauseClicked() {
 //        timeline.pause();
         //DEBUG
-        
+
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
         map.forEach(mapTile ->System.out.println(mapTile.getState()));
     }
@@ -212,7 +214,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-        
+
     }
 
     public void onArtifactCardDrawStackClicked() {
@@ -245,7 +247,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-        
+
         //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
@@ -287,11 +289,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
-                if (card.getType().equals(ArtifactCardType.HELICOPTER) || card.getType().equals(ArtifactCardType.SANDBAGS)) {
-                    final int newIndex = index;
-                    v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onSpecialCardClicked((ArtifactCardView) v, newIndex));
-                }
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
                 v.showFrontImage();
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
@@ -304,9 +302,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
             if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
                 pane = handOneCardGridPane;
-            if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+          
+            else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
                 pane = handTwoCardGridPane;
-            if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+            
+            else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
 
 
@@ -322,7 +322,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void onSpecialCardClicked(ArtifactCardView card, int index) {
-        // TODO Auto-generated method stub
         if (card.getType().equals(ArtifactCardType.HELICOPTER)) {
 
         } else if (card.getType().equals(ArtifactCardType.SANDBAGS)) {

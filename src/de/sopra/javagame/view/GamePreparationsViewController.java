@@ -120,6 +120,8 @@ public class GamePreparationsViewController extends AbstractViewController {
         changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
         this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
+
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(0);
     }
         
 
