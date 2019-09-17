@@ -20,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -92,6 +91,9 @@ public class InGameViewController extends AbstractViewController implements InGa
             getGameWindow().getControllerChan().getGameFlowController().redo();
             refreshAll();
         }));
+
+        resetTargetPlayer();
+
     }
 
     private void initArtifactsFound() {
@@ -284,11 +286,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
-                if (card.getType().equals(ArtifactCardType.HELICOPTER) || card.getType().equals(ArtifactCardType.SANDBAGS)) {
-                    final int newIndex = index;
-                    v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onSpecialCardClicked((ArtifactCardView) v, newIndex));
-                }
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
                 v.showFrontImage();
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
