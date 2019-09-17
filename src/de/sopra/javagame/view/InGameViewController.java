@@ -6,6 +6,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
@@ -84,7 +85,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         initArtifactsFound();
 
         //debug
-        refreshWaterLevel(4);
+//        refreshWaterLevel(4);
 
         //setze Timeline für Replays
         timeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
@@ -192,7 +193,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onPauseClicked() {
-        timeline.pause();
+//        timeline.pause();
+        //DEBUG
+        
+        MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
+        map.forEach(mapTile ->System.out.println(mapTile.getState()));
     }
 
     public void onSettingsClicked() {
@@ -204,7 +209,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-
+        
     }
 
     public void onArtifactCardDrawStackClicked() {
