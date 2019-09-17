@@ -29,9 +29,11 @@ public class GameFlowController {
         CardStack<ArtifactCard> artifactCardStack = controllerChan.getCurrentAction().getArtifactCardStack();
         List<ArtifactCard> drawnCards = artifactCardStack.draw(2, false);
         Player activePlayer = controllerChan.getCurrentAction().getActivePlayer();
+        boolean shuffleBack = false;
         for (ArtifactCard currentCard : drawnCards) {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
+                shuffleBack = true;
                 if (waterLevel.isGameLost()) {
                     controllerChan.getInGameViewAUI().showNotification("Ihr habt leider verloren!" +
                             "Das Wasser ist viel zu schnell gestiegen und nun ist die ganze Insel versunken." +
@@ -56,6 +58,11 @@ public class GameFlowController {
                     (activePlayer.getHand().size() - 5) + " Karten zum Abwerfen aus.");
             //TODO in HighScoreIO Methode zum speichern von High-Scores
             //                    //dann View bescheid geben, dass Spielvorbei (set as Replay)
+        }
+        if (shuffleBack) {
+            CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
+            stack.shuffleBack();
+            controllerChan.getInGameViewAUI().refreshFloodStack(stack);
         }
     }
 
