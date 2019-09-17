@@ -4,15 +4,7 @@ import de.sopra.javagame.model.player.*;
 import de.sopra.javagame.util.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.stream.Collector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -146,8 +138,10 @@ public class Action implements Copyable<Action>, Serializable {
         action.description = "Spielstart";
         action.map = map;
         action.floodCardStack = CardStackUtil.createFloodCardStack(map.raw());
+        action.floodCardStack.shuffleDrawStack();
         action.waterLevel = new WaterLevel(difficulty);
         action.artifactCardStack = CardStackUtil.createArtifactCardStack();
+        action.artifactCardStack.shuffleDrawStack();
         action.players = new LinkedList<>();
         players.forEach(triple -> {
             if(triple.getFirst() != PlayerType.NONE)

@@ -50,6 +50,8 @@ public class HighScoresViewController extends AbstractViewController implements 
 
     public void onCloseClicked() {
         changeState(ViewState.MENU);
+        
+        
     }
 
     @Override
