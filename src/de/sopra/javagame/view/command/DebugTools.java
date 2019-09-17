@@ -25,6 +25,11 @@ public class DebugTools {
         window.getMainStage().toBack();
     }
 
+    @Command("get")
+    public Object get(Object element) {
+        return element;
+    }
+
 }
 /***********************************************************************************************
  *
