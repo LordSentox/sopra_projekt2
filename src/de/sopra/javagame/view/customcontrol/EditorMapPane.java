@@ -3,12 +3,14 @@ package de.sopra.javagame.view.customcontrol;
 import de.sopra.javagame.util.*;
 import de.sopra.javagame.view.MapEditorViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Paint;
 
 import java.io.IOException;
 import java.util.stream.IntStream;
@@ -20,6 +22,11 @@ public class EditorMapPane extends GridPane {
     private final ImageView[][] mapImageView;
     private MapEditorViewController mapEditorViewController;
     private MapBlackWhite booleanMap;
+    private Label showUsedTilesLabel;
+    public static final Paint WHITE = Paint.valueOf("#FFFFFF");
+    public static final Paint GREEN = Paint.valueOf("#00FF00");
+    public static final Paint RED = Paint.valueOf("#FF0000");
+    public static final int VALID_MAP_TILE_COUNT = 24;
 
 
     public EditorMapPane() throws IOException {
@@ -52,6 +59,7 @@ public class EditorMapPane extends GridPane {
                 this.getChildren().add(v);
                 mapImageView[y][x] = v;
                 GridPane.setConstraints(v, x * 2 + 1, y * 2 + 1);
+                
                 final int newX = x, newY = y;
                 v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onTileClicked(event, newX, newY));
             }
@@ -64,6 +72,12 @@ public class EditorMapPane extends GridPane {
         } else if (e.getButton() == MouseButton.SECONDARY && booleanMap.get(x, y)) {
             setBooleanTile(new Point(x, y), false);
         }
+        
+
+        int count = (int) getBooleanMap().stream().filter(element -> element).count();
+        
+        showUsedTilesLabel.setText(count + "/" + VALID_MAP_TILE_COUNT);
+        showUsedTilesLabel.setTextFill(count == VALID_MAP_TILE_COUNT ? GREEN : count < VALID_MAP_TILE_COUNT ? WHITE : RED);
     }
 
     public void setMapEditorViewController(MapEditorViewController mapEditorViewController) {
@@ -97,5 +111,10 @@ public class EditorMapPane extends GridPane {
 
     public MapBlackWhite getBooleanMap() {
         return booleanMap;
+    }
+
+    public void setTileCountLabel(Label showUsedTiles) {
+        this.showUsedTilesLabel = showUsedTiles;
+        
     }
 }

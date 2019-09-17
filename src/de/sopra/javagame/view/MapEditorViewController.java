@@ -11,7 +11,10 @@ import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -36,15 +39,21 @@ public class MapEditorViewController extends AbstractViewController implements M
     JFXTextField textFieldCreatedMapName;
     @FXML
     ImageView mainPane;
+    @FXML
+    Label showUsedTiles;
 
     private String chosenMapName;
-
+    
     public void init() {
         /* Set Background */
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
+        
+        showUsedTiles.setFont(new Font(60));
+        showUsedTiles.setTextFill(editorMapPane.WHITE);
 
         editorMapPane.setMapEditorViewController(this);
+        editorMapPane.setTileCountLabel(showUsedTiles);
         chosenMapName = "";
         comboBoxChooseGivenMap.valueProperty().addListener((options , oldValue, newValue) -> {
             chosenMapName = newValue;
@@ -61,6 +70,7 @@ public class MapEditorViewController extends AbstractViewController implements M
         textFieldCreatedMapName.textProperty().addListener((options, oldValue, newValue) ->{
             boolean isValid = MapCheckUtil.checkMapValidity(editorMapPane.getBooleanMap());
             setSaveButtonDisabled(!isValid);
+            
         });
 
         setSaveButtonDisabled(true);
@@ -86,6 +96,8 @@ public class MapEditorViewController extends AbstractViewController implements M
 
     public void onGenerateClicked() {
         getGameWindow().getControllerChan().getMapController().generateMapToEditor();
+        showUsedTiles.setTextFill(editorMapPane.GREEN);
+        showUsedTiles.setText(editorMapPane.VALID_MAP_TILE_COUNT + "/" + editorMapPane.VALID_MAP_TILE_COUNT);
     }
 
     public void onCloseClicked() {
