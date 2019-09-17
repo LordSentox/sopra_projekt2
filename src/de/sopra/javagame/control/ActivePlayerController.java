@@ -230,10 +230,16 @@ public class ActivePlayerController {
      * Beendet den Zug und startet den nächsten Zug.
      */
     public void endTurn() {
-        controllerChan.finishAction();
-        Action currentAktion = controllerChan.getCurrentAction();
-        currentAktion.setState(TurnState.DRAW_ARTIFACT_CARD);
+        Action currentAction = controllerChan.finishAction();
+        currentAction.setState(TurnState.DRAW_ARTIFACT_CARD);
         controllerChan.getGameFlowController().drawArtifactCards();
+
+        // Wenn keine Karten abgeworfen werden müssen, kann direkt in den Flutkartenziehstatus gewechselt werden
+        if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
+            currentAction = controllerChan.finishAction();
+            currentAction.setState(TurnState.FLOOD);
+        }
+
         controllerChan.getInGameViewAUI().refreshSome();
     }
 }
