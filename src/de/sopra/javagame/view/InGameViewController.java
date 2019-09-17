@@ -550,7 +550,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         {
             refreshHand(player.getType(), player.getHand());
             refreshPlayerName(player.getName(), player.getType());
-            refreshPlayerPosition(player.getPosition(), player.getType());
+            mapPane.movePlayer(player.getPosition(), player.getType());
         });
         refreshWaterLevel(action.getWaterLevel().getLevel());
     }
