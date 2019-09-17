@@ -58,6 +58,8 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
             return startActionQueue().pilotFlyTo(move).drain(firstDrain).drain(secondDrain);    
         }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), move)){
             return startActionQueue().diverDiveTo(move).drain(firstDrain).drain(secondDrain); 
+        }else if(!(player().getType()==PlayerType.ENGINEER)){
+            return startActionQueue().move(move).engineersDrain(firstDrain).engineersDrain(secondDrain);
         }else{
             return startActionQueue().move(move).drain(firstDrain).drain(secondDrain);
         }
