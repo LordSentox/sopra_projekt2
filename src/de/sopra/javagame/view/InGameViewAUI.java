@@ -130,9 +130,16 @@ public interface InGameViewAUI {
     void refreshPlayerName(String name, PlayerType player);
 
     /**
-     * aktualisiert die Anzeige des gesamten Spielfelds
+     * Aktualisiert einiges in der Anzeige des gesamten Spielfelds.
+     * Hierbei wird die Map neu initialisiert.
+     *
+     * @see #refreshArtifactsFound()
+     * @see #refreshActivePlayer()
+     * @see #refreshArtifactStack(CardStack)
+     * @see #refreshFloodStack(CardStack)
+     * @see #refreshTurnState(TurnState)
      */
-    void refreshAll();
+    void refreshSome();
 
     /**
      * setzt das Fenster auf ein Replay Fenster um vergangene Partien anzusehen

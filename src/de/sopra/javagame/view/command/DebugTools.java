@@ -25,6 +25,13 @@ public class DebugTools {
         window.getMainStage().toBack();
     }
 
+    @Command("get")
+    public String get(@Scope GameWindow window, String element) {
+        if (element != null)
+            window.getControllerChan().getInGameViewAUI().showNotification("command result: " + element);
+        return element;
+    }
+
 }
 /***********************************************************************************************
  *

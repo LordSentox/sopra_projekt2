@@ -67,7 +67,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         playersOnTile.forEach(type -> {
             PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
             view.setPreserveRatio(true);
-            view.setFitHeight(110);
+            view.setFitHeight(PLAYERSIZE);
             fourPlayerPane.getChildren().add(view);
             GridPane.setConstraints(view, x.get(), y.get());
             view.addEventFilter(MouseEvent.MOUSE_CLICKED, view);
@@ -109,7 +109,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         return canMoveTo;
     }
 
-    public void dehighlight() {
+    public void dehighlightAll() {
         this.canDrain = false;
         this.canMoveTo = false;
         updateHighlight();
@@ -119,7 +119,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         if(this.base == null) return;
         if (isHighlighted())
             this.base.highlight();
-        else this.base.deHighlight();
+        else this.base.dehighlight();
     }
 
     public boolean isHighlighted() {

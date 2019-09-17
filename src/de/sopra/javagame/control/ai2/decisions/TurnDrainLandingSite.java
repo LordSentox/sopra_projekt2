@@ -43,6 +43,9 @@ public class TurnDrainLandingSite extends Decision {
 
     @Override
     public ActionQueue act() {
+        if(!(player().getType()==PlayerType.ENGINEER)){
+            return startActionQueue().engineersDrain(control.getTile(PlayerType.PILOT).getLeft());
+        }
         return startActionQueue().drain(control.getTile(PlayerType.PILOT).getLeft());
     }
 

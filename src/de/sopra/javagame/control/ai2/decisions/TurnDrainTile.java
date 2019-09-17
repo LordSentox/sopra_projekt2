@@ -3,6 +3,7 @@ package de.sopra.javagame.control.ai2.decisions;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
@@ -31,6 +32,9 @@ public class TurnDrainTile extends Decision {
 
     @Override
     public ActionQueue act() {
+        if(!(player().getType()==PlayerType.ENGINEER)){
+            return startActionQueue().engineersDrain(drainTile);
+        }
         return startActionQueue().drain(drainTile);
     }
 

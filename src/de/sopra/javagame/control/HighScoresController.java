@@ -125,6 +125,10 @@ public class HighScoresController {
     private static List<HighScore> loadScoresNoRefresh(String mapName) {
         try {
             String scoresToString = new String(Files.readAllBytes(Paths.get(SCORE_FOLDER + mapName + ".score")), StandardCharsets.UTF_8);
+            if(scoresToString.trim().isEmpty()) {
+                return new ArrayList<>();
+                
+            }
             // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
             String[] scores = scoresToString.split("\n");
             String[][] scorecsv = new String[scores.length][];

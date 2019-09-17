@@ -5,6 +5,7 @@ import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
@@ -71,6 +72,9 @@ public class TurnDrainOrphanedTempleMapTiles extends Decision {
 
     @Override
     public ActionQueue act() {
+        if(!(player().getType()==PlayerType.ENGINEER)){
+            return startActionQueue().engineersDrain(drainPoint);
+        }
         return startActionQueue().drain(drainPoint);
     }
 

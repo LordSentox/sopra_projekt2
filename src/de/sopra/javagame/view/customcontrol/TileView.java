@@ -2,11 +2,13 @@ package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.view.abstraction.Highlightable;
 import de.sopra.javagame.view.textures.TextureLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class TileView extends ImageView {
+public class TileView extends ImageView implements Highlightable {
 
     private final Image dryImage, floodedImage, goneImage;
 
@@ -44,12 +46,9 @@ public class TileView extends ImageView {
         return type;
     }
 
-    public void highlight() {
-        if (!this.getStyleClass().contains("highlightmapTile"))
-            this.getStyleClass().add("highlightmapTile");
+    @Override
+    public Node node() {
+        return this;
     }
 
-    public void deHighlight() {
-        this.getStyleClass().removeIf(s -> s.equals("highlightmapTile"));
-    }
 }

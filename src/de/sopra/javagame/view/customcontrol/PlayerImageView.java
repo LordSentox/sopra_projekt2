@@ -3,8 +3,10 @@ package de.sopra.javagame.view.customcontrol;
 import de.sopra.javagame.model.player.Pilot;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.view.abstraction.Highlightable;
 import de.sopra.javagame.view.customcontrol.ActionPicker.ActionButton;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -13,7 +15,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PlayerImageView extends ImageView implements EventHandler<MouseEvent> {
+public class PlayerImageView extends ImageView implements EventHandler<MouseEvent>, Highlightable {
 
     private PlayerType type;
     private ActionPicker picker;
@@ -87,4 +89,8 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
     }
 
 
+    @Override
+    public Node node() {
+        return this;
+    }
 }
