@@ -95,7 +95,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         //setze Timeline für Replays
         timeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
             getGameWindow().getControllerChan().getGameFlowController().redo();
-            refreshAll();
+            refreshSome();
         }));
 
         resetTargetPlayer();
@@ -267,14 +267,15 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshAll() {
+    public void refreshSome() {
         refreshArtifactsFound();
         refreshActivePlayer();
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-        //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
+
+        //Always fix docs in InGameViewAUI if you change this
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
 //        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
     }

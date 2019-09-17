@@ -106,7 +106,7 @@ public class GameFlowController {
             controllerChan.getJavaGame().undoAction();
             controllerChan.getJavaGame().markCheetah();
             controllerChan.setAction(controllerChan.getJavaGame().getPreviousAction().copy());
-            controllerChan.getInGameViewAUI().refreshAll();
+            controllerChan.getInGameViewAUI().refreshSome();
         }
     }
 
@@ -120,7 +120,7 @@ public class GameFlowController {
         if (controllerChan.getJavaGame().canRedo()) {
             controllerChan.getJavaGame().redoAction();
             controllerChan.setAction(controllerChan.getJavaGame().getPreviousAction().copy());
-            controllerChan.getInGameViewAUI().refreshAll();
+            controllerChan.getInGameViewAUI().refreshSome();
             return true;
         }
         return false;
