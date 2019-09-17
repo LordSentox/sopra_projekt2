@@ -32,6 +32,11 @@ public class DebugTools {
         return element;
     }
 
+    @Command("test")
+    public void test(@Scope GameWindow window) {
+        //use for testing, dont commit
+    }
+
 }
 /***********************************************************************************************
  *

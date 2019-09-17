@@ -3,10 +3,8 @@ package de.sopra.javagame.view;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-
 import de.sopra.javagame.control.HighScoresController;
 import de.sopra.javagame.control.MapController;
-import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapCheckUtil;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
@@ -16,12 +14,8 @@ import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,18 +124,6 @@ public class MapEditorViewController extends AbstractViewController implements M
 
     public void onCloseClicked() {
         changeState(ViewState.MAP_EDITOR, getGameWindow().getPreviousViewState());
-    }
-
-    @Override
-    public void reset() {
-        editorMapPane.buildMap(null);
-        comboBoxChooseGivenMap.getSelectionModel().clearSelection();
-
-    }
-
-    @Override
-    public void show(Stage stage) {
-
     }
 
     @Override

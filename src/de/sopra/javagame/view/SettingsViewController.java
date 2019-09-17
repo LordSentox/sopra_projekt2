@@ -4,11 +4,19 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSlider;
 import de.sopra.javagame.util.GameSettings;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.GameWindow;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 /**
  * GUI für die Spieleinstellungen
@@ -27,6 +35,7 @@ public class SettingsViewController extends AbstractViewController {
     @FXML
     ImageView mainPane;
 
+    private Stage modalCopy;
 
     public void init() {
         effectVolumeSlider.getStylesheets().add(getClass().getResource("/stylesheets/sliders.css").toExternalForm());
@@ -48,19 +57,32 @@ public class SettingsViewController extends AbstractViewController {
         settings.devToolsEnabled().bind(developerToolsCheckbox.selectedProperty());
     }
 
+    public static void openModal(GameWindow window) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(SettingsViewController.class.getResource("/Settings.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        SettingsViewController settingsViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(SettingsViewController.class.getClass().getResource("/application.css").toExternalForm());
+        settingsViewController.setGameWindow(window);
+        settingsViewController.setScene(mainMenuScene);
+        settingsViewController.init();
+        Stage stage = new Stage();
+        stage.setScene(mainMenuScene);
+        stage.initOwner(window.getMainStage());
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setAlwaysOnTop(true);
+        stage.toFront();
+        settingsViewController.modalCopy = stage;
+        stage.show();
+    }
+
     public void onCloseClicked() {
-        getGameWindow().getSettings().save();
-        changeState(ViewState.SETTINGS, ViewState.MENU);
+        if(modalCopy == null) {
+            getGameWindow().getSettings().save();
+            changeState(ViewState.SETTINGS, ViewState.MENU);
+        }
+        else modalCopy.close();
     }
 
-    @Override
-    public void reset() {
-        getGameWindow().resetSettings();
-        init();
-    }
-
-    @Override
-    public void show(Stage stage) {
-
-    }
 }

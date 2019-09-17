@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -117,16 +116,6 @@ public class HighScoresViewController extends AbstractViewController implements 
                 highScoreListView.getItems().add(score);
             });
         }
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void show(Stage stage) {
-
     }
     
     private void changeHighScoreLabelVisibility(boolean active) {

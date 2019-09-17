@@ -11,7 +11,6 @@ import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
-import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -27,10 +26,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
@@ -209,7 +208,12 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onSettingsClicked() {
-        changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
+        try {
+            SettingsViewController.openModal(getGameWindow());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
     }
 
     public void onArtifactCardDiscardStackClicked() {
@@ -235,16 +239,6 @@ public class InGameViewController extends AbstractViewController implements InGa
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void show(Stage stage) {
-
     }
 
     @Override

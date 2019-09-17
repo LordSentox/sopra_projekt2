@@ -3,7 +3,6 @@ package de.sopra.javagame.view;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
-
 import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
@@ -19,9 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
-
-import static de.sopra.javagame.view.abstraction.ViewState.MAP_EDITOR;
 
 import java.io.File;
 import java.util.Arrays;
@@ -29,6 +25,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static de.sopra.javagame.view.abstraction.ViewState.MAP_EDITOR;
 
 /**
  * GUI für die Spielvorbereitung
@@ -155,17 +153,6 @@ public class GamePreparationsViewController extends AbstractViewController {
     public void onCloseClicked() {
         changeState(ViewState.GAME_PREPARATIONS, ViewState.MENU);
     }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void show(Stage stage) {
-
-    }
-
 
     public void addPlayerType(String type, boolean isAi, String name) {
         if (type == null) {
