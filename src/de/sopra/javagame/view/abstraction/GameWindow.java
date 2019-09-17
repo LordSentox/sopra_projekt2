@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,7 +41,7 @@ public class GameWindow {
     public GameWindow(Stage stage) {
         this.settings = GameSettings.load();
         this.controllerChan = new ControllerChan();
-        this.views = new HashMap<>();
+        this.views = new EnumMap<>(ViewState.class);
         this.mainStage = stage;
         stage.centerOnScreen();
     }
