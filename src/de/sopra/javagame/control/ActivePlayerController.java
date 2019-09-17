@@ -238,6 +238,7 @@ public class ActivePlayerController {
         if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
             currentAction = controllerChan.finishAction();
             currentAction.setState(TurnState.FLOOD);
+            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
         }
 
         controllerChan.getInGameViewAUI().refreshSome();
