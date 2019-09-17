@@ -59,11 +59,11 @@ public class EditorMapPane extends GridPane {
                 this.getChildren().add(v);
                 mapImageView[y][x] = v;
                 GridPane.setConstraints(v, x * 2 + 1, y * 2 + 1);
-                
                 final int newX = x, newY = y;
                 v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onTileClicked(event, newX, newY));
             }
         }
+        countTiles();
     }
 
     private void onTileClicked(MouseEvent e, int x, int y) {
@@ -71,13 +71,17 @@ public class EditorMapPane extends GridPane {
             setBooleanTile(new Point(x, y), true);
         } else if (e.getButton() == MouseButton.SECONDARY && booleanMap.get(x, y)) {
             setBooleanTile(new Point(x, y), false);
-        }
-        
+        }       
 
+        countTiles();
+    }
+
+    private void countTiles() {
         int count = (int) getBooleanMap().stream().filter(element -> element).count();
-        
+        if (showUsedTilesLabel != null){
         showUsedTilesLabel.setText(count + "/" + VALID_MAP_TILE_COUNT);
         showUsedTilesLabel.setTextFill(count == VALID_MAP_TILE_COUNT ? GREEN : count < VALID_MAP_TILE_COUNT ? WHITE : RED);
+        }
     }
 
     public void setMapEditorViewController(MapEditorViewController mapEditorViewController) {

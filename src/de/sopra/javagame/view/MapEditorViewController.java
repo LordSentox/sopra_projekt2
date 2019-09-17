@@ -13,8 +13,11 @@ import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -40,7 +43,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     @FXML
     ImageView mainPane;
     @FXML
-    Label showUsedTiles;
+    Label showUsedTiles, labelShowMessages;
 
     private String chosenMapName;
     
@@ -51,7 +54,13 @@ public class MapEditorViewController extends AbstractViewController implements M
         
         showUsedTiles.setFont(new Font(60));
         showUsedTiles.setTextFill(editorMapPane.WHITE);
-
+        
+        labelShowMessages.setFont(new Font(30));
+        labelShowMessages.setTextFill(editorMapPane.WHITE);
+        labelShowMessages.setFont(new Font(20));
+        
+        showUsedTiles.setTextAlignment(TextAlignment.RIGHT);
+        
         editorMapPane.setMapEditorViewController(this);
         editorMapPane.setTileCountLabel(showUsedTiles);
         chosenMapName = "";
@@ -96,8 +105,8 @@ public class MapEditorViewController extends AbstractViewController implements M
 
     public void onGenerateClicked() {
         getGameWindow().getControllerChan().getMapController().generateMapToEditor();
-        showUsedTiles.setTextFill(editorMapPane.GREEN);
-        showUsedTiles.setText(editorMapPane.VALID_MAP_TILE_COUNT + "/" + editorMapPane.VALID_MAP_TILE_COUNT);
+        //showUsedTiles.setTextFill(editorMapPane.GREEN);
+        //showUsedTiles.setText(editorMapPane.VALID_MAP_TILE_COUNT + "/" + editorMapPane.VALID_MAP_TILE_COUNT);
     }
 
     public void onCloseClicked() {

@@ -11,7 +11,7 @@
             fx:controller="de.sopra.javagame.view.MapEditorViewController">
     <children>
         <ImageView fx:id="mainPane"/>
-        <JFXTextField fx:id="textFieldCreatedMapName" layoutX="55.0" layoutY="10.0" prefHeight="30" prefWidth="150"/>
+        <JFXTextField fx:id="textFieldCreatedMapName" layoutX="55.0" layoutY="125.0" prefHeight="30" prefWidth="350" />
 
         <EditorMapPane
                 fx:id="editorMapPane"
@@ -22,7 +22,9 @@
         
               
         
-        <JFXComboBox fx:id="comboBoxChooseGivenMap" layoutX="55" layoutY="190" prefWidth="150" />
+        <JFXComboBox fx:id="comboBoxChooseGivenMap" layoutX="55" layoutY="190" prefWidth="350" />
+        
+        <Label fx:id="labelShowMessages" layoutX="55" layoutY="230" prefWidth="350"/>
 
         <JFXButton styleClass="mainmenuJFXButton" fx:id="saveButton" layoutX="55.0" layoutY="920.0" text="Speichern"
                    prefHeight="30" prefWidth="150" onAction="#onSaveClicked"/>
@@ -32,6 +34,6 @@
                    text="Karte generieren" prefHeight="30" prefWidth="150" onAction="#onGenerateClicked"/>
         <JFXButton styleClass="mainmenuJFXButton" fx:id="closeButton" layoutX="55.0" layoutY="1040.0" text="Schließen"
                    prefHeight="30" prefWidth="150" onAction="#onCloseClicked"/>
-        <Label fx:id="showUsedTiles" layoutX="215.0" layoutY="920.0" text="0/24"/>
+        <Label fx:id="showUsedTiles" layoutX="230" layoutY="1010.0" prefWidth="190" text="0/24"/>
     </children>
 </AnchorPane>
