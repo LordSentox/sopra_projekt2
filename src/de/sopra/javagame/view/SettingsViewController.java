@@ -36,18 +36,21 @@ public class SettingsViewController extends AbstractViewController {
         GameSettings settings = getGameWindow().getSettings();
 
         effectVolumeSlider.valueProperty().set(settings.getEffectsVolume().intValue());
+        settings.getEffectsVolume().unbind();
         settings.getEffectsVolume().bind(effectVolumeSlider.valueProperty());
 
         musicVolumeSlider.valueProperty().set(settings.getMusicVolume().intValue());
+        settings.getMusicVolume().unbind();
         settings.getMusicVolume().bind(musicVolumeSlider.valueProperty());
 
         developerToolsCheckbox.selectedProperty().set(settings.devToolsEnabled().get());
+        settings.devToolsEnabled().unbind();
         settings.devToolsEnabled().bind(developerToolsCheckbox.selectedProperty());
     }
 
     public void onCloseClicked() {
         getGameWindow().getSettings().save();
-        changeState(ViewState.MENU);
+        changeState(ViewState.SETTINGS, ViewState.MENU);
     }
 
     @Override

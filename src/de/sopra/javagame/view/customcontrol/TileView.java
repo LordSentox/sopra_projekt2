@@ -11,7 +11,7 @@ public class TileView extends ImageView {
     private final Image dryImage, floodedImage, goneImage;
 
     private final MapTileProperties type;
-    
+
     public TileView(int id, int size) {
         //System.out.println(id);
         type = MapTileProperties.getByIndex(id);
@@ -39,15 +39,16 @@ public class TileView extends ImageView {
         }
 
     }
-    
+
     public MapTileProperties getType() {
         return type;
     }
-    
-    public void highlight(){
+
+    public void highlight() {
         this.getStyleClass().add("highlightmapTile");
     }
-    public void deHighlight(){
-        this.getStyleClass().remove("highlightmapTile");
+
+    public void deHighlight() {
+        this.getStyleClass().removeIf(s -> s.equals("highlightmapTile"));
     }
 }

@@ -143,14 +143,15 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
+        PlayerType activePlayerType = control.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
 
         List<ActionButton> buttons = new LinkedList<>();
         if (canMoveTo)
             buttons.add(ActionButton.MOVE);
-        if (canDrain)
+        if (canDrain && control.getTargetPlayer().getType() == activePlayerType)
             buttons.add(ActionButton.DRAIN);
         if (buttons.size() > 0) {
-            contextPicker.setDelegatingPlayer(control.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+            contextPicker.setDelegatingPlayer(activePlayerType);
             contextPicker.setMovingPlayer(control.getTargetPlayer().getType());
             contextPicker.init(buttons.toArray(new ActionButton[buttons.size()]));
             contextPicker.show(event);
