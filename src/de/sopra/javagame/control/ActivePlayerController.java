@@ -1,11 +1,7 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.control.ai.ActionQueue;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.TurnState;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
@@ -234,19 +230,10 @@ public class ActivePlayerController {
      * Beendet den Zug und startet den nächsten Zug.
      */
     public void endTurn() {
-        
-        
-            controllerChan.finishAction();
-            Action currentAktion = controllerChan.getCurrentAction();
-            controllerChan.getGameFlowController().drawArtifactCards();
-            currentAktion.setState(TurnState.DRAW_ARTIFACT_CARD);
-            currentAktion.nextPlayerActive();
-            controllerChan.getInGameViewAUI().refreshActivePlayer();
-            controllerChan.getInGameViewAUI().refreshActionsLeft(currentAktion.getActivePlayer().getActionsLeft());
-            controllerChan.getInGameViewAUI().refreshHand(currentAktion.getActivePlayer().getType(), currentAktion.getActivePlayer().getHand());
-            //TODO:
-//            controllerChan.getInGameViewAUI().refreshTurnState();
-        
-      
+        controllerChan.finishAction();
+        Action currentAktion = controllerChan.getCurrentAction();
+        currentAktion.setState(TurnState.DRAW_ARTIFACT_CARD);
+        controllerChan.getGameFlowController().drawArtifactCards();
+        controllerChan.getInGameViewAUI().refreshAll();
     }
 }
