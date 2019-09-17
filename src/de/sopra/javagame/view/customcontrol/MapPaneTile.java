@@ -116,7 +116,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     }
 
     private void updateHighlight() {
-        if (isHighlighted())
+        if (isHighlighted() && this.base != null)
             this.base.highlight();
         else this.base.deHighlight();
     }
