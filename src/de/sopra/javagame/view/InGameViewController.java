@@ -27,7 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
@@ -235,16 +234,6 @@ public class InGameViewController extends AbstractViewController implements InGa
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void show(Stage stage) {
-
     }
 
     @Override
