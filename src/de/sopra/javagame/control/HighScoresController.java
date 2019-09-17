@@ -129,7 +129,7 @@ public class HighScoresController {
             String[] scores = scoresToString.split("\n");
             String[][] scorecsv = new String[scores.length][];
             for (int i = 0; i < scores.length; ++i) {
-                String[] split = scores[i].split(",");
+                String[] split = scores[i].split(", ");
                 scorecsv[i] = split;
             }
 

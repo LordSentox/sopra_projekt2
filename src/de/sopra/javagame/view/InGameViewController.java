@@ -197,7 +197,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onPauseClicked() {
 //        timeline.pause();
         //DEBUG
-        
+
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
         map.forEach(mapTile ->System.out.println(mapTile.getState()));
     }
@@ -211,7 +211,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-        
+
     }
 
     public void onArtifactCardDrawStackClicked() {
@@ -245,10 +245,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
 
-        this.rotateTurnSpinner(72.0);
+        //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
-        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
-        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+//        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
+//        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
     }
 
     @Override
@@ -299,9 +299,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
             if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
                 pane = handOneCardGridPane;
-            if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+          
+            else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
                 pane = handTwoCardGridPane;
-            if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+            
+            else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
                 pane = handThreeCardGridPane;
 
 
@@ -317,7 +319,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void onSpecialCardClicked(ArtifactCardView card, int index) {
-        // TODO Auto-generated method stub
         if (card.getType().equals(ArtifactCardType.HELICOPTER)) {
 
         } else if (card.getType().equals(ArtifactCardType.SANDBAGS)) {

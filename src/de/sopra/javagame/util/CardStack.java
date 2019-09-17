@@ -84,7 +84,7 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
         shuffleDrawStack();
         return drawn;
     }
-
+    
     /**
      * @return die Anzahl an Karten im Ziehstapel
      */

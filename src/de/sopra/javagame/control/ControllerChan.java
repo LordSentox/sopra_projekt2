@@ -1,7 +1,10 @@
 package de.sopra.javagame.control;
 
 import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.Difficulty;
+import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
@@ -108,6 +111,33 @@ public class ControllerChan {
         this.currentAction = pair.getRight();
 
         this.inGameViewAUI.refreshAll();
+        //6 MapTiles zu beginn fluten
+        CardStack<FloodCard> floodCardCardStack = this.getCurrentAction().getFloodCardStack();
+        for(int i = 0; i < 6; i++) {
+            //TODO: Wait
+            //try{ Thread.sleep(1000); }catch(InterruptedException ignored){}
+            
+            MapFull map = this.getCurrentAction().getMap();
+            FloodCard floodCard = floodCardCardStack.draw(true);
+            floodCard.flood(map);
+            
+            this.inGameViewAUI.refreshMapTile(map.getPositionForTile(floodCard.getTile()), map.get(floodCard.getTile()));
+            this.inGameViewAUI.refreshFloodStack(floodCardCardStack);
+             
+        }
+        //player auf map packen
+        this.currentAction.getPlayers().forEach(player -> {
+            this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType());
+        });
+        
+        //2 Artefaktkarten ziehen
+        this.currentAction.getPlayers().forEach(player -> {
+            
+            player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
+            player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
+            this.inGameViewAUI.refreshHand(player.getType(), player.getHand());
+        });
+        
     }
 
     /**
