@@ -72,14 +72,15 @@ public class GameFlowController {
             currentCard.flood(map);
             //check if one or more Players are drowning
             List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(currentCard.getTile()));
-            for(Player rescuePlayer : rescuesNeeded) {
-                controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(false));
+            for (Player rescuePlayer : rescuesNeeded) {
+                controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
             }
-            
+
             controllerChan.getInGameViewAUI().refreshMapTile(map.getPositionForTile(currentCard.getTile()),
-                                                            map.get(map.getPositionForTile(currentCard.getTile())));
+                    map.get(map.getPositionForTile(currentCard.getTile())));
             controllerChan.finishAction();
         }
+        controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
     }
 
 

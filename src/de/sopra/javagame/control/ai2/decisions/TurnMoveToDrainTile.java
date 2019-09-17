@@ -20,15 +20,17 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
  */
 @DoAfter(act = TURN_ACTION, value = TurnMoveToDrainCorePositions.class)
 public class TurnMoveToDrainTile extends Decision {
+    private Point move;
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
         if (!activePlayer.drainablePositions().isEmpty()) {
             return null;
         }
-        List<Point> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
-                activePlayer.getType()).stream().map(Pair::getRight).collect(Collectors.toList());
+        List<Pair<Point,Point>> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(activePlayer.getPosition(),
+                activePlayer.getType());
         if (!drainablePositionsOneMoveAway.isEmpty()) {
+            move = drainablePositionsOneMoveAway.get(0).getLeft();
             return this;
         }
         return null;
@@ -36,7 +38,7 @@ public class TurnMoveToDrainTile extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().move(move);
     }
 
 }
