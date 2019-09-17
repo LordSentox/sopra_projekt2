@@ -1,13 +1,18 @@
 package de.sopra.javagame.util;
 
+import de.sopra.javagame.model.MapTile;
+
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import static de.sopra.javagame.model.MapTileState.DRY;
+import static de.sopra.javagame.model.MapTileState.FLOODED;
 
 public abstract class Map<T> {
     public static final int SIZE_X = 10;
     public static final int SIZE_Y = 7;
 
-    T[][] raw;
+    protected T[][] raw;
 
     public Map() {
         this.raw = newEmptyRaw();
@@ -46,7 +51,7 @@ public abstract class Map<T> {
      */
     public T get(int posX, int posY) {
         if (posX >= SIZE_X || posY >= SIZE_Y)
-            return null;        
+            return null;
         return this.raw[posY + 1][posX + 1];
     }
 
@@ -107,4 +112,5 @@ public abstract class Map<T> {
     }
 
     protected abstract T[][] newEmptyRaw();
+
 }

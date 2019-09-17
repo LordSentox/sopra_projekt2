@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 public class MapController {
 
     public static final String MAP_FOLDER = "data/maps/";
+    public static final String RESOURCE_MAPS = "resources/maps/";
 
     private final ControllerChan controllerChan;
 
@@ -63,7 +64,8 @@ public class MapController {
             System.err.println("Man muss einen Name angeben!");
         }
         try {
-            String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
+            String mapString = new String(Files.readAllBytes(Paths.get(RESOURCE_MAPS + name +".map")), StandardCharsets.UTF_8);
+            //String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
 
             MapBlackWhite map = MapUtil.readBlackWhiteMapFromString(mapString);
 

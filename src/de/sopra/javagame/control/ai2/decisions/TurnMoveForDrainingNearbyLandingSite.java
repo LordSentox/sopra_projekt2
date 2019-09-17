@@ -49,7 +49,13 @@ public class TurnMoveForDrainingNearbyLandingSite extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().move(move);
+        if(player().getType()==PlayerType.PILOT && needSpecialToMove(player().getPosition(), move)){
+            return startActionQueue().pilotFlyTo(move);    
+        }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), move)){
+            return startActionQueue().diverDiveTo(move); 
+        }else{
+            return startActionQueue().move(move);
+        }
     }
 
 }
