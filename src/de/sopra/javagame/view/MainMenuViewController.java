@@ -26,11 +26,11 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onSettingsClicked() {
-        changeState(SETTINGS);
+        changeState(ViewState.MENU, SETTINGS);
     }
 
     public void onStartGameClicked() {
-        changeState(ViewState.GAME_PREPARATIONS);
+        changeState(ViewState.MENU, ViewState.GAME_PREPARATIONS);
     }
 
     public void onLoadGameClicked() {
@@ -38,15 +38,15 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onMapEditorClicked() {
-        changeState(MAP_EDITOR);
+        changeState(ViewState.MENU, MAP_EDITOR);
     }
 
     public void onHighscoresClicked() {
-        changeState(HIGH_SCORES);
+        changeState(ViewState.MENU, HIGH_SCORES);
     }
 
     public void onCloseClicked() {
-        changeState(ViewState.CLOSE);
+        changeState(ViewState.MENU, ViewState.CLOSE);
     }
 
     public void onLoadReplayClicked() {

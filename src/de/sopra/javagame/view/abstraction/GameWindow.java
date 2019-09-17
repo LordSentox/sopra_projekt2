@@ -36,6 +36,7 @@ public class GameWindow {
 
     private Map<ViewState, AbstractViewController> views;
 
+    private ViewState previousViewState;
     private ViewState currentViewState;
 
     public GameWindow(Stage stage) {
@@ -60,7 +61,7 @@ public class GameWindow {
 
         mainStage.setResizable(false);
         mainStage.initStyle(StageStyle.UNDECORATED);
-        this.setState(ViewState.MENU);
+        this.setState(ViewState.CLOSE, ViewState.MENU);
         mainStage.show();
     }
 
@@ -171,9 +172,12 @@ public class GameWindow {
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
                     CommandResult commandResult = Commands.processCommand(this, result.get());
-                    if (!commandResult.wasSuccessful())
+                    if (!commandResult.wasSuccessful()) {
                         System.out.println(commandResult.getResultMessage());
-                    else System.out.println("result: " + commandResult.get());
+                        if (commandResult.get() instanceof Exception)
+                            ((Exception) commandResult.get()).printStackTrace();
+                        else System.err.println("error result: " + commandResult.get());
+                    } else System.out.println("result: " + commandResult.get());
                 }
             }
         });
@@ -188,7 +192,7 @@ public class GameWindow {
      *
      * @param state Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
      */
-    void setState(ViewState state) {
+    void setState(ViewState previous, ViewState state) {
         if (currentViewState == state)
             return;
 
@@ -201,6 +205,9 @@ public class GameWindow {
         mainStage.setFullScreen(state.isFullscreen());
         mainStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); //Spieler soll den Fullscreen nicht beenden können
         mainStage.centerOnScreen();
+
+        this.previousViewState = previous;
+        this.currentViewState = state;
     }
 
     public ControllerChan getControllerChan() {
@@ -213,5 +220,9 @@ public class GameWindow {
 
     public void resetSettings() {
         settings = new GameSettings();
+    }
+
+    public ViewState getPreviousViewState() {
+        return previousViewState;
     }
 }

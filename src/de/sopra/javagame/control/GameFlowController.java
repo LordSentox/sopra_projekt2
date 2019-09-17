@@ -29,9 +29,11 @@ public class GameFlowController {
         CardStack<ArtifactCard> artifactCardStack = controllerChan.getCurrentAction().getArtifactCardStack();
         List<ArtifactCard> drawnCards = artifactCardStack.draw(2, false);
         Player activePlayer = controllerChan.getCurrentAction().getActivePlayer();
+        boolean shuffleBack = false;
         for (ArtifactCard currentCard : drawnCards) {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
+                shuffleBack = true;
                 if (waterLevel.isGameLost()) {
                     controllerChan.getInGameViewAUI().showNotification("Ihr habt leider verloren!" +
                             "Das Wasser ist viel zu schnell gestiegen und nun ist die ganze Insel versunken." +
@@ -56,6 +58,11 @@ public class GameFlowController {
                     (activePlayer.getHand().size() - 5) + " Karten zum Abwerfen aus.");
             //TODO in HighScoreIO Methode zum speichern von High-Scores
             //                    //dann View bescheid geben, dass Spielvorbei (set as Replay)
+        }
+        if (shuffleBack) {
+            CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
+            stack.shuffleBack();
+            controllerChan.getInGameViewAUI().refreshFloodStack(stack);
         }
     }
 
@@ -103,10 +110,10 @@ public class GameFlowController {
      */
     public void undo() {
         if (controllerChan.getJavaGame().canUndo()) {
-            controllerChan.getJavaGame().markCheetah();
             controllerChan.getJavaGame().undoAction();
             controllerChan.getJavaGame().markCheetah();
-            controllerChan.getInGameViewAUI().refreshAll();
+            controllerChan.setAction(controllerChan.getJavaGame().getPreviousAction().copy());
+            controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
         }
     }
 
@@ -119,9 +126,22 @@ public class GameFlowController {
     public boolean redo() {
         if (controllerChan.getJavaGame().canRedo()) {
             controllerChan.getJavaGame().redoAction();
-            controllerChan.getInGameViewAUI().refreshAll();
+            controllerChan.setAction(controllerChan.getJavaGame().getPreviousAction().copy());
+            controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
             return true;
         }
+        return false;
+    }
+
+    public boolean isPausedToDiscard() {
+        // Überprüfe, ob einer der Spieler mehr als 5 Handkarten hat. In diesem Fall muss erst abgelegt werden,
+        // bevor weitergespielt werden kann.
+        for (Player player : controllerChan.getCurrentAction().getPlayers()) {
+            if (player.getHand().size() > 5) {
+                return true;
+            }
+        }
+
         return false;
     }
 }

@@ -42,7 +42,7 @@ public class TurnStayOnLandingSiteWaitingForDeparture extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue(); //TODO
+        return startActionQueue().waitAndDrinkTea();
     }
 
 }

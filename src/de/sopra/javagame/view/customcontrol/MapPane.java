@@ -1,7 +1,6 @@
 package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapFull;
@@ -9,16 +8,14 @@ import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import de.sopra.javagame.view.textures.TextureLoader.PlayerTexture;
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 
@@ -28,7 +25,7 @@ public class MapPane extends GridPane {
     private static final int TILE_SIZE = 130;
     private final MapPaneTile[][] map;
     private InGameViewController inGameViewController;
-    
+
 
     public MapPane() throws IOException {
         super();
@@ -37,17 +34,18 @@ public class MapPane extends GridPane {
         IntStream.range(0, 21).forEach(i -> this.getColumnConstraints().add(new ColumnConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
         IntStream.range(0, 15).forEach(i -> this.getRowConstraints().add(new RowConstraints(i % 2 == 0 ? 5 : TILE_SIZE)));
     }
-  
-    public void buildMap(MapFull tiles){
+
+    public void buildMap(MapFull tiles) {
         for (int y = 0; y < Map.SIZE_Y; y++) {
             for (int x = 0; x < Map.SIZE_X; x++) {
                 if (tiles.get(x, y) != null) {
                     TileView v = new TileView(tiles.get(x, y).getTileIndex(), TILE_SIZE);
                     v.setPreserveRatio(true);
-                    MapPaneTile pane = new MapPaneTile(inGameViewController,v, new Point(x,y));
+                    MapPaneTile pane = new MapPaneTile(inGameViewController, v, new Point(x, y));
                     map[y][x] = pane;
                     this.getChildren().add(pane);
-                    GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);    
+                    pane.toBack();
+                    GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 } else {
                     ImageView v = new ImageView(TextureLoader.getSea1());
                     v.setPreserveRatio(true);
@@ -56,6 +54,7 @@ public class MapPane extends GridPane {
                     MapPaneTile pane = new MapPaneTile(v);
                     map[y][x] = pane;
                     this.getChildren().add(pane);
+                    pane.toBack();
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 }
             }
@@ -65,34 +64,30 @@ public class MapPane extends GridPane {
     /**
      * Mit 0 indiziert
      *
-     * @param x
-     * @param y
+     * @param point
      * @return
      */
     public MapPaneTile getMapStackPane(Point point) {
         return map[point.yPos][point.xPos];
     }
 
+    public void forEach(Consumer<MapPaneTile> consumer) {
+        for (MapPaneTile[] tiles : map)
+            for (MapPaneTile tile : tiles)
+                if (tile != null)
+                    consumer.accept(tile);
+    }
 
     public void movePlayer(Point point, PlayerType type) {
         MapPaneTile pane = getMapStackPane(point);
-        Optional<Point> playerPos = playerPosition(type);
-        if (playerPos.isPresent()) {
-            Point pos = playerPos.get();
-            removePlayer(pos, type);
-        }
+        playerPosition(type).ifPresent(mapPaneTile -> mapPaneTile.unputPlayer(type));
         pane.putPlayer(type);
-    }
-
-    public void removePlayer(Point p, PlayerType type) {
-        playerOnTile(p, type).ifPresent(getMapStackPane(p).getChildren()::remove);
     }
 
     /**
      * Gibt die ImageView zurück, die den gegebenen PlayerType enthhält, falls dieser auf diesem Feld existiert
      *
-     * @param x    die x Position
-     * @param y    die y Position
+     * @param p
      * @param type der PlayerType, nach dem gesucht werden soll
      * @return Ein Optional, der die gesuchte ImageView enthält. Ein leerer Optional, falls der Player nicht auf diesem Feld steht
      */
@@ -105,10 +100,12 @@ public class MapPane extends GridPane {
     }
 
 
-    public Optional<Point> playerPosition(PlayerType type) {
+    public Optional<MapPaneTile> playerPosition(PlayerType type) {
         for (int y = 0; y < Map.SIZE_Y; y++) {
             for (int x = 0; x < Map.SIZE_X; x++) {
-                if (playerOnTile(new Point(x,y), type).isPresent()) return Optional.of(new Point(x, y));
+                MapPaneTile mapPaneTile = getMapStackPane(new Point(x, y));
+                if (mapPaneTile.getPlayers().contains(type))
+                    return Optional.of(mapPaneTile);
             }
         }
         return Optional.empty();
@@ -123,10 +120,10 @@ public class MapPane extends GridPane {
         this.inGameViewController = inGameViewController;
 
     }
-    
-    public void setMapTile(Point position, MapTile tile){
+
+    public void setMapTile(Point position, MapTile tile) {
         MapPaneTile pane = this.getMapStackPane(position);
         pane.getBase().showImage(tile.getState());
     }
-    
+
 }

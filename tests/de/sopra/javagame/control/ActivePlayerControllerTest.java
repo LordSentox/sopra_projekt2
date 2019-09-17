@@ -1,10 +1,15 @@
 package de.sopra.javagame.control;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.TestDummy.InGameView;
+import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.Engineer;
+import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -14,30 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.TestDummy.InGameView;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.model.player.Engineer;
-import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Direction;
-import de.sopra.javagame.util.Map;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
-import de.sopra.javagame.util.Triple;
+import static org.junit.Assert.*;
 
 public class ActivePlayerControllerTest {
 
@@ -84,13 +66,13 @@ public class ActivePlayerControllerTest {
 
         assertSame(activePlayer.getType(), PlayerType.COURIER);
         Assert.assertEquals("Courier not on correct spawn location", new Point(3, 4), playerPos);
-        activePlayerController.showMovements(false);
+        controllerChan.getInGameUserController().showMovements(PlayerType.COURIER, false);
         List<Point> movementPoints = inGameView.getMovementPoints();
         Assert.assertEquals("More/less than 2 tiles are marked as movement option", 2, movementPoints.size());
         Assert.assertTrue("Point 3,3 is not marked as movement option", movementPoints.contains(new Point(3, 3)));
         Assert.assertTrue("Point 2,4 is not marked as movement option", movementPoints.contains(new Point(2, 4)));
 
-        activePlayerController.showMovements(true);
+        controllerChan.getInGameUserController().showMovements(PlayerType.COURIER, true);
         movementPoints = inGameView.getMovementPoints();
         Assert.assertEquals("More/less than 2 tiles are marked as movement option after enabling non existant special movement on courier", 2, movementPoints.size());
         Assert.assertTrue("Point 3,3 is not marked as movement option after enabling non existant special movement on courier", movementPoints.contains(new Point(3, 3)));
@@ -104,13 +86,13 @@ public class ActivePlayerControllerTest {
 
         assertSame(activePlayer.getType(), PlayerType.EXPLORER);
         Assert.assertEquals("Explorer not on correct spawn location", new Point(6, 4), playerPos);
-        activePlayerController.showMovements(false);
+        controllerChan.getInGameUserController().showMovements(PlayerType.EXPLORER, false);
         movementPoints = inGameView.getMovementPoints();
         Assert.assertEquals("More/less than 2 tiles are marked as movement option", 2, movementPoints.size());
         Assert.assertTrue("Point 6,3 is not marked as movement option", movementPoints.contains(new Point(6, 3)));
         Assert.assertTrue("Point 7,4 is not marked as movement option", movementPoints.contains(new Point(7, 4)));
 
-        activePlayerController.showMovements(true);
+        controllerChan.getInGameUserController().showMovements(PlayerType.EXPLORER, true);
         movementPoints = inGameView.getMovementPoints();
         Assert.assertEquals("More/less than 4 tiles are marked as movement option after enabling non existant special movement on courier", 4, movementPoints.size());
         Assert.assertTrue("Point 6,3 is not marked as movement option", movementPoints.contains(new Point(6, 3)));
@@ -127,14 +109,14 @@ public class ActivePlayerControllerTest {
 
         assertSame(activePlayer.getType(), PlayerType.PILOT);
         Assert.assertEquals("Pilot not on correct spawn location", new Point(6, 3), playerPos);
-        activePlayerController.showMovements(false);
+        controllerChan.getInGameUserController().showMovements(PlayerType.PILOT, false);
         movementPoints = inGameView.getMovementPoints();
         Assert.assertEquals("More/less than 4 tiles are marked as movement option", 4, movementPoints.size());
         for (Point point : adjacentPoints(playerPos, false)) {
             Assert.assertTrue(String.format("Point %d,%d is not marked as movement option", point.xPos, point.yPos), movementPoints.contains(point));
         }
 
-        activePlayerController.showMovements(true);
+        controllerChan.getInGameUserController().showMovements(PlayerType.PILOT, true);
         movementPoints = inGameView.getMovementPoints();
         for (int y = 0; y < Map.SIZE_Y; y++) {
             for (int x = 0; x < Map.SIZE_X; x++) {
@@ -241,7 +223,7 @@ public class ActivePlayerControllerTest {
         activePlayerController.cancelSpecialAbility();
 
         players = Arrays.asList(
-                new Triple<>(PlayerType.DIVER, "",false),
+                new Triple<>(PlayerType.DIVER, "", false),
                 new Triple<>(PlayerType.ENGINEER, "", false),
                 new Triple<>(PlayerType.NAVIGATOR, "", false),
                 new Triple<>(PlayerType.PILOT, "", false));
@@ -265,7 +247,7 @@ public class ActivePlayerControllerTest {
         expectedMovePoints.add(new Point(6, 2));
         expectedMovePoints.add(new Point(6, 3));
 
-        assertEquals("Diver move points incorrect" , expectedMovePoints, inGameView.getMovementPoints());
+        assertEquals("Diver move points incorrect", expectedMovePoints, inGameView.getMovementPoints());
 
 
         activePlayerController.cancelSpecialAbility();
@@ -322,7 +304,7 @@ public class ActivePlayerControllerTest {
 
         players = Arrays.asList(
                 new Triple<>(PlayerType.DIVER, "", false),
-                new Triple<>(PlayerType.ENGINEER,  "",false),
+                new Triple<>(PlayerType.ENGINEER, "", false),
                 new Triple<>(PlayerType.NAVIGATOR, "", false),
                 new Triple<>(PlayerType.PILOT, "", false));
 
@@ -345,7 +327,7 @@ public class ActivePlayerControllerTest {
         expectedMovePoints.add(new Point(5, 2));
         expectedMovePoints.add(new Point(6, 3));
 
-        assertEquals("Diver move points incorrect" , expectedMovePoints, inGameView.getMovementPoints());
+        assertEquals("Diver move points incorrect", expectedMovePoints, inGameView.getMovementPoints());
 
 
         activePlayerController.cancelSpecialAbility();

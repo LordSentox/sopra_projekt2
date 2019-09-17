@@ -168,6 +168,9 @@ public class AIController {
                         controllerChan.getInGameViewAUI().refreshActionsLeft(getCurrentAction().getActivePlayer().getActionsLeft());
                     }
                     break;
+                case WAIT_AND_DRINK_TEA:
+                    //TODO remove action or end turn
+                    break;
             }
         });
     }

@@ -67,7 +67,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         playersOnTile.forEach(type -> {
             PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
             view.setPreserveRatio(true);
-            view.setFitHeight(110);
+            view.setFitHeight(PLAYERSIZE);
             fourPlayerPane.getChildren().add(view);
             GridPane.setConstraints(view, x.get(), y.get());
             view.addEventFilter(MouseEvent.MOUSE_CLICKED, view);
@@ -109,16 +109,17 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         return canMoveTo;
     }
 
-    public void dehighlight() {
+    public void dehighlightAll() {
         this.canDrain = false;
         this.canMoveTo = false;
         updateHighlight();
     }
 
     private void updateHighlight() {
+        if(this.base == null) return;
         if (isHighlighted())
             this.base.highlight();
-        else this.base.deHighlight();
+        else this.base.dehighlight();
     }
 
     public boolean isHighlighted() {
@@ -143,14 +144,15 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
+        PlayerType activePlayerType = control.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
 
         List<ActionButton> buttons = new LinkedList<>();
         if (canMoveTo)
             buttons.add(ActionButton.MOVE);
-        if (canDrain)
+        if (canDrain && control.getTargetPlayer().getType() == activePlayerType)
             buttons.add(ActionButton.DRAIN);
         if (buttons.size() > 0) {
-            contextPicker.setDelegatingPlayer(control.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+            contextPicker.setDelegatingPlayer(activePlayerType);
             contextPicker.setMovingPlayer(control.getTargetPlayer().getType());
             contextPicker.init(buttons.toArray(new ActionButton[buttons.size()]));
             contextPicker.show(event);

@@ -1,9 +1,6 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
 import de.sopra.javagame.view.HighScoresViewAUI;
@@ -108,7 +105,7 @@ public class ControllerChan {
         this.javaGame = pair.getLeft();
         this.currentAction = pair.getRight();
 
-        this.inGameViewAUI.refreshAll();
+        this.inGameViewAUI.refreshSome();
         //6 MapTiles zu beginn fluten
         CardStack<FloodCard> floodCardCardStack = this.getCurrentAction().getFloodCardStack();
         for(int i = 0; i < 6; i++) {
@@ -123,9 +120,18 @@ public class ControllerChan {
             this.inGameViewAUI.refreshFloodStack(floodCardCardStack);
              
         }
+        //player auf map packen
+        this.currentAction.getPlayers().forEach(player -> {
+            this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType());
+        });
         
         //2 Artefaktkarten ziehen
-        
+        this.currentAction.getPlayers().forEach(player -> {
+            
+            player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
+            player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
+            this.inGameViewAUI.refreshHand(player.getType(), player.getHand());
+        });
         
     }
 
@@ -150,7 +156,7 @@ public class ControllerChan {
             // Spiel wurde erfolgreich geladen, der Name des momentanen Spiels kann gesetzt werden und
             // das GUI kann informiert werden
             this.gameName = loadGameName;
-            this.inGameViewAUI.refreshAll();
+            this.inGameViewAUI.refreshSome();
         } catch (FileNotFoundException e) {
             System.out.println("Es gab keine solche Datei.");
             e.printStackTrace();
@@ -221,7 +227,7 @@ public class ControllerChan {
         // TODO: Bei der Erstellung des Strukturmodelles wurde noch keine Unterscheidung zwischen Replays und
         // weiterspielbaren Spielen gemacht. Deshalb muss die loadGame/saveGame-Methode noch angepasst werden.
         loadSaveGame(replayGameName);
-        inGameViewAUI.refreshAll();
+        inGameViewAUI.refreshSome();
     }
 
     /**
@@ -255,8 +261,12 @@ public class ControllerChan {
         this.gameName = this.gameName.substring(0, this.gameName.length() - 5);
     }
 
-    public void finishAction() {
+    public Action finishAction() {
         this.currentAction = this.javaGame.finishAction(this.currentAction);
+        return this.currentAction;
+    }
+    void setAction(Action action){
+        this.currentAction = action;
     }
 
     public Action getCurrentAction() {

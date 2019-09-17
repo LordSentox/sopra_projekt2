@@ -2,13 +2,12 @@ package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.ActionQueue;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.TurnState;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.abstraction.Notification;
+import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.List;
 
@@ -34,11 +33,20 @@ public interface InGameViewAUI {
     void refreshDrainOptions(List<Point> points);
 
     /**
+     * gibt dem Spieler eine Mitteilung in dem dafür vorgesehenen Fenster
+     *
+     * @param notification Mitteilung an den Spieler
+     */
+    void showNotification(Notification notification);
+
+    /**
      * zeigt dem Spieler die übergebene Nachricht in dem dafür vorgesehenen Fenster
      *
-     * @param notification Nachricht an den Spieler
+     * @param infoMessage Nachricht an den Spieler
      */
-    void showNotification(String notification);
+    default void showNotification(String infoMessage) {
+        showNotification(Notifications.info(infoMessage));
+    }
 
     /**
      * aktualisiert die Anzeige, ob Karten abgegeben werden können
@@ -65,7 +73,6 @@ public interface InGameViewAUI {
 
     /**
      * aktualisiert die Anzeige der gefundenen Artefakte. Gefundene Artefakte sind nicht mehr ausgegraut.
-     *
      */
     void refreshArtifactsFound();
 
@@ -120,9 +127,22 @@ public interface InGameViewAUI {
     void refreshPlayerName(String name, PlayerType player);
 
     /**
-     * aktualisiert die Anzeige des gesamten Spielfelds
+     * Aktualisiert einiges in der Anzeige des gesamten Spielfelds.
+     * Hierbei wird die Map neu initialisiert.
+     *
+     * @see #refreshArtifactsFound()
+     * @see #refreshActivePlayer()
+     * @see #refreshArtifactStack(CardStack)
+     * @see #refreshFloodStack(CardStack)
+     * @see #refreshTurnState(TurnState)
      */
-    void refreshAll();
+    void refreshSome();
+
+    /**
+     * Aktualisiert die Ansicht mittels der kompletten Aktion.
+     * Ist mit Vorsicht zu genießen!
+     */
+    void refreshHopefullyAll(Action action);
 
     /**
      * setzt das Fenster auf ein Replay Fenster um vergangene Partien anzusehen
@@ -139,10 +159,10 @@ public interface InGameViewAUI {
      * @param queue die queue an Aktionen, welche als Tipp ausgeführt würden (KI erstellt den Tipp)
      */
     void showTip(ActionQueue queue);
-    
+
     /**
      * Soll den aktuellen Turnstate anzeigen.
-     * 
+     *
      * @param turnState der aktuelle state, der angezeigt werden soll.
      */
     void refreshTurnState(TurnState turnState);

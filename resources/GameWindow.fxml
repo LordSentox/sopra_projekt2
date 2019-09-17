@@ -52,7 +52,7 @@
    		<!-- Draw Stacks -->
    		<GridPane fx:id="artifactCardDrawStackGridPane" layoutX="20" layoutY="720.0"/>
 
-   		<GridPane fx:id="artifactCardDicardGridPane" layoutX="200" layoutY="720"/>
+   		<GridPane fx:id="artifactCardDiscardGridPane" layoutX="200" layoutY="720"/>
    		
    		<GridPane fx:id="floodCardDrawStackGridPane" layoutX="20" layoutY="960.0"/><!-- 800 -->
    		
@@ -79,9 +79,9 @@
    		
    		<JFXButton styleClass="mainmenuJFXButton" fx:id="endTurnButton" layoutX="1500.0" layoutY="975.0" text="Zug beenden" prefHeight="30" prefWidth="150" onAction="#onEndTurnClicked"/>
    		
-   		<JFXButton styleClass="mainmenuJFXButton" fx:id="redoButton" layoutX="1500.0" layoutY="1015.0" text="Zug rückgängig" prefHeight="30" prefWidth="150" onAction="#onRedoClicked"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="redoButton" layoutX="1500.0" layoutY="1015.0" text="Zug rückgängig" prefHeight="30" prefWidth="150" onAction="#onUndoClicked"/>
    		
-   		<JFXButton styleClass="mainmenuJFXButton" fx:id="undoButton" layoutX="1500.0" layoutY="1055.0" text="Zug wiederholen" prefHeight="30" prefWidth="150" onAction="#onUndoClicked"/>
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="undoButton" layoutX="1500.0" layoutY="1055.0" text="Zug wiederholen" prefHeight="30" prefWidth="150" onAction="#onRedoClicked"/>
    		
    		<JFXButton styleClass="mainmenuJFXButton" fx:id="settingsButton" layoutX="1500.0" layoutY="1095.0" text="Einstellungen" prefHeight="30" prefWidth="150" onAction="#onSettingsClicked"/>
    		
