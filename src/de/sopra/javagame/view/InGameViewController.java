@@ -281,7 +281,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void resetHighlighting() {
         movePoints = new LinkedList<>();
         drainablePoints = new LinkedList<>();
-        mapPane.forEach(tile -> tile.dehighlight());
+        mapPane.forEach(tile -> tile.dehighlightAll());
     }
 
     @Override

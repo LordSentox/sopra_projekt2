@@ -1,13 +1,13 @@
 package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.view.abstraction.Highlightable;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 
-import static de.sopra.javagame.view.abstraction.AbstractViewController.HIGHLIGHT;
-
-public class ArtifactCardView extends CardView implements EventHandler<MouseEvent> {
+public class ArtifactCardView extends CardView implements EventHandler<MouseEvent>, Highlightable {
 
     private ArtifactCardType type;
 
@@ -25,10 +25,9 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
 
     public void updateHighlight() {
         if (selected) {
-            if (!this.getStyleClass().contains(HIGHLIGHT))
-                this.getStyleClass().add(HIGHLIGHT);
+            highlight();
         } else {
-            this.getStyleClass().removeIf(s -> s.equals(HIGHLIGHT));
+            dehighlight();
         }
     }
 
@@ -46,4 +45,8 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
         updateHighlight();
     }
 
+    @Override
+    public Node node() {
+        return this;
+    }
 }
