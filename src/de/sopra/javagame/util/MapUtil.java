@@ -22,7 +22,7 @@ public class MapUtil {
         // zufälliges ausgewählt, wo ein Inselfeld hinkommt.
         List<Point> nextTileOptions = startPoint.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X - 1, Map.SIZE_Y - 1));
 
-        int tilesGenerated = 0;
+        int tilesGenerated = 1;
         while (tilesGenerated < MapTileProperties.values().length) {
             // Wähle das nächste Tile zufällig aus
             int next = random.nextInt(nextTileOptions.size());
