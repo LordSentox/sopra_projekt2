@@ -15,6 +15,7 @@ public enum ActionType {
     TRADE_CARD,
     SPECIAL_CARD,
     SPECIAL_ABILITY,
-    COLLECT_TREASURE
+    COLLECT_TREASURE,
+    WAIT_AND_DRINK_TEA
 
 }

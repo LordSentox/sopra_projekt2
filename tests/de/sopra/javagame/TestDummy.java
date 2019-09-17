@@ -208,7 +208,12 @@ public class TestDummy {
         }
 
         @Override
-        public void refreshAll() {
+        public void refreshSome() {
+            refreshedAll++;
+        }
+
+        @Override
+        public void refreshHopefullyAll(Action action) {
             refreshedAll++;
         }
 

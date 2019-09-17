@@ -2,10 +2,7 @@ package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.ActionQueue;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.MapTile;
-import de.sopra.javagame.model.TurnState;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
@@ -130,9 +127,22 @@ public interface InGameViewAUI {
     void refreshPlayerName(String name, PlayerType player);
 
     /**
-     * aktualisiert die Anzeige des gesamten Spielfelds
+     * Aktualisiert einiges in der Anzeige des gesamten Spielfelds.
+     * Hierbei wird die Map neu initialisiert.
+     *
+     * @see #refreshArtifactsFound()
+     * @see #refreshActivePlayer()
+     * @see #refreshArtifactStack(CardStack)
+     * @see #refreshFloodStack(CardStack)
+     * @see #refreshTurnState(TurnState)
      */
-    void refreshAll();
+    void refreshSome();
+
+    /**
+     * Aktualisiert die Ansicht mittels der kompletten Aktion.
+     * Ist mit Vorsicht zu genießen!
+     */
+    void refreshHopefullyAll(Action action);
 
     /**
      * setzt das Fenster auf ein Replay Fenster um vergangene Partien anzusehen

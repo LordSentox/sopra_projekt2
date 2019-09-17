@@ -44,6 +44,7 @@ public class MapPane extends GridPane {
                     MapPaneTile pane = new MapPaneTile(inGameViewController, v, new Point(x, y));
                     map[y][x] = pane;
                     this.getChildren().add(pane);
+                    pane.toBack();
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 } else {
                     ImageView v = new ImageView(TextureLoader.getSea1());
@@ -53,6 +54,7 @@ public class MapPane extends GridPane {
                     MapPaneTile pane = new MapPaneTile(v);
                     map[y][x] = pane;
                     this.getChildren().add(pane);
+                    pane.toBack();
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 }
             }

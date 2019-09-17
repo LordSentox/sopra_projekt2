@@ -27,7 +27,7 @@
 .Artifact_Air {
 	-fx-effect: dropshadow(three-pass-box, rgba(197,115,33,1), 10, 0.6, 0, 0);
 }
-.highlightmapTile{
+.highlighting{
 	-fx-effect: dropshadow(three-pass-box, rgba(75,255,0,1), 10, 0.6, 0, 0);
 }
 .mainmenuJFXButton {

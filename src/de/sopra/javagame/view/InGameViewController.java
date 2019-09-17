@@ -32,7 +32,6 @@ import javafx.util.Duration;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -52,6 +51,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private List<Point> movePoints = new ArrayList<>();
     private boolean specialActive = false;
     private Supplier<Player> targetPlayer;
+
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
     MapPane mapPane;
@@ -94,7 +94,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         //setze Timeline für Replays
         timeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
             getGameWindow().getControllerChan().getGameFlowController().redo();
-            refreshAll();
+            refreshSome();
         }));
 
         resetTargetPlayer();
@@ -266,14 +266,15 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshAll() {
+    public void refreshSome() {
         refreshArtifactsFound();
         refreshActivePlayer();
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
-        //DEBUG
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
+
+        //Always fix docs in InGameViewAUI if you change this
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
 //        mapPane.movePlayer(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getPosition(), getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
     }
@@ -281,7 +282,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void resetHighlighting() {
         movePoints = new LinkedList<>();
         drainablePoints = new LinkedList<>();
-        mapPane.forEach(tile -> tile.dehighlight());
+        setFloodCardStackHighlighted(false);
+        mapPane.forEach(tile -> tile.dehighlightAll());
+
     }
 
     @Override
@@ -300,11 +303,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshCardsTransferable(boolean transferable) {
-        if (transferable) {
-            List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
-                    .filter(cardView -> (cardView.getType().equals(ArtifactCardType.HELICOPTER) || cardView.getType().equals(ArtifactCardType.SANDBAGS) || cardView.getType().equals(ArtifactCardType.WATERS_RISE))).collect(Collectors.toList());
-            cardsTohighLight.forEach(view -> view.getStyleClass().add(HIGHLIGHT));
-        }
+        //FIXME
+//        if (transferable) {
+//            List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
+//                    .filter(cardView -> (cardView.getType().equals(ArtifactCardType.HELICOPTER) || cardView.getType().equals(ArtifactCardType.SANDBAGS) || cardView.getType().equals(ArtifactCardType.WATERS_RISE))).collect(Collectors.toList());
+//            cardsTohighLight.forEach(view -> view.getStyleClass().add(HIGHLIGHT));
+//        }
     }
 
     @Override
@@ -513,6 +517,42 @@ public class InGameViewController extends AbstractViewController implements InGa
                 break;
         }
 
+    }
+
+    @Override
+    public void refreshHopefullyAll(Action action) {
+        resetHighlighting();
+        resetTargetPlayer();
+        setSpecialActive(false);
+        //refreshArtifacts found
+        EnumSet<ArtifactType> artifacts = action.getDiscoveredArtifacts();
+        fireArtefactImageView.setEffect(artifacts.contains(ArtifactType.FIRE) ? null : DESATURATION);
+        waterArtefactImageView.setEffect(artifacts.contains(ArtifactType.WATER) ? null : DESATURATION);
+        earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
+        airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
+        //refresh active player
+        List<Player> players = action.getPlayers();
+        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
+        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
+        if (players.size() >= 3) {
+            playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
+        }
+        if (players.size() == 4) {
+            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
+        }
+        //refreshes
+        mapPane.buildMap(action.getMap());
+        refreshArtifactStack(action.getArtifactCardStack());
+        refreshFloodStack(action.getFloodCardStack());
+        refreshTurnState(action.getState());
+        refreshActionsLeft(action.getActivePlayer().getActionsLeft());
+        action.getPlayers().forEach(player ->
+        {
+            refreshHand(player.getType(), player.getHand());
+            refreshPlayerName(player.getName(), player.getType());
+            refreshPlayerPosition(player.getPosition(), player.getType());
+        });
+        refreshWaterLevel(action.getWaterLevel().getLevel());
     }
 
     public boolean isSpecialActive() {
