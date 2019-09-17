@@ -26,7 +26,7 @@ import static de.sopra.javagame.control.ai2.decisions.Condition.PLAYER_HAS_MORE_
 public class TurnMoveForDrainingNearbyLandingSite extends Decision {
 
     private Point move;
-    
+
     /**
      * Prüfe: ist der Spieler einen Schritt entfernt, um den Landeplatz trocken legen zu können
      * kann der Spieler innerhalb seines Zuges trockenlegen
@@ -37,12 +37,12 @@ public class TurnMoveForDrainingNearbyLandingSite extends Decision {
         Point playerPosition = player().getPosition();
         PlayerType playerType = player().getType();
 
-        List<Pair<Point,Point>> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
-        for(Pair<Point,Point> possiblePosition : drainablePositionslist) {
-            if(possiblePosition.getRight().equals(landingSitePosition)){
-                move=possiblePosition.getLeft();
+        List<Pair<Point, Point>> drainablePositionslist = control.getDrainablePositionsOneMoveAway(playerPosition, playerType);
+        for (Pair<Point, Point> possiblePosition : drainablePositionslist) {
+            if (possiblePosition.getRight().equals(landingSitePosition)) {
+                move = possiblePosition.getLeft();
                 return this;
-            }        
+            }
         }
         return null;
     }

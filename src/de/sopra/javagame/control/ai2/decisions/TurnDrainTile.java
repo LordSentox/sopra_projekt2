@@ -18,11 +18,12 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 @DoAfter(act = TURN_ACTION, value = TurnMoveIfMovingCouldDrainTwoTiles.class)
 public class TurnDrainTile extends Decision {
     private Point drainTile;
+
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
         if (!activePlayer.drainablePositions().isEmpty()) {
-            drainTile= activePlayer.drainablePositions().get(0);
+            drainTile = activePlayer.drainablePositions().get(0);
             return this;
         }
         return null;

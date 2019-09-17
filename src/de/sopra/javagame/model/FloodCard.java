@@ -3,6 +3,8 @@ package de.sopra.javagame.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import de.sopra.javagame.util.MapFull;
+
 import static de.sopra.javagame.model.MapTileState.*;
 
 /**
@@ -15,9 +17,9 @@ public class FloodCard implements Copyable<FloodCard>, Serializable {
     /**
      * Das Inselfeld, welches von dieser Karte überflutet wird.
      */
-    private MapTile tile;
+    private MapTileProperties tile;
 
-    public FloodCard(MapTile tile) {
+    public FloodCard(MapTileProperties tile) {
         this.tile = tile;
     }
 
@@ -29,31 +31,31 @@ public class FloodCard implements Copyable<FloodCard>, Serializable {
      *             wenn das Feld bereits versunken war. Die Karte hätte dann aus
      *             dem Stapel entfernt werden sollen.
      */
-    public void flood() throws IllegalStateException {
+    public void flood(MapFull map) throws IllegalStateException {
         // Überprüfe, ob das Feld bereits entfernt wurde. Diese Karte hätte dann
         // nicht gespielt
-        // werden können dürfen.
-        if (this.tile.getState() == GONE) {
+        // werden können dürfen.        
+        MapTile tile = map.get(map.getPositionForTile(this.tile));
+        if (tile == null || tile.getState() == GONE) {
             throw new IllegalStateException();
-        } else if (this.tile.getState() == DRY) {
-            this.tile.setState(FLOODED);
+        } else if (tile.getState() == DRY) {
+            tile.setState(FLOODED);
         } else {
-            this.tile.setState(GONE);
+            tile.setState(GONE);
         }
-
     }
 
-    public MapTile getTile() {
+    public MapTileProperties getTile() {
         return tile;
     }
 
-    public void setTile(MapTile tile) {
+    public void setTile(MapTileProperties tile) {
         this.tile = tile;
     }
 
     @Override
     public FloodCard copy() {
-        return new FloodCard(tile.copy());
+        return new FloodCard(tile);
     }
 
     @Override

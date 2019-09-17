@@ -29,7 +29,8 @@ import static de.sopra.javagame.model.MapTileState.GONE;
 
 public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
-    private Point target=null;
+    private Point target = null;
+
     @Override
     public Decision decide() {
         List<Pair<Point, MapTile>> templeList = control.getTemples();
@@ -42,17 +43,17 @@ public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
             //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
             if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
                 continue;
-            }  
-            for(Pair<Point, MapTile> otherTemple : control.getTemples()) {
-                EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
-                if(!discoveredArtifacts.contains(otherTemple.getRight().getProperties().getHidden())&&
-                   !otherTemple.getLeft().equals(temple.getLeft())&&
-                   otherTemple.getRight().getState() == GONE) {
-                    target= temple.getLeft();
-                }
-                
             }
-            if(target==null){
+            for (Pair<Point, MapTile> otherTemple : control.getTemples()) {
+                EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
+                if (!discoveredArtifacts.contains(otherTemple.getRight().getProperties().getHidden()) &&
+                        !otherTemple.getLeft().equals(temple.getLeft()) &&
+                        otherTemple.getRight().getState() == GONE) {
+                    target = temple.getLeft();
+                }
+
+            }
+            if (target == null) {
                 return null;
             }
             return this;
@@ -62,7 +63,7 @@ public class SpecialUseSandbagToDrainOrphanedTempleMapTile extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().sandbagCard(target); 
+        return startActionQueue().sandbagCard(target);
     }
 
 }
