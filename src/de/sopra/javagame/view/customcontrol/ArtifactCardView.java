@@ -25,7 +25,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
         if (selected) {
             this.getStyleClass().add("highlightmapTile");
         } else {
-            this.getStyleClass().remove("highlightmapTile");
+            this.getStyleClass().removeIf(s -> s.equals("highlightmapTile"));
         }
     }
 
