@@ -18,6 +18,7 @@ import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -58,7 +59,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     WaterLevelView waterLevelView;
     @FXML
     GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
-            artifactCardDicardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
+            artifactCardDiscardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
     @FXML
     Button endTurnButton;
     @FXML
@@ -129,7 +130,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         IntStream.range(0, 28).forEach(item -> {
             artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
-            artifactCardDicardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+            artifactCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
         IntStream.range(0, 24).forEach(item -> {
@@ -224,6 +225,14 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void onFloodCardDrawStackClicked() {
 
+    }
+
+    public void setFloodCardStackHighlighted(boolean highlight) {
+        ObservableList<String> styleClass = floodCardDiscardGridPane.getStyleClass();
+        if (styleClass.contains("highlightmapTile") && highlight)
+            styleClass.add("highlightmapTile");
+        else if (!highlight)
+            styleClass.removeIf(s -> s.equals("highlightmapTile"));
     }
 
     @Override
@@ -377,11 +386,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         List<ArtifactCard> discardPile = stack.getDiscardPile();
         int index = 0;
-        artifactCardDicardGridPane.getChildren().clear();
+        artifactCardDiscardGridPane.getChildren().clear();
         for (ArtifactCard card : discardPile) {
             CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
             v.showFrontImage();
-            artifactCardDicardGridPane.getChildren().add(v);
+            artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
         }
