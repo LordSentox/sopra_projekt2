@@ -11,7 +11,6 @@ import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
-import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -27,10 +26,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
@@ -209,7 +208,12 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onSettingsClicked() {
-        changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
+        try {
+            SettingsViewController.openModal(getGameWindow());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
     }
 
     public void onArtifactCardDiscardStackClicked() {
@@ -235,16 +239,6 @@ public class InGameViewController extends AbstractViewController implements InGa
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void show(Stage stage) {
-
     }
 
     @Override
@@ -454,17 +448,17 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshActionsLeft(int actionsLeft) {
         System.out.println(actionsLeft);
         switch (actionsLeft) {
-            case 0:
-                //TODO wenn keine aktionen mehr übrig, dann spezialkarten spielen oder zug beenden
-                break;
-            case 1:
-                this.rotateTurnSpinner(-144);
-                break;
-            case 2:
-                this.rotateTurnSpinner(-72);
-                break;
             case 3:
                 this.rotateTurnSpinner(0);
+                break;
+            case 2:
+                this.rotateTurnSpinner(-60);
+                break;
+            case 1:
+                this.rotateTurnSpinner(-120);
+                break;
+            case 0:
+                this.rotateTurnSpinner(-180);
                 break;
             default:
                 this.rotateTurnSpinner(0);
@@ -508,10 +502,10 @@ public class InGameViewController extends AbstractViewController implements InGa
                 this.rotateTurnSpinner(0);
                 break;
             case DRAW_ARTIFACT_CARD:
-                this.rotateTurnSpinner(-216);
+                this.rotateTurnSpinner(-240);
                 break;
             case FLOOD:
-                this.rotateTurnSpinner(-288);
+                this.rotateTurnSpinner(-300);
                 setFloodCardStackHighlighted(true);
                 break;
             default:
