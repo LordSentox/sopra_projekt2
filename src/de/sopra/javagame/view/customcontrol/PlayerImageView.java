@@ -39,15 +39,11 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
             else return false;
         }
         switch (activePlayer.getType()) {
-
             case COURIER:
-                break;
             case DIVER:
-                break;
             case ENGINEER:
-                break;
             case EXPLORER:
-                break;
+                return true;
             case PILOT:
                 return ((Pilot) activePlayer).hasSpecialMove();
         }
@@ -60,7 +56,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
         boolean hasSpecial = shallShowSpecial();
         List<ActionButton> buttons = new LinkedList<>();
         //Mit der linken Maustaste soll die Special deaktiviert und
-        if (event.getButton() == MouseButton.PRIMARY) {
+        if (event.getButton() == MouseButton.PRIMARY && activePlayer.getType() == type) {
             tile.getControl().getGameWindow().getControllerChan().getInGameUserController().showMovements(type, false);
             tile.getControl().getGameWindow().getControllerChan().getActivePlayerController().showDrainOptions();
             tile.getControl().setSpecialActive(false);
@@ -71,15 +67,13 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
                 if (activePlayer.getType() == type) {
                     if (tile.canCollectTreasure(type))
                         buttons.add(ActionButton.COLLECT_ARTIFACT);
-                    if (hasSpecial)
-                        buttons.add(ActionButton.SPECIAL);
                 } else {
-                    Player clickedPlayer = tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getPlayer(type);
+                    //Player clickedPlayer = tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getPlayer(type);
                     if (tile.getPlayers().contains(activePlayer.getType()) || activePlayer.getType() == PlayerType.COURIER)
                         buttons.add(ActionButton.GIVE_CARD);
-                    if (activePlayer.getType() == PlayerType.NAVIGATOR)
-                        buttons.add(ActionButton.SPECIAL);
                 }
+                if (hasSpecial)
+                    buttons.add(ActionButton.SPECIAL);
 
                 if (buttons.size() > 0) {
                     picker.setDelegatingPlayer(activePlayer.getType());
