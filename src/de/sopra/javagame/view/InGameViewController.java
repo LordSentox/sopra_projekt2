@@ -230,6 +230,22 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onArtifactCardDiscardStackClicked() {
 
     }
+    
+    public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
+        if (card.equals(ArtifactCardType.HELICOPTER)) {
+            //TODO
+        } else if (card.equals(ArtifactCardType.SANDBAGS)) {
+            List<Point> drainable = new ArrayList<>(); 
+            MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
+            map.forEach(mapTile -> {
+                if(mapTile.getState().equals(MapTileState.FLOODED)){
+                    drainable.add(map.getPositionForTile(mapTile.getProperties()));
+                }
+            });
+            System.out.println("on card clicked: " + card + " " + index + " " + owner);
+            drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
+        }
+    }
 
     public void onFloodCardDiscardStackClicked() {
 
@@ -364,23 +380,6 @@ public class InGameViewController extends AbstractViewController implements InGa
                 pane.getChildren().add(v);
                 GridPane.setConstraints(v, index++, 0);
             }
-        }
-    }
-
-    public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
-        if (card.equals(ArtifactCardType.HELICOPTER)) {
-            //TODO
-        } else if (card.equals(ArtifactCardType.SANDBAGS)) {
-            //TODO
-            List<Point> drainable = new ArrayList<>(); 
-            MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
-            map.forEach(mapTile -> {
-               if(mapTile.getState().equals(MapTileState.FLOODED)){
-                   drainable.add(map.getPositionForTile(mapTile.getProperties()));
-               }
-            });
-            System.out.println("on card clicked: " + card + " " + index + " " + owner);
-            drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
         }
     }
 
