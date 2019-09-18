@@ -1,18 +1,9 @@
 package de.sopra.javagame.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.GameWindow;
-import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
@@ -24,6 +15,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SaveGameViewController extends AbstractViewController {
     @FXML
@@ -59,16 +57,13 @@ public class SaveGameViewController extends AbstractViewController {
 
     public void onCloseClicked() {
 //        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
-        
         modalCopy.close();
-
-
     }
     
     public void onSaveGameClicked(){
         String selectedGame = saveGameTextField.getText();
         if(selectedGame.isEmpty()){
-            showNotificatoin("Das Feld ist nicht ausgefüllt");
+            showNotification("Das Feld ist nicht ausgefüllt");
             return;
         }
         getGameWindow().getControllerChan().saveGame(selectedGame);
@@ -96,7 +91,7 @@ public class SaveGameViewController extends AbstractViewController {
         stage.requestFocus();
     }
     
-    public void showNotificatoin(String notification) {
+    public void showNotification(String notification) {
         notificationLabel.setText(notification);
     }
     
