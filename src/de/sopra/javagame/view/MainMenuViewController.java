@@ -18,7 +18,7 @@ public class MainMenuViewController extends AbstractViewController {
     @FXML
     ImageView mainPane;
     @FXML
-    JFXButton settingsButton, closeButton, startGameButton, loadGameButton, mapEditorButton, highscoreButton;
+    JFXButton settingsButton, closeButton, startGameButton, loadGameButton, continueGameButton, mapEditorButton, highscoreButton;
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
@@ -34,6 +34,9 @@ public class MainMenuViewController extends AbstractViewController {
 
     public void onLoadGameClicked() {
         
+    }
+    public void onContinueClicked(){
+        changeState(ViewState.MENU, ViewState.IN_GAME);
     }
 
     public void onMapEditorClicked() {
