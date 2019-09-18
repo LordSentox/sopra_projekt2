@@ -88,6 +88,23 @@
     -fx-background-color: rgb(164,133,87);
 }
 
+.dialog-pane {
+	-fx-background-color: rgb(164,133,87);
+}
+
+.dialog-pane .label {
+	-fx-text-fill: white;
+}
+
+.dialog-pane .button{
+	-fx-text-fill: "#000000";
+	-fx-background-color: "#c9af06";
+}
+
+.dialog-pane:header .header-panel {
+	-fx-background-color: rgb(102,62,3);
+}
+
 .label {
 	-fx-text-fill: white;
 }
