@@ -40,6 +40,7 @@ public class LoadGameViewController extends AbstractViewController {
                 && file.getName().endsWith(".save") && file.getName().length() > 5);
         List<String> loadNames = Arrays.stream(loadFiles).map(File::getName).collect(Collectors.toList());
 
+        loadMapListView.getItems().clear();
         for (String currentName : loadNames) {
             loadMapListView.getItems().addAll(currentName.substring(0, currentName.length() - 5));
             loadMapListView.getItems().sort(Comparator.naturalOrder());

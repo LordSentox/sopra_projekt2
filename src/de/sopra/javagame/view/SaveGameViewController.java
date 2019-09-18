@@ -37,18 +37,19 @@ public class SaveGameViewController extends AbstractViewController {
     
     private Stage modalCopy;
     private File[] loadFiles;
+    private final int NO_SAVE_FILES = 0;
 
     public void init() throws IOException {
         mainPane.setImage(TextureLoader.getBackground());
 
         fillListView();
-        final int NO_SAVE_FILES = 0;
-        loadMapViewLabel.setDisable(loadFiles.length == NO_SAVE_FILES);
+        loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
         notificationLabel.setTextFill(EditorMapPane.RED);
     }
 
 
     private void fillListView() {
+        loadMapListView.getItems().clear();
         File loadFile = new File(getGameWindow().getControllerChan().SAVE_GAME_FOLDER);
         loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
                 && file.getName().endsWith(".save") && file.getName().length() > 5);
@@ -73,8 +74,9 @@ public class SaveGameViewController extends AbstractViewController {
             showNotificatoin("Das Feld ist nicht ausgefüllt");
             return;
         }
-       fillListView();
         getGameWindow().getControllerChan().saveGame(selectedGame);
+        loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
+        fillListView();
         
     }
     
