@@ -1,8 +1,6 @@
 package de.sopra.javagame.view.textures;
 
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTileProperties;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.view.textures.ZipWrapper.ZipEntryList;
 import javafx.scene.image.Image;
@@ -13,7 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Queue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -172,6 +173,10 @@ public class TextureLoader {
 
     public static TileTexture getTileTextureFlooded(MapTileProperties properties) {
         return TILE_TEXTURES_FLOODED.get(properties);
+    }
+
+    public static Image getTileTexture(MapTile tile) {
+        return tile.getState() == MapTileState.DRY ? getTileTextureDry(tile.getProperties()) : (tile.getState() == MapTileState.FLOODED ? getTileTextureFlooded(tile.getProperties()) : getGone());
     }
 
     public static Image getBackground() {

@@ -7,7 +7,6 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
-
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
@@ -275,7 +274,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
         //TODO mapPane darf nur noch vollständig refresht werdne, nicht neu gebaut ´!
-        //mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
+        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 
         //Always fix docs in InGameViewAUI if you change this

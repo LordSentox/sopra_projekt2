@@ -36,10 +36,16 @@ public class MapPane extends GridPane {
     }
 
     public void buildMap(MapFull tiles) {
+
+        for (MapPaneTile[] row : map) {
+            for (MapPaneTile tile : row) {
+                getChildren().remove(tile);
+            }
+        }
         for (int y = 0; y < Map.SIZE_Y; y++) {
             for (int x = 0; x < Map.SIZE_X; x++) {
                 if (tiles.get(x, y) != null) {
-                    TileView v = new TileView(tiles.get(x, y).getTileIndex(), TILE_SIZE);
+                    TileView v = new TileView(tiles.get(x, y), TILE_SIZE);
                     v.setPreserveRatio(true);
                     MapPaneTile pane = new MapPaneTile(inGameViewController, v, new Point(x, y));
                     map[y][x] = pane;
