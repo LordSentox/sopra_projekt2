@@ -103,6 +103,16 @@ public class GameFlowController {
         Action nextAction = controllerChan.finishAction();
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
+
+        // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
+        if (nextAction.getFloodCardsToDraw() <= 0) {
+            nextAction.nextPlayerActive();
+            nextAction.setState(TurnState.PLAYER_ACTION);
+
+            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
+            controllerChan.getInGameViewAUI().refreshActivePlayer();
+            controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
+        }
     }
 
 
