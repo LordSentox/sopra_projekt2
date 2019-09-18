@@ -22,7 +22,7 @@ public class CopyUtil {
     }
 
     public static <C, T extends Copyable<T>> C copy(Collection<T> collection, Collector<T, ?, C> collector) {
-        return collection.stream().map(item -> item.copy()).collect(collector);
+        return collection.stream().map(Copyable::copy).collect(collector);
     }
 
     public static <T extends Copyable<T>> List<T> copyAsList(Collection<T> collection) {

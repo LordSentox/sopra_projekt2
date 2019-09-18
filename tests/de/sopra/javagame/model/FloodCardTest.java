@@ -1,18 +1,17 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.util.MapFull;
+import de.sopra.javagame.util.MapUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
-
-import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * <h1>projekt2</h1>
@@ -54,6 +53,7 @@ public class FloodCardTest {
         wannKommtDieFlut.flood(blubBlub);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testEquals() {
         FloodCard newWannKommtDieFlut = new FloodCard(MapTile.fromNumber(4).getProperties());

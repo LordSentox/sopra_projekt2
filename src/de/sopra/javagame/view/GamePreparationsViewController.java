@@ -93,13 +93,13 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerFourButton.setDisable(true);
         isPlayerThreeKiCheckBox.setDisable(true);
         isPlayerFourKiCheckBox.setDisable(true);
-        
-        File mapFile = new File (MapController.MAP_FOLDER);
+
+        File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
         List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
-        for(String currentName : mapNames) {
-            chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length()-4));
+        for (String currentName : mapNames) {
+            chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 4));
             chooseMapComboBox.getItems().sort(null);
         }
         chooseMapComboBox.getItems().add("neu generieren");
@@ -124,11 +124,12 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerFourButton.setDisable(!addPlayerFourToggleButton.isSelected());
         isPlayerFourKiCheckBox.setDisable(!addPlayerFourToggleButton.isSelected());
     }
+
     //Exception wegen Map einlesen
     public void onStartGameClicked() throws IOException {
         playerList.clear();
         MapBlackWhite currentMap;
-        
+
         //Spielertypen hinzufügen
         addPlayerType(playerOneChooseCharakterComboBox.getValue(),
                 !isPlayerOneKiCheckBox.isDisabled(),
@@ -153,22 +154,20 @@ public class GamePreparationsViewController extends AbstractViewController {
             cannotStartGameLabel.setText("Es sind nicht alle Namensfelder ausgefüllt");
             return;
         }
-        
-        if(chooseMapComboBox.getValue() == null ){
+
+        if (chooseMapComboBox.getValue() == null) {
             cannotStartGameLabel.setText("Es ist keine Map ausgewählt");
             return;
-        }
-        else if(chooseMapComboBox.getValue().equals("neu generieren")){
+        } else if (chooseMapComboBox.getValue().equals("neu generieren")) {
             currentMap = MapUtil.generateRandomIsland();
             debug("Map: random \n");
-        }
-        else{
-            String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getValue() +".map")), StandardCharsets.UTF_8);
+        } else {
+            String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getValue() + ".map")), StandardCharsets.UTF_8);
             currentMap = MapUtil.readBlackWhiteMapFromString(mapString);
             debug("Map:" + chooseMapComboBox.getValue() + "\n");
         }
-        
-        
+
+
         changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
         this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
@@ -244,7 +243,6 @@ public class GamePreparationsViewController extends AbstractViewController {
             return playerOneNameTextField.getText().isEmpty() || playerTwoNameTextField.getText().isEmpty();
         }
     }
-    
 
-    
+
 }

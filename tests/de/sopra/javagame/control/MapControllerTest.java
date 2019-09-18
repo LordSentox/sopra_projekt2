@@ -5,23 +5,17 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 
 public class MapControllerTest {
 
-    private ControllerChan controllerChan;
     private MapController mapController;
-    private JavaGame javaGame;
-    private Action action;
     private TestDummy.MapEditorView mapEditorView;
     private MapBlackWhite map;
     private String name;
@@ -29,10 +23,10 @@ public class MapControllerTest {
 
     @Before
     public void setUp() {
-        controllerChan = TestDummy.getDummyControllerChan();
+        ControllerChan controllerChan = TestDummy.getDummyControllerChan();
         mapController = controllerChan.getMapController();
-        javaGame = controllerChan.getJavaGame();
-        action = controllerChan.getCurrentAction();
+        JavaGame javaGame = controllerChan.getJavaGame();
+        Action action = controllerChan.getCurrentAction();
         mapEditorView = (TestDummy.MapEditorView) mapController.getMapEditorViewAUI();
         map = new MapBlackWhite();
         name = "hallo";
@@ -82,7 +76,7 @@ public class MapControllerTest {
     }
 
     @Test
-    public void testSaveMap() throws IOException {
+    public void testSaveMap() {
 
         //teste mit korrekter map ohne Namen
         mapController.saveMap("", map);

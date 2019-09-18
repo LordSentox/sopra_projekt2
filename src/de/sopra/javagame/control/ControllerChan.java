@@ -11,6 +11,8 @@ import de.sopra.javagame.view.MapEditorViewAUI;
 import java.io.*;
 import java.util.List;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * @author Max Bühmann, Melanie Arnds
  */
@@ -100,46 +102,47 @@ public class ControllerChan {
         MapFull fullMap = MapUtil.createAndFillMap(map);
         startNewGame(mapName, fullMap, players, difficulty);
     }
-    
-    public void startNewGame (String mapName, MapFull fullMap, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
+
+    public void startNewGame(String mapName, MapFull fullMap, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
 
         this.currentAction = pair.getRight();
+        debug("initial players: " + currentAction.getPlayers().size());
         aiController.connectTrackers();
         aiController.setAI(GameAI.DECISION_BASED_AI);
 
         this.currentAction = pair.getLeft().finishAction(this.currentAction);
-        
+
         this.javaGame = pair.getLeft();
 
         this.inGameViewAUI.refreshSome();
         //6 MapTiles zu beginn fluten
         CardStack<FloodCard> floodCardCardStack = this.getCurrentAction().getFloodCardStack();
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             //TODO: Wait
             //try{ Thread.sleep(1000); }catch(InterruptedException ignored){}
-            
+
             MapFull map = this.getCurrentAction().getMap();
             FloodCard floodCard = floodCardCardStack.draw(true);
             floodCard.flood(map);
-            
+
             this.inGameViewAUI.refreshMapTile(map.getPositionForTile(floodCard.getTile()), map.get(floodCard.getTile()));
             this.inGameViewAUI.refreshFloodStack(floodCardCardStack);
-             
+
         }
         //player auf map packen
         this.currentAction.getPlayers().forEach(player -> {
             this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType());
         });
-        
+
         //2 Artefaktkarten ziehen
         this.currentAction.getPlayers().forEach(player -> {
-            
+
             player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
             player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
             this.inGameViewAUI.refreshHand(player.getType(), player.getHand());
         });
-        
+
     }
 
     /**
@@ -176,8 +179,8 @@ public class ControllerChan {
         }
     }
 
-    public void loadReplay(String replayName){
-        while(this.javaGame.canUndo()) {
+    public void loadReplay(String replayName) {
+        while (this.javaGame.canUndo()) {
             this.javaGame.undoAction();
         }
         this.gameName = replayName;
@@ -210,10 +213,10 @@ public class ControllerChan {
                     javaGame.undoAction();
                 }
                 try (FileOutputStream fileOutputStreamReplay =
-                     new FileOutputStream(HighScoresController.REPLAY_FOLDER + this.gameName + ".replay");
+                             new FileOutputStream(HighScoresController.REPLAY_FOLDER + this.gameName + ".replay");
                      ObjectOutputStream objectOutputStreamReplay =
-                     new ObjectOutputStream(fileOutputStreamReplay)) {
-                            objectOutputStream.writeObject(javaGame);
+                             new ObjectOutputStream(fileOutputStreamReplay)) {
+                    objectOutputStream.writeObject(javaGame);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -272,7 +275,8 @@ public class ControllerChan {
         this.currentAction = this.javaGame.finishAction(this.currentAction);
         return this.currentAction;
     }
-    void setAction(Action action){
+
+    void setAction(Action action) {
         this.currentAction = action;
     }
 

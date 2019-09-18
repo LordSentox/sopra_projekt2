@@ -1,9 +1,9 @@
 package de.sopra.javagame.model;
 
+import de.sopra.javagame.util.MapFull;
+
 import java.io.Serializable;
 import java.util.Objects;
-
-import de.sopra.javagame.util.MapFull;
 
 import static de.sopra.javagame.model.MapTileState.*;
 
@@ -27,9 +27,8 @@ public class FloodCard implements Copyable<FloodCard>, Serializable {
      * Ruft Methode {@link MapTile#flood()} auf. Diese setzt das der FloodCard
      * entsprechende MapTile von DRY auf FLOODED oder von FLOODED auf GONE
      *
-     * @throws IllegalStateException
-     *             wenn das Feld bereits versunken war. Die Karte hätte dann aus
-     *             dem Stapel entfernt werden sollen.
+     * @throws IllegalStateException wenn das Feld bereits versunken war. Die Karte hätte dann aus
+     *                               dem Stapel entfernt werden sollen.
      */
     public void flood(MapFull map) throws IllegalStateException {
         // Überprüfe, ob das Feld bereits entfernt wurde. Diese Karte hätte dann

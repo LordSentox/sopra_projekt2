@@ -2,7 +2,6 @@ package de.sopra.javagame.control.ai1;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
-import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
 
 import java.util.LinkedList;
@@ -45,7 +44,7 @@ public class Prioritizer implements AIProcessor {
     }
 
     @Override
-    public ActionQueue getTip(AIController control) {
+    public SimpleAction getTip(AIController control) {
         return null; //TODO
     }
 

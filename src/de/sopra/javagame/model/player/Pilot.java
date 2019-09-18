@@ -48,9 +48,8 @@ public class Pilot extends Player {
      * Spieler sich regelkonform hinbewegen darf. Wenn specialActive, dann
      * werden alle {@link MapTile} der Liste hinzugefügt, die nicht GONE sind
      *
-     * @param specialActive
-     *            gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja,
-     *            wird die Liste um zusätzlich erreichbare Punkte erweitert
+     * @param specialActive gibt an, ob eine Spezialfähigkeit aktiviert wurde, wenn ja,
+     *                      wird die Liste um zusätzlich erreichbare Punkte erweitert
      * @return das erstellte Listli
      */
     @Override
@@ -75,11 +74,9 @@ public class Pilot extends Player {
      * move bewegt den Spieler zur angegebenen destination, zieht dabei eine
      * Aktion ab, wenn costsAction true ist
      *
-     * @param destination
-     *            Zielkoordinaten
-     * @param costsAction
-     *            wenn false, wird keine Action abgezogen, wenn true, wird eine
-     *            abgezogen
+     * @param destination Zielkoordinaten
+     * @param costsAction wenn false, wird keine Action abgezogen, wenn true, wird eine
+     *                    abgezogen
      * @return false, wenn es einen Fehler gab, true, sonst
      */
     @Override
@@ -87,7 +84,7 @@ public class Pilot extends Player {
         if (!specialActive || !this.hasSpecialMove)
             return super.move(destination, costsAction, specialActive);
 
-        List<Point> legelMovement = legalMoves(specialActive);
+        List<Point> legelMovement = legalMoves(true);
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {
             return false;
         } else {
@@ -104,7 +101,7 @@ public class Pilot extends Player {
     public boolean hasSpecialMove() {
         return hasSpecialMove;
     }
-   
+
     @Override
     public Player copy() {
         Pilot player = new Pilot(CopyUtil.copy(this.name), new Point(position), null);
