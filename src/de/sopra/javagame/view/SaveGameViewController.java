@@ -13,6 +13,7 @@ import com.jfoenix.controls.JFXTextField;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.GameWindow;
 import de.sopra.javagame.view.abstraction.ViewState;
+import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,9 +31,9 @@ public class SaveGameViewController extends AbstractViewController {
     @FXML
     JFXListView<String> loadGameListViewLabel;
     @FXML
-    Label loadMapViewLabel;
+    Label loadMapViewLabel, notificationLabel;
     @FXML
-    JFXTextField saveGameTextField, notificationLabel;
+    JFXTextField saveGameTextField;
     
     private Stage modalCopy;
 
@@ -52,7 +53,7 @@ public class SaveGameViewController extends AbstractViewController {
         }
         final int NO_SAVE_FILES = 0;
         loadMapViewLabel.setDisable(loadFiles.length == NO_SAVE_FILES);
-
+        notificationLabel.setTextFill(EditorMapPane.RED);
     }
 
 
@@ -67,10 +68,11 @@ public class SaveGameViewController extends AbstractViewController {
     public void onSaveGameClicked(){
         String selectedGame = saveGameTextField.getText();
         if(selectedGame.isEmpty()){
-            notificationLabel.setText("Das Feld ist nicht ausgefüllt");
+            showNotificatoin("Das Feld ist nicht ausgefüllt");
             return;
         }
-        getGameWindow().getControllerChan().loadSaveGame(selectedGame);
+        getGameWindow().getControllerChan().saveGame(selectedGame);
+        
     }
     
     public static void openModal(GameWindow window) throws IOException {
@@ -93,6 +95,9 @@ public class SaveGameViewController extends AbstractViewController {
         stage.requestFocus();
     }
     
+    public void showNotificatoin(String notification) {
+        notificationLabel.setText(notification);
+    }
     
 
 }
