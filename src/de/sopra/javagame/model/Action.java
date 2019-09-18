@@ -168,7 +168,6 @@ public class Action implements Copyable<Action>, Serializable {
             action.players.set(i, p);
         }
         //TODO darf nicht initial auf FLOOD stehen, sondern soll ordentlich die 6 felder zu beginn fluten
-        
         action.state = TurnState.PLAYER_ACTION;
         
         return action;

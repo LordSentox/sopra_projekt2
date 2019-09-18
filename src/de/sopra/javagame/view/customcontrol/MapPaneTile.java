@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
@@ -112,6 +113,10 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     public void dehighlightAll() {
         this.canDrain = false;
         this.canMoveTo = false;
+        playersOnTile.forEach(type -> {
+            PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
+            view.dehighlight();
+        });
         updateHighlight();
     }
 
@@ -141,6 +146,13 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         }
         return false;
     }
+    
+    public void highlightPlayerForPlayerType (PlayerType type) {
+        if (playersOnTile.contains(type)) {
+            PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
+            view.highlight();
+        }
+    }
 
     @Override
     public void handle(MouseEvent event) {
@@ -158,6 +170,10 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
             contextPicker.show(event);
         }
 
+    }
+    
+    public void setState(MapTileState state){
+        base.showImage(state);
     }
 
 }

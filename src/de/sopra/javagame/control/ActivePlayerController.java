@@ -226,15 +226,15 @@ public class ActivePlayerController {
      * Zeigt einen Spielhinweis an. Danach wird dieses Spiel nicht mehr in die
      * Bestenliste aufgenommen
      * 
-     * @param playerType
+     * @param player
      *            welche Spieler ruft showTip() auf.
      *
      * @see HighScore
      */
-    public void showTip(PlayerType playerType) {
+    public void showTip(Player player) {
         Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().markCheetah();
-        ActionQueue tipps = controllerChan.getAiController().getTip(() -> currentAction.getPlayer(playerType));
+        ActionQueue tipps = controllerChan.getAiController().getTip(() -> player);
         
         controllerChan.getInGameViewAUI().showTip(tipps);
     }

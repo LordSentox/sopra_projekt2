@@ -8,3 +8,4 @@ target
 out
 src/de/sopra/javagame/application/Yeet.java
 *.score
+/data/settings

@@ -62,11 +62,8 @@ public class InGameSettingsViewController extends AbstractViewController {
         stage.initOwner(window.getMainStage());
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.WINDOW_MODAL);
-        stage.setAlwaysOnTop(true);
         iInGameSettingsViewController.modalCopy = stage;
         stage.show();
-        window.getMainStage().toBack();
-        mainPane.toBack();
         stage.toFront();
         stage.requestFocus();
     }
