@@ -61,9 +61,9 @@ public class TurnDrainTempleMapTileOfUndiscoveredArtifact extends Decision {
     @Override
     public ActionQueue act() {
         if(!(player().getType()==PlayerType.ENGINEER)){
-            return startActionQueue().engineersDrain(drainPoint);
+            return startActionQueue().drain(drainPoint);
         }
-        return startActionQueue().drain(drainPoint);
+        return startActionQueue().engineersDrain(drainPoint);
     }
 
 }

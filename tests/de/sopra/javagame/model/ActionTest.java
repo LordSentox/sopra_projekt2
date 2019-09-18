@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -68,7 +67,7 @@ public class ActionTest {
     }
 
     @Test
-    public void serialize() throws IOException {
+    public void serialize() {
         Action action = Action.createInitialAction(Difficulty.NOVICE,
                 Arrays.asList(new Triple<>(PlayerType.EXPLORER, "Forscher", false),
                         new Triple<>(PlayerType.NAVIGATOR, "Navigator", true),

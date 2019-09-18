@@ -107,6 +107,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     }
 
+
     private void initArtifactsFound() {
         fireArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.FIRE));
         fireArtefactImageView.setFitWidth(ARTIFACT_SIZE);
@@ -214,11 +215,18 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onSettingsClicked() {
+
 //        try {
 //            SettingsViewController.openModal(getGameWindow());
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+
+        try {
+            InGameSettingsViewController.openModal(getGameWindow());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
         getGameWindow().getControllerChan().getActivePlayerController().showTip(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer());
     }
