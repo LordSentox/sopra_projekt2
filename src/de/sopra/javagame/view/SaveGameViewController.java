@@ -88,6 +88,7 @@ public class SaveGameViewController extends AbstractViewController {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.WINDOW_MODAL);
         saveGameViewController.modalCopy = stage;
+        stage.setAlwaysOnTop(true);
         stage.show();
         stage.toFront();
         stage.requestFocus();
