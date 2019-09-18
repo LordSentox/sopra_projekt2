@@ -47,6 +47,7 @@ public class GameFlowController {
                 } else {
                     artifactCardStack.discard(currentCard);
                 }
+                controllerChan.getInGameViewAUI().refreshWaterLevel(waterLevel.getLevel());
             } else {
                 activePlayer.getHand().add(currentCard);
 

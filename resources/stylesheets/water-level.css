@@ -9,7 +9,7 @@
 .water-level-border-circle {
     -fx-fill: transparent;
     -fx-opacity: 0.8;
-    -fx-stroke-width: 5.0px;
+    -fx-stroke-width: 0.4em;
 }
 
 
@@ -30,6 +30,11 @@
     -fx-fill: #000;
     -fx-stroke-width: 3px;
 }
+
+.water-level-container-outer > .cards-drawn-label {
+    -fx-font-weight: bold;
+}
+
 
 
 .l-water {

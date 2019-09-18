@@ -17,7 +17,7 @@ public class WaterLevel implements Copyable<WaterLevel>, Serializable {
     /**
      * Hat am jeweiligen index die Anzahl der zu ziehenden Karten
      */
-    private static final int[] DRAW_AMOUNT_BY_LEVEL = new int[]{2, 2, 3, 3, 3, 4, 4, 5, 5, 6}; // TODO
+    public static final int[] DRAW_AMOUNT_BY_LEVEL = new int[]{2, 2, 3, 3, 3, 4, 4, 5, 5, 6}; // TODO
 
     /**
      * Das maximale Wasserlevel
