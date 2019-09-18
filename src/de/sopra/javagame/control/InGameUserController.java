@@ -242,7 +242,7 @@ public class InGameUserController {
         //Falls alle Bedingungen korrekt wirf gewählte Karte ab
         currentAction.getArtifactCardStack().discard(handCards.get(handCardIndex));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
-        controllerChan.finishAction();
+        currentAction = controllerChan.finishAction();
 
         // Wenn der Spieler gerade Artefaktkarten gezogen und abgeworfen hat muss nun mit der Flutphase fortgefahren
         // werden.
