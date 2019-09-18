@@ -2,7 +2,10 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.model.player.Courier;
+import de.sopra.javagame.model.player.Explorer;
+import de.sopra.javagame.model.player.Navigator;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -96,7 +99,6 @@ public class InGameUserControllerTest {
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
-        ;
 
         handCardsExpected = new ArrayList<>();
         explorer.getHand().add(fireCard);

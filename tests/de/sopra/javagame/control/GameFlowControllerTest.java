@@ -17,7 +17,7 @@ public class GameFlowControllerTest {
     MapTile dry;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         controllerChan = TestDummy.getDummyControllerChan();
         inGameViewAUI = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
         gameFlowController = controllerChan.getGameFlowController();

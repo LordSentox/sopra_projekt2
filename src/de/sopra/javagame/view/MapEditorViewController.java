@@ -52,10 +52,10 @@ public class MapEditorViewController extends AbstractViewController implements M
         mainPane.setFitHeight(1200);
         
         showUsedTiles.setFont(new Font(60));
-        showUsedTiles.setTextFill(editorMapPane.WHITE);
+        showUsedTiles.setTextFill(EditorMapPane.WHITE);
         
         labelShowMessages.setFont(new Font(30));
-        labelShowMessages.setTextFill(editorMapPane.WHITE);
+        labelShowMessages.setTextFill(EditorMapPane.WHITE);
         labelShowMessages.setFont(new Font(20));
         
         showUsedTiles.setTextAlignment(TextAlignment.RIGHT);
@@ -63,9 +63,7 @@ public class MapEditorViewController extends AbstractViewController implements M
         editorMapPane.setMapEditorViewController(this);
         editorMapPane.setTileCountLabel(showUsedTiles);
         chosenMapName = "";
-        comboBoxChooseGivenMap.valueProperty().addListener((options , oldValue, newValue) -> {
-            chosenMapName = newValue;
-        });
+        comboBoxChooseGivenMap.valueProperty().addListener((options , oldValue, newValue) -> chosenMapName = newValue);
 
         fillComboBox();
 

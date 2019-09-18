@@ -8,7 +8,6 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 

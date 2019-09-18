@@ -128,9 +128,7 @@ public class ControllerChan {
              
         }
         //player auf map packen
-        this.currentAction.getPlayers().forEach(player -> {
-            this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType());
-        });
+        this.currentAction.getPlayers().forEach(player -> this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType()));
         
         //2 Artefaktkarten ziehen
         this.currentAction.getPlayers().forEach(player -> {

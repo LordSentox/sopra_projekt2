@@ -68,21 +68,18 @@ public class ActionPicker extends CirclePopupMenu {
 
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
-                EventHandler<ActionEvent> moveHandler = new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        //TODO
-                        picker.mapPaneTile.getControl()
-                                .getGameWindow()
-                                .getControllerChan()
-                                .getActivePlayerController()
-                                .move(picker
-                                        .mapPaneTile
-                                        .getPosition(), picker
-                                        .mapPaneTile
-                                        .getControl()
-                                        .isSpecialActive());
-                    }
+                EventHandler<ActionEvent> moveHandler = e -> {
+                    //TODO
+                    picker.mapPaneTile.getControl()
+                            .getGameWindow()
+                            .getControllerChan()
+                            .getActivePlayerController()
+                            .move(picker
+                                    .mapPaneTile
+                                    .getPosition(), picker
+                                    .mapPaneTile
+                                    .getControl()
+                                    .isSpecialActive());
                 };
                 CustomMenuItem moveButtonMenuItem = new CustomMenuItem(new Button("move"));
                 moveButtonMenuItem.setGraphic(new ImageView(TextureLoader.getMove()));
@@ -94,12 +91,7 @@ public class ActionPicker extends CirclePopupMenu {
         DRAIN {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
-                EventHandler<ActionEvent> drainHandler = new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().drain(picker.mapPaneTile.getPosition());
-                    }
-                };
+                EventHandler<ActionEvent> drainHandler = e -> picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().drain(picker.mapPaneTile.getPosition());
                 CustomMenuItem drainButtonMenuItem = new CustomMenuItem(new Button("drain"));
                 drainButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
                 drainButtonMenuItem.setOnAction(drainHandler);
@@ -134,11 +126,8 @@ public class ActionPicker extends CirclePopupMenu {
         GIVE_CARD {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
-                EventHandler<ActionEvent> giveCardHandler = new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
+                EventHandler<ActionEvent> giveCardHandler = e -> {
 //                        TODO picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().
-                    }
                 };
                 CustomMenuItem giveCardButtonMenuItem = new CustomMenuItem(new Button("move"));
                 giveCardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getGiveCard()));
@@ -150,12 +139,7 @@ public class ActionPicker extends CirclePopupMenu {
         COLLECT_ARTIFACT {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
-                EventHandler<ActionEvent> findArtifactHandler = new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().collectArtifact();
-                    }
-                };
+                EventHandler<ActionEvent> findArtifactHandler = e -> picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().collectArtifact();
                 CustomMenuItem findArtifactButtonMenuItem = new CustomMenuItem(new Button("move"));
                 findArtifactButtonMenuItem.setGraphic(new ImageView(TextureLoader.getFindArtifact()));
                 findArtifactButtonMenuItem.setOnAction(findArtifactHandler);
