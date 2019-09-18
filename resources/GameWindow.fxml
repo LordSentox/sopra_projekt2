@@ -57,7 +57,7 @@
    		
    		<GridPane fx:id="floodCardDiscardGridPane" layoutX="200" layoutY="960.0"/>
    		
-   		<WaterLevelView fx:id="waterLevelView" layoutX="375" layoutY="850"/>
+   		<WaterLevelView fx:id="waterLevelView" layoutX="377" layoutY="850"/>
 
    		<Button fx:id="artifactCardDrawStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="20.0" layoutY="720" visible="false" disable="true" onAction="#onArtifactCardDrawStackClicked"/>
    		<Button fx:id="artifactCardDiscarStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="200.0" layoutY="720" visible="false" onAction="#onArtifactCardDiscardStackClicked"/>
