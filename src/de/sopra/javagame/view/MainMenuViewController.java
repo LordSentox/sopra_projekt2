@@ -62,7 +62,8 @@ public class MainMenuViewController extends AbstractViewController {
         changeState(ViewState.MENU, ViewState.GAME_PREPARATIONS);
     }
 
-    public void onLoadGameClicked() {
+    public void onLoadGameClicked() throws IOException {
+        ((LoadGameViewController)getGameWindow().getView(LOAD_GAME)).init();
         changeState(ViewState.MENU, ViewState.LOAD_GAME);
 
     }
