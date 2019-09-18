@@ -73,16 +73,16 @@ public class EditorMapPane extends GridPane {
             setBooleanTile(new Point(x, y), true);
         } else if (e.getButton() == MouseButton.SECONDARY && booleanMap.get(x, y)) {
             setBooleanTile(new Point(x, y), false);
-        }       
+        }
 
         countTiles();
     }
 
     private void countTiles() {
         int count = (int) getBooleanMap().stream().filter(element -> element).count();
-        if (showUsedTilesLabel != null){
-        showUsedTilesLabel.setText(count + "/" + VALID_MAP_TILE_COUNT);
-        showUsedTilesLabel.setTextFill(count == VALID_MAP_TILE_COUNT ? GREEN : count < VALID_MAP_TILE_COUNT ? WHITE : RED);
+        if (showUsedTilesLabel != null) {
+            showUsedTilesLabel.setText(count + "/" + VALID_MAP_TILE_COUNT);
+            showUsedTilesLabel.setTextFill(count == VALID_MAP_TILE_COUNT ? GREEN : count < VALID_MAP_TILE_COUNT ? WHITE : RED);
         }
     }
 
@@ -121,6 +121,6 @@ public class EditorMapPane extends GridPane {
 
     public void setTileCountLabel(Label showUsedTiles) {
         this.showUsedTilesLabel = showUsedTiles;
-        
+
     }
 }

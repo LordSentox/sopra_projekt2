@@ -94,8 +94,8 @@ public class Diver extends Player {
      * Bedingung im Zielfeld gegeben ist.
      *
      * @param reachable Der reachable-Array, der gesetzt werden soll
-     * @param around Der Startpunkt im reachable-Array, um den herum gesetzt werden soll
-     * @param premise Die Prämisse, die auf dem Zielfeld erfüllt sein muss.
+     * @param around    Der Startpunkt im reachable-Array, um den herum gesetzt werden soll
+     * @param premise   Die Prämisse, die auf dem Zielfeld erfüllt sein muss.
      */
     private void setTrueAroundWithTargetPremise(boolean[][] reachable, Point around, Function<MapTile, Boolean> premise) {
         List<Point> neighbours = around.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X, Map.SIZE_Y));
@@ -111,7 +111,7 @@ public class Diver extends Player {
      * ob sich etwas geändert hat
      *
      * @param reachable Der reachable-Array, der gesetzt werden soll
-     * @param around Der Startpunkt im reachable-Array, um den herum gesetzt werden soll
+     * @param around    Der Startpunkt im reachable-Array, um den herum gesetzt werden soll
      * @return True, wenn mindestens eines der Felder umgesetzt wurde, sonst false
      */
     private boolean setTrueAround(boolean[][] reachable, Point around) {

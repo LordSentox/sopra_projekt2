@@ -18,7 +18,7 @@ public class JavaGame implements Serializable {
 
     private static final long serialVersionUID = -5194350096601415362L;
     public static final int MAP_SIZE_X = 10;
-    public static final int MAP_SIZE_Y =  7;
+    public static final int MAP_SIZE_Y = 7;
 
 
     //region Attribute
@@ -88,7 +88,7 @@ public class JavaGame implements Serializable {
         }
 
         Action initialAction = Action.createInitialAction(difficulty, players, map);
-        
+
         return new Pair<>(game, initialAction);
     }
 
@@ -101,8 +101,8 @@ public class JavaGame implements Serializable {
         while (!redoActions.empty()) {
             redoActions.pop();
         }
-        if (currentAction.isGameEnded() || currentAction.isGameWon() || currentAction.getWaterLevel().isGameLost()){
-         return null;
+        if (currentAction.isGameEnded() || currentAction.isGameWon() || currentAction.getWaterLevel().isGameLost()) {
+            return null;
         }
 
         return currentAction.copy();
@@ -174,9 +174,13 @@ public class JavaGame implements Serializable {
         return undoActions.peek();
     }
 
-    public int getUndoStackSize() {return this.undoActions.size();}
+    public int getUndoStackSize() {
+        return this.undoActions.size();
+    }
 
-    public int getRedoStackSize() {return this.redoActions.size();}
+    public int getRedoStackSize() {
+        return this.redoActions.size();
+    }
 
     public boolean canRedo() {
         return !redoActions.isEmpty();

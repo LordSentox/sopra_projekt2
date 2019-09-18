@@ -42,7 +42,7 @@ public class MapBlackWhite extends Map<Boolean> {
         return atarashii;
     }
 
-    public String toString () {
+    public String toString() {
         StringBuilder mapString = new StringBuilder();
         for (Boolean[] row : raw) {
             for (Boolean tile : row) {

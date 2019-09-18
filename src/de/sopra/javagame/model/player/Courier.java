@@ -35,7 +35,7 @@ public class Courier extends Player {
     @Override
     public List<PlayerType> legalReceivers() {
         List<PlayerType> receivers = new ArrayList<>();
-        for(Player currentPlayer : action.getPlayers()) {
+        for (Player currentPlayer : action.getPlayers()) {
             if (currentPlayer.getType() != this.getType()) {
                 receivers.add(currentPlayer.getType());
             }

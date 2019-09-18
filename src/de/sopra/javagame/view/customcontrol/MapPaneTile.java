@@ -121,7 +121,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     }
 
     private void updateHighlight() {
-        if(this.base == null) return;
+        if (this.base == null) return;
         if (isHighlighted())
             this.base.highlight();
         else this.base.dehighlight();
@@ -146,8 +146,8 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         }
         return false;
     }
-    
-    public void highlightPlayerForPlayerType (PlayerType type) {
+
+    public void highlightPlayerForPlayerType(PlayerType type) {
         if (playersOnTile.contains(type)) {
             PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
             view.highlight();
@@ -171,8 +171,8 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         }
 
     }
-    
-    public void setState(MapTileState state){
+
+    public void setState(MapTileState state) {
         base.showImage(state);
     }
 

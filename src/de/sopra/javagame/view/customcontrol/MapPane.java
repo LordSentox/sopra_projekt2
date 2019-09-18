@@ -128,7 +128,7 @@ public class MapPane extends GridPane {
 
     public void setMapTile(Point position, MapTile tile) {
         MapPaneTile pane = this.getMapStackPane(position);
-        
+
         pane.setState(tile.getState());
     }
 

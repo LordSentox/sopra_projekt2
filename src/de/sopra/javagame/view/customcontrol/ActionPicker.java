@@ -52,13 +52,16 @@ public class ActionPicker extends CirclePopupMenu {
     public void setMapPaneTile(MapPaneTile mapPaneTile) {
         this.mapPaneTile = mapPaneTile;
     }
+
     public void setArtifactCardType(ArtifactCardType type) {
-        this.cardType = type;   
+        this.cardType = type;
     }
-    public void setCardIndex(int index){
+
+    public void setCardIndex(int index) {
         this.cardIndex = index;
     }
-    public void setInGameViewController(InGameViewController igvc){
+
+    public void setInGameViewController(InGameViewController igvc) {
         this.controller = igvc;
     }
 
@@ -161,16 +164,16 @@ public class ActionPicker extends CirclePopupMenu {
                 discardButtonMenuItem.setOnAction(discardHandler);
 
                 return discardButtonMenuItem;
-            } 
+            }
         },
-        PLAY_CARD{
+        PLAY_CARD {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> playCardHandler = new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
                         picker.controller.onSpecialCardClicked(picker.cardType, picker.cardIndex, picker.delegatingPlayer);
-                        
+
                     }
                 };
                 CustomMenuItem playcardButtonMenuItem = new CustomMenuItem(new Button("special"));
@@ -178,9 +181,8 @@ public class ActionPicker extends CirclePopupMenu {
                 playcardButtonMenuItem.setOnAction(playCardHandler);
 
                 return playcardButtonMenuItem;
-            } 
+            }
         }
-        ;
 
     }
 

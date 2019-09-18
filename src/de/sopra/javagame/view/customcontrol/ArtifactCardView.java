@@ -1,8 +1,5 @@
 package de.sopra.javagame.view.customcontrol;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.view.InGameViewController;
@@ -14,11 +11,14 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class ArtifactCardView extends CardView implements EventHandler<MouseEvent>, Highlightable {
 
     private ArtifactCardType type;
     private int handCardIndex;
-    private  InGameViewController controller;
+    private InGameViewController controller;
     private boolean selected;
     private PlayerType ownerType;
 
@@ -49,13 +49,16 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
-    public void setOwner(PlayerType owner){
+
+    public void setOwner(PlayerType owner) {
         this.ownerType = owner;
     }
-    public void setInGameViewController(InGameViewController igvc){
+
+    public void setInGameViewController(InGameViewController igvc) {
         this.controller = igvc;
     }
-    public InGameViewController getInGameViewController(){
+
+    public InGameViewController getInGameViewController() {
         return this.controller;
     }
 
@@ -64,7 +67,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
         if (isFrontShown()) {
             selected = !selected;
             updateHighlight();
-            if(!(handCardIndex == -1)){
+            if (!(handCardIndex == -1)) {
                 ActionPicker ap = new ActionPicker(this, MouseButton.NONE);
                 ap.setCardIndex(handCardIndex);
                 ap.setArtifactCardType(this.getType());
@@ -77,7 +80,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
                 if (buttons.size() > 0) {
                     ap.init(buttons.toArray(new ActionButton[buttons.size()]));
                     ap.show(event);
-                }                
+                }
             }
         }
     }

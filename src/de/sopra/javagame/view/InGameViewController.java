@@ -346,11 +346,11 @@ public class InGameViewController extends AbstractViewController implements InGa
             List<Player> players = action.getPlayers();
             GridPane pane = null;
 
-            if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player)){
+            if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player)) {
                 pane = handOneCardGridPane;
-            }else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player)){
+            } else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player)) {
                 pane = handTwoCardGridPane;
-            }else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player)){
+            } else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player)) {
                 pane = handThreeCardGridPane;
             }
 

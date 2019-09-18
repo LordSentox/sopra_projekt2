@@ -28,6 +28,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     ImageView mainPane;
     private Stage modalCopy;
 
+    @SuppressWarnings("Duplicates")
     public void init() {
         effectVolumeSlider.getStylesheets().add(getClass().getResource("/stylesheets/sliders.css").toExternalForm());
         musicVolumeSlider.getStylesheets().add(getClass().getResource("/stylesheets/sliders.css").toExternalForm());
@@ -47,7 +48,8 @@ public class InGameSettingsViewController extends AbstractViewController {
         settings.devToolsEnabled().unbind();
         settings.devToolsEnabled().bind(developerToolsCheckbox.selectedProperty());
     }
-    
+
+    @SuppressWarnings("Duplicates")
     public static void openModal(GameWindow window) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SettingsViewController.class.getResource("/InGameSettings.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -70,11 +72,10 @@ public class InGameSettingsViewController extends AbstractViewController {
 
 
     public void onCloseClicked() {
-        if(modalCopy == null) {
+        if (modalCopy == null) {
             getGameWindow().getSettings().save();
             changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
-        }
-        else modalCopy.close();
+        } else modalCopy.close();
     }
 
     public void onSaveClicked() {
@@ -83,9 +84,9 @@ public class InGameSettingsViewController extends AbstractViewController {
     }
 
     public void onBackToMenuClicked() {
-            getGameWindow().getSettings().save();
-            modalCopy.close();
-            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
-        
+        getGameWindow().getSettings().save();
+        modalCopy.close();
+        changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
+
     }
 }
