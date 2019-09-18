@@ -178,7 +178,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         //control.getGameWindow().getControllerChan().getInGameUserController().playHelicopterCard();
 
         // Wenn gerade eine Helikopterkarte gespielt wird, und das Tile angeklickt wird, versuche abzuheben
-        if (this.getControl().getHelicopterHelper() != null) {
+        if (this.getControl().getHelicopterHelper() != null && this.getControl().getHelicopterHelper().getDestinationTile() != this) {
             this.getControl().getHelicopterHelper().setDestinationTile(this);
             this.getControl().tryPlayHelicopterCard();
         }
