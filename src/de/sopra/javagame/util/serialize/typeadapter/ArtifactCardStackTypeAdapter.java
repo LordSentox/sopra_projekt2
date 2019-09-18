@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("Duplicates")
 public class ArtifactCardStackTypeAdapter implements JsonSerializer<CardStack<ArtifactCard>>, JsonDeserializer<CardStack<ArtifactCard>> {
     @Override
     public JsonElement serialize(CardStack<ArtifactCard> src, Type typeOfSrc, JsonSerializationContext context) {
