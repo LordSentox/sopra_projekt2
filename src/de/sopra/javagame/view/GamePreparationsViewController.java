@@ -76,7 +76,7 @@ public class GamePreparationsViewController extends AbstractViewController {
     public static final String DEV_MAP_FOLDER = "resources/ai_tournament/maps/";
     public static final String DEV_ARTIFACT_STACK_FOLDER = "resources/ai_tournament/artifact_stack/";
     public static final String DEV_FLOOD_STACK_FOLDER = "resources/ai_tournament/flood_stack/";
-    final int DOT_MAP_ENDING_LENGTH = 4;
+    final int DOT_EXTMAP_ENDING_LENGTH = 7;
     final int DOT_CSV_ENDING_LENGTH = 4;
 
     public void init() {
@@ -119,7 +119,7 @@ public class GamePreparationsViewController extends AbstractViewController {
 
         for (String currentName : devFloodStackNames) {
             if (!currentName.startsWith(".")) {
-                chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_MAP_ENDING_LENGTH));
+                chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_EXTMAP_ENDING_LENGTH));
             }
             chooseMapComboBox.getItems().sort(null);
         }
@@ -135,7 +135,7 @@ public class GamePreparationsViewController extends AbstractViewController {
 
         for (String currentName : devFloodStackNames) {
             if (!currentName.startsWith(".")) {
-            chooseDeveloperMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_MAP_ENDING_LENGTH ));
+            chooseDeveloperMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_EXTMAP_ENDING_LENGTH ));
             }
             chooseDeveloperMapComboBox.getItems().sort(null);
         } 
