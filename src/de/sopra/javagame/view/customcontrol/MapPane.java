@@ -53,8 +53,8 @@ public class MapPane extends GridPane {
                     pane.toBack();
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 } else {
-                    ImageView v = new ImageView(TextureLoader.getSea1());
-                    v.setPreserveRatio(true);
+                    ImageView v = new ImageView(TextureLoader.getWaterTile());
+                    v.setPreserveRatio(false);
                     v.setFitWidth(TILE_SIZE);
                     v.setFitHeight(TILE_SIZE);
                     MapPaneTile pane = new MapPaneTile(v);
