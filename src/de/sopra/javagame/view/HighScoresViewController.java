@@ -60,10 +60,6 @@ public class HighScoresViewController extends AbstractViewController implements 
             }
         }
 
-        scoreFile = new File(HighScoresController.SCORE_FOLDER);
-        scoreFiles = scoreFile.listFiles(file -> !file.getName().startsWith(".")
-                && file.getName().endsWith(".score") && file.getName().length() > 6);
-        scoreNames = Arrays.stream(scoreFiles).map(File::getName).collect(Collectors.toList());
         for (String currentName : scoreNames) {
             mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 6));
             mapSelectionComboBox.getItems().sort(Comparator.naturalOrder());
