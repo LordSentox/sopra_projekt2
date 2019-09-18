@@ -101,7 +101,7 @@ public class ControllerChanTest {
         Assert.assertTrue("Das alte Spiel hätte nicht gelöscht sondern gespeichert werden sollen", saveGame.exists());
 
         ControllerChan newControllerChan = TestDummy.getDummyControllerChan();
-        newControllerChan.loadSaveGame(controllerChan.getGameName());
+        newControllerChan.loadSaveGame(controllerChan.getGameName(), false);
         JavaGame loadedGame = newControllerChan.getJavaGame();
         Assert.assertEquals("Das geladene Spiel hätte dem vorher noch aktiven alten Spiel entsprechen sollen", oldGame, loadedGame);
 
@@ -137,7 +137,7 @@ public class ControllerChanTest {
                 saveGame.exists());
 
         ControllerChan newControllerChan = TestDummy.getDummyControllerChan();
-        newControllerChan.loadSaveGame(controllerChan.getGameName());
+        newControllerChan.loadSaveGame(controllerChan.getGameName(), false);
         JavaGame loadedGame = newControllerChan.getJavaGame();
         Assert.assertEquals("Das geladene Spiel sollte dem vorher gespeicherten entsprechen!", oldGame, loadedGame);
         Assert.assertEquals("Der Name des geladenen und gesetzten Spiels sollte dem gespeicherten entsprechen!",
@@ -156,7 +156,7 @@ public class ControllerChanTest {
         saveGame = new File(ControllerChan.SAVE_GAME_FOLDER + controllerChan.getGameName() + ".save");
         replayGame = new File(ControllerChan.REPLAY_FOLDER + controllerChan.getGameName() + ".replay");
         newControllerChan = TestDummy.getDummyControllerChan();
-        newControllerChan.loadSaveGame(controllerChan.getGameName());
+        newControllerChan.loadSaveGame(controllerChan.getGameName(), true);
         JavaGame savedGame = newControllerChan.getJavaGame();
 
         /*
@@ -180,12 +180,12 @@ public class ControllerChanTest {
                 inGameView.getNotifications().contains("Das Spiel muss einen Namen haben!"));
 
         saveGame = new File(ControllerChan.SAVE_GAME_FOLDER + "" + ".save");
-        controllerChan.loadSaveGame(controllerChan.getGameName());
+        controllerChan.loadSaveGame(controllerChan.getGameName(), false);
         Assert.assertTrue("Es hätte eine Meldung an den Benutzer ausgegeben werden sollen",
                 inGameView.getNotifications().contains("Es muss ein Spiel ausgewählt sein"));
 
         saveGame = new File(ControllerChan.SAVE_GAME_FOLDER + "noGame" + ".save");
-        controllerChan.loadSaveGame(controllerChan.getGameName());
+        controllerChan.loadSaveGame(controllerChan.getGameName(), false);
         Assert.assertTrue("Es hätte eine Meldung an den Benutzer ausgegeben werden sollen",
                 inGameView.getNotifications().contains("Die gewählte Datei ist nicht kompatibel oder fehlerhaft."));
 

@@ -220,7 +220,7 @@ public class GameWindow implements NotificationAUI {
      * @param state Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
      */
     void setState(ViewState previous, ViewState state) {
-        if (currentViewState == state)
+        if (currentViewState == state || previous == state)
             return;
 
         if (state == ViewState.CLOSE) {

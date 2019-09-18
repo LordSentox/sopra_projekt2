@@ -15,10 +15,8 @@ public class ActionTypeAdapter implements JsonSerializer<Action>, JsonDeserializ
     @Override
     public JsonElement serialize(Action src, Type typeOfSrc, JsonSerializationContext context) {
         return new JsonParser().parse(new GsonBuilder()
-                .registerTypeAdapter(new TypeToken<CardStack<FloodCard>>() {
-                }.getType(), new FloodCardStackTypeAdapter())
-                .registerTypeAdapter(new TypeToken<CardStack<ArtifactCard>>() {
-                }.getType(), new ArtifactCardStackTypeAdapter())
+                .registerTypeAdapter(new TypeToken<CardStack<FloodCard>>() {}.getType(), new FloodCardStackTypeAdapter())
+                .registerTypeAdapter(new TypeToken<CardStack<ArtifactCard>>() {}.getType(), new ArtifactCardStackTypeAdapter())
                 .registerTypeAdapter(MapTile.class, new MapTileTypeAdapter())
                 .create().toJson(src));
     }
@@ -27,10 +25,8 @@ public class ActionTypeAdapter implements JsonSerializer<Action>, JsonDeserializ
     public Action deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         Action action = new GsonBuilder()
                 .registerTypeAdapter(Player.class, new PlayerTypeAdapter())
-                .registerTypeAdapter(new TypeToken<CardStack<FloodCard>>() {
-                }.getType(), new FloodCardStackTypeAdapter())
-                .registerTypeAdapter(new TypeToken<CardStack<ArtifactCard>>() {
-                }.getType(), new ArtifactCardStackTypeAdapter())
+                .registerTypeAdapter(new TypeToken<CardStack<FloodCard>>() {}.getType(), new FloodCardStackTypeAdapter())
+                .registerTypeAdapter(new TypeToken<CardStack<ArtifactCard>>() {}.getType(), new ArtifactCardStackTypeAdapter())
                 .registerTypeAdapter(MapTile.class, new MapTileTypeAdapter())
                 .create().fromJson(json, Action.class);
         action.getPlayers().forEach(player -> player.setAction(action));

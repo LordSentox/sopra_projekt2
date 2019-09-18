@@ -1,12 +1,5 @@
 package de.sopra.javagame.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 
@@ -25,11 +18,18 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class SaveGameViewController extends AbstractViewController {
     @FXML
     ImageView mainPane;
     @FXML
-    JFXListView<String> loadGameListViewLabel;
+    JFXListView<String> loadMapListView;
     @FXML
     Label loadMapViewLabel, notificationLabel;
     @FXML
@@ -55,8 +55,8 @@ public class SaveGameViewController extends AbstractViewController {
         List<String> loadNames = Arrays.stream(loadFiles).map(File::getName).collect(Collectors.toList());
 
         for (String currentName : loadNames) {
-            loadGameListViewLabel.getItems().addAll(currentName.substring(0, currentName.length() - 5));
-            loadGameListViewLabel.getItems().sort(Comparator.naturalOrder());
+            loadMapListView.getItems().addAll(currentName.substring(0, currentName.length() - 5));
+            loadMapListView.getItems().sort(Comparator.naturalOrder());
             System.out.println(currentName + "\n");
         }
     }
@@ -64,10 +64,7 @@ public class SaveGameViewController extends AbstractViewController {
 
     public void onCloseClicked() {
 //        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
-        
         modalCopy.close();
-
-
     }
     
     public void onSaveGameClicked(){
