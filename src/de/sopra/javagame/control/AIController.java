@@ -313,6 +313,7 @@ public class AIController {
      * @see #getCurrentAction()
      */
     public SimpleAction getTip() {
+        controllerChan.getJavaGame().markCheetah();
         return getTip(() -> getCurrentAction().getActivePlayer());
     }
 

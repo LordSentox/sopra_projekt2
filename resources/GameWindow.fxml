@@ -78,11 +78,11 @@
    		
    		<JFXButton styleClass="mainmenuJFXButton" fx:id="endTurnButton" layoutX="1500.0" layoutY="975.0" text="Zug beenden"  prefHeight="30" prefWidth="155" onAction="#onEndTurnClicked"/>
    		
-   		<JFXButton styleClass="mainmenuJFXButton" fx:id="getHintButton" layoutX="1500.0" layoutY="1025.0" text="Tipp geben" prefHeight="30" prefWidth="155" onAction="#onGetHintClicked"/>   		
+   		<JFXButton styleClass="mainmenuJFXButton" fx:id="getHintButton" layoutX="1500.0" layoutY="1025.0" text="Tipp geben" prefHeight="30" prefWidth="155" onAction="#onMaybeGetHintClicked"/>   		
    		
-   		<JFXButton styleClass="gameWriteBigButton" fx:id="redoButton" layoutX="1500.0" layoutY="1075.0" text="↶" prefHeight="40" prefWidth="45" onAction="#onUndoClicked"/>
+   		<JFXButton styleClass="gameWriteBigButton" fx:id="undoButton" layoutX="1500.0" layoutY="1075.0" text="↶" prefHeight="40" prefWidth="45" onAction="#onMaybeUndoClicked"/>
    		<JFXButton styleClass="gameWriteBigButton" fx:id="settingsButton" layoutX="1555.0" layoutY="1075.0" text="⚙" prefHeight="40" prefWidth="45" onAction="#onSettingsClicked"/>
-   		<JFXButton styleClass="gameWriteBigButton" fx:id="undoButton" layoutX="1610.0" layoutY="1075.0" text="↷" prefHeight="40" prefWidth="45" onAction="#onRedoClicked"/>
+   		<JFXButton styleClass="gameWriteBigButton" fx:id="redoButton" layoutX="1610.0" layoutY="1075.0" text="↷" prefHeight="40" prefWidth="45" onAction="#onRedoClicked"/>
    		
    		<JFXButton styleClass="mainmenuJFXButton" fx:id="pauseButton" layoutX="1500" layoutY="1135" text="▌▌" prefHeight="30" prefWidth="45" onAction="#onPauseClicked"/>
    		<JFXButton styleClass="mainmenuJFXButton" fx:id="playButton" layoutX="1555" layoutY="1135" text="▶" prefHeight="30" prefWidth="45"/>

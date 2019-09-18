@@ -10,6 +10,7 @@ import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
@@ -20,11 +21,13 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -191,11 +194,46 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getGameFlowController().redo();
     }
 
-    public void onGetHintClicked() {
-
+    public void onMaybeGetHintClicked() {
+        if (getGameWindow().getControllerChan().getJavaGame().getIsCheetah()) {
+            getHint();
+        } else {
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
+                    null, 
+                    "Möchtest du dir wirklich einen Tipp anzeigen lassen?", 
+                    "Du wirst dann mit diesem Spiel für immer \n"
+                    + "aus der Highscore-Liste verbannt!");  
+            pack.addButton("Tipp zeigen", () -> getHint());
+            pack.addButton("Abbrechen", () -> {});
+            pack.setAlertType(AlertType.CONFIRMATION);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+        }
+    }
+    
+    private void getHint() {
+        SimpleAction tip = getGameWindow().getControllerChan().getAiController().getTip();
+        getGameWindow().getControllerChan().getInGameViewAUI().showTip(tip);
     }
 
-    public void onUndoClicked() {
+    public void onMaybeUndoClicked() {
+        if (getGameWindow().getControllerChan().getJavaGame().getIsCheetah()) {
+            undo();
+        } else {
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
+                    null, 
+                    "Möchtest du einen Zug rückgängig machen?", 
+                    "Du wirst dann mit diesem Spiel für immer \n"
+                    + "aus der Highscore-Liste verbannt!");  
+            pack.addButton("Rückgängig machen", () -> undo());
+            pack.addButton("Abbrechen", () -> {});
+            pack.setAlertType(AlertType.CONFIRMATION);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+        }
+    }
+    
+    private void undo() {
         //TODO Fenster öffnen, das Bescheid gibt über Löschen aus HighScoreListe
         getGameWindow().getControllerChan().getGameFlowController().undo();
     }
