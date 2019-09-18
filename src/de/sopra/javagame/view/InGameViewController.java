@@ -241,7 +241,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                     drainable.add(map.getPositionForTile(mapTile.getProperties()));
                 }
             });
-            System.out.println("on card clicked: " + card + " " + index + " " + owner);
+            debug("on card clicked: " + card + " " + index + " " + owner);
             drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
         }
     }
@@ -455,11 +455,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
-        System.out.println(actionsLeft);
-        switch (actionsLeft) {
-            case 3:
-                this.rotateTurnSpinner(0);
-                break;
+        debug("remaining actions: " + actionsLeft);
+        switch (actionsLeft) { //3 is covered by default
             case 2:
                 this.rotateTurnSpinner(-60);
                 break;
