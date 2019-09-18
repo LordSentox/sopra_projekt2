@@ -6,6 +6,7 @@ import de.sopra.javagame.util.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * enthält die Informationen über den aktuellen Spielzug des zugehörigen {@link JavaGame}s
@@ -128,10 +129,10 @@ public class Action implements Copyable<Action>, Serializable {
      * @param map        Die Map des Spiels
      */
     public static Action createInitialAction(Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
-        if (map == null || difficulty == null || players == null)
+        if (Boolean.logicalOr(map == null, difficulty == null) || players == null)
             throw new IllegalArgumentException("Argument is null");
 
-        if (players.isEmpty() || players.size() < 2 || players.size() > 4)
+        if (Boolean.logicalOr(players.isEmpty(), players.size() < 2) || players.size() > 4)
             throw new IllegalStateException();
 
         //players.replaceAll(pair -> pair.getFirst().equals(other));
@@ -153,20 +154,23 @@ public class Action implements Copyable<Action>, Serializable {
                 action.players.add(null);
         });
 
-
-        for (int i = 0; i < players.size(); i++) {
+        IntStream.range(0, players.size()).forEach(i ->
+        {
             Player player = action.players.get(i);
-            if (player != null) continue;
-            Triple<PlayerType, String, Boolean> triple = players.get(i);
-            List<PlayerType> list = EnumSet.allOf(PlayerType.class).stream()
-                    .filter(pType -> !pType.equals(PlayerType.NONE))
-                    .filter(pType -> action.players.stream().filter(Objects::nonNull).noneMatch(p -> p.getType() == pType))
-                    .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList());
+            if (player == null) {
+                Triple<PlayerType, String, Boolean> triple = players.get(i);
+                List<PlayerType> list = EnumSet.allOf(PlayerType.class).stream()
+                        .filter(pType -> !pType.equals(PlayerType.NONE))
+                        .filter(pType -> action.players.stream().filter(Objects::nonNull).noneMatch(p -> p.getType() == pType))
+                        .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList());
 
-            Collections.shuffle(list);
-            Player p = createPlayerByType(list.get(0), triple.getSecond(), map.getPlayerSpawnPoint(list.get(0)), action);
-            action.players.set(i, p);
-        }
+                Collections.shuffle(list);
+                Player playerCreated = createPlayerByType(list.get(0), triple.getSecond(),
+                        map.getPlayerSpawnPoint(list.get(0)), action);
+                action.players.set(i, playerCreated);
+            }
+        });
+
         //TODO darf nicht initial auf FLOOD stehen, sondern soll ordentlich die 6 felder zu beginn fluten
         action.state = TurnState.PLAYER_ACTION;
 
