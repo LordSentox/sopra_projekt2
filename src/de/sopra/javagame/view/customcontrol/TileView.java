@@ -18,7 +18,7 @@ public class TileView extends ImageView implements Highlightable {
         //System.out.println(id);
         type = MapTileProperties.getByIndex(id);
         this.dryImage = TextureLoader.getTileTextureDry(type);
-        this.floodedImage = TextureLoader.getTileTextureFlooded(MapTileProperties.getByIndex(id));
+        this.floodedImage = TextureLoader.getTileTextureFlooded(type);
         this.goneImage = TextureLoader.getGone();
         this.setImage(dryImage);
         setPreserveRatio(true);

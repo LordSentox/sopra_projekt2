@@ -6,6 +6,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
@@ -230,7 +231,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void onFloodCardDrawStackClicked() {
         if (getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD)
-            this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
+            this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();        
     }
 
     public void setFloodCardStackHighlighted(boolean highlight) {
@@ -267,7 +268,8 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshActivePlayer();
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
-        mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
+        //TODO mapPane darf nur noch vollständig refresht werdne, nicht neu gebaut ´!
+        //mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 
         //Always fix docs in InGameViewAUI if you change this
@@ -286,7 +288,10 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshMovementOptions(List<Point> points) {
         movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
         movePoints = points;
-        points.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(true));
+        points.forEach(point -> {
+            mapPane.getMapStackPane(point).setCanMoveTo(true);
+            System.out.println("42 "+mapPane.getMapStackPane(point).canMoveTo());
+        });
     }
 
     @Override
@@ -422,9 +427,12 @@ public class InGameViewController extends AbstractViewController implements InGa
         mapPane.movePlayer(position, player);
         resetHighlighting();
     }
+    
+    //TODO neue refresh map einbauen
 
     @Override
     public void refreshMapTile(Point position, MapTile tile) {
+        //TODO ersetzen durch echten refresh, nicht nur das neu setzen des states
         mapPane.setMapTile(position, tile);
     }
 

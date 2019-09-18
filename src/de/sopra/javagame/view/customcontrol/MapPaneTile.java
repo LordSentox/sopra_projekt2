@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
@@ -158,6 +159,10 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
             contextPicker.show(event);
         }
 
+    }
+    
+    public void setState(MapTileState state){
+        base.showImage(state);
     }
 
 }
