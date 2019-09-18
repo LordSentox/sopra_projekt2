@@ -7,8 +7,8 @@ import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.stage.StageStyle;
 
@@ -70,7 +70,7 @@ public class LoadGameViewController extends AbstractViewController {
                     null, 
                     "Möchtest du wirklich dein Spiel laden?", 
                     "Der nicht gespeicherte Fortschritt \ndeines laufenden Spiels geht verloren!");  
-            pack.addButton("Spiel laden", () -> loadGame());
+            pack.addButton("Spiel laden", this::loadGame);
             pack.addButton("Abbrechen", () -> {});
             pack.setAlertType(AlertType.CONFIRMATION);
             pack.setStageStyle(StageStyle.UNDECORATED);
