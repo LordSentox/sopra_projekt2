@@ -8,6 +8,7 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.Point;
 
@@ -39,6 +40,10 @@ public abstract class Decision {
     private HashMap<Condition, ICondition> conditions = new HashMap<>();
 
     private PreCondition preCondition;
+
+    private void debug(String debug) {
+        DebugUtil.debug(debug);
+    }
 
     public final static Decision empty() {
         return new Decision() {
@@ -77,16 +82,22 @@ public abstract class Decision {
      */
     public final Decision next(Decision lessImportantDecision) {
         Decision self = this; //um Zugriff auf decide von this in decide von neuer Decision zu haben
+        debug("order: " + self.getClass().getSimpleName() + " -> " + lessImportantDecision.getClass().getSimpleName());
         return new Decision() {
             @Override
             public Decision decide() {
                 //Wenn die PreCondition nicht erfüllt, darf die decide Methode nicht verwendet werden
                 Decision decision = self.matchPreCondition() ? self.decide() : null;
+                debug("current decision: " + decision);
                 if (decision == null) {
+                    debug("conditions not met: " + self.getClass().getSimpleName());
                     //mögliche getroffene Conditions sollen nicht neu getroffen werden (Effizienz)
                     lessImportantDecision.conditions = self.conditions;
                     //Auch hier: Wenn die PreCondition nicht erfüllt, darf die decide Methode nicht verwendet werden
-                    return lessImportantDecision.matchPreCondition() ? lessImportantDecision.decide() : null;
+                    Decision otherDecision = lessImportantDecision.matchPreCondition() ? lessImportantDecision.decide() : null;
+                    if (otherDecision == null)
+                        debug("conditions not met: " + self.getClass().getSimpleName());
+                    return otherDecision;
                 } else return decision;
             }
 

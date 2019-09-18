@@ -4,7 +4,6 @@ import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.Copyable;
 import de.sopra.javagame.model.FloodCard;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -15,9 +14,7 @@ import java.util.stream.Collectors;
  * <p>
  * Ein CardStack implementiert einen Zieh- sowie einen Ablagestapel eines Kartentyps.
  */
-public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> implements Copyable<CardStack<T>>, Serializable {
-
-    private static final long serialVersionUID = 8572616465854559809L;
+public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> implements Copyable<CardStack<T>> {
 
     private Stack<T> drawStack;
 
@@ -32,7 +29,6 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
         drawStack.addAll(cards);
         discardPile = new ArrayList<>();
     }
-//FIXME Tests überarbeiten und draw nur noch ohne amount benutzen!
 
     /**
      * draw nimmt die angegebene Anzahl Karten von oben vom Stack
@@ -80,11 +76,12 @@ public class CardStack<T extends Copyable<T>> extends CardStackObservable<T> imp
             drawn = draw(false);
         }
         while (skip.test(drawn));
-        shuffleBack();
-        shuffleDrawStack();
+        if (!discardPile.isEmpty())
+            drawStack.addAll(0, discardPile);
+        discardPile.clear();
         return drawn;
     }
-    
+
     /**
      * @return die Anzahl an Karten im Ziehstapel
      */

@@ -8,6 +8,8 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 
 import java.io.*;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  *
  */
@@ -27,7 +29,7 @@ public class GameSettings {
         SerializedSettings settings = new SerializedSettings(this);
         String serialized = settings.serialize();
 
-        System.out.println("Saved Settings: " + serialized);
+        debug("Saved Settings: " + serialized);
     }
 
 
@@ -99,7 +101,8 @@ public class GameSettings {
 
         private boolean devTools = false;
 
-        SerializedSettings(){}
+        SerializedSettings() {
+        }
 
         SerializedSettings(GameSettings settings) {
             volumeMusic = settings.volumeMusic.get();
@@ -124,10 +127,10 @@ public class GameSettings {
 
         private static SerializedSettings deserialize() {
             File settingsFile = ControllerChan.SETTINGS_FILE;
-            if(!settingsFile.exists()) {
+            if (!settingsFile.exists()) {
                 return null;
             }
-            try (FileReader reader = new FileReader(settingsFile)){
+            try (FileReader reader = new FileReader(settingsFile)) {
                 return new Gson().fromJson(reader, SerializedSettings.class);
             } catch (IOException e) {
                 e.printStackTrace();

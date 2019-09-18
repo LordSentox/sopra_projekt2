@@ -35,6 +35,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * GUI für den Spielablauf
  *
@@ -186,6 +188,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getGameFlowController().redo();
     }
 
+    public void onGetHintClicked() {
+
+    }
+
     public void onUndoClicked() {
         //TODO Fenster öffnen, das Bescheid gibt über Löschen aus HighScoreListe
         getGameWindow().getControllerChan().getGameFlowController().undo();
@@ -205,7 +211,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
 
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
-        map.forEach(mapTile -> System.out.println(mapTile.getState()));
+        map.forEach(mapTile -> debug(mapTile.getState().name()));
 
         //debug for AI tip
 //        getGameWindow().getControllerChan().getActivePlayerController().showTip(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer());
@@ -318,7 +324,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshWaterLevel(int level) {
         waterLevelView.setProgress(level);
-        System.out.println("uwu");
+        debug("uwu");
     }
 
     @Override
@@ -379,10 +385,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
         airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
 
-        System.out.println(artifacts.contains(ArtifactType.FIRE));
-        System.out.println(artifacts.contains(ArtifactType.WATER));
-        System.out.println(artifacts.contains(ArtifactType.EARTH));
-        System.out.println(artifacts.contains(ArtifactType.AIR));
+        debug("found fire: " + artifacts.contains(ArtifactType.FIRE));
+        debug("found water: " + artifacts.contains(ArtifactType.WATER));
+        debug("found earth: " + artifacts.contains(ArtifactType.EARTH));
+        debug("found air: " + artifacts.contains(ArtifactType.AIR));
     }
 
     @Override
@@ -436,9 +442,10 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     //TODO neue refresh map einbauen
-    public void refreshMap(MapFull map){
+    public void refreshMap(MapFull map) {
         map.forEach(maptile -> refreshMapTile(map.getPositionForTile(maptile.getProperties()), maptile));
     }
+
     @Override
     public void refreshMapTile(Point position, MapTile tile) {
         //TODO ersetzen durch echten refresh, nicht nur das neu setzen des states
@@ -509,7 +516,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void showTip(ActionQueue queue) {
         SimpleAction recommendation = queue.actionIterator().next();
 
-        if(recommendation == null) {
+        if (recommendation == null) {
             showNotification("Wir sind selber ratlos - Ihr werdet alle sterben (siehe Knorkator)");
             return;
         }
