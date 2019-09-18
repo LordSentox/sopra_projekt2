@@ -7,6 +7,7 @@ import de.sopra.javagame.view.command.Commands;
 import de.spaceparrots.api.command.interfaces.CommandResult;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
@@ -26,7 +27,7 @@ import java.util.Optional;
  *
  * @author Hannah, Lisa
  */
-public class GameWindow {
+public class GameWindow implements NotificationAUI {
 
     private ControllerChan controllerChan;
 
@@ -108,7 +109,7 @@ public class GameWindow {
         views.put(ViewState.HIGH_SCORES, highScoresViewController);
         controllerChan.setHighScoresViewAUI(highScoresViewController);
     }
-    
+
     private void initLoadGame() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/LoadGame.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -120,7 +121,7 @@ public class GameWindow {
         loadGameViewController.init();
         views.put(ViewState.LOAD_GAME, loadGameViewController);
     }
-    
+
     private void initSaveGame() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SaveGame.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -250,5 +251,21 @@ public class GameWindow {
 
     public ViewState getPreviousViewState() {
         return previousViewState;
+    }
+
+    @Override
+    public void showNotification(Notification notification) {
+        if (notification.isError()) {
+            DialogPack pack = new DialogPack(this.getMainStage(), "", "Es ist ein Fehler aufgetreten: ", notification.message());
+            pack.setAlertType(Alert.AlertType.ERROR);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+        } else if (notification.hasMessage()) {
+            DialogPack pack = new DialogPack(this.getMainStage(), "", "Das Spiel informiert:", notification.message());
+            pack.setAlertType(Alert.AlertType.INFORMATION);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+            System.out.println("info: " + notification.message());
+        }
     }
 }
