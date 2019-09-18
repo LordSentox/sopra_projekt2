@@ -7,9 +7,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
@@ -32,13 +30,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import static de.sopra.javagame.model.ArtifactType.NONE;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static de.sopra.javagame.util.DebugUtil.debug;
 
 /**
  * GUI für den Spielablauf
@@ -106,7 +103,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         resetTargetPlayer();
 
     }
-
 
     private void initArtifactsFound() {
         fireArtefactImageView.setImage(TextureLoader.getArtifactTexture(ArtifactType.FIRE));
@@ -192,6 +188,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getGameFlowController().redo();
     }
 
+    public void onGetHintClicked() {
+
+    }
+
     public void onUndoClicked() {
         //TODO Fenster öffnen, das Bescheid gibt über Löschen aus HighScoreListe
         getGameWindow().getControllerChan().getGameFlowController().undo();
@@ -211,24 +211,21 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
 
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
-        map.forEach(mapTile -> System.out.println(mapTile.getState()));
+        map.forEach(mapTile -> debug(mapTile.getState().name()));
+
+        //debug for AI tip
+//        getGameWindow().getControllerChan().getActivePlayerController().showTip(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer());
+
     }
 
     public void onSettingsClicked() {
 
-//        try {
-//            SettingsViewController.openModal(getGameWindow());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         try {
-            InGameSettingsViewController.openModal(getGameWindow());
+            SettingsViewController.openModal(getGameWindow());
         } catch (IOException e) {
             e.printStackTrace();
         }
         //changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
-        getGameWindow().getControllerChan().getActivePlayerController().showTip(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer());
     }
 
     public void onArtifactCardDiscardStackClicked() {
@@ -282,8 +279,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshActivePlayer();
         refreshArtifactStack(getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack());
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
+        //TODO mapPane darf nur noch vollständig refresht werdne, nicht neu gebaut ´!
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
+        List<Player> list = getGameWindow().getControllerChan().getCurrentAction().getPlayers();
+        list.forEach(player -> this.refreshPlayerPosition(player.getPosition(), player.getType()));
 
         //Always fix docs in InGameViewAUI if you change this
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
@@ -300,14 +300,14 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshMovementOptions(List<Point> points) {
         movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
-        movePoints = points;
+        movePoints = new ArrayList<>(points);
         points.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(true));
     }
 
     @Override
     public void refreshDrainOptions(List<Point> points) {
         drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
-        drainablePoints = points;
+        drainablePoints = new ArrayList<>(points);
         points.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(true));
     }
 
@@ -324,7 +324,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshWaterLevel(int level) {
         waterLevelView.setProgress(level);
-        System.out.println("uwu");
+        debug("uwu");
     }
 
     @Override
@@ -382,10 +382,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
         airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
 
-        System.out.println(artifacts.contains(ArtifactType.FIRE));
-        System.out.println(artifacts.contains(ArtifactType.WATER));
-        System.out.println(artifacts.contains(ArtifactType.EARTH));
-        System.out.println(artifacts.contains(ArtifactType.AIR));
+        debug("found fire: " + artifacts.contains(ArtifactType.FIRE));
+        debug("found water: " + artifacts.contains(ArtifactType.WATER));
+        debug("found earth: " + artifacts.contains(ArtifactType.EARTH));
+        debug("found air: " + artifacts.contains(ArtifactType.AIR));
     }
 
     @Override
@@ -438,8 +438,14 @@ public class InGameViewController extends AbstractViewController implements InGa
         resetHighlighting();
     }
 
+    //TODO neue refresh map einbauen
+    public void refreshMap(MapFull map) {
+        map.forEach(maptile -> refreshMapTile(map.getPositionForTile(maptile.getProperties()), maptile));
+    }
+
     @Override
     public void refreshMapTile(Point position, MapTile tile) {
+        //TODO ersetzen durch echten refresh, nicht nur das neu setzen des states
         mapPane.setMapTile(position, tile);
     }
 
@@ -506,49 +512,49 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void showTip(ActionQueue queue) {
         SimpleAction recommendation = queue.actionIterator().next();
-        
-        if(recommendation == null) {
+
+        if (recommendation == null) {
             showNotification("Wir sind selber ratlos - Ihr werdet alle sterben (siehe Knorkator)");
             return;
         }
-        
+
         Action currentAction = getGameWindow().getControllerChan().getCurrentAction();
         Player playerToUse = currentAction.getPlayer(recommendation.getTargetPlayers().iterator().hasNext() ? recommendation.getTargetPlayers().iterator().next() : null);
         Point targetPoint = recommendation.getTargetPoint();
         ArtifactCardType card = recommendation.getCardType();
         String notification = "";
-       
+
         switch (recommendation.getType()) {
             case MOVE:
                 mapPane.getMapStackPane(targetPoint).getBase().highlight();
                 notification = "Bewege den Spieler " + playerToUse.getType().name() + " auf das angezeigte Feld.";
                 break;
-                
+
             case DRAIN:
                 mapPane.getMapStackPane(targetPoint).getBase().highlight();
                 notification = "Lege das angezeigte Feld trocken.";
                 break;
-                
+
             case DISCARD_CARD:
                 notification = "Wirf eine Karte vom Typ " + card.name() + " ab";
                 break;
-                
-            case TRADE_CARD:  
+
+            case TRADE_CARD:
                 notification = "Gib eine Karte vom Typ " + card.name() + " an den Spieler " + playerToUse.getType().name() + " ab.";
                 break;
-            
+
             case SPECIAL_CARD:
                 notification = "Spiele die Spezialkarte " + card.name() + ".";
                 break;
-                
+
             case COLLECT_TREASURE:
                 notification = "Sammle das Artefakt.";
                 break;
-                
+
             case SPECIAL_ABILITY:
                 notification = "Nutze deine Spezialaktion";//TODO: Split special ability
                 break;
-            
+
             case WAIT_AND_DRINK_TEA:
                 notification = "Zug abgeben.";
         }

@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
 import static de.sopra.javagame.view.abstraction.ViewState.MAP_EDITOR;
 
 /**
@@ -157,14 +158,14 @@ public class GamePreparationsViewController extends AbstractViewController {
             cannotStartGameLabel.setText("Es ist keine Map ausgewählt");
             return;
         }
-        else if(chooseMapComboBox.getValue() == "neu generieren"){
+        else if(chooseMapComboBox.getValue().equals("neu generieren")){
             currentMap = MapUtil.generateRandomIsland();
-            System.out.println("Map: random \n");
+            debug("Map: random \n");
         }
         else{
             String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getValue() +".map")), StandardCharsets.UTF_8);
             currentMap = MapUtil.readBlackWhiteMapFromString(mapString);
-            System.out.println("Map:" + chooseMapComboBox.getValue() + "\n");
+            debug("Map:" + chooseMapComboBox.getValue() + "\n");
         }
         
         
@@ -172,7 +173,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
         this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
 
-        getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(0);
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(getGameWindow().getControllerChan().getCurrentAction().getWaterLevel().getLevel());
     }
 
 
