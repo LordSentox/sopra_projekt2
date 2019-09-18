@@ -35,8 +35,7 @@ public class HighScoresController {
     /**
      * Erstellt einen neün {@link HighScoresController}
      */
-    HighScoresController(ControllerChan controllerChan) {
-    }
+    //HighScoresController(ControllerChan controllerChan) {}
 
     public void setHighScoresViewAUI(HighScoresViewAUI highScoresViewAUI) {
         this.highScoresViewAUI = highScoresViewAUI;
@@ -61,7 +60,6 @@ public class HighScoresController {
     }
 
     public void saveHighScore(HighScore scoreToSave) {
-
         if (scoreToSave.getMapName().isEmpty())
             System.err.println("Warning: Mapname is empty! saving highscore will still continue.");
 
@@ -73,9 +71,6 @@ public class HighScoresController {
         if (highScores == null) {
             highScores = new ArrayList<>();
         }
-
-        // TODO: Speichere das Replay und sorge dafür, dass es mit dem Highscore in Verbindung gebracht werden kann
-
         // Füge den neuen High-Score ein und sortiere die Liste, damit er an der richtigen Stelle steht
         highScores.add(scoreToSave);
         Collections.sort(highScores);
@@ -83,18 +78,15 @@ public class HighScoresController {
         // Speichere die angepasste oder erzeugte Liste in der zugehörigen Highscore-Datei
         try {
             File file = new File(SCORE_FOLDER + scoreToSave.getMapName() + ".score");
-
             if (file.exists()) {
                 file.delete();
             }
-
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             for (HighScore score : highScores) {
                 writer.write(score.getName() + ", ");
                 writer.write(score.getScore() + ", ");
                 writer.write(score.getReplayName() + "\n");
             }
-
             writer.close();
         } catch (IOException e) {
             System.err.println("HighScore-Datei konnte nicht geschrieben werden");
@@ -139,9 +131,10 @@ public class HighScoresController {
                 scorecsv[i] = split;
             }
 
+            final int columnCount = 3;
             List<HighScore> highScores = new ArrayList<>();
             for (String[] row : scorecsv) {
-                if (row.length != 3) {
+                if (row.length != columnCount) {
                     System.err.println("Highscores für " + mapName + " konnten nicht gelesen werden. Eine Zeile ist korrumpiert.");
                     return null;
                 }

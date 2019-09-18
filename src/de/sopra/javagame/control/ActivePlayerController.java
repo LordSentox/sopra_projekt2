@@ -225,7 +225,6 @@ public class ActivePlayerController {
      * @see HighScore
      */
     public void showTip(Player player) {
-        Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().markCheetah();
         SimpleAction tipp = controllerChan.getAiController().getTip(() -> player);
         controllerChan.getInGameViewAUI().showTip(tipp);
