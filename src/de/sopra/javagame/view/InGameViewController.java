@@ -267,6 +267,14 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void showNotification(Notification notification) {
+        if(notification.isGameWon())
+        {
+
+        }
+        else if(notification.isGameLost())
+        {
+
+        }
         super.showNotification(notification);
     }
 

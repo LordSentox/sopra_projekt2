@@ -52,10 +52,6 @@ public abstract class AbstractViewController {
             pack.setAlertType(Alert.AlertType.ERROR);
             pack.setStageStyle(StageStyle.UNDECORATED);
             pack.open();
-        } else if (notification.isGameWon()) {
-            //TODO
-        } else if (notification.isGameLost()) {
-            //TODO
         } else if (notification.hasMessage()) {
             DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Das Spiel informiert:", notification.message());
             pack.setAlertType(Alert.AlertType.INFORMATION);
