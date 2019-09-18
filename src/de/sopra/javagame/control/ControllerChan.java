@@ -11,6 +11,8 @@ import de.sopra.javagame.view.MapEditorViewAUI;
 import java.io.*;
 import java.util.List;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * @author Max Bühmann, Melanie Arnds
  */
@@ -105,10 +107,12 @@ public class ControllerChan {
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
 
         this.currentAction = pair.getRight();
+        debug("initial players: " + currentAction.getPlayers().size());
         aiController.connectTrackers();
         aiController.setAI(GameAI.DECISION_BASED_AI);
 
         this.currentAction = pair.getLeft().finishAction(this.currentAction);
+        debug("after finished action, players: " + currentAction.getPlayers().size());
         
         this.javaGame = pair.getLeft();
 
