@@ -2,6 +2,7 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.Pilot;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
@@ -49,9 +50,12 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         InGameViewAUI aui = controllerChan.getInGameViewAUI();
 
-        if (player.getType() == PILOT || player.getType() == DIVER) {
-            List<Point> movements = player.legalMoves(true);
-            aui.refreshMovementOptions(movements);
+        if (player.getType() == PILOT) {
+            if (!((Pilot) player).hasSpecialMove())
+                aui.showNotification("Der Pilot darf einmal pro Zug fliegen. Du bist diesen Zug bereits geflogen");
+            else aui.refreshMovementOptions(player.legalMoves(true));
+        } else if (player.getType() == DIVER) {
+            aui.showNotification("Der Taucher kann überflutete Gebiete im einem Schwung durchtauchen.");
         } else if (player.getType() == PlayerType.COURIER) {
             aui.showNotification("Der Bote darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
         } else if (player.getType() == PlayerType.EXPLORER) {
