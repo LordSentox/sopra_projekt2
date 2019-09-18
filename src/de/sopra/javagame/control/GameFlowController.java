@@ -39,16 +39,8 @@ public class GameFlowController {
                 waterLevel.increment();
                 shuffleBack = true;
                 if (waterLevel.isGameLost()) {
-                    controllerChan.getCurrentAction().setGameWon(false);
-                    controllerChan.getCurrentAction().setGameEnded(true);
-                    controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt leider verloren!" +
-                            "Das Wasser ist viel zu schnell gestiegen und nun ist die ganze Insel versunken." +
-                            "Keiner von euch konnte sich retten. Ihr alle seid einen qualvollen Tod " +
-                            "gestorben."));
+                    gameLostNotification();
                     return;
-                    //TODO in HighScoreIO Methode zum speichern von High-Scores
-                    //dann View bescheid geben, dass Spielvorbei (set as Replay)
-                    //controllerChan.getHighScoresController().save;
                 } else {
                     artifactCardStack.discard(currentCard);
                 }
@@ -63,14 +55,23 @@ public class GameFlowController {
         if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
             controllerChan.getInGameViewAUI().showNotification("Du hast zu viele Handkarten. Bitte wähle " +
                     (activePlayer.getHand().size() - 5) + " Karten zum Abwerfen aus.");
-            //TODO in HighScoreIO Methode zum speichern von High-Scores
-            //                    //dann View bescheid geben, dass Spielvorbei (set as Replay)
-        }
+            }
         if (shuffleBack) {
             CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
             stack.shuffleBack();
             controllerChan.getInGameViewAUI().refreshFloodStack(stack);
         }
+    }
+
+    private void gameLostNotification() {
+        controllerChan.getCurrentAction().setGameWon(false);
+        controllerChan.getCurrentAction().setGameEnded(true);
+        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt leider verloren!\n" 
+                + "Das Wasser ist viel zu schnell gestiegen \n"
+                + "und nun ist die ganze Insel versunken.\n" 
+                + "Keiner von euch konnte sich retten.\n"
+                + "Ihr alle seid einen qualvollen Tod " 
+                + "gestorben."));
     }
 
     /**
@@ -105,32 +106,18 @@ public class GameFlowController {
             controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
         }
 
-        Action nextAction = controllerChan.finishAction();
-        nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
-        controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
-
         //Spiel ist verloren
         if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {
-            nextAction.setGameWon(false);
-            nextAction.setGameEnded(true);
-            controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt das Spiel verloren"));
+            gameLostNotification();
             return;
         }
 
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
-        if (nextAction.getFloodCardsToDraw() <= 0) {
-            nextAction.nextPlayerActive();
-            nextAction.setState(TurnState.PLAYER_ACTION);
-
-            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
-            controllerChan.getInGameViewAUI().refreshActivePlayer();
-            controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
-            nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
-        }
+        endFloodCardDrawAction(floodCardCardStack);      
     }
 
 
-    List<Player> playersNeedRescue(Point positionToCheck) {
+    private List<Player> playersNeedRescue(Point positionToCheck) {
         MapFull map = controllerChan.getCurrentAction().getMap();
         List<Player> playersToRescue = new ArrayList<>();
         if (map.get(positionToCheck).getState() == GONE) {
@@ -141,6 +128,22 @@ public class GameFlowController {
             }
         }
         return playersToRescue;
+    }
+    
+    private void endFloodCardDrawAction(CardStack<FloodCard> floodCardCardStack) {
+        Action nextAction = controllerChan.finishAction();
+        nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
+        controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
+
+        if (nextAction.getFloodCardsToDraw() <= 0) {
+        nextAction.nextPlayerActive();
+        nextAction.setState(TurnState.PLAYER_ACTION);
+
+        controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
+        controllerChan.getInGameViewAUI().refreshActivePlayer();
+        controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
+        nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
+        }
     }
 
     /**
