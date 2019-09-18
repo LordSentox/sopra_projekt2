@@ -17,9 +17,9 @@ import java.util.List;
 
 public class PlayerImageView extends ImageView implements EventHandler<MouseEvent>, Highlightable {
 
-    private PlayerType type;
-    private ActionPicker picker;
-    private MapPaneTile tile;
+    private final PlayerType type;
+    private final ActionPicker picker;
+    private final MapPaneTile tile;
 
     public PlayerImageView(MapPaneTile tile, PlayerType type, Image image) {
         super(image);
@@ -36,9 +36,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
         Player activePlayer = tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer();
         if (activePlayer.getType() != type) {
             //wenn der gewählte Spieler nicht der aktive ist und der aktive der Navigator ist
-            if (activePlayer.getType() == PlayerType.NAVIGATOR && tile.getControl().isSpecialActive())
-                return true;
-            else return false;
+            return activePlayer.getType() == PlayerType.NAVIGATOR && tile.getControl().isSpecialActive();
         }
         switch (activePlayer.getType()) {
             case COURIER:
@@ -81,7 +79,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
                     picker.setDelegatingPlayer(activePlayer.getType());
                     picker.setMapPaneTile(tile);
                     picker.setMovingPlayer(type);
-                    picker.init(buttons.toArray(new ActionButton[buttons.size()]));
+                    picker.init(buttons.toArray(new ActionButton[0]));
                     picker.show(event);
                 }
             }

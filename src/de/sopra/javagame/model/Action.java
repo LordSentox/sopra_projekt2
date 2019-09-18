@@ -133,9 +133,9 @@ public class Action implements Copyable<Action>, Serializable {
 
         if (players.isEmpty() || players.size() < 2 || players.size() > 4)
             throw new IllegalStateException();
-        
+
         //players.replaceAll(pair -> pair.getFirst().equals(other));
-        
+
         Action action = new Action();
         action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
         action.description = "Spielstart";
@@ -147,32 +147,32 @@ public class Action implements Copyable<Action>, Serializable {
         action.artifactCardStack.shuffleDrawStack();
         action.players = new LinkedList<>();
         players.forEach(triple -> {
-            if(triple.getFirst() != PlayerType.NONE)
+            if (triple.getFirst() != PlayerType.NONE)
                 action.players.add(createPlayerByType(triple.getFirst(), triple.getSecond(), map.getPlayerSpawnPoint(triple.getFirst()), action));
             else
                 action.players.add(null);
         });
-        
-        
+
+
         for (int i = 0; i < players.size(); i++) {
             Player player = action.players.get(i);
-            if(player != null) continue;
+            if (player != null) continue;
             Triple<PlayerType, String, Boolean> triple = players.get(i);
             List<PlayerType> list = EnumSet.allOf(PlayerType.class).stream()
-                  .filter(pType -> !pType.equals(PlayerType.NONE))
-                  .filter(pType -> action.players.stream().filter(Objects::nonNull).noneMatch(p -> p.getType() == pType))
-                  .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList()); 
-                 
+                    .filter(pType -> !pType.equals(PlayerType.NONE))
+                    .filter(pType -> action.players.stream().filter(Objects::nonNull).noneMatch(p -> p.getType() == pType))
+                    .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList());
+
             Collections.shuffle(list);
             Player p = createPlayerByType(list.get(0), triple.getSecond(), map.getPlayerSpawnPoint(list.get(0)), action);
             action.players.set(i, p);
         }
         //TODO darf nicht initial auf FLOOD stehen, sondern soll ordentlich die 6 felder zu beginn fluten
         action.state = TurnState.PLAYER_ACTION;
-        
+
         return action;
     }
-    
+
     public static Player createPlayerByType(PlayerType type, String name, Point start, Action action) {
         switch (type) {
             case COURIER:

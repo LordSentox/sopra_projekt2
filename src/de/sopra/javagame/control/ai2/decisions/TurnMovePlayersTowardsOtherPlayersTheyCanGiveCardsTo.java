@@ -23,6 +23,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
 @PreCondition(allTrue = PLAYER_HAS_ANY_ARTIFACT_CARD)
 public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decision {
     private Point moveTowards;
+
     @Override
     public Decision decide() {
 
@@ -51,7 +52,7 @@ public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decisi
                     all(fire > ZERO_CARDS, fire < fire2, fire2 < FOUR_CARDS),
                     all(water > ZERO_CARDS, water < water2, water2 < FOUR_CARDS)
             )) {
-                moveTowards= control.getClosestPointInDirectionOf(player().legalMoves(true), player.getPosition(), player().getType());
+                moveTowards = control.getClosestPointInDirectionOf(player().legalMoves(true), player.getPosition(), player().getType());
                 return this;
             }
 
@@ -61,11 +62,11 @@ public class TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo extends Decisi
 
     @Override
     public ActionQueue act() {
-        if(player().getType()==PlayerType.PILOT && needSpecialToMove(player().getPosition(), moveTowards)){
-            return startActionQueue().pilotFlyTo(moveTowards);    
-        }else if(player().getType()==PlayerType.DIVER && needSpecialToMove(player().getPosition(), moveTowards)){
-            return startActionQueue().diverDiveTo(moveTowards); 
-        }else{
+        if (player().getType() == PlayerType.PILOT && needSpecialToMove(player().getPosition(), moveTowards)) {
+            return startActionQueue().pilotFlyTo(moveTowards);
+        } else if (player().getType() == PlayerType.DIVER && needSpecialToMove(player().getPosition(), moveTowards)) {
+            return startActionQueue().diverDiveTo(moveTowards);
+        } else {
             return startActionQueue().move(moveTowards);
         }
     }

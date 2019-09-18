@@ -35,6 +35,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * GUI für den Spielablauf
  *
@@ -186,6 +188,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getGameFlowController().redo();
     }
 
+    public void onGetHintClicked() {
+
+    }
+
     public void onUndoClicked() {
         //TODO Fenster öffnen, das Bescheid gibt über Löschen aus HighScoreListe
         getGameWindow().getControllerChan().getGameFlowController().undo();
@@ -205,7 +211,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         //DEBUG
 
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
-        map.forEach(mapTile -> System.out.println(mapTile.getState()));
+        map.forEach(mapTile -> debug(mapTile.getState().name()));
 
         //debug for AI tip
 //        getGameWindow().getControllerChan().getActivePlayerController().showTip(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer());
@@ -276,6 +282,8 @@ public class InGameViewController extends AbstractViewController implements InGa
         //TODO mapPane darf nur noch vollständig refresht werdne, nicht neu gebaut ´!
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
+        List<Player> list = getGameWindow().getControllerChan().getCurrentAction().getPlayers();
+        list.forEach(player -> this.refreshPlayerPosition(player.getPosition(), player.getType()));
 
         //Always fix docs in InGameViewAUI if you change this
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
@@ -286,7 +294,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         movePoints = new LinkedList<>();
         drainablePoints = new LinkedList<>();
         setFloodCardStackHighlighted(false);
-        mapPane.forEach(tile -> tile.dehighlightAll());
+        mapPane.forEach(MapPaneTile::dehighlightAll);
     }
 
     @Override
@@ -316,7 +324,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshWaterLevel(int level) {
         waterLevelView.setProgress(level);
-        System.out.println("uwu");
+        debug("uwu");
     }
 
     @Override
@@ -325,8 +333,10 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index);
                 v.showFrontImage();
+                v.setInGameViewController(this);
+                v.setOwner(player);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
                 index += 2;
@@ -336,32 +346,33 @@ public class InGameViewController extends AbstractViewController implements InGa
             List<Player> players = action.getPlayers();
             GridPane pane = null;
 
-            if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
+            if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player)) {
                 pane = handOneCardGridPane;
-
-            else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+            } else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player)) {
                 pane = handTwoCardGridPane;
-
-            else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+            } else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player)) {
                 pane = handThreeCardGridPane;
+            }
 
 
             pane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                CardView v = new ArtifactCardView(card.getType(), PASSIVE_CARD_SIZE);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), PASSIVE_CARD_SIZE, index);
                 v.showFrontImage();
+                v.setInGameViewController(this);
+                v.setOwner(player);
                 pane.getChildren().add(v);
                 GridPane.setConstraints(v, index++, 0);
             }
         }
     }
 
-    private void onSpecialCardClicked(ArtifactCardView card, int index) {
-        if (card.getType().equals(ArtifactCardType.HELICOPTER)) {
-
-        } else if (card.getType().equals(ArtifactCardType.SANDBAGS)) {
-
+    public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
+        if (card.equals(ArtifactCardType.HELICOPTER)) {
+            //TODO
+        } else if (card.equals(ArtifactCardType.SANDBAGS)) {
+            //TODO
         }
     }
 
@@ -369,22 +380,19 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshArtifactsFound() {
         EnumSet<ArtifactType> artifacts = this.getGameWindow().getControllerChan().getCurrentAction().getDiscoveredArtifacts();
 
-        fireArtefactImageView.setEffect(artifacts.contains(ArtifactType.FIRE) ? null : DESATURATION);
-        waterArtefactImageView.setEffect(artifacts.contains(ArtifactType.WATER) ? null : DESATURATION);
-        earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
-        airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
+        highlightArtifacts(artifacts);
 
-        System.out.println(artifacts.contains(ArtifactType.FIRE));
-        System.out.println(artifacts.contains(ArtifactType.WATER));
-        System.out.println(artifacts.contains(ArtifactType.EARTH));
-        System.out.println(artifacts.contains(ArtifactType.AIR));
+        debug("found fire: " + artifacts.contains(ArtifactType.FIRE));
+        debug("found water: " + artifacts.contains(ArtifactType.WATER));
+        debug("found earth: " + artifacts.contains(ArtifactType.EARTH));
+        debug("found air: " + artifacts.contains(ArtifactType.AIR));
     }
 
     @Override
     public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
         artifactCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE, -1);
             v.showBackImage();
             artifactCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
@@ -394,7 +402,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         int index = 0;
         artifactCardDiscardGridPane.getChildren().clear();
         for (ArtifactCard card : discardPile) {
-            CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, -1);
             v.showFrontImage();
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
@@ -431,6 +439,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     //TODO neue refresh map einbauen
+    public void refreshMap(MapFull map) {
+        map.forEach(maptile -> refreshMapTile(map.getPositionForTile(maptile.getProperties()), maptile));
+    }
 
     @Override
     public void refreshMapTile(Point position, MapTile tile) {
@@ -441,16 +452,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshActivePlayer() {
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
-        List<Player> players = action.getPlayers();
-
-        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
-        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
-        if (players.size() >= 3) {
-            playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
-        }
-        if (players.size() == 4) {
-            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
-        }
+        refreshPlayerCardImages(action);
         resetHighlighting();
     }
 
@@ -502,7 +504,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void showTip(ActionQueue queue) {
         SimpleAction recommendation = queue.actionIterator().next();
 
-        if(recommendation == null) {
+        if (recommendation == null) {
             showNotification("Wir sind selber ratlos - Ihr werdet alle sterben (siehe Knorkator)");
             return;
         }
@@ -577,21 +579,9 @@ public class InGameViewController extends AbstractViewController implements InGa
         resetTargetPlayer();
         setSpecialActive(false);
         //refreshArtifacts found
-        EnumSet<ArtifactType> artifacts = action.getDiscoveredArtifacts();
-        fireArtefactImageView.setEffect(artifacts.contains(ArtifactType.FIRE) ? null : DESATURATION);
-        waterArtefactImageView.setEffect(artifacts.contains(ArtifactType.WATER) ? null : DESATURATION);
-        earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
-        airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
+        highlightArtifacts(action.getDiscoveredArtifacts());
         //refresh active player
-        List<Player> players = action.getPlayers();
-        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
-        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
-        if (players.size() >= 3) {
-            playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
-        }
-        if (players.size() == 4) {
-            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
-        }
+        refreshPlayerCardImages(action);
         //refreshes
         mapPane.buildMap(action.getMap());
         refreshArtifactStack(action.getArtifactCardStack());
@@ -613,6 +603,25 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void setSpecialActive(boolean specialActive) {
         this.specialActive = specialActive;
+    }
+
+    private void highlightArtifacts(EnumSet<ArtifactType> artifacts) {
+        fireArtefactImageView.setEffect(artifacts.contains(ArtifactType.FIRE) ? null : DESATURATION);
+        waterArtefactImageView.setEffect(artifacts.contains(ArtifactType.WATER) ? null : DESATURATION);
+        earthArtefactImageView.setEffect(artifacts.contains(ArtifactType.EARTH) ? null : DESATURATION);
+        airArtefactImageView.setEffect(artifacts.contains(ArtifactType.AIR) ? null : DESATURATION);
+    }
+
+    private void refreshPlayerCardImages(Action action) {
+        List<Player> players = action.getPlayers();
+        activePlayerTypeImageView.setImage(TextureLoader.getPlayerCardTexture(action.getActivePlayer().getType()));
+        playerOneTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 1) % players.size()).getType()));
+        if (players.size() >= 3) {
+            playerTwoTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 2) % players.size()).getType()));
+        }
+        if (players.size() == 4) {
+            playerThreeTypeImageView.setImage(TextureLoader.getPlayerCardTexture(players.get((action.getActivePlayerIndex() + 3) % players.size()).getType()));
+        }
     }
 
 }

@@ -57,8 +57,8 @@ public class ZipWrapper implements Iterable<ZipEntry> {
     public static class ZipEntryList extends ArrayList<ZipEntry> {
 
         private static final long serialVersionUID = 3230098602232873227L;
-        private ZipFile zipFile;
-        private String subPath;
+        private final ZipFile zipFile;
+        private final String subPath;
 
 
         private ZipEntryList(Collection<? extends ZipEntry> c, ZipFile zipFile, String subPath) {

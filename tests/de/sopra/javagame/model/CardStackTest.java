@@ -20,14 +20,13 @@ import static org.junit.Assert.*;
 public class CardStackTest {
     private CardStack<FloodCard> floodCardStack;
     private CardStack<ArtifactCard> artifactCardStack;
-    private MapTile[][] tiles;
     private MapTile wirHabenLandGefunden;
     private List<ArtifactCard> hand;
 
     @Before
     public void setUp() {
         wirHabenLandGefunden = MapTile.fromNumber(20);
-        tiles = new MapTile[1][1];
+        MapTile[][] tiles = new MapTile[1][1];
         tiles[0][0] = wirHabenLandGefunden;
 
         hand = new ArrayList<>();

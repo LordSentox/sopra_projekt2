@@ -8,5 +8,5 @@ target
 out
 src/de/sopra/javagame/application/Yeet.java
 *.score
-/data/settings
+/data/settings.json
 /data/high_scores/scores/git.score

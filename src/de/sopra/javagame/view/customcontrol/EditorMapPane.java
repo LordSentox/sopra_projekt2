@@ -1,6 +1,9 @@
 package de.sopra.javagame.view.customcontrol;
 
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.Map;
+import de.sopra.javagame.util.MapBlackWhite;
+import de.sopra.javagame.util.MapCheckUtil;
+import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.MapEditorViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.scene.control.Label;
@@ -12,7 +15,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Paint;
 
-import java.io.IOException;
 import java.util.stream.IntStream;
 
 public class EditorMapPane extends GridPane {
@@ -29,7 +31,7 @@ public class EditorMapPane extends GridPane {
     public static final int VALID_MAP_TILE_COUNT = 24;
 
 
-    public EditorMapPane() throws IOException {
+    public EditorMapPane() {
         super();
         mapImageView = new ImageView[Map.SIZE_Y][Map.SIZE_X];
 
@@ -71,16 +73,16 @@ public class EditorMapPane extends GridPane {
             setBooleanTile(new Point(x, y), true);
         } else if (e.getButton() == MouseButton.SECONDARY && booleanMap.get(x, y)) {
             setBooleanTile(new Point(x, y), false);
-        }       
+        }
 
         countTiles();
     }
 
     private void countTiles() {
         int count = (int) getBooleanMap().stream().filter(element -> element).count();
-        if (showUsedTilesLabel != null){
-        showUsedTilesLabel.setText(count + "/" + VALID_MAP_TILE_COUNT);
-        showUsedTilesLabel.setTextFill(count == VALID_MAP_TILE_COUNT ? GREEN : count < VALID_MAP_TILE_COUNT ? WHITE : RED);
+        if (showUsedTilesLabel != null) {
+            showUsedTilesLabel.setText(count + "/" + VALID_MAP_TILE_COUNT);
+            showUsedTilesLabel.setTextFill(count == VALID_MAP_TILE_COUNT ? GREEN : count < VALID_MAP_TILE_COUNT ? WHITE : RED);
         }
     }
 
@@ -119,6 +121,6 @@ public class EditorMapPane extends GridPane {
 
     public void setTileCountLabel(Label showUsedTiles) {
         this.showUsedTilesLabel = showUsedTiles;
-        
+
     }
 }

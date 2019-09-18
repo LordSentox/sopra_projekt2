@@ -13,7 +13,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -27,7 +26,7 @@ public class MapPane extends GridPane {
     private InGameViewController inGameViewController;
 
 
-    public MapPane() throws IOException {
+    public MapPane() {
         super();
         map = new MapPaneTile[Map.SIZE_Y][Map.SIZE_X];
 
@@ -53,8 +52,8 @@ public class MapPane extends GridPane {
                     pane.toBack();
                     GridPane.setConstraints(pane, x * 2 + 1, y * 2 + 1);
                 } else {
-                    ImageView v = new ImageView(TextureLoader.getSea1());
-                    v.setPreserveRatio(true);
+                    ImageView v = new ImageView(TextureLoader.getWaterTile());
+                    v.setPreserveRatio(false);
                     v.setFitWidth(TILE_SIZE);
                     v.setFitHeight(TILE_SIZE);
                     MapPaneTile pane = new MapPaneTile(v);
@@ -129,7 +128,7 @@ public class MapPane extends GridPane {
 
     public void setMapTile(Point position, MapTile tile) {
         MapPaneTile pane = this.getMapStackPane(position);
-        
+
         pane.setState(tile.getState());
     }
 

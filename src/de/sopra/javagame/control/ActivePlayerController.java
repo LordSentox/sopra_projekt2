@@ -31,7 +31,7 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         List<Point> drainable = player.drainablePositions();
         controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
-     
+
     }
 
     /**
@@ -51,22 +51,18 @@ public class ActivePlayerController {
         if (player.getType() == PILOT || player.getType() == DIVER) {
             List<Point> movements = player.legalMoves(true);
             aui.refreshMovementOptions(movements);
-        }
-        else if (player.getType() == PlayerType.COURIER) {
+        } else if (player.getType() == PlayerType.COURIER) {
             aui.showNotification("Der Bote darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
-        }
-        else if (player.getType() == PlayerType.EXPLORER) {
+        } else if (player.getType() == PlayerType.EXPLORER) {
             List<Point> movements = player.legalMoves(true);
             List<Point> drainables = player.drainablePositions();
 
             aui.refreshMovementOptions(movements);
             aui.refreshDrainOptions(drainables);
             //aui.showNotification("Der Abenteurer kann sich diagonal bewegen und diagonal Felder trockenlegen!");
-        }
-        else if (player.getType() == PlayerType.ENGINEER) {
+        } else if (player.getType() == PlayerType.ENGINEER) {
             aui.showNotification("Der Ingenieur darf gleichzeitig zwei Insel-Felder trocken legen!");
-        }
-        else if (player.getType() == PlayerType.NAVIGATOR) {
+        } else if (player.getType() == PlayerType.NAVIGATOR) {
             aui.showNotification("Navigator darf einen anderen Abenteurer um bis zu 2 oder 2 andere Abenteurer um jeweils 1 Inselfeld bewegen!");
         }
     }
@@ -91,8 +87,7 @@ public class ActivePlayerController {
      * Zeigt an, ob der aktive Spieler dem gegebenen Spieler eine Karte geben
      * kann
      *
-     * @param targetPlayer
-     *            Der Spieler, dem eine Karte gegeben werden soll.
+     * @param targetPlayer Der Spieler, dem eine Karte gegeben werden soll.
      */
     public void showTransferable(PlayerType targetPlayer) {
         Action currentAction = controllerChan.getCurrentAction();
@@ -104,10 +99,8 @@ public class ActivePlayerController {
      * Gibt die Karte mit dem gegebenen Index aus der Hand des aktiven Spielers,
      * dem gegebenen anderen Spieler
      *
-     * @param handCardIndex
-     *            Der Index der Karte, die übergeben werden soll.
-     * @param targetPlayer
-     *            Der Spieler, dem die Karte gegeben werden soll
+     * @param handCardIndex Der Index der Karte, die übergeben werden soll.
+     * @param targetPlayer  Der Spieler, dem die Karte gegeben werden soll
      */
     public void transferCard(int handCardIndex, PlayerType targetPlayer) {
         Action currentAction = controllerChan.getCurrentAction();
@@ -154,12 +147,10 @@ public class ActivePlayerController {
      * Bewegt den aktiven Spieler auf das von dem {@link Point} angegebenen
      * {@link MapTile}
      *
-     * @param destination
-     *            Die Position des {@link MapTile}, auf das der Spieler bewegt
-     *            werden soll
-     * @param useSpecial
-     *            Falls true, benutzt der Spieler seine Spezialfähigkeit, um
-     *            sich auf das Feld zu bewegen
+     * @param destination Die Position des {@link MapTile}, auf das der Spieler bewegt
+     *                    werden soll
+     * @param useSpecial  Falls true, benutzt der Spieler seine Spezialfähigkeit, um
+     *                    sich auf das Feld zu bewegen
      */
     public void move(Point destination, boolean useSpecial) {
         Action currentAction = controllerChan.getCurrentAction();
@@ -178,11 +169,9 @@ public class ActivePlayerController {
     /**
      * Bewegt einen anderen Spieler in eine Richtung.
      *
-     * @param direction
-     *            Die Richtung in die sich der Spieler um ein Feld bewegt werden
-     *            soll.
-     * @param target
-     *            Der Spieler, der Bewegt werden soll.
+     * @param direction Die Richtung in die sich der Spieler um ein Feld bewegt werden
+     *                  soll.
+     * @param target    Der Spieler, der Bewegt werden soll.
      * @see Direction
      * @see PlayerType
      */
@@ -205,19 +194,19 @@ public class ActivePlayerController {
      * Legt alle Felder trocken an den gegebenen Positionen.
      *
      * @param positions next =
-     *            Die Positionen aller Felder die Trockengelegt werden sollen.
+     *                  Die Positionen aller Felder die Trockengelegt werden sollen.
      */
     public void drain(Point... positions) {
         //FIXME Es werden NIIEMALS mehrere Positionen gedraint, auch Engineer macht draint atomar beschees
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
-        for (Point point : positions){
-            if (player.drain(point)){
+        for (Point point : positions) {
+            if (player.drain(point)) {
                 controllerChan.getInGameViewAUI().refreshMapTile(point, currentAction.getMap().get(point));
                 controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
                 controllerChan.getInGameViewAUI().refreshDrainOptions(player.drainablePositions());
             }
-         }
+        }
 
         this.controllerChan.finishAction();
     }
@@ -225,17 +214,15 @@ public class ActivePlayerController {
     /**
      * Zeigt einen Spielhinweis an. Danach wird dieses Spiel nicht mehr in die
      * Bestenliste aufgenommen
-     * 
-     * @param player
-     *            welche Spieler ruft showTip() auf.
      *
+     * @param player welche Spieler ruft showTip() auf.
      * @see HighScore
      */
     public void showTip(Player player) {
         Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().markCheetah();
         ActionQueue tipps = controllerChan.getAiController().getTip(() -> player);
-        
+
         controllerChan.getInGameViewAUI().showTip(tipps);
     }
 

@@ -137,8 +137,7 @@ public class MapUtil {
                 String sign = map[y][x].trim();
                 if (sign.equalsIgnoreCase("x")) {
                     blackWhite.set(true, x, y);
-                }
-                else if (sign.equals("-")) {
+                } else if (sign.equals("-")) {
                     blackWhite.set(false, x, y);
                 } else {
                     System.err.println("Karte ist korrumpiert und konnte nicht geladen werden");

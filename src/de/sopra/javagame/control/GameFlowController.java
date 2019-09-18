@@ -112,6 +112,7 @@ public class GameFlowController {
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
             controllerChan.getInGameViewAUI().refreshActivePlayer();
             controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
+            nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
         }
     }
 
