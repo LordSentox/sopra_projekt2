@@ -4,7 +4,6 @@ import de.sopra.javagame.control.ai.*;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.*;
 
 import java.util.*;
@@ -80,115 +79,13 @@ public class AIController {
      * @param queue die Queue, welche alle Schritt nacheinander enthält
      */
     public void doSteps(ActionQueue queue) {
-        queue.actionIterator().forEachRemaining(action -> {
-            Player player = getCurrentAction().getPlayer(queue.getPlayer());
-            int index;
-            Player targetPlayer;
-            switch (action.getType()) {
-
-                case MOVE:
-                    boolean isRescuing = getTile(player.getPosition()).getState() == MapTileState.GONE;
-                    player.move(action.getTargetPoint(), !isRescuing, isRescuing);
-                    break;
-                case DRAIN:
-                    player.drain(action.getTargetPoint());
-                    break;
-                case DISCARD_CARD:
-                    index = -1;
-                    for (int i = 0; i < player.getHand().size(); i++) {
-                        if (player.getHand().get(i).getType() == action.getCardType())
-                            index = i;
-                    }
-                    controllerChan.getInGameUserController().discardCard(player.getType(), index);
-                    break;
-                case TRADE_CARD:
-                    ArtifactCard card = null;
-                    for (int i = 0; i < player.getHand().size(); i++) {
-                        if (player.getHand().get(i).getType() == action.getCardType())
-                            card = player.getHand().get(i);
-                    }
-                    targetPlayer = getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
-                    controllerChan.getCurrentAction().transferArtifactCard(card, player,
-                            targetPlayer);
-                    //geile refresh action
-                    controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
-                    controllerChan.getInGameViewAUI().refreshHand(targetPlayer.getType(), targetPlayer.getHand());
-                    controllerChan.getInGameViewAUI().refreshActionsLeft(getCurrentAction().getActivePlayer().getActionsLeft());
-                    break;
-                case SPECIAL_CARD:
-                    index = -1;
-                    for (int i = 0; i < player.getHand().size(); i++) {
-                        if (player.getHand().get(i).getType() == action.getCardType())
-                            index = i;
-                    }
-                    controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
-                            new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
-                            new ArrayList<>(action.getTargetPlayers()));
-                    break;
-                case SPECIAL_ABILITY:
-                    switch (player.getType()) {
-
-                        case COURIER:
-                            ArtifactCard courierCard = null;
-                            for (int i = 0; i < player.getHand().size(); i++) {
-                                if (player.getHand().get(i).getType() == action.getCardType())
-                                    courierCard = player.getHand().get(i);
-                            }
-                            targetPlayer = getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
-                            controllerChan.getCurrentAction().transferArtifactCard(courierCard, player,
-                                    targetPlayer);
-                            //geile refresh action
-                            controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
-                            controllerChan.getInGameViewAUI().refreshHand(targetPlayer.getType(), targetPlayer.getHand());
-                            controllerChan.getInGameViewAUI().refreshActionsLeft(getCurrentAction().getActivePlayer().getActionsLeft());
-                            break;
-                        case DIVER:
-                        case PILOT:
-                        case EXPLORER:
-                            player.move(action.getTargetPoint(), true, true);
-                            break;
-                        case ENGINEER:
-                            player.drain(action.getTargetPoint());
-                            break;
-                        case NAVIGATOR:
-                            targetPlayer = getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
-                            Direction direction = targetPlayer.getPosition().getPrimaryDirection(action.getTargetPoint());
-                            player.forcePush(direction, targetPlayer);
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case COLLECT_TREASURE:
-                    ArtifactType artifactType = player.collectArtifact();
-                    if (artifactType != NONE) {
-                        controllerChan.getInGameViewAUI().refreshArtifactsFound();
-                        controllerChan.getInGameViewAUI().refreshArtifactStack(getCurrentAction().getArtifactCardStack());
-                        controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
-                        controllerChan.getInGameViewAUI().refreshActionsLeft(getCurrentAction().getActivePlayer().getActionsLeft());
-                    }
-                    break;
-                case WAIT_AND_DRINK_TEA:
-                    //TODO remove action or end turn
-                    break;
-            }
-        });
+        AIControllerUtil.doSteps(controllerChan, this, queue);
     }
 
-    /**
-     * Der aktive Tracker des Artifaktkartenstapels
-     *
-     * @return den aktiven Tracker des Artifaktkartenstapels
-     */
     public CardStackTracker<ArtifactCard> getArtifactCardStackTracker() {
         return artifactCardStackTracker;
     }
 
-    /**
-     * Der aktive Tracker des Flutkartenstapels
-     *
-     * @return den aktiven Tracker des Flutkartenstapels
-     */
     public CardStackTracker<FloodCard> getFloodCardStackTracker() {
         return floodCardStackTracker;
     }
@@ -463,60 +360,7 @@ public class AIController {
      * @return die minimal Anzahl an Aktionen für den Weg
      */
     public int getMinimumActionsNeededToReachTarget(Point startPosition, Point targetPosition, PlayerType playerType) {
-        if (startPosition.equals(targetPosition))
-            return 0; // Nix zu tun
-
-        // Initialisiere einen Array, um die Anzahl der Aktionen, die benötigt werden zu zählen.
-        Map<Integer> stepMap = new Map<Integer>() {
-            @Override
-            protected Integer[][] newEmptyRaw() {
-                return new Integer[Map.SIZE_Y][Map.SIZE_X];
-            }
-        };
-
-        // Die Startposition kann sofort erreicht werden, alle anderen müssen erst noch überprüft werden
-        for (int y = 0; y < Map.SIZE_Y; ++y) {
-            for (int x = 0; x < Map.SIZE_X; ++x) {
-                if (new Point(x, y).equals(startPosition)) {
-                    stepMap.set(0, x, y);
-                }
-            }
-        }
-
-        // Erstelle einen Fake-Spieler und eine Fake-Action, auf dem gearbeitet werden kann
-        Action action = getCurrentAction().copy();
-        Player player = action.getPlayer(playerType);
-
-        // Gehe solange durch die map, wie noch Möglichkeiten offen sind, die man gehen kann.
-        boolean somethingChanged;
-        do {
-            somethingChanged = false;
-
-            for (int y = 0; y < Map.SIZE_Y; ++y) {
-                for (int x = 0; x < Map.SIZE_X; ++x) {
-                    // Wenn die Position im letzten Zug noch nicht erreicht wurde, kann sie für's Erste
-                    // übersprungen werden
-                    if (stepMap.get(x, y) == null)
-                        continue;
-
-                    // Aktualisiere die Step-Map mit der Anzahl der Aktionen, die benötigt werden
-                    player.setPosition(new Point(x, y));
-                    List<Point> moves = player.legalMoves(false);
-                    moves.addAll(player.legalMoves(true));
-                    for (Point move : moves) {
-                        if (stepMap.get(move) == null) {
-                            stepMap.set(stepMap.get(x, y) + 1, move);
-                            somethingChanged = true;
-                        }
-                    }
-                }
-            }
-
-        } while (somethingChanged);
-
-        // Zurückgeben der benötigten Aktionen, bzw. Integer-Maximum, falls die Position gar nicht erreicht werden kann
-        Integer requiredSteps = stepMap.get(targetPosition);
-        return requiredSteps != null ? requiredSteps : Integer.MAX_VALUE;
+        return AIControllerUtil.getMinimumActionsNeededToReachTarget(getCurrentAction(), startPosition, targetPosition, playerType);
     }
 
 }

@@ -69,7 +69,7 @@ public class DialogPack {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (buttons.size() != 0) {
-            Runnable run = functions.get(buttons.indexOf(result.get()));
+            Runnable run = functions.get(buttons.indexOf(result.get().getText()));
             run.run();
         }
     }

@@ -1,6 +1,8 @@
 package de.sopra.javagame.view.abstraction;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.stage.StageStyle;
 
 /**
  * bietet Schnittstellenmethoden die alle ViewController benötigen
@@ -37,6 +39,26 @@ public abstract class AbstractViewController {
      */
     protected void changeState(ViewState previous, ViewState next) {
         gameWindow.setState(previous, next);
+    }
+
+    /**
+     * gibt dem Spieler eine Mitteilung in dem dafür vorgesehenen Fenster
+     *
+     * @param notification Mitteilung an den Spieler
+     */
+    protected void showNotification(Notification notification) {
+        if (notification.isError()) {
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Es ist ein Fehler aufgetreten: ", notification.message());
+            pack.setAlertType(Alert.AlertType.ERROR);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+        } else if (notification.hasMessage()) {
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Das Spiel informiert:", notification.message());
+            pack.setAlertType(Alert.AlertType.INFORMATION);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+            System.out.println("info: " + notification.message());
+        }
     }
 
 }

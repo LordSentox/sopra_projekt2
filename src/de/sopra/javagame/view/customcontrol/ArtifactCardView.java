@@ -20,6 +20,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     private int handCardIndex;
     private InGameViewController controller;
     private boolean selected;
+    private boolean tradeable;
     private PlayerType ownerType;
     private ActionPicker ap;
 
@@ -31,10 +32,16 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
 
         this.ap = new ActionPicker(this, MouseButton.NONE);
+        ap.setCardIndex(handCardIndex);
+        ap.setArtifactCardType(type);
     }
 
     public ArtifactCardType getType() {
         return type;
+    }
+
+    public int getHandCardIndex() {
+        return handCardIndex;
     }
 
     public void updateHighlight() {
@@ -49,12 +56,22 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
         return selected;
     }
 
-    public void setSelected(boolean selected) {
+    void setSelected(boolean selected) {
         this.selected = selected;
+        updateHighlight();
     }
 
     public void setOwner(PlayerType owner) {
         this.ownerType = owner;
+        ap.setDelegatingPlayer(ownerType);
+    }
+
+    public void setTradeable(boolean tradeable) {
+        this.tradeable = tradeable;
+    }
+
+    public boolean isTradeable() {
+        return tradeable;
     }
 
     public void setInGameViewController(InGameViewController igvc) {
@@ -69,25 +86,28 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     @Override
     public void handle(MouseEvent event) {
         if (isFrontShown()) {
-            selected = !selected;
-            updateHighlight();
-            if(!(handCardIndex == -1)){
             if (!(handCardIndex == -1)) {
-                ap.setCardIndex(handCardIndex);
-                ap.setArtifactCardType(this.getType());
-                ap.setDelegatingPlayer(ownerType);
+                if (tradeable) {
+                    controller.getGameWindow().getControllerChan().getActivePlayerController().transferCard(handCardIndex, controller.getTargetPlayer().getType());
+                    controller.resetTargetPlayer();
+                    controller.setTransferActive(false);
+                    return;
+                }
                 controller.setTargetPlayer(ownerType);
                 List<ActionButton> buttons = new LinkedList<>();
                 if (type.equals(ArtifactCardType.HELICOPTER) || type.equals(ArtifactCardType.SANDBAGS))
                     buttons.add(ActionButton.PLAY_CARD);
+                if (controller.getGameWindow().getControllerChan().getCurrentAction().getPlayer(ownerType).getHand().size() >= 5)
+                    buttons.add(ActionButton.DISCARD);
                 if (buttons.size() > 0) {
                     ap.init(buttons.toArray(new ActionButton[buttons.size()]));
                     ap.show(event);
-                    }
                 }
             }
+
         }
     }
+
     @Override
     public Node node() {
         return this;

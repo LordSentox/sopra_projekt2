@@ -2,6 +2,7 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.player.Pilot;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
@@ -41,6 +42,7 @@ public class ActivePlayerController {
      *
      * @see PlayerType
      */
+    // TODO: Wird hierfür tatsächlich jedes Mal eine Aktion benötigt?
     public void showSpecialAbility() {
 
         // XXX: Nicht immer Spieler kopieren
@@ -48,9 +50,12 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         InGameViewAUI aui = controllerChan.getInGameViewAUI();
 
-        if (player.getType() == PILOT || player.getType() == DIVER) {
-            List<Point> movements = player.legalMoves(true);
-            aui.refreshMovementOptions(movements);
+        if (player.getType() == PILOT) {
+            if (!((Pilot) player).hasSpecialMove())
+                aui.showNotification("Der Pilot darf einmal pro Zug fliegen. Du bist diesen Zug bereits geflogen");
+            else aui.refreshMovementOptions(player.legalMoves(true));
+        } else if (player.getType() == DIVER) {
+            aui.showNotification("Der Taucher kann überflutete Gebiete im einem Schwung durchtauchen.");
         } else if (player.getType() == PlayerType.COURIER) {
             aui.showNotification("Der Bote darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
         } else if (player.getType() == PlayerType.EXPLORER) {
@@ -110,12 +115,13 @@ public class ActivePlayerController {
         if (player.getActionsLeft() <= 0) {
             return;
         }
-
+        System.out.println(handCardIndex);
+        System.out.println(targetPlayer.toString());
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
 
-            // TODO: Wird hierfür tatsächlich jedes Mal eine Aktion benötigt?
+            //  Wird hierfür tatsächlich jedes Mal eine Aktion benötigt? JA
             player.setActionsLeft(player.getActionsLeft() - 1);
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
 

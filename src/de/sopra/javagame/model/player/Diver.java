@@ -40,9 +40,6 @@ public class Diver extends Player {
     @Override
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> legalMoves = super.legalMoves(false);
-        if (!specialActive) {
-            return legalMoves;
-        }
 
         boolean[][] reachable = this.reachableDestinations();
 

@@ -7,7 +7,6 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
-import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  *
  * @author Hannah, Lisa
  */
-public interface InGameViewAUI {
+public interface InGameViewAUI extends NotificationAUI {
 
     /**
      * aktualisiert die Anzeige der möglichen Bewegungen
@@ -32,13 +31,6 @@ public interface InGameViewAUI {
      * @param points Liste der Felder die der Spieler trockenlegen darf
      */
     void refreshDrainOptions(List<Point> points);
-
-    /**
-     * gibt dem Spieler eine Mitteilung in dem dafür vorgesehenen Fenster
-     *
-     * @param notification Mitteilung an den Spieler
-     */
-    void showNotification(Notification notification);
 
     /**
      * zeigt dem Spieler die übergebene Nachricht in dem dafür vorgesehenen Fenster

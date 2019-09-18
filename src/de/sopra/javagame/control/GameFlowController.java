@@ -2,9 +2,11 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,19 +39,22 @@ public class GameFlowController {
                 waterLevel.increment();
                 shuffleBack = true;
                 if (waterLevel.isGameLost()) {
-                    controllerChan.getInGameViewAUI().showNotification("Ihr habt leider verloren!" +
+                    controllerChan.getCurrentAction().setGameWon(false);
+                    controllerChan.getCurrentAction().setGameEnded(true);
+                    controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt leider verloren!" +
                             "Das Wasser ist viel zu schnell gestiegen und nun ist die ganze Insel versunken." +
                             "Keiner von euch konnte sich retten. Ihr alle seid einen qualvollen Tod " +
-                            "gestorben.");
+                            "gestorben."));
+                    return;
                     //TODO in HighScoreIO Methode zum speichern von High-Scores
                     //dann View bescheid geben, dass Spielvorbei (set as Replay)
                     //controllerChan.getHighScoresController().save;
                 } else {
                     artifactCardStack.discard(currentCard);
                 }
+                controllerChan.getInGameViewAUI().refreshWaterLevel(waterLevel.getLevel());
             } else {
                 activePlayer.getHand().add(currentCard);
-
             }
             controllerChan.getInGameViewAUI().refreshArtifactStack(artifactCardStack);
             controllerChan.finishAction();
@@ -103,6 +108,14 @@ public class GameFlowController {
         Action nextAction = controllerChan.finishAction();
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
+
+        //Spiel ist verloren
+        if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {
+            nextAction.setGameWon(false);
+            nextAction.setGameEnded(true);
+            controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt das Spiel verloren"));
+            return;
+        }
 
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
         if (nextAction.getFloodCardsToDraw() <= 0) {

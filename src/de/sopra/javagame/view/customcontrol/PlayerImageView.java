@@ -83,8 +83,12 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
                         buttons.add(ActionButton.COLLECT_ARTIFACT);
                 } else {
                     //Player clickedPlayer = tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getPlayer(type);
-                    if (tile.getPlayers().contains(activePlayer.getType()) || activePlayer.getType() == PlayerType.COURIER)
+                    if (tile.getPlayers().size() >= 2 || activePlayer.getType() == PlayerType.COURIER){
                         buttons.add(ActionButton.GIVE_CARD);
+                        picker.setMapPaneTile(tile);
+                        picker.setMovingPlayer(type);;
+                        picker.setDelegatingPlayer(tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
+                    }
                 }
                 if (hasSpecial)
                     buttons.add(ActionButton.SPECIAL);

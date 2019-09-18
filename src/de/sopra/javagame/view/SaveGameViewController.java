@@ -1,18 +1,12 @@
 package de.sopra.javagame.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.GameWindow;
 import de.sopra.javagame.view.abstraction.ViewState;
+import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,53 +18,66 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class SaveGameViewController extends AbstractViewController {
     @FXML
     ImageView mainPane;
     @FXML
-    JFXListView<String> loadGameListViewLabel;
+    JFXListView<String> loadMapListView;
     @FXML
-    Label loadMapViewLabel;
+    Label loadMapViewLabel, notificationLabel;
     @FXML
-    JFXTextField saveGameTextField, notificationLabel;
+    JFXTextField saveGameTextField;
     
     private Stage modalCopy;
+    private File[] loadFiles;
+    private final int NO_SAVE_FILES = 0;
 
     public void init() throws IOException {
         mainPane.setImage(TextureLoader.getBackground());
 
+        fillListView();
+        loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
+        notificationLabel.setTextFill(EditorMapPane.RED);
+    }
 
+
+    private void fillListView() {
+        loadMapListView.getItems().clear();
         File loadFile = new File(getGameWindow().getControllerChan().SAVE_GAME_FOLDER);
-        File[] loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
+        loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
                 && file.getName().endsWith(".save") && file.getName().length() > 5);
         List<String> loadNames = Arrays.stream(loadFiles).map(File::getName).collect(Collectors.toList());
 
         for (String currentName : loadNames) {
-            loadGameListViewLabel.getItems().addAll(currentName.substring(0, currentName.length() - 5));
-            loadGameListViewLabel.getItems().sort(Comparator.naturalOrder());
+            loadMapListView.getItems().addAll(currentName.substring(0, currentName.length() - 5));
+            loadMapListView.getItems().sort(Comparator.naturalOrder());
             System.out.println(currentName + "\n");
         }
-        final int NO_SAVE_FILES = 0;
-        loadMapViewLabel.setDisable(loadFiles.length == NO_SAVE_FILES);
-
     }
 
 
     public void onCloseClicked() {
 //        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
-        
         modalCopy.close();
-
-
     }
     
     public void onSaveGameClicked(){
         String selectedGame = saveGameTextField.getText();
         if(selectedGame.isEmpty()){
-            notificationLabel.setText("Das Feld ist nicht ausgefüllt");
+            showNotificatoin("Das Feld ist nicht ausgefüllt");
             return;
         }
-        getGameWindow().getControllerChan().loadSaveGame(selectedGame);
+        getGameWindow().getControllerChan().saveGame(selectedGame);
+        loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
+        fillListView();
+        
     }
     
     public static void openModal(GameWindow window) throws IOException {
@@ -88,11 +95,15 @@ public class SaveGameViewController extends AbstractViewController {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.WINDOW_MODAL);
         saveGameViewController.modalCopy = stage;
+        stage.setAlwaysOnTop(true);
         stage.show();
         stage.toFront();
         stage.requestFocus();
     }
     
+    public void showNotificatoin(String notification) {
+        notificationLabel.setText(notification);
+    }
     
 
 }

@@ -6,12 +6,12 @@ import de.sopra.javagame.control.HighScoresController;
 import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Paint;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,15 +90,22 @@ public class HighScoresViewController extends AbstractViewController implements 
     public void onShowReplayClicked() {
         HighScore selectedHighScore = highScoreListView.getSelectionModel().getSelectedItem();
         changeState(ViewState.HIGH_SCORES, ViewState.IN_GAME);
-        getGameWindow().getControllerChan().loadSaveGame(selectedHighScore.getReplayName());
+        getGameWindow().getControllerChan().loadSaveGame(selectedHighScore.getReplayName(), true);
     }
 
     public void onCloseClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
     }
 
     public void onMainMenuClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
+    }
+
+    @Override
+    public void showNotification(Notification notification) {
+        super.showNotification(notification);
     }
 
     @Override

@@ -10,7 +10,6 @@ import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
-import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
@@ -20,14 +19,12 @@ import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -53,6 +50,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private List<Point> drainablePoints = new ArrayList<>();
     private List<Point> movePoints = new ArrayList<>();
     private boolean specialActive = false;
+    private boolean transferActive = false;
     private Supplier<Player> targetPlayer;
 
     // Wird gesetzt, wenn eine Helikopterkarte gespielt werden soll
@@ -127,7 +125,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void initGridPane() {
-        IntStream.range(0, 6).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(ACTIVE_CARD_SIZE-50)));
+        IntStream.range(0, 6).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(ACTIVE_CARD_SIZE - 50)));
 
         IntStream.range(0, 5).forEach(item -> {
             handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
@@ -165,6 +163,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onTransferCardClicked(int cardIndex) {
+
 
     }
 
@@ -235,20 +234,20 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onArtifactCardDiscardStackClicked() {
 
     }
-    
+
     public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
         if (card.equals(ArtifactCardType.HELICOPTER)) {
             // Initialisieren des Helicopter-Helpers
             this.helicopterHelper = new HelicopterHelper(owner, index, this.mapPane);
         } else if (card.equals(ArtifactCardType.SANDBAGS)) {
-            List<Point> drainable = new ArrayList<>(); 
+            List<Point> drainable = new ArrayList<>();
             MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
             map.forEach(mapTile -> {
-                if(mapTile.getState().equals(MapTileState.FLOODED)){
+                if (mapTile.getState().equals(MapTileState.FLOODED)) {
                     drainable.add(map.getPositionForTile(mapTile.getProperties()));
                 }
             });
-            System.out.println("on card clicked: " + card + " " + index + " " + owner);
+            debug("on card clicked: " + card + " " + index + " " + owner);
             drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
         }
     }
@@ -276,22 +275,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void showNotification(Notification notification) {
-        if (notification.isError()) {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Es ist ein Fehler aufgetreten: ", notification.message());
-            pack.setAlertType(Alert.AlertType.ERROR);
-            pack.setStageStyle(StageStyle.UNDECORATED);
-            pack.open();
-        } else if (notification.isGameWon()) {
-            //TODO
+        if (notification.isGameWon()) {
+
         } else if (notification.isGameLost()) {
-            //TODO
-        } else if (notification.hasMessage()) {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Das Spiel informiert:", notification.message());
-            pack.setAlertType(Alert.AlertType.INFORMATION);
-            pack.setStageStyle(StageStyle.UNDECORATED);
-            pack.open();
-            System.out.println("info: " + notification.message());
+
         }
+        super.showNotification(notification);
     }
 
     @Override
@@ -358,9 +347,10 @@ public class InGameViewController extends AbstractViewController implements InGa
                 v.showFrontImage();
                 v.setInGameViewController(this);
                 v.setOwner(player);
+                if (transferActive) v.setTradeable(transferActive);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
-                index ++;
+                index++;
             }
         } else {
             Action action = getGameWindow().getControllerChan().getCurrentAction();
@@ -471,11 +461,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
-        System.out.println(actionsLeft);
-        switch (actionsLeft) {
-            case 3:
-                this.rotateTurnSpinner(0);
-                break;
+        debug("remaining actions: " + actionsLeft);
+        switch (actionsLeft) { //3 is covered by default
             case 2:
                 this.rotateTurnSpinner(-60);
                 break;
@@ -617,6 +604,10 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void setSpecialActive(boolean specialActive) {
         this.specialActive = specialActive;
+    }
+
+    public void setTransferActive(boolean transferActive) {
+        this.transferActive = transferActive;
     }
 
     private void highlightArtifacts(EnumSet<ArtifactType> artifacts) {

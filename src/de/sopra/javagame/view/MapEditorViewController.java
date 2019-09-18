@@ -8,6 +8,7 @@ import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapCheckUtil;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -80,6 +81,11 @@ public class MapEditorViewController extends AbstractViewController implements M
         setSaveButtonDisabled(true);
     }
 
+    @Override
+    public void showNotification(Notification notification) {
+        super.showNotification(notification);
+    }
+
     private void fillComboBox() {
         File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
@@ -120,6 +126,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     public void onCloseClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.MAP_EDITOR, getGameWindow().getPreviousViewState());
     }
 
