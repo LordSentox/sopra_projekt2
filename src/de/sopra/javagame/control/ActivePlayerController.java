@@ -242,7 +242,7 @@ public class ActivePlayerController {
     /**
      * Beendet den Zug und startet den nächsten Zug.
      */
-    public void endTurn() {
+    public void endActionPhase() {
         Action currentAction = controllerChan.finishAction();
         currentAction.setState(TurnState.DRAW_ARTIFACT_CARD);
         controllerChan.getGameFlowController().drawArtifactCards();
