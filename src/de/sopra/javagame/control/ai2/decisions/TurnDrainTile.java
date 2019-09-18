@@ -33,9 +33,9 @@ public class TurnDrainTile extends Decision {
     @Override
     public ActionQueue act() {
         if(!(player().getType()==PlayerType.ENGINEER)){
-            return startActionQueue().engineersDrain(drainTile);
+            return startActionQueue().drain(drainTile);
         }
-        return startActionQueue().drain(drainTile);
+        return startActionQueue().engineersDrain(drainTile);
     }
 
 }

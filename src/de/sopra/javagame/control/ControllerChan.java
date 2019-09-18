@@ -1,5 +1,6 @@
 package de.sopra.javagame.control;
 
+import de.sopra.javagame.control.ai.GameAI;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
@@ -102,8 +103,14 @@ public class ControllerChan {
     
     public void startNewGame (String mapName, MapFull fullMap, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
-        this.javaGame = pair.getLeft();
+
         this.currentAction = pair.getRight();
+        aiController.connectTrackers();
+        aiController.setAI(GameAI.DECISION_BASED_AI);
+
+        this.currentAction = pair.getLeft().finishAction(this.currentAction);
+        
+        this.javaGame = pair.getLeft();
 
         this.inGameViewAUI.refreshSome();
         //6 MapTiles zu beginn fluten

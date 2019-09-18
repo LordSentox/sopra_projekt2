@@ -1,11 +1,13 @@
 package de.sopra.javagame.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Triple;
-
+import de.sopra.javagame.util.serialize.typeadapter.ActionTypeAdapter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +36,21 @@ public class JavaGameTest {
             add(new Triple<>(PlayerType.DIVER,"", false));
             add(new Triple<>(PlayerType.COURIER,"", true));
         }};
+    }
+
+    @Test
+    public void serialize() {
+        Pair<JavaGame, Action> newGame = JavaGame.newGame(testMapString, testMap, Difficulty.NOVICE, players);
+        JavaGame javaGame = newGame.getLeft();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Action.class, new ActionTypeAdapter())
+                .create();
+
+        String serialized = gson.toJson(javaGame);
+        JavaGame deserialized = gson.fromJson(serialized, JavaGame.class);
+
+        Assert.assertEquals(serialized, gson.toJson(deserialized));
     }
 
     @Test

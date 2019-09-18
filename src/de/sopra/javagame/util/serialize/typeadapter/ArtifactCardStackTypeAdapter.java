@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("Duplicates")
 public class ArtifactCardStackTypeAdapter implements JsonSerializer<CardStack<ArtifactCard>>, JsonDeserializer<CardStack<ArtifactCard>> {
     @Override
     public JsonElement serialize(CardStack<ArtifactCard> src, Type typeOfSrc, JsonSerializationContext context) {
@@ -37,23 +38,21 @@ public class ArtifactCardStackTypeAdapter implements JsonSerializer<CardStack<Ar
         String stackJson = json.getAsJsonObject().getAsJsonPrimitive("drawStack").getAsString();
         String discardPileJson = json.getAsJsonObject().getAsJsonPrimitive("discardPile").getAsString();
 
-
         CardStack<ArtifactCard> cardStack = new CardStack<>();
 
         Stack<ArtifactCard> drawStack = Arrays.stream(stackJson.split(","))
-                .filter(s -> !s.isEmpty())
+                .filter(string -> !string.isEmpty())
                 .map(Integer::parseInt)
-                .map(i -> ArtifactCardType.values()[i])
+                .map(index -> ArtifactCardType.values()[index])
                 .map(ArtifactCard::new)
                 .collect(Collectors.toCollection(Stack::new));
 
         List<ArtifactCard> discardPile = Arrays.stream(discardPileJson.split(","))
-                .filter(s -> !s.isEmpty())
+                .filter(string -> !string.isEmpty())
                 .map(Integer::parseInt)
-                .map(i -> ArtifactCardType.values()[i])
+                .map(index -> ArtifactCardType.values()[index])
                 .map(ArtifactCard::new)
                 .collect(Collectors.toList());
-
 
         try {
             Class<CardStack> cardStackClass = CardStack.class;
@@ -70,8 +69,6 @@ public class ArtifactCardStackTypeAdapter implements JsonSerializer<CardStack<Ar
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
-
         return cardStack;
     }
 }
