@@ -49,7 +49,7 @@ public class MainMenuViewController extends AbstractViewController {
             DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
                     null, 
                     "Möchtest du wirklich ein neues Spiel starten?", 
-                    "Dein aktuell laufendes Spiel geht verloren!");  
+                    "Der nicht gespeicherte Fortschritt \ndeines laufenden Spiels geht verloren!");  
             pack.addButton("Spiel starten", () -> startGame());
             pack.addButton("Abbrechen", () -> {});
             pack.setAlertType(AlertType.CONFIRMATION);
