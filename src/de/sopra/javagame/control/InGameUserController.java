@@ -253,5 +253,7 @@ public class InGameUserController {
         }
 
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
+        controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
+
     }
 }
