@@ -1,7 +1,5 @@
 package de.sopra.javagame.view;
 
-import java.io.IOException;
-
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSlider;
 import de.sopra.javagame.util.GameSettings;
@@ -17,6 +15,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 public class InGameSettingsViewController extends AbstractViewController {
 
@@ -63,15 +63,12 @@ public class InGameSettingsViewController extends AbstractViewController {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setAlwaysOnTop(true);
-        
-        window.getMainStage().toBack();
-        mainPane.toBack();
-        
-        stage.requestFocus();
-        
-        stage.toFront();
         iInGameSettingsViewController.modalCopy = stage;
         stage.show();
+        window.getMainStage().toBack();
+        mainPane.toBack();
+        stage.toFront();
+        stage.requestFocus();
     }
 
 
