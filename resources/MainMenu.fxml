@@ -15,7 +15,5 @@
       <JFXButton styleClass="mainmenuJFXButton" fx:id="continueGameButton" layoutX="50" layoutY="150" prefHeight="30" prefWidth="200" text="Spiel fortsetzen" onAction="#onContinueClicked"/>
       <JFXButton styleClass="mainmenuJFXButton" fx:id="mapEditorButton" layoutX="50" layoutY="200" prefHeight="30" prefWidth="200" text="Map-Editor" onAction="#onMapEditorClicked"/>
       <JFXButton styleClass="mainmenuJFXButton" fx:id="highscoreButton" layoutX="50" layoutY="250" prefHeight="30" prefWidth="200" text="Highscores" onAction="#onHighscoresClicked"/>
-      
-         
    </children>
 </AnchorPane>
