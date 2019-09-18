@@ -3,13 +3,11 @@ package de.sopra.javagame.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.fail;
 
 public class MapCheckUtilTest {
     @Test
-    public void checkMapValidity() throws IOException {
+    public void checkMapValidity() {
         // Teste mit unvollständiger map
         MapBlackWhite map = new MapBlackWhite();
         Assert.assertFalse("Unvolständige Karte wurde nicht erkannt", MapCheckUtil.checkMapValidity(map));

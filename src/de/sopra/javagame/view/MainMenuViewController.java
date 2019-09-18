@@ -33,7 +33,7 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onLoadGameClicked() {
-        
+
     }
     public void onContinueClicked(){
         changeState(ViewState.MENU, ViewState.IN_GAME);

@@ -41,11 +41,11 @@ public abstract class Decision {
 
     private PreCondition preCondition;
 
-    private void debug(String debug) {
+    protected void debug(String debug) {
         DebugUtil.debug(debug);
     }
 
-    public final static Decision empty() {
+    public static Decision empty() {
         return new Decision() {
             @Override
             public Decision decide() {
@@ -54,7 +54,7 @@ public abstract class Decision {
 
             @Override
             public ActionQueue act() {
-                return startActionQueue();
+                return null;
             }
         };
     }
@@ -90,15 +90,21 @@ public abstract class Decision {
                 Decision decision = self.matchPreCondition() ? self.decide() : null;
                 debug("current decision: " + decision);
                 if (decision == null) {
-                    debug("conditions not met: " + self.getClass().getSimpleName());
                     //mögliche getroffene Conditions sollen nicht neu getroffen werden (Effizienz)
                     lessImportantDecision.conditions = self.conditions;
                     //Auch hier: Wenn die PreCondition nicht erfüllt, darf die decide Methode nicht verwendet werden
                     Decision otherDecision = lessImportantDecision.matchPreCondition() ? lessImportantDecision.decide() : null;
                     if (otherDecision == null)
-                        debug("conditions not met: " + self.getClass().getSimpleName());
+                        debug("less important decision not made: " + lessImportantDecision.getClass().getSimpleName());
                     return otherDecision;
                 } else return decision;
+            }
+
+            @Override
+            public void setControl(AIController control) {
+                super.setControl(control);
+                self.setControl(control);
+                lessImportantDecision.setControl(control);
             }
 
             @Override
@@ -124,7 +130,8 @@ public abstract class Decision {
             return conditions.get(condition);
         else {
             boolean value = condition.isTrue(this);
-            return conditions.put(condition, Conditions.condition(value));
+            conditions.put(condition, Conditions.condition(value));
+            return condition(condition);
         }
     }
 
@@ -206,7 +213,7 @@ public abstract class Decision {
         }
     }
 
-    public final void setControl(AIController control) {
+    public void setControl(AIController control) {
         this.control = control;
     }
 
@@ -214,7 +221,7 @@ public abstract class Decision {
         this.preCondition = preCondition;
     }
 
-    private final boolean matchPreCondition() {
+    private boolean matchPreCondition() {
         if (preCondition == null) return true;
         boolean allMatchTrue = Arrays.stream(preCondition.allTrue())
                 .allMatch(condition -> condition(condition).isTrue(this));

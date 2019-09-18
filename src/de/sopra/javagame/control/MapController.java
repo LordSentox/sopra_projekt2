@@ -17,8 +17,6 @@ public class MapController {
 
     public static final String MAP_FOLDER = "data/maps/";
 
-    private final ControllerChan controllerChan;
-
     /**
      * Die AUI mit der die angezeigten Daten im {@link de.sopra.javagame.view.MapEditorViewController} aktualisiert
      * werden.
@@ -29,7 +27,6 @@ public class MapController {
      * Erstellt einen neün {@link MapController}
      */
     MapController(ControllerChan controllerChan) {
-        this.controllerChan = controllerChan;
     }
 
     public void setMapEditorViewAUI(MapEditorViewAUI mapEditorViewAUI) {

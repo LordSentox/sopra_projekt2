@@ -14,18 +14,16 @@ import java.io.PrintWriter;
 
 public class HighScoresControllerTest {
 
-    private ControllerChan controllerChan;
     private HighScoresController highScoresController;
     private TestDummy.HighScoreView highScoresView;
-    private JavaGame javaGame;
 
 
     @Before
     public void setUp() {
-        controllerChan = TestDummy.getDummyControllerChan();
+        ControllerChan controllerChan = TestDummy.getDummyControllerChan();
         highScoresController = controllerChan.getHighScoresController();
         highScoresView = (TestDummy.HighScoreView) highScoresController.getHighScoresViewAUI();
-        javaGame = controllerChan.getJavaGame();
+        JavaGame javaGame = controllerChan.getJavaGame();
     }
 
     @Test

@@ -54,6 +54,7 @@ public class FloodCardTest {
         wannKommtDieFlut.flood(blubBlub);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testEquals() {
         FloodCard newWannKommtDieFlut = new FloodCard(MapTile.fromNumber(4).getProperties());

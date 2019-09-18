@@ -8,13 +8,11 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.Triple;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,7 @@ public class ControllerChanTest {
     private TestDummy.InGameView inGameView;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         this.controllerChan = TestDummy.getDummyControllerChan();
         this.testMap = new MapBlackWhite();
         for (int y = 0; y < Map.SIZE_Y; ++y) {

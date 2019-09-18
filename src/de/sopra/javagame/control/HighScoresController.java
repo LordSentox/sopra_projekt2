@@ -24,8 +24,6 @@ public class HighScoresController {
 
     public static final String REPLAY_FOLDER = "data/high_scores/replays/";
 
-    private final ControllerChan controllerChan;
-
     private List<HighScore> highScores;
 
     /**
@@ -38,7 +36,6 @@ public class HighScoresController {
      * Erstellt einen neün {@link HighScoresController}
      */
     HighScoresController(ControllerChan controllerChan) {
-        this.controllerChan = controllerChan;
     }
 
     public void setHighScoresViewAUI(HighScoresViewAUI highScoresViewAUI) {
