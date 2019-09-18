@@ -14,6 +14,7 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.*;
+import static de.sopra.javagame.util.DebugUtil.debug;
 
 /**
  * <h1>projekt2</h1>
@@ -54,10 +55,12 @@ public class DecisionMaker implements AIProcessor {
                     .filter(pair -> pair.getLeft().act().equals(decisionType))
                     .collect(Collectors.toList());
 
+            debug("filtered " + towerDecisions.size() + " decision for " + decisionType.name() + "-tower");
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander
             LinkedList<Class<? extends Decision>> buildingQueue = buildingQueue(towerDecisions);
 
             //Tower linear aus Queue generieren
+            debug("building decision tower for " + decisionType.name() + " with " + buildingQueue.size() + " elements in queue");
             Decision decisionTower = buildTower(buildingQueue);
 
             //tower der Sammlung hinzufügen
@@ -105,6 +108,7 @@ public class DecisionMaker implements AIProcessor {
         if (!queuedDecisions.isEmpty()) {
             Class<? extends Decision> poll = queuedDecisions.poll();
             Decision tower = ClassUtil.create(poll);
+            debug("created tower: " + tower);
             tower.setPreCondition(poll.getDeclaredAnnotation(PreCondition.class));
             if (tower != null) {
                 while (!queuedDecisions.isEmpty()) {
@@ -123,7 +127,7 @@ public class DecisionMaker implements AIProcessor {
         Decision decision = decisionTowers.get(result);
         decision = decision == null ? Decision.empty() : decision.decide();
         decision.setControl(control);
-        
+
         return decision;
     }
 

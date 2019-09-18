@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
 import static de.sopra.javagame.view.abstraction.ViewState.MAP_EDITOR;
 
 /**
@@ -159,12 +160,12 @@ public class GamePreparationsViewController extends AbstractViewController {
         }
         else if(chooseMapComboBox.getValue().equals("neu generieren")){
             currentMap = MapUtil.generateRandomIsland();
-            System.out.println("Map: random \n");
+            debug("Map: random \n");
         }
         else{
             String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getValue() +".map")), StandardCharsets.UTF_8);
             currentMap = MapUtil.readBlackWhiteMapFromString(mapString);
-            System.out.println("Map:" + chooseMapComboBox.getValue() + "\n");
+            debug("Map:" + chooseMapComboBox.getValue() + "\n");
         }
         
         

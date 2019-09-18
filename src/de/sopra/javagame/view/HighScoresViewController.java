@@ -20,6 +20,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * GUI für das anzeigen der Highscores
  *
@@ -64,7 +66,7 @@ public class HighScoresViewController extends AbstractViewController implements 
         for (String currentName : scoreNames) {
             mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 6));
             mapSelectionComboBox.getItems().sort(Comparator.naturalOrder());
-            System.out.println(currentName + "\n");
+            debug(currentName + "\n");
         }
 
 
@@ -96,8 +98,6 @@ public class HighScoresViewController extends AbstractViewController implements 
 
     public void onCloseClicked() {
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
-
-
     }
 
     public void onMainMenuClicked() {

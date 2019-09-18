@@ -2,7 +2,9 @@ package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,6 +26,9 @@ public class ActionPicker extends CirclePopupMenu {
     private MapPaneTile mapPaneTile;
     private PlayerType movingPlayer;
     private PlayerType delegatingPlayer;
+    private ArtifactCardType cardType;
+    private int cardIndex;
+    private InGameViewController controller;
 
     public ActionPicker(Node node, MouseButton mouseButton) {
         super(node, mouseButton);
@@ -46,6 +51,15 @@ public class ActionPicker extends CirclePopupMenu {
 
     public void setMapPaneTile(MapPaneTile mapPaneTile) {
         this.mapPaneTile = mapPaneTile;
+    }
+    public void setArtifactCardType(ArtifactCardType type) {
+        this.cardType = type;   
+    }
+    public void setCardIndex(int index){
+        this.cardIndex = index;
+    }
+    public void setInGameViewController(InGameViewController igvc){
+        this.controller = igvc;
     }
 
     public enum ActionButton implements Function<ActionPicker, CustomMenuItem> {
@@ -132,7 +146,41 @@ public class ActionPicker extends CirclePopupMenu {
 
                 return findArtifactButtonMenuItem;
             }
+        },
+        DISCARD {
+            @Override
+            public CustomMenuItem apply(ActionPicker picker) {
+                EventHandler<ActionEvent> discardHandler = new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        //TODO wie genau discarden wir?
+                    }
+                };
+                CustomMenuItem discardButtonMenuItem = new CustomMenuItem(new Button("discard"));
+                discardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
+                discardButtonMenuItem.setOnAction(discardHandler);
+
+                return discardButtonMenuItem;
+            } 
+        },
+        PLAY_CARD{
+            @Override
+            public CustomMenuItem apply(ActionPicker picker) {
+                EventHandler<ActionEvent> playCardHandler = new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        picker.controller.onSpecialCardClicked(picker.cardType, picker.cardIndex, picker.delegatingPlayer);
+                        
+                    }
+                };
+                CustomMenuItem playcardButtonMenuItem = new CustomMenuItem(new Button("special"));
+                playcardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getSpecial()));
+                playcardButtonMenuItem.setOnAction(playCardHandler);
+
+                return playcardButtonMenuItem;
+            } 
         }
+        ;
 
     }
 
