@@ -52,9 +52,23 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
 
     @Override
     public void handle(MouseEvent event) {
+        List<ActionButton> buttons = new LinkedList<>();
+
+        // Wenn gerade eine Helikopterkarte gespielt wird, soll der Spieler zu ihr hinzugefügt werden oder von ihr
+        // entfernt werden
+        HelicopterHelper helicopterHelper = this.tile.getControl().getHelicopterHelper();
+        if (event.getButton() == MouseButton.PRIMARY && helicopterHelper != null && helicopterHelper.addToTransport(this.type)) {
+            this.highlight();
+            return;
+        }
+        else if (event.getButton() == MouseButton.SECONDARY && helicopterHelper != null) {
+            this.dehighlight();
+            helicopterHelper.removeFromTransport(this.type);
+            return;
+        }
+
         Player activePlayer = tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer();
         boolean hasSpecial = shallShowSpecial();
-        List<ActionButton> buttons = new LinkedList<>();
         //Mit der linken Maustaste soll die Special deaktiviert und
         if (event.getButton() == MouseButton.PRIMARY && activePlayer.getType() == type) {
             tile.getControl().getGameWindow().getControllerChan().getInGameUserController().showMovements(type, false);

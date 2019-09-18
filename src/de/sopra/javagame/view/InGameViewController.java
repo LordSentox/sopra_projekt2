@@ -7,6 +7,7 @@ import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
+import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
@@ -54,6 +55,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     private boolean specialActive = false;
     private Supplier<Player> targetPlayer;
 
+    // Wird gesetzt, wenn eine Helikopterkarte gespielt werden soll
+    private HelicopterHelper helicopterHelper;
+
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
     MapPane mapPane;
@@ -70,6 +74,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private Timeline timeline;
 
     public void init() {
+        this.helicopterHelper = null;
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
         waterLevelView.setProgress(7);
 
@@ -233,7 +238,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     
     public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
         if (card.equals(ArtifactCardType.HELICOPTER)) {
-            //TODO
+            // Initialisieren des Helicopter-Helpers
+            this.helicopterHelper = new HelicopterHelper(owner, index, this.mapPane);
         } else if (card.equals(ArtifactCardType.SANDBAGS)) {
             List<Point> drainable = new ArrayList<>(); 
             MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
@@ -632,4 +638,22 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
     }
 
+    public HelicopterHelper getHelicopterHelper() {
+        return this.helicopterHelper;
+    }
+
+    public void tryPlayHelicopterCard() {
+        if (this.helicopterHelper == null || !this.helicopterHelper.readyToTransport()) {
+            return;
+        }
+
+        this.getGameWindow().getControllerChan().getInGameUserController().playHelicopterCard(helicopterHelper.getCaster(),
+                helicopterHelper.getCardIndex(),
+                new Pair<>(helicopterHelper.getStartTile().getPosition(), helicopterHelper.getDestinationTile().getPosition()),
+                new ArrayList<>(helicopterHelper.getToTransportConst()));
+
+        // Dehighlight all and reset Helicopter card
+        this.resetHighlighting();
+        this.helicopterHelper = null;
+    }
 }

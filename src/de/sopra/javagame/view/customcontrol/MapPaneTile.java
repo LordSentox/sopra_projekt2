@@ -35,8 +35,9 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     private boolean canSandBag = false;
     private int cardIndex;
     private ActionPicker contextPicker;
+    private MapPane pane;
 
-    public MapPaneTile(InGameViewController control, TileView base, Point position) {
+    public MapPaneTile(InGameViewController control, TileView base, Point position, MapPane pane) {
         this.control = control;
         this.position = position;
         this.getChildren().add(base);
@@ -46,6 +47,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
         this.contextPicker = new ActionPicker(this, MouseButton.NONE);
         this.contextPicker.setMapPaneTile(this);
+        this.pane = pane;
     }
 
     public MapPaneTile(ImageView base) {
@@ -168,6 +170,15 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
+        // Wenn Spieler zum Helikoptern ausgewählt wurden, sollen sie geflogen werden
+        //control.getGameWindow().getControllerChan().getInGameUserController().playHelicopterCard();
+
+        // Wenn gerade eine Helikopterkarte gespielt wird, und das Tile angeklickt wird, versuche abzuheben
+        if (this.getControl().getHelicopterHelper() != null) {
+            this.getControl().getHelicopterHelper().setDestinationTile(this);
+            this.getControl().tryPlayHelicopterCard();
+        }
+
         PlayerType activePlayerType = control.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
 
         List<ActionButton> buttons = new LinkedList<>();
@@ -192,4 +203,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         base.showImage(state);
     }
 
+    public MapPane getPane() {
+        return pane;
+    }
 }
