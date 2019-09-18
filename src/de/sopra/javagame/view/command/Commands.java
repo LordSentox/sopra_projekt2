@@ -53,6 +53,7 @@ public final class Commands {
     private void loadCommands() {
         processor.register(DemonstrateOrdinaryRandomImplosionStrategies.class, DemonstrateOrdinaryRandomImplosionStrategies::new);
         processor.register(DebugTools.class, DebugTools::new);
+        processor.register(MapManipulation.class, MapManipulation::new);
     }
 
     @SuppressWarnings("unchecked")
