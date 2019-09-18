@@ -292,14 +292,14 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshMovementOptions(List<Point> points) {
         movePoints.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(false));
-        movePoints = points;
+        movePoints = new ArrayList<>(points);
         points.forEach(point -> mapPane.getMapStackPane(point).setCanMoveTo(true));
     }
 
     @Override
     public void refreshDrainOptions(List<Point> points) {
         drainablePoints.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(false));
-        drainablePoints = points;
+        drainablePoints = new ArrayList<>(points);
         points.forEach(point -> mapPane.getMapStackPane(point).setCanDrain(true));
     }
 
