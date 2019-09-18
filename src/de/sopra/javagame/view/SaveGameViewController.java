@@ -2,9 +2,10 @@ package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-import de.sopra.javagame.control.ControllerChan;
+
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.GameWindow;
+import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
@@ -35,14 +36,21 @@ public class SaveGameViewController extends AbstractViewController {
     JFXTextField saveGameTextField;
     
     private Stage modalCopy;
+    private File[] loadFiles;
 
-    @SuppressWarnings("Duplicates")
-    public void init() {
+    public void init() throws IOException {
         mainPane.setImage(TextureLoader.getBackground());
 
+        fillListView();
+        final int NO_SAVE_FILES = 0;
+        loadMapViewLabel.setDisable(loadFiles.length == NO_SAVE_FILES);
+        notificationLabel.setTextFill(EditorMapPane.RED);
+    }
 
-        File loadFile = new File(ControllerChan.SAVE_GAME_FOLDER);
-        File[] loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
+
+    private void fillListView() {
+        File loadFile = new File(getGameWindow().getControllerChan().SAVE_GAME_FOLDER);
+        loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
                 && file.getName().endsWith(".save") && file.getName().length() > 5);
         List<String> loadNames = Arrays.stream(loadFiles).map(File::getName).collect(Collectors.toList());
 
@@ -51,9 +59,6 @@ public class SaveGameViewController extends AbstractViewController {
             loadMapListView.getItems().sort(Comparator.naturalOrder());
             System.out.println(currentName + "\n");
         }
-        final int NO_SAVE_FILES = 0;
-        loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
-        notificationLabel.setTextFill(EditorMapPane.RED);
     }
 
 
@@ -68,6 +73,7 @@ public class SaveGameViewController extends AbstractViewController {
             showNotificatoin("Das Feld ist nicht ausgefüllt");
             return;
         }
+       fillListView();
         getGameWindow().getControllerChan().saveGame(selectedGame);
         
     }

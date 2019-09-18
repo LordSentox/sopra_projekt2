@@ -2,10 +2,13 @@ package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXButton;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
+import javafx.stage.StageStyle;
 
 import static de.sopra.javagame.view.abstraction.ViewState.*;
 
@@ -31,13 +34,31 @@ public class MainMenuViewController extends AbstractViewController {
 //        if(getGameWindow().getControllerChan().getCurrentAction() == null){
 //            continueGameButton.setDisable(true);
 //        }
+
+        setContinueButtonDisabled(getGameWindow().getControllerChan().getCurrentAction() == null);
     }
 
     public void onSettingsClicked() {
         changeState(ViewState.MENU, SETTINGS);
     }
 
-    public void onStartGameClicked() {
+    public void onMaybeStartGameClicked() {
+        if (continueGameButton.isDisabled()) {
+            startGame();
+        } else {
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
+                    null, 
+                    "Möchtest du wirklich ein neues Spiel starten?", 
+                    "Dein aktuell laufendes Spiel geht verloren!");  
+            pack.addButton("Spiel starten", () -> startGame());
+            pack.addButton("Abbrechen", () -> {});
+            pack.setAlertType(AlertType.CONFIRMATION);
+            pack.setStageStyle(StageStyle.UNDECORATED);
+            pack.open();
+        }
+    }
+    
+    private void startGame() {
         changeState(ViewState.MENU, ViewState.GAME_PREPARATIONS);
     }
 
@@ -46,10 +67,12 @@ public class MainMenuViewController extends AbstractViewController {
 
     }
     public void onContinueClicked(){
-        if(getGameWindow().getControllerChan().getCurrentAction() == null){  
-            return;
-        }
+        setContinueButtonDisabled(getGameWindow().getControllerChan().getCurrentAction() == null);
         changeState(ViewState.MENU, ViewState.IN_GAME);
+    }
+
+    private void setContinueButtonDisabled(boolean disabled) {
+        continueGameButton.setDisable(disabled);
     }
 
     public void onMapEditorClicked() {
