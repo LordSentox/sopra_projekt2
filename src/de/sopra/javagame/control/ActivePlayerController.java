@@ -111,7 +111,8 @@ public class ActivePlayerController {
         if (player.getActionsLeft() <= 0) {
             return;
         }
-
+        System.out.println(handCardIndex);
+        System.out.println(targetPlayer.toString());
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());

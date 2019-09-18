@@ -20,6 +20,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     private int handCardIndex;
     private InGameViewController controller;
     private boolean selected;
+    private boolean tradeable;
     private PlayerType ownerType;
     private ActionPicker ap;
 
@@ -56,6 +57,12 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     public void setOwner(PlayerType owner) {
         this.ownerType = owner;
     }
+    public void setTradeable(boolean tradeable){
+        this.tradeable = tradeable;
+    }
+    public boolean isTradeable(){
+        return tradeable;
+    }
 
     public void setInGameViewController(InGameViewController igvc) {
         this.controller = igvc;
@@ -72,6 +79,12 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
             selected = !selected;
             updateHighlight();
             if (!(handCardIndex == -1)) {
+                if(tradeable){
+                    controller.getGameWindow().getControllerChan().getActivePlayerController().transferCard(handCardIndex, controller.getTargetPlayer().getType());
+                    controller.resetTargetPlayer();
+                    controller.setTransferActive(false);
+                    return;
+                }
                 ap.setCardIndex(handCardIndex);
                 ap.setArtifactCardType(this.getType());
                 ap.setDelegatingPlayer(ownerType);
