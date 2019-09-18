@@ -43,9 +43,6 @@ public class Explorer extends Player {
     @Override
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> moves = super.legalMoves(false);
-        if (!specialActive)
-            return moves;
-
         // Diagonale Bewegungen
         List<Point> additional = Arrays.asList(
                 new Point(this.position.add(-1, -1)),

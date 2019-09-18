@@ -159,6 +159,7 @@ public class ActionPicker extends CirclePopupMenu {
                     @Override
                     public void handle(ActionEvent e) {
                         //TODO wie genau discarden wir?
+                        picker.controller.getGameWindow().getControllerChan().getInGameUserController().discardCard(picker.delegatingPlayer, picker.cardIndex);
                     }
                 };
                 CustomMenuItem discardButtonMenuItem = new CustomMenuItem(new Button("discard"));

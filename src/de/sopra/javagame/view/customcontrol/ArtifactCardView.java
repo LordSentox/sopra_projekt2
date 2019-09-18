@@ -71,7 +71,6 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
         if (isFrontShown()) {
             selected = !selected;
             updateHighlight();
-            if(!(handCardIndex == -1)){
             if (!(handCardIndex == -1)) {
                 ap.setCardIndex(handCardIndex);
                 ap.setArtifactCardType(this.getType());
@@ -80,12 +79,14 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
                 List<ActionButton> buttons = new LinkedList<>();
                 if (type.equals(ArtifactCardType.HELICOPTER) || type.equals(ArtifactCardType.SANDBAGS))
                     buttons.add(ActionButton.PLAY_CARD);
+                if(handCardIndex >=5)
+                    buttons.add(ActionButton.DISCARD);
                 if (buttons.size() > 0) {
                     ap.init(buttons.toArray(new ActionButton[buttons.size()]));
                     ap.show(event);
                     }
                 }
-            }
+            
         }
     }
     @Override

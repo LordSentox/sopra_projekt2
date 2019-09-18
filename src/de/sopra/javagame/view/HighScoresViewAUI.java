@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Lisa, Hannah
  */
-public interface HighScoresViewAUI {
+public interface HighScoresViewAUI extends NotificationAUI {
 
     /**
      * aktualisiert die Anzeige der Highscoe Liste

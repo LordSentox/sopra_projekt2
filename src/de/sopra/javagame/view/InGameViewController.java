@@ -9,7 +9,6 @@ import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
-import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
@@ -19,14 +18,12 @@ import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -122,7 +119,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void initGridPane() {
-        IntStream.range(0, 9).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(item % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
+        IntStream.range(0, 6).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(ACTIVE_CARD_SIZE-50)));
 
         IntStream.range(0, 5).forEach(item -> {
             handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
@@ -270,22 +267,15 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void showNotification(Notification notification) {
-        if (notification.isError()) {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Es ist ein Fehler aufgetreten: ", notification.message());
-            pack.setAlertType(Alert.AlertType.ERROR);
-            pack.setStageStyle(StageStyle.UNDECORATED);
-            pack.open();
-        } else if (notification.isGameWon()) {
-            //TODO
-        } else if (notification.isGameLost()) {
-            //TODO
-        } else if (notification.hasMessage()) {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), "", "Das Spiel informiert:", notification.message());
-            pack.setAlertType(Alert.AlertType.INFORMATION);
-            pack.setStageStyle(StageStyle.UNDECORATED);
-            pack.open();
-            System.out.println("info: " + notification.message());
+        if(notification.isGameWon())
+        {
+
         }
+        else if(notification.isGameLost())
+        {
+
+        }
+        super.showNotification(notification);
     }
 
     @Override
@@ -348,13 +338,13 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index / 2);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index);
                 v.showFrontImage();
                 v.setInGameViewController(this);
                 v.setOwner(player);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
-                index += 2;
+                index ++;
             }
         } else {
             Action action = getGameWindow().getControllerChan().getCurrentAction();

@@ -1,11 +1,14 @@
 package de.sopra.javagame.view.skin;
 
+import de.sopra.javagame.model.WaterLevel;
 import de.sopra.javagame.view.textures.TextureLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -17,9 +20,11 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
 
     private static final String[] LABEL_COLOR_CLASSES = new String[]{"l-water", "lm-water", "m-water", "mh-water", "h-water"};
     private final FillProgressIndicator indicator;
-    private final StackPane container = new StackPane();
+    private final VBox container = new VBox();
+    private final StackPane waterLevelContainer = new StackPane();
     private final Label levelLabel = new Label();
-    private final Rectangle clip = new Rectangle(container.getWidth(), container.getHeight());
+    private final Label cardsDrawnLabel = new Label();
+    private final Rectangle clip = new Rectangle(waterLevelContainer.getWidth(), waterLevelContainer.getHeight());
     private final Circle borderCircle = new Circle();
     private final Circle labelCircle = new Circle();
 
@@ -29,7 +34,7 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
         this.updateRadii();
         this.initStyles();
 
-        this.clip.widthProperty().bind(container.widthProperty());
+        this.clip.widthProperty().bind(waterLevelContainer.widthProperty());
         this.clip.setManaged(false);
 
         Circle fillerCircle = new Circle();
@@ -50,7 +55,15 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
         circlePane.setClip(clip);
 
         this.initLabel(indicator.getProgress());
-        this.container.getChildren().addAll(circlePane, this.borderCircle, this.labelCircle, this.levelLabel);
+        this.waterLevelContainer.getChildren().addAll(circlePane, this.borderCircle, this.labelCircle, this.levelLabel);
+
+        waterLevelContainer.applyCss();
+        waterLevelContainer.layout();
+
+        updateCardsDrawnLabel();
+
+        container.getChildren().addAll(waterLevelContainer, cardsDrawnLabel);
+        container.setAlignment(Pos.CENTER);
 
         container.applyCss();
         container.layout();
@@ -60,11 +73,15 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
 
 
     private void initContainer() {
+        this.waterLevelContainer.getStylesheets().addAll(indicator.getStylesheets());
+        this.waterLevelContainer.getStylesheets().add(getClass().getResource("/stylesheets/water-level.css").toExternalForm());
+        this.waterLevelContainer.getStyleClass().add("water-level-container");
+        this.waterLevelContainer.setMaxHeight(Double.NEGATIVE_INFINITY);
+        this.waterLevelContainer.setMaxWidth(Double.NEGATIVE_INFINITY);
+
         this.container.getStylesheets().addAll(indicator.getStylesheets());
         this.container.getStylesheets().add(getClass().getResource("/stylesheets/water-level.css").toExternalForm());
-        this.container.getStyleClass().add("water-level-container");
-        this.container.setMaxHeight(Double.NEGATIVE_INFINITY);
-        this.container.setMaxWidth(Double.NEGATIVE_INFINITY);
+        this.container.getStyleClass().add("water-level-container-outer");
     }
 
     private void initStyles() {
@@ -79,6 +96,8 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
     private void initLabel(int value) {
         this.setProgressLabel(value);
         this.levelLabel.getStyleClass().add("water-level-label");
+        this.cardsDrawnLabel.getStyleClass().add("cards-drawn-label");
+        this.cardsDrawnLabel.setStyle("-fx-stroke: #000");
     }
 
     private void setProgressLabel(int value) {
@@ -87,7 +106,12 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
             updateLabelColor();
             updateBorderColor();
             updateLabelCircleColor();
+            updateCardsDrawnLabel();
         }
+    }
+
+    private void updateCardsDrawnLabel() {
+        cardsDrawnLabel.setText("Flutkarten/Zug: " + WaterLevel.DRAW_AMOUNT_BY_LEVEL[indicator.getProgress()]);
     }
 
     private void updateLabelCircleColor() {
@@ -103,6 +127,8 @@ public class WaterLevelSkin implements Skin<FillProgressIndicator> {
     private void updateLabelColor() {
         levelLabel.getStyleClass().removeAll(LABEL_COLOR_CLASSES);
         levelLabel.getStyleClass().add(LABEL_COLOR_CLASSES[(int) (indicator.getProgress() * (4 / (double) MAX_WATER_LEVEL))]);
+        cardsDrawnLabel.getStyleClass().removeAll(LABEL_COLOR_CLASSES);
+        cardsDrawnLabel.getStyleClass().add(LABEL_COLOR_CLASSES[(int) (indicator.getProgress() * (4 / (double) MAX_WATER_LEVEL))]);
     }
 
     /**
