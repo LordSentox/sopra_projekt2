@@ -160,9 +160,13 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     }
 
     public void highlightPlayerForPlayerType(PlayerType type) {
-        if (playersOnTile.contains(type)) {
+        fourPlayerPane.getChildren().clear();
+        for(PlayerType playerType : playersOnTile){
             PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
-            view.highlight();
+            if (playersOnTile.contains(type)) {
+                view.highlight();
+            }
+            fourPlayerPane.getChildren().add(view);
         }
     }
 

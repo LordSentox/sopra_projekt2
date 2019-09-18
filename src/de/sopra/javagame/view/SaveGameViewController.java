@@ -59,10 +59,7 @@ public class SaveGameViewController extends AbstractViewController {
 
     public void onCloseClicked() {
 //        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
-        
         modalCopy.close();
-
-
     }
     
     public void onSaveGameClicked(){

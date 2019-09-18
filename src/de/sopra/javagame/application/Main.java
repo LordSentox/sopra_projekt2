@@ -1,12 +1,11 @@
 package de.sopra.javagame.application;
 
 import de.sopra.javagame.view.abstraction.GameWindow;
+import de.sopra.javagame.view.abstraction.Notifications;
 import de.spaceparrots.translator.api.Translator;
 import de.spaceparrots.translator.core.Dictionary;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 
 public class Main extends Application {
@@ -20,12 +19,12 @@ public class Main extends Application {
 //        Dictionary dictionary = new Dictionary();
 //        dictionary.registerDictionaryFile(new DictionaryFile(getClass().getResourceAsStream("/lang/de_DE.xml")));
 //        Translator.setDictionary(dictionary);
+        GameWindow window = new GameWindow(primaryStage);
         try {
-            GameWindow window = new GameWindow(primaryStage);
             window.init();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Das Spiel konnte nicht gestartet werden!");
+            window.showNotification(Notifications.info("Das Spiel konnte nicht gestartet werden! (" + e.toString() + ")"));
         }
 //        window.setState(ViewState.MENU);
     }

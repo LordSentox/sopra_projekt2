@@ -6,6 +6,7 @@ import de.sopra.javagame.control.HighScoresController;
 import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
@@ -98,6 +99,11 @@ public class HighScoresViewController extends AbstractViewController implements 
 
     public void onMainMenuClicked() {
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
+    }
+
+    @Override
+    public void showNotification(Notification notification) {
+        super.showNotification(notification);
     }
 
     @Override

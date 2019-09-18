@@ -41,6 +41,7 @@ public class ActivePlayerController {
      *
      * @see PlayerType
      */
+    // TODO: Wird hierfür tatsächlich jedes Mal eine Aktion benötigt?
     public void showSpecialAbility() {
 
         // XXX: Nicht immer Spieler kopieren
@@ -115,7 +116,7 @@ public class ActivePlayerController {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
 
-            // TODO: Wird hierfür tatsächlich jedes Mal eine Aktion benötigt?
+            //  Wird hierfür tatsächlich jedes Mal eine Aktion benötigt? JA
             player.setActionsLeft(player.getActionsLeft() - 1);
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
 
