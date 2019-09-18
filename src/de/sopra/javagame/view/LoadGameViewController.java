@@ -1,19 +1,13 @@
 package de.sopra.javagame.view;
 
-import de.sopra.javagame.control.HighScoresController;
+import com.jfoenix.controls.JFXListView;
+import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
-import de.sopra.javagame.view.abstraction.GameWindow;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +15,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.jfoenix.controls.JFXListView;
 
 /**
  * GUI für das anzeigen der Highscores
@@ -34,26 +26,27 @@ public class LoadGameViewController extends AbstractViewController {
     @FXML
     ImageView mainPane;
     @FXML
-    JFXListView<String> loadGameListViewLabel;
+    JFXListView<String> loadMapListView;
     @FXML
     Label loadMapViewLabel;
 
+    @SuppressWarnings("Duplicates")
     public void init() throws IOException {
         mainPane.setImage(TextureLoader.getBackground());
 
 
-        File loadFile = new File(getGameWindow().getControllerChan().SAVE_GAME_FOLDER);
+        File loadFile = new File(ControllerChan.SAVE_GAME_FOLDER);
         File[] loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
                 && file.getName().endsWith(".save") && file.getName().length() > 5);
         List<String> loadNames = Arrays.stream(loadFiles).map(File::getName).collect(Collectors.toList());
 
         for (String currentName : loadNames) {
-            loadGameListViewLabel.getItems().addAll(currentName.substring(0, currentName.length() - 5));
-            loadGameListViewLabel.getItems().sort(Comparator.naturalOrder());
+            loadMapListView.getItems().addAll(currentName.substring(0, currentName.length() - 5));
+            loadMapListView.getItems().sort(Comparator.naturalOrder());
             System.out.println(currentName + "\n");
         }
         final int NO_SAVE_FILES = 0;
-        loadMapViewLabel.setDisable(loadFiles.length == NO_SAVE_FILES);
+        loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
 
     }
 
@@ -65,8 +58,10 @@ public class LoadGameViewController extends AbstractViewController {
     }
     
     public void onLoadGameClicked(){
-        String selectedGame = loadGameListViewLabel.getSelectionModel().getSelectedItem();
-        getGameWindow().getControllerChan().loadSaveGame(selectedGame);
+        String selectedGame = loadMapListView.getSelectionModel().getSelectedItem();
+        getGameWindow().getControllerChan().loadSaveGame(selectedGame, false);
+        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME);
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getJavaGame().getPreviousAction());
     }
 
 
