@@ -8,7 +8,6 @@ import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 public class InGameSettingsViewController extends AbstractViewController {
 
@@ -51,16 +50,5 @@ public class InGameSettingsViewController extends AbstractViewController {
     public void onBackToMenuClicked() {
         getGameWindow().getSettings().save();
         changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
-    }
-
-    @Override
-    public void reset() {
-        getGameWindow().resetSettings();
-        init();
-    }
-
-    @Override
-    public void show(Stage stage) {
-
     }
 }

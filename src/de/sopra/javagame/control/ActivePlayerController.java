@@ -114,10 +114,19 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         Player target = currentAction.getPlayer(targetPlayer);
         ArtifactCard card = player.getHand().get(handCardIndex);
+        if (player.getActionsLeft() <= 0) {
+            return;
+        }
+
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
+
+            // TODO: Wird hierfür tatsächlich jedes Mal eine Aktion benötigt?
+            player.setActionsLeft(player.getActionsLeft() - 1);
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+
+            controllerChan.finishAction();
         }
     }
 
@@ -136,6 +145,8 @@ public class ActivePlayerController {
             controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+
+            controllerChan.finishAction();
         }
     }
 
@@ -153,11 +164,10 @@ public class ActivePlayerController {
     public void move(Point destination, boolean useSpecial) {
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
-        int actionsLeft = player.getActionsLeft();
-        
+
         if (player.move(destination, true, useSpecial)) {
             controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, player.getType());
-            controllerChan.getInGameViewAUI().refreshActionsLeft(actionsLeft);
+            controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
 
             controllerChan.finishAction();
         } else {
@@ -181,12 +191,13 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         Player forcePlayer = currentAction.getPlayer(target);
 
-        if (player.canMoveOthers()) {
-            player.forcePush(direction, forcePlayer);
+        if (player.canMoveOthers() && player.forcePush(direction, forcePlayer)) {
             Point position = forcePlayer.getPosition();
 
             controllerChan.getInGameViewAUI().refreshPlayerPosition(position, target);
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+
+            this.controllerChan.finishAction();
         }
     }
 
@@ -207,6 +218,8 @@ public class ActivePlayerController {
                 controllerChan.getInGameViewAUI().refreshDrainOptions(player.drainablePositions());
             }
          }
+
+        this.controllerChan.finishAction();
     }
 
     /**
@@ -229,7 +242,7 @@ public class ActivePlayerController {
     /**
      * Beendet den Zug und startet den nächsten Zug.
      */
-    public void endTurn() {
+    public void endActionPhase() {
         Action currentAction = controllerChan.finishAction();
         currentAction.setState(TurnState.DRAW_ARTIFACT_CARD);
         controllerChan.getGameFlowController().drawArtifactCards();
@@ -238,6 +251,8 @@ public class ActivePlayerController {
         if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
             currentAction = controllerChan.finishAction();
             currentAction.setState(TurnState.FLOOD);
+            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getDrawAmount());
+            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
         }
 
         controllerChan.getInGameViewAUI().refreshSome();

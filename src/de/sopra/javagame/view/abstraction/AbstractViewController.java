@@ -1,7 +1,6 @@
 package de.sopra.javagame.view.abstraction;
 
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 /**
  * bietet Schnittstellenmethoden die alle ViewController benötigen
@@ -30,18 +29,6 @@ public abstract class AbstractViewController {
     public void setScene(Scene scene) {
         this.scene = scene;
     }
-
-    /**
-     * neu initailisieren des aktuellen Controllers
-     */
-    public abstract void reset();
-
-    /**
-     * zeigen des aktuellen controllers als neue scene auf der gegebenen stage
-     *
-     * @param stage Fenster(Menu, Settings, InGame, MapEditor, GamePreperatios, HighScores) welches angezeigt werden soll
-     */
-    public abstract void show(Stage stage);
 
     /**
      * Wechsel zum übergebenen ViewState

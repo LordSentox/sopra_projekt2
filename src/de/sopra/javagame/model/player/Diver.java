@@ -6,7 +6,6 @@ import de.sopra.javagame.util.CopyUtil;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.Point;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -40,15 +39,15 @@ public class Diver extends Player {
      */
     @Override
     public List<Point> legalMoves(boolean specialActive) {
+        List<Point> legalMoves = super.legalMoves(false);
         if (!specialActive) {
-            return super.legalMoves(false);
+            return legalMoves;
         }
 
         boolean[][] reachable = this.reachableDestinations();
 
         // Gebe alle Positionen zurück, welche der Taucher erreichen kann, aber filtere alle heraus, welche überflutet
         // sind, oder kein Inselfeld sind.
-        List<Point> legalMoves = new ArrayList<>();
         for (int y = 0; y < reachable.length; ++y) {
             for (int x = 0; x < reachable[y].length; ++x) {
                 if (reachable[y][x] && this.action.getMap().get(x, y) != null && this.action.getMap().get(x, y).getState() == DRY) {

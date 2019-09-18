@@ -6,7 +6,6 @@ import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 import static de.sopra.javagame.view.abstraction.ViewState.*;
 
@@ -53,13 +52,4 @@ public class MainMenuViewController extends AbstractViewController {
 
     }
 
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void show(Stage stage) {
-
-    }
 }

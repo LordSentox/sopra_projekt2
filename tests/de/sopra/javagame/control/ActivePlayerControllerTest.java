@@ -586,7 +586,7 @@ public class ActivePlayerControllerTest {
     @Test
     public void testEndTurn() {
         Action current = controllerChan.getCurrentAction();
-        activePlayerController.endTurn();
+        activePlayerController.endActionPhase();
         Assert.assertNotSame("ControllerChan still owns old action after calling entTurn", current, controllerChan.getCurrentAction());
     }
 

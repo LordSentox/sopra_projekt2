@@ -66,11 +66,14 @@ public class Action implements Copyable<Action>, Serializable {
      */
     private TurnState state;
 
+    private int floodCardsToDraw;
+
     private boolean gameEnded;
 
     private boolean gameWon;
 
     private Action() {
+        floodCardsToDraw = 0;
     }
 
     public CardStack<ArtifactCard> getArtifactCardStack() {
@@ -234,6 +237,7 @@ public class Action implements Copyable<Action>, Serializable {
         action.state = this.state;
         action.map = new MapFull(this.map);
         action.waterLevel = this.waterLevel.copy();
+        action.floodCardsToDraw = this.floodCardsToDraw;
         return action;
     }
 
@@ -265,5 +269,11 @@ public class Action implements Copyable<Action>, Serializable {
         return this.map;
     }
 
+    public void setFloodCardsToDraw(int toDraw) {
+        this.floodCardsToDraw = toDraw;
+    }
 
+    public int getFloodCardsToDraw() {
+        return floodCardsToDraw;
+    }
 }

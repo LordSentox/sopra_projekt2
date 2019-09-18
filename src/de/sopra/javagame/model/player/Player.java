@@ -92,7 +92,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
             this.setPosition(destination);
            
             if (costsAction) {
-                actionsLeft -= 1;
+                actionsLeft--;
             }
             return true;
         }
@@ -173,6 +173,10 @@ public abstract class Player implements Copyable<Player>, Serializable {
      * @return den betroffenen ArtefaktTypen, wenn ein Artefakt collected wurde, none, sonst
      */
     public ArtifactType collectArtifact() {
+        if (actionsLeft <= 0) {
+            return ArtifactType.NONE;
+        }
+
         MapTile mapTile = this.action.getMap().get(this.position);
         ArtifactType hiddenArtifact = mapTile.getProperties().getHidden();
 
@@ -197,6 +201,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
             // Lege die vier Karten auf den Ablagestapel
             this.hand.removeAll(correspondingHandCards);
             this.action.getArtifactCardStack().discard(correspondingHandCards);
+            this.actionsLeft--;
             this.action.getDiscoveredArtifacts().add(hiddenArtifact);
 
             return hiddenArtifact;

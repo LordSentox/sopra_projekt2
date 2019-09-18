@@ -9,6 +9,8 @@ import de.sopra.javagame.util.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.sopra.javagame.model.MapTileState.GONE;
+
 /**
  * Kontrolliert den Spielablauf, auf den kein Spieler einen direkten Einfluss hat.
  */
@@ -70,31 +72,54 @@ public class GameFlowController {
      * Zieht die Menge an Flutkarten, die laut {@link de.sopra.javagame.model.WaterLevel} gezogen werden müssen und
      * überflutet bzw. versenkt die entsprechenden Felder.
      */
-	public void drawFloodCard() {
-        WaterLevel waterLevel = controllerChan.getCurrentAction().getWaterLevel();
-        CardStack<FloodCard> floodCardCardStack = controllerChan.getCurrentAction().getFloodCardStack();
-        List<FloodCard> floodCards = floodCardCardStack.draw(waterLevel.getDrawAmount(), true);
-        for (FloodCard currentCard : floodCards) {
-            MapFull map = controllerChan.getCurrentAction().getMap();
-            currentCard.flood(map);
-            //check if one or more Players are drowning
-            List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(currentCard.getTile()));
-            for (Player rescuePlayer : rescuesNeeded) {
-                controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
-            }
-
-            controllerChan.getInGameViewAUI().refreshMapTile(map.getPositionForTile(currentCard.getTile()),
-                    map.get(map.getPositionForTile(currentCard.getTile())));
-            controllerChan.finishAction();
+    public void drawFloodCard() {
+        // Wenn keine Flutkarten mehr gezogen werden müssen soll diese Funktion nichts ändern
+        if (this.controllerChan.getCurrentAction().getFloodCardsToDraw() <= 0) {
+            return;
         }
+
+        // Ziehe die nächste Flutkarte
+        CardStack<FloodCard> floodCardCardStack = controllerChan.getCurrentAction().getFloodCardStack();
+        FloodCard card = floodCardCardStack.draw(false);
+        MapFull map = controllerChan.getCurrentAction().getMap();
+        card.flood(map);
+
+        // Lege die Karte auf den Ablagestapel, wenn die Insel nur überflutet wurde, ansonsten kann sie aus dem
+        // Spiel entfernt werden
+        if (map.get(card.getTile()).getState() != GONE) {
+            floodCardCardStack.discard(card);
+        }
+
+        // Refreshe, welche Spieler gerettet werden müssen
+        List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
+        for (Player rescuePlayer : rescuesNeeded) {
+            controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
+        }
+
+        Point position = map.getPositionForTile(card.getTile());
+        MapTile tile = map.get(card.getTile());
+        controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
+
+        Action nextAction = controllerChan.finishAction();
+        nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
+
+        // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
+        if (nextAction.getFloodCardsToDraw() <= 0) {
+            nextAction.nextPlayerActive();
+            nextAction.setState(TurnState.PLAYER_ACTION);
+
+            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
+            controllerChan.getInGameViewAUI().refreshActivePlayer();
+            controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
+        }
     }
 
 
     List<Player> playersNeedRescue(Point positionToCheck) {
         MapFull map = controllerChan.getCurrentAction().getMap();
         List<Player> playersToRescue = new ArrayList<>();
-        if (map.get(positionToCheck).getState() == MapTileState.GONE) {
+        if (map.get(positionToCheck).getState() == GONE) {
             for (Player currentPlayer : controllerChan.getCurrentAction().getPlayers()) {
                 if (currentPlayer.getPosition().equals(positionToCheck)) {
                     playersToRescue.add(currentPlayer);
