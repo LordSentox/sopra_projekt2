@@ -73,7 +73,8 @@ public class CardStackUtil {
         List<String> cardStrings = Arrays.stream(toParse.split(",")).map(String::trim).collect(Collectors.toList());
 
         // Überprüfe, ob es genau 28 Karten, für jedes Tile eines ist
-        if (cardStrings.size() != 28) {
+        int numArtifactCardsInStack = 28;
+        if (cardStrings.size() != numArtifactCardsInStack) {
             System.err.println("Korrumpierte Artefaktkartenstapeldatei. Sie konnte nicht gelesen werden");
             return null;
         }
