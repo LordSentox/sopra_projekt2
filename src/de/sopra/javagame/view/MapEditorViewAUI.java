@@ -7,7 +7,7 @@ import de.sopra.javagame.util.MapBlackWhite;
  *
  * @author Hannah, Lisa
  */
-public interface MapEditorViewAUI {
+public interface MapEditorViewAUI extends NotificationAUI {
     /**
      * zeigt dem Benutzer die übergebene Nachricht in dem dafür vorgesehenen Fenster
      *

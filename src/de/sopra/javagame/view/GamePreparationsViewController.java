@@ -11,6 +11,7 @@ import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
+import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,6 +107,8 @@ public class GamePreparationsViewController extends AbstractViewController {
         }
         chooseMapComboBox.getItems().add("neu generieren");
         chooseMapComboBox.getSelectionModel().select(mapNames.size());
+        
+        cannotStartGameLabel.setTextFill(Paint.valueOf("#FF0000"));
 
     }
 

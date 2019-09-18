@@ -1,9 +1,6 @@
 package de.sopra.javagame.view.customcontrol;
 
-import de.sopra.javagame.util.Map;
-import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapCheckUtil;
-import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.*;
 import de.sopra.javagame.view.MapEditorViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.scene.control.Label;
@@ -88,7 +85,7 @@ public class EditorMapPane extends GridPane {
 
     public void setMapEditorViewController(MapEditorViewController mapEditorViewController) {
         this.mapEditorViewController = mapEditorViewController;
-        System.out.println("map editor View Controller gesetzt");
+        DebugUtil.debug("map editor View Controller gesetzt");
     }
 
     public MapEditorViewController getMapEditorViewController() {

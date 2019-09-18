@@ -80,6 +80,11 @@ public class TestDummy {
         public List<HighScore> getHighScores() {
             return highScores;
         }
+
+        @Override
+        public void showNotification(Notification notification) {
+
+        }
     }
 
     public static class MapEditorView implements MapEditorViewAUI {
@@ -114,6 +119,11 @@ public class TestDummy {
          */
         public MapBlackWhite getMap() {
             return tiles;
+        }
+
+        @Override
+        public void showNotification(Notification notification) {
+
         }
     }
 
