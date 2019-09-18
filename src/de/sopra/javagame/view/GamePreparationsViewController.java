@@ -157,7 +157,7 @@ public class GamePreparationsViewController extends AbstractViewController {
             cannotStartGameLabel.setText("Es ist keine Map ausgewählt");
             return;
         }
-        else if(chooseMapComboBox.getValue() == "neu generieren"){
+        else if(chooseMapComboBox.getValue().equals("neu generieren")){
             currentMap = MapUtil.generateRandomIsland();
             System.out.println("Map: random \n");
         }
@@ -172,7 +172,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
         this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
 
-        getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(0);
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(getGameWindow().getControllerChan().getCurrentAction().getWaterLevel().getLevel());
     }
 
 
