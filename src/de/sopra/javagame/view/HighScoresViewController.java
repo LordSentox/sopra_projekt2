@@ -66,12 +66,9 @@ public class HighScoresViewController extends AbstractViewController implements 
         for (String currentName : scoreNames) {
             mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 6));
             mapSelectionComboBox.getItems().sort(Comparator.naturalOrder());
+
             debug(currentName + "\n");
         }
-
-
-        highScoreListViewLabel.setTextFill(Paint.valueOf("#FFFFFF"));
-        chooseMapLabel.setTextFill(Paint.valueOf("#FFFFFF"));
 
         //mapSelectionComboBox.getItems().addAll(standardMaps);
         mapSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue)

@@ -50,6 +50,8 @@ public class GameWindow {
     public void init() throws IOException {
         initMainMenu();
         initGamePreparations();
+        initLoadGame();
+        initSaveGame();
         initHighScore();
         initInGame();
         initMapEditor();
@@ -105,6 +107,30 @@ public class GameWindow {
         highScoresViewController.init();
         views.put(ViewState.HIGH_SCORES, highScoresViewController);
         controllerChan.setHighScoresViewAUI(highScoresViewController);
+    }
+    
+    private void initLoadGame() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/LoadGame.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        LoadGameViewController loadGameViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
+        loadGameViewController.setGameWindow(this);
+        loadGameViewController.setScene(mainMenuScene);
+        loadGameViewController.init();
+        views.put(ViewState.LOAD_GAME, loadGameViewController);
+    }
+    
+    private void initSaveGame() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SaveGame.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        SaveGameViewController saveGameViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
+        saveGameViewController.setGameWindow(this);
+        saveGameViewController.setScene(mainMenuScene);
+        saveGameViewController.init();
+        views.put(ViewState.SAVE_GAME, saveGameViewController);
     }
 
     private void initInGame() throws IOException {
@@ -168,7 +194,7 @@ public class GameWindow {
                 dialog.setHeaderText(null);
                 dialog.initModality(Modality.WINDOW_MODAL);
                 dialog.initOwner(mainStage);
-                dialog.initStyle(StageStyle.UTILITY);
+                dialog.initStyle(StageStyle.UNDECORATED);
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
                     CommandResult commandResult = Commands.processCommand(this, result.get());

@@ -11,6 +11,8 @@ import de.sopra.javagame.view.MapEditorViewAUI;
 import java.io.*;
 import java.util.List;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * @author Max Bühmann, Melanie Arnds
  */
@@ -105,6 +107,7 @@ public class ControllerChan {
         Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
 
         this.currentAction = pair.getRight();
+        debug("initial players: " + currentAction.getPlayers().size());
         aiController.connectTrackers();
         aiController.setAI(GameAI.DECISION_BASED_AI);
 
@@ -128,7 +131,9 @@ public class ControllerChan {
 
         }
         //player auf map packen
-        this.currentAction.getPlayers().forEach(player -> this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType()));
+        this.currentAction.getPlayers().forEach(player -> {
+            this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType());
+        });
 
         //2 Artefaktkarten ziehen
         this.currentAction.getPlayers().forEach(player -> {

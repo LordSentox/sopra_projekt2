@@ -11,6 +11,7 @@ import de.sopra.javagame.util.Point;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 import static de.sopra.javagame.control.ai2.decisions.Condition.GAME_HAS_ALL_ARTIFACTS;
@@ -37,12 +38,13 @@ public class TurnEndGame extends Decision {
         List<Player> allPlayers = control.getAllPlayers();
 
         for (Player player : allPlayers) {
-            people.add(player.getType());
             Point playerPosition = player.getPosition();
             if (!playerPosition.equals(landingSitePosition)) {
                 return null;
             }
         }
+
+        people = EnumSet.copyOf(allPlayers.stream().map(Player::getType).collect(Collectors.toList()));
 
         return this;
     }

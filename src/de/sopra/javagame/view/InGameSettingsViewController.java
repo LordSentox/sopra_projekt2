@@ -72,15 +72,21 @@ public class InGameSettingsViewController extends AbstractViewController {
 
 
     public void onCloseClicked() {
-        if (modalCopy == null) {
-            getGameWindow().getSettings().save();
-            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
-        } else modalCopy.close();
+//        if(modalCopy == null) {
+//            getGameWindow().getSettings().save();
+//            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
+//        }
+//        else 
+            modalCopy.close();
     }
 
-    public void onSaveClicked() {
+    public void onSaveClicked() throws IOException {
         //eigentlich soll hier das Spiel gespeichert werden und nicht die Einstellungen
         getGameWindow().getSettings().save();
+        SaveGameViewController.openModal(getGameWindow());
+        
+        
+//        changeState(ViewState.IN_GAME_SETTINGS, ViewState.SAVE_GAME);
     }
 
     public void onBackToMenuClicked() {

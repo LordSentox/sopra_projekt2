@@ -1,7 +1,6 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ControllerChan;
-import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
@@ -221,7 +220,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onSettingsClicked() {
 
         try {
-            SettingsViewController.openModal(getGameWindow());
+            InGameSettingsViewController.openModal(getGameWindow());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -501,8 +500,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void showTip(ActionQueue queue) {
-        SimpleAction recommendation = queue.actionIterator().next();
+    public void showTip(SimpleAction recommendation) {
 
         if (recommendation == null) {
             showNotification("Wir sind selber ratlos - Ihr werdet alle sterben (siehe Knorkator)");
@@ -514,6 +512,8 @@ public class InGameViewController extends AbstractViewController implements InGa
         Point targetPoint = recommendation.getTargetPoint();
         ArtifactCardType card = recommendation.getCardType();
         String notification = "";
+
+        resetHighlighting();
 
         switch (recommendation.getType()) {
             case MOVE:
