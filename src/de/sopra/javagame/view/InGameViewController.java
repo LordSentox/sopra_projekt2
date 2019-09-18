@@ -7,11 +7,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
-<<<<<<< HEAD
-import de.sopra.javagame.util.Map;
-import de.sopra.javagame.util.Direction;
-=======
->>>>>>> branch 'master' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
+
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
