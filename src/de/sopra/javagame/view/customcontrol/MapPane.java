@@ -25,7 +25,6 @@ public class MapPane extends GridPane {
     private final MapPaneTile[][] map;
     private InGameViewController inGameViewController;
 
-
     public MapPane() {
         super();
         map = new MapPaneTile[Map.SIZE_Y][Map.SIZE_X];
@@ -46,7 +45,7 @@ public class MapPane extends GridPane {
                 if (tiles.get(x, y) != null) {
                     TileView v = new TileView(tiles.get(x, y), TILE_SIZE);
                     v.setPreserveRatio(true);
-                    MapPaneTile pane = new MapPaneTile(inGameViewController, v, new Point(x, y));
+                    MapPaneTile pane = new MapPaneTile(inGameViewController, v, new Point(x, y), this);
                     map[y][x] = pane;
                     this.getChildren().add(pane);
                     pane.toBack();
@@ -131,5 +130,4 @@ public class MapPane extends GridPane {
 
         pane.setState(tile.getState());
     }
-
 }

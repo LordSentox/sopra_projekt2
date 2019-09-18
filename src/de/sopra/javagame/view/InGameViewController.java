@@ -7,6 +7,7 @@ import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.MapFull;
+import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.Notification;
@@ -52,6 +53,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     private boolean transferActive = false;
     private Supplier<Player> targetPlayer;
 
+    // Wird gesetzt, wenn eine Helikopterkarte gespielt werden soll
+    private HelicopterHelper helicopterHelper;
+
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
     MapPane mapPane;
@@ -68,6 +72,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private Timeline timeline;
 
     public void init() {
+        this.helicopterHelper = null;
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
         waterLevelView.setProgress(7);
 
@@ -232,7 +237,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
         if (card.equals(ArtifactCardType.HELICOPTER)) {
-            //TODO
+            // Initialisieren des Helicopter-Helpers
+            this.helicopterHelper = new HelicopterHelper(owner, index, this.mapPane);
         } else if (card.equals(ArtifactCardType.SANDBAGS)) {
             List<Point> drainable = new ArrayList<>();
             MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
@@ -241,7 +247,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                     drainable.add(map.getPositionForTile(mapTile.getProperties()));
                 }
             });
-            System.out.println("on card clicked: " + card + " " + index + " " + owner);
+            debug("on card clicked: " + card + " " + index + " " + owner);
             drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
         }
     }
@@ -455,11 +461,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
-        System.out.println(actionsLeft);
-        switch (actionsLeft) {
-            case 3:
-                this.rotateTurnSpinner(0);
-                break;
+        debug("remaining actions: " + actionsLeft);
+        switch (actionsLeft) { //3 is covered by default
             case 2:
                 this.rotateTurnSpinner(-60);
                 break;
@@ -626,4 +629,22 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
     }
 
+    public HelicopterHelper getHelicopterHelper() {
+        return this.helicopterHelper;
+    }
+
+    public void tryPlayHelicopterCard() {
+        if (this.helicopterHelper == null || !this.helicopterHelper.readyToTransport()) {
+            return;
+        }
+
+        this.getGameWindow().getControllerChan().getInGameUserController().playHelicopterCard(helicopterHelper.getCaster(),
+                helicopterHelper.getCardIndex(),
+                new Pair<>(helicopterHelper.getStartTile().getPosition(), helicopterHelper.getDestinationTile().getPosition()),
+                new ArrayList<>(helicopterHelper.getToTransportConst()));
+
+        // Dehighlight all and reset Helicopter card
+        this.resetHighlighting();
+        this.helicopterHelper = null;
+    }
 }
