@@ -327,8 +327,10 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index);
                 v.showFrontImage();
+                v.setInGameViewController(this);
+                v.setOwner(player);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
                 index += 2;
@@ -338,32 +340,33 @@ public class InGameViewController extends AbstractViewController implements InGa
             List<Player> players = action.getPlayers();
             GridPane pane = null;
 
-            if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player))
+            if (players.get((action.getActivePlayerIndex() + 1) % players.size()).getType().equals(player)){
                 pane = handOneCardGridPane;
-
-            else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player))
+            }else if (players.get((action.getActivePlayerIndex() + 2) % players.size()).getType().equals(player)){
                 pane = handTwoCardGridPane;
-
-            else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player))
+            }else if (players.get((action.getActivePlayerIndex() + 3) % players.size()).getType().equals(player)){
                 pane = handThreeCardGridPane;
+            }
 
 
             pane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                CardView v = new ArtifactCardView(card.getType(), PASSIVE_CARD_SIZE);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), PASSIVE_CARD_SIZE, index);
                 v.showFrontImage();
+                v.setInGameViewController(this);
+                v.setOwner(player);
                 pane.getChildren().add(v);
                 GridPane.setConstraints(v, index++, 0);
             }
         }
     }
 
-    private void onSpecialCardClicked(ArtifactCardView card, int index) {
-        if (card.getType().equals(ArtifactCardType.HELICOPTER)) {
-
-        } else if (card.getType().equals(ArtifactCardType.SANDBAGS)) {
-
+    public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
+        if (card.equals(ArtifactCardType.HELICOPTER)) {
+            //TODO
+        } else if (card.equals(ArtifactCardType.SANDBAGS)) {
+            //TODO
         }
     }
 
@@ -386,7 +389,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshArtifactStack(CardStack<ArtifactCard> stack) {
         artifactCardDrawStackGridPane.getChildren().clear();
         for (int i = 0; i < stack.size(); i += 2) {
-            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(ArtifactCardType.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE, -1);
             v.showBackImage();
             artifactCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
@@ -396,7 +399,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         int index = 0;
         artifactCardDiscardGridPane.getChildren().clear();
         for (ArtifactCard card : discardPile) {
-            CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE);
+            CardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, -1);
             v.showFrontImage();
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
