@@ -249,7 +249,7 @@ public class TextureLoader {
 
         private final PlayerType player;
 
-        public PlayerTexture(InputStream inputStream, PlayerType player) {
+        PlayerTexture(InputStream inputStream, PlayerType player) {
             super(inputStream);
             this.player = player;
         }
@@ -278,7 +278,7 @@ public class TextureLoader {
 
         private final MapTileProperties properties;
 
-        public TileTexture(InputStream inputStream, MapTileProperties properties) {
+        TileTexture(InputStream inputStream, MapTileProperties properties) {
             super(inputStream);
             this.properties = properties;
         }

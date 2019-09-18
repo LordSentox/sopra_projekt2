@@ -84,7 +84,7 @@ public class Pilot extends Player {
         if (!specialActive || !this.hasSpecialMove)
             return super.move(destination, costsAction, specialActive);
 
-        List<Point> legelMovement = legalMoves(specialActive);
+        List<Point> legelMovement = legalMoves(true);
         if (actionsLeft < 1 || !legelMovement.contains(destination)) {
             return false;
         } else {

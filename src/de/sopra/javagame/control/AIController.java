@@ -82,8 +82,8 @@ public class AIController {
     public void doSteps(ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
             Player player = getCurrentAction().getPlayer(queue.getPlayer());
-            int index = -1;
-            Player targetPlayer = null;
+            int index;
+            Player targetPlayer;
             switch (action.getType()) {
 
                 case MOVE:

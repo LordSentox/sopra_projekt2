@@ -19,28 +19,23 @@ import java.util.Set;
 
 public class ExplorerTest {
 
-    private ControllerChan controllerChan;
-    private ActivePlayerController activePlayerController;
     private MapFull testMap;
     private Action action;
-    private List<Triple<PlayerType,String, Boolean>> players;
-
-    private TestDummy.InGameView inGameView;
 
     @Before
     public void setUp() throws Exception {
-        controllerChan = TestDummy.getDummyControllerChan();
-        activePlayerController = controllerChan.getActivePlayerController();
-        inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
+        ControllerChan controllerChan = TestDummy.getDummyControllerChan();
+        ActivePlayerController activePlayerController = controllerChan.getActivePlayerController();
+        TestDummy.InGameView inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
 
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         this.testMap = MapUtil.readFullMapFromString(testMapString);
 
-        players = Arrays.asList(
-                new Triple<>(PlayerType.EXPLORER,"", false),
-                new Triple<>(PlayerType.COURIER,"", false),
-                new Triple<>(PlayerType.NAVIGATOR,"", false),
-                new Triple<>(PlayerType.PILOT,"", false));
+        List<Triple<PlayerType, String, Boolean>> players = Arrays.asList(
+                new Triple<>(PlayerType.EXPLORER, "", false),
+                new Triple<>(PlayerType.COURIER, "", false),
+                new Triple<>(PlayerType.NAVIGATOR, "", false),
+                new Triple<>(PlayerType.PILOT, "", false));
 
         Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());

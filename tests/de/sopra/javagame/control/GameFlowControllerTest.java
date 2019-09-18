@@ -12,14 +12,13 @@ import static org.junit.Assert.fail;
 
 public class GameFlowControllerTest {
     private ControllerChan controllerChan;
-    private TestDummy.InGameView inGameViewAUI;
     private GameFlowController gameFlowController;
-    MapTile dry;
+    private MapTile dry;
 
     @Before
     public void setUp() {
         controllerChan = TestDummy.getDummyControllerChan();
-        inGameViewAUI = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
+        TestDummy.InGameView inGameViewAUI = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
         gameFlowController = controllerChan.getGameFlowController();
         this.dry = new MapTile(MapTileProperties.CORAL_PALACE);
         this.dry.setState(MapTileState.DRY);

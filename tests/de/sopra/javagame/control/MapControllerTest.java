@@ -15,10 +15,7 @@ import java.io.PrintWriter;
 
 public class MapControllerTest {
 
-    private ControllerChan controllerChan;
     private MapController mapController;
-    private JavaGame javaGame;
-    private Action action;
     private TestDummy.MapEditorView mapEditorView;
     private MapBlackWhite map;
     private String name;
@@ -26,10 +23,10 @@ public class MapControllerTest {
 
     @Before
     public void setUp() {
-        controllerChan = TestDummy.getDummyControllerChan();
+        ControllerChan controllerChan = TestDummy.getDummyControllerChan();
         mapController = controllerChan.getMapController();
-        javaGame = controllerChan.getJavaGame();
-        action = controllerChan.getCurrentAction();
+        JavaGame javaGame = controllerChan.getJavaGame();
+        Action action = controllerChan.getCurrentAction();
         mapEditorView = (TestDummy.MapEditorView) mapController.getMapEditorViewAUI();
         map = new MapBlackWhite();
         name = "hallo";

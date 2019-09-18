@@ -44,7 +44,6 @@ public class MapEditorViewController extends AbstractViewController implements M
     Label showUsedTiles, labelShowMessages;
 
     private String chosenMapName;
-    private List<String> mapNames;
 
     public void init() {
         /* Set Background */
@@ -84,7 +83,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     private void fillComboBox() {
         File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
-        mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+        List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
         for (String currentName : mapNames) {
             comboBoxChooseGivenMap.getItems().addAll(currentName.substring(0, currentName.length() - 4));

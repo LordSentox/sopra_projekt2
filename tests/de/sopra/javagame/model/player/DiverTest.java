@@ -22,8 +22,8 @@ import java.util.List;
 import static org.junit.Assert.fail;
 
 public class DiverTest {
-    MapFull testMap;
-    MapFull testMapFull;
+    private MapFull testMap;
+    private MapFull testMapFull;
 
     @Before
     public void setUp() throws Exception {
