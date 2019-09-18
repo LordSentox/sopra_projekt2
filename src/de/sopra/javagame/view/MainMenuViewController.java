@@ -24,6 +24,13 @@ public class MainMenuViewController extends AbstractViewController {
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
+        //TODO: Continue Button disablen, wenn noch kein Spiel am laufen ist
+//        if(getGameWindow().getControllerChan().getCurrentAction() != null){
+//            continueGameButton.setDisable(false);
+//        }
+//        if(getGameWindow().getControllerChan().getCurrentAction() == null){
+//            continueGameButton.setDisable(true);
+//        }
     }
 
     public void onSettingsClicked() {
@@ -39,10 +46,14 @@ public class MainMenuViewController extends AbstractViewController {
 
     }
     public void onContinueClicked(){
+        if(getGameWindow().getControllerChan().getCurrentAction() == null){  
+            return;
+        }
         changeState(ViewState.MENU, ViewState.IN_GAME);
     }
 
     public void onMapEditorClicked() {
+
         changeState(ViewState.MENU, MAP_EDITOR);
     }
 
