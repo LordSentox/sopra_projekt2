@@ -41,14 +41,14 @@ public class FloodCardStackTypeAdapter implements JsonSerializer<CardStack<Flood
         CardStack<FloodCard> cardStack = new CardStack<>();
 
         Stack<FloodCard> drawStack = Arrays.stream(stackJson.split(","))
-                .filter(s -> !s.isEmpty())
+                .filter(string -> !string.isEmpty())
                 .map(Integer::parseInt)
                 .map(MapTileProperties::getByIndex)
                 .map(FloodCard::new)
                 .collect(Collectors.toCollection(Stack::new));
 
         List<FloodCard> discardPile = Arrays.stream(discardPileJson.split(","))
-                .filter(s -> !s.isEmpty())
+                .filter(string -> !string.isEmpty())
                 .map(Integer::parseInt)
                 .map(MapTileProperties::getByIndex)
                 .map(FloodCard::new)
