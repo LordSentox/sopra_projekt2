@@ -168,7 +168,7 @@ public class GameWindow {
                 dialog.setHeaderText(null);
                 dialog.initModality(Modality.WINDOW_MODAL);
                 dialog.initOwner(mainStage);
-                dialog.initStyle(StageStyle.UTILITY);
+                dialog.initStyle(StageStyle.UNDECORATED);
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
                     CommandResult commandResult = Commands.processCommand(this, result.get());
