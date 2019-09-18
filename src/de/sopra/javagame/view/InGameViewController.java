@@ -432,7 +432,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
     
     //TODO neue refresh map einbauen
-
+    public void refreshMap(MapFull map){
+        map.forEach(maptile -> refreshMapTile(map.getPositionForTile(maptile.getProperties()), maptile));
+    }
     @Override
     public void refreshMapTile(Point position, MapTile tile) {
         //TODO ersetzen durch echten refresh, nicht nur das neu setzen des states
