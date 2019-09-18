@@ -122,7 +122,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void initGridPane() {
-        IntStream.range(0, 9).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(item % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
+        IntStream.range(0, 6).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(ACTIVE_CARD_SIZE-50)));
 
         IntStream.range(0, 5).forEach(item -> {
             handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
@@ -230,6 +230,22 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onArtifactCardDiscardStackClicked() {
 
     }
+    
+    public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
+        if (card.equals(ArtifactCardType.HELICOPTER)) {
+            //TODO
+        } else if (card.equals(ArtifactCardType.SANDBAGS)) {
+            List<Point> drainable = new ArrayList<>(); 
+            MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
+            map.forEach(mapTile -> {
+                if(mapTile.getState().equals(MapTileState.FLOODED)){
+                    drainable.add(map.getPositionForTile(mapTile.getProperties()));
+                }
+            });
+            System.out.println("on card clicked: " + card + " " + index + " " + owner);
+            drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
+        }
+    }
 
     public void onFloodCardDiscardStackClicked() {
 
@@ -332,13 +348,13 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index / 2);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index);
                 v.showFrontImage();
                 v.setInGameViewController(this);
                 v.setOwner(player);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
-                index += 2;
+                index ++;
             }
         } else {
             Action action = getGameWindow().getControllerChan().getCurrentAction();
@@ -364,23 +380,6 @@ public class InGameViewController extends AbstractViewController implements InGa
                 pane.getChildren().add(v);
                 GridPane.setConstraints(v, index++, 0);
             }
-        }
-    }
-
-    public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
-        if (card.equals(ArtifactCardType.HELICOPTER)) {
-            //TODO
-        } else if (card.equals(ArtifactCardType.SANDBAGS)) {
-            //TODO
-            List<Point> drainable = new ArrayList<>(); 
-            MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
-            map.forEach(mapTile -> {
-               if(mapTile.getState().equals(MapTileState.FLOODED)){
-                   drainable.add(map.getPositionForTile(mapTile.getProperties()));
-               }
-            });
-            System.out.println("on card clicked: " + card + " " + index + " " + owner);
-            drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
         }
     }
 
