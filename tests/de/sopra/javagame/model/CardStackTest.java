@@ -39,8 +39,8 @@ public class CardStackTest {
     public void testDraw() {
         //Test draw floodCard
 
-        assertEquals(wirHabenLandGefunden, floodCardStack.draw(1, true).get(0).getTile());
-        assertEquals(wirHabenLandGefunden, floodCardStack.draw(1, true).get(0).getTile());
+        assertEquals(wirHabenLandGefunden.getProperties(), floodCardStack.draw(1, true).get(0).getTile());
+        assertEquals(wirHabenLandGefunden.getProperties(), floodCardStack.draw(1, true).get(0).getTile());
 
         //Test draw artifactCard
         hand.addAll(artifactCardStack.draw(28, false));
