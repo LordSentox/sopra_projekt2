@@ -25,8 +25,8 @@ import static de.sopra.javagame.model.ArtifactCardType.SANDBAGS;
  */
 public final class ActionQueue {
 
-    private Queue<SimpleAction> actions = new LinkedList<>();
-    private PlayerType currentPlayer;
+    private final Queue<SimpleAction> actions = new LinkedList<>();
+    private final PlayerType currentPlayer;
 
     public ActionQueue(PlayerType player) {
         currentPlayer = player;
@@ -51,7 +51,7 @@ public final class ActionQueue {
 
     public Iterator<SimpleAction> actionIterator() {
         return new Iterator<SimpleAction>() {
-            Queue<SimpleAction> copy = CopyUtil.copy(actions, Collectors.toCollection(LinkedList::new));
+            final Queue<SimpleAction> copy = CopyUtil.copy(actions, Collectors.toCollection(LinkedList::new));
 
             @Override
             public boolean hasNext() {

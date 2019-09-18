@@ -16,7 +16,6 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @author Max Bühmann, Melanie Arnds
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
-
 public abstract class Player implements Copyable<Player>, Serializable {
 
     private static final long serialVersionUID = -4230315355144349100L;
@@ -45,7 +44,8 @@ public abstract class Player implements Copyable<Player>, Serializable {
         this.hand = new ArrayList<>();
     }
 
-    public void onTurnStarted() {}
+    public void onTurnStarted() {
+    }
 
     /**
      * legalMoves erstellt eine Liste an Koordinaten Punkten, zu welchen der
@@ -58,7 +58,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
 
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> moves = this.position.getNeighbours();
-        List <Point> legalTiles = new ArrayList<>();
+        List<Point> legalTiles = new ArrayList<>();
         for (Point currentPoint : moves) {
             MapTile tile = this.action.getMap().get(currentPoint);
             if (tile != null && tile.getState() != GONE) {
@@ -90,7 +90,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
             return false;
         } else {
             this.setPosition(destination);
-           
+
             if (costsAction) {
                 actionsLeft--;
             }
@@ -118,6 +118,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
      *
      * @return Listli
      */
+    @SuppressWarnings("Duplicates")
     public List<Point> drainablePositions() {
         // Alle Felder, zu denen sich der Spieler auf normalem Wege hinbewegen darf
         List<Point> drainable = this.legalMoves(false);
@@ -154,7 +155,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
         if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
             return false;
         }
-        
+
         // Muss überhaupt noch etwas getan werden?
         if (toDrain.getState() == DRY) {
             return false;

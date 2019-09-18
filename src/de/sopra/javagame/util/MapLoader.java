@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class MapLoader {
-    public MapBlackWhite loadMap (String mapName){
+    public MapBlackWhite loadMap(String mapName) {
         List<String> strist;
         try {
             strist = Files.readAllLines(Paths.get(getClass().getResource("/maps/" + mapName + ".map").toURI()));

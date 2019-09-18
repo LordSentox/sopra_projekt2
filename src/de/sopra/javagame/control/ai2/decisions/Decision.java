@@ -45,7 +45,7 @@ public abstract class Decision {
         DebugUtil.debug(debug);
     }
 
-    public final static Decision empty() {
+    public static Decision empty() {
         return new Decision() {
             @Override
             public Decision decide() {
@@ -221,7 +221,7 @@ public abstract class Decision {
         this.preCondition = preCondition;
     }
 
-    private final boolean matchPreCondition() {
+    private boolean matchPreCondition() {
         if (preCondition == null) return true;
         boolean allMatchTrue = Arrays.stream(preCondition.allTrue())
                 .allMatch(condition -> condition(condition).isTrue(this));
