@@ -73,7 +73,6 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
             updateHighlight();
             if(!(handCardIndex == -1)){
             if (!(handCardIndex == -1)) {
-                ActionPicker ap = new ActionPicker(this, MouseButton.NONE);
                 ap.setCardIndex(handCardIndex);
                 ap.setArtifactCardType(this.getType());
                 ap.setDelegatingPlayer(ownerType);
