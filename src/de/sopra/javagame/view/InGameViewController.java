@@ -7,10 +7,12 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
+<<<<<<< HEAD
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.Direction;
+=======
+>>>>>>> branch 'master' of https://sopra-gitlab.cs.tu-dortmund.de/sopra19B/gruppe04/projekt2.git
 import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
@@ -33,12 +35,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import static de.sopra.javagame.model.ArtifactType.NONE;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -212,23 +211,20 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
         map.forEach(mapTile -> System.out.println(mapTile.getState()));
+
+        //debug for AI tip
+//        getGameWindow().getControllerChan().getActivePlayerController().showTip(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer());
+
     }
 
     public void onSettingsClicked() {
 
-//        try {
-//            SettingsViewController.openModal(getGameWindow());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         try {
-            InGameSettingsViewController.openModal(getGameWindow());
+            SettingsViewController.openModal(getGameWindow());
         } catch (IOException e) {
             e.printStackTrace();
         }
         //changeState(ViewState.IN_GAME, ViewState.IN_GAME_SETTINGS);
-        getGameWindow().getControllerChan().getActivePlayerController().showTip(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer());
     }
 
     public void onArtifactCardDiscardStackClicked() {
