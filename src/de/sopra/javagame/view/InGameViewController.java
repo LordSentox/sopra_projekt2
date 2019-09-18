@@ -49,6 +49,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private List<Point> drainablePoints = new ArrayList<>();
     private List<Point> movePoints = new ArrayList<>();
     private boolean specialActive = false;
+    private boolean transferActive = false;
     private Supplier<Player> targetPlayer;
 
     //mal dem ganzen current-kram zwischenspeichern
@@ -157,6 +158,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onTransferCardClicked(int cardIndex) {
+     
 
     }
 
@@ -342,6 +344,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 v.showFrontImage();
                 v.setInGameViewController(this);
                 v.setOwner(player);
+                if(transferActive) v.setTradeable(transferActive);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
                 index ++;
@@ -601,6 +604,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void setSpecialActive(boolean specialActive) {
         this.specialActive = specialActive;
+    }
+    public void setTransferActive(boolean transferActive) {
+        this.transferActive = transferActive;
     }
 
     private void highlightArtifacts(EnumSet<ArtifactType> artifacts) {
