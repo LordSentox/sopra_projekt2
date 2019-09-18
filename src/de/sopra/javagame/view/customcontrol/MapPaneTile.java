@@ -166,7 +166,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         if (buttons.size() > 0) {
             contextPicker.setDelegatingPlayer(activePlayerType);
             contextPicker.setMovingPlayer(control.getTargetPlayer().getType());
-            contextPicker.init(buttons.toArray(new ActionButton[buttons.size()]));
+            contextPicker.init(buttons.toArray(new ActionButton[0]));
             contextPicker.show(event);
         }
 

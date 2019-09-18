@@ -136,7 +136,7 @@ public class AIControllerTest {
         for (int i = 0; i < completeCard.length; i++){
             for (int j = 0; j < completeCard[i].length; j++){
                 if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.DRY);;
+                    completeCard[i][j].setState(MapTileState.DRY);
                 }
             }
         }
@@ -262,7 +262,7 @@ public class AIControllerTest {
         for (int i = 0; i < completeCard.length; i++){
             for (int j = 0; j < completeCard[i].length; j++){
                 if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.DRY);;
+                    completeCard[i][j].setState(MapTileState.DRY);
                 }
             }
         }

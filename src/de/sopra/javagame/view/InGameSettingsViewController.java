@@ -53,7 +53,7 @@ public class InGameSettingsViewController extends AbstractViewController {
         AnchorPane mainPane = fxmlLoader.load();
         InGameSettingsViewController iInGameSettingsViewController = fxmlLoader.getController();
         Scene mainMenuScene = new Scene(mainPane);
-        mainMenuScene.getStylesheets().add(SettingsViewController.class.getClass().getResource("/application.css").toExternalForm());
+        mainMenuScene.getStylesheets().add(SettingsViewController.class.getResource("/application.css").toExternalForm());
         iInGameSettingsViewController.setGameWindow(window);
         iInGameSettingsViewController.setScene(mainMenuScene);
         iInGameSettingsViewController.init();

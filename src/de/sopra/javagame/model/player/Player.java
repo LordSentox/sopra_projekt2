@@ -16,7 +16,6 @@ import static de.sopra.javagame.model.MapTileState.GONE;
  * @author Max Bühmann, Melanie Arnds
  * Player beschreibt die Basisfunktionen, die jede Spielfigur ausführen kann.
  */
-
 public abstract class Player implements Copyable<Player>, Serializable {
 
     private static final long serialVersionUID = -4230315355144349100L;
@@ -118,6 +117,7 @@ public abstract class Player implements Copyable<Player>, Serializable {
      *
      * @return Listli
      */
+    @SuppressWarnings("Duplicates")
     public List<Point> drainablePositions() {
         // Alle Felder, zu denen sich der Spieler auf normalem Wege hinbewegen darf
         List<Point> drainable = this.legalMoves(false);

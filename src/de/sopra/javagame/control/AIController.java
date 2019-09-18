@@ -123,7 +123,7 @@ public class AIController {
                     }
                     controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
                             new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
-                            action.getTargetPlayers().stream().collect(Collectors.toList()));
+                            new ArrayList<>(action.getTargetPlayers()));
                     break;
                 case SPECIAL_ABILITY:
                     switch (player.getType()) {

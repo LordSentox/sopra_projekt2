@@ -38,13 +38,13 @@ public class JavaGame implements Serializable {
      * Stack mit den Zügen, die rückgängig gemacht werden können. Der oberste Zug ist der zuletzt gemachte, der
      * abgeschlossen wurde.
      */
-    private Stack<Action> undoActions;
+    private final Stack<Action> undoActions;
 
     /**
      * Stack mit den Zügen, die gesehen vom Zug, der gerade getätigt wird in der Zukunft liegen. Er ist leer, wenn das
      * Spiel gerade gespielt wird und kein Zug rückgängig gemacht wurde.
      */
-    private Stack<Action> redoActions;
+    private final Stack<Action> redoActions;
 
     /**
      * Der Schwierigkeitsgrad mit dem das Spiel angefangen wurde. Bestimmt den Anfangswasserpegel.

@@ -5,16 +5,13 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.JavaGame;
 import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 
 public class MapControllerTest {
 
@@ -82,7 +79,7 @@ public class MapControllerTest {
     }
 
     @Test
-    public void testSaveMap() throws IOException {
+    public void testSaveMap() {
 
         //teste mit korrekter map ohne Namen
         mapController.saveMap("", map);

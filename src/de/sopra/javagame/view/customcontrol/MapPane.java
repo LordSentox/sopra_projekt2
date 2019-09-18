@@ -13,7 +13,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -27,7 +26,7 @@ public class MapPane extends GridPane {
     private InGameViewController inGameViewController;
 
 
-    public MapPane() throws IOException {
+    public MapPane() {
         super();
         map = new MapPaneTile[Map.SIZE_Y][Map.SIZE_X];
 

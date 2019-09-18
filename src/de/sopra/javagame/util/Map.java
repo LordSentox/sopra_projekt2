@@ -1,12 +1,7 @@
 package de.sopra.javagame.util;
 
-import de.sopra.javagame.model.MapTile;
-
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
-import static de.sopra.javagame.model.MapTileState.DRY;
-import static de.sopra.javagame.model.MapTileState.FLOODED;
 
 public abstract class Map<T> {
     public static final int SIZE_X = 10;

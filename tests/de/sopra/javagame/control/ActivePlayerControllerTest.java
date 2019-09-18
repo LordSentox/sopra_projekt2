@@ -149,7 +149,6 @@ public class ActivePlayerControllerTest {
 
         action.nextPlayerActive();
         activePlayer = action.getActivePlayer();
-        playerPos = activePlayer.getPosition();
 
         assertSame(activePlayer.getType(), PlayerType.EXPLORER);
         activePlayerController.showDrainOptions();
@@ -163,7 +162,7 @@ public class ActivePlayerControllerTest {
     @Test
     public void testShowSpecialAbility() throws Exception {
         Player activePlayer = action.getActivePlayer();
-        Point playerPos = activePlayer.getPosition();
+        Point playerPos;
 
         testMap.get(5, 3).flood();
         testMap.get(4, 1).flood();
@@ -194,7 +193,6 @@ public class ActivePlayerControllerTest {
         activePlayerController.cancelSpecialAbility();
         action.nextPlayerActive();
         activePlayer = action.getActivePlayer();
-        playerPos = activePlayer.getPosition();
         assertSame(activePlayer.getType(), PlayerType.NAVIGATOR);
         activePlayerController.showSpecialAbility();
         assertEquals("No notification of Navigator ability", 1, inGameView.getNotifications().size());
@@ -237,7 +235,6 @@ public class ActivePlayerControllerTest {
         action.getActivePlayer().setActionsLeft(3);
 
         activePlayer = action.getActivePlayer();
-        playerPos = activePlayer.getPosition();
         assertSame(activePlayer.getType(), PlayerType.DIVER);
         activePlayerController.showSpecialAbility();
         assertEquals(activePlayer.getPosition(), new Point(5, 3));
@@ -254,7 +251,6 @@ public class ActivePlayerControllerTest {
         action.nextPlayerActive();
         activePlayer = action.getActivePlayer();
         assertSame(activePlayer.getType(), PlayerType.ENGINEER);
-        playerPos = activePlayer.getPosition();
         activePlayerController.showSpecialAbility();
         assertEquals("No notification of Engineer ability", 1, inGameView.getNotifications().size());
         inGameView.getNotifications().clear();
@@ -263,7 +259,7 @@ public class ActivePlayerControllerTest {
     @Test
     public void testCancelSpecialAbility() throws Exception {
         Player activePlayer = action.getActivePlayer();
-        Point playerPos = activePlayer.getPosition();
+        Point playerPos;
 
         testMap.get(5, 3).flood();
         testMap.get(6, 3).flood();
@@ -294,7 +290,6 @@ public class ActivePlayerControllerTest {
         activePlayerController.showSpecialAbility();
         action.nextPlayerActive();
         activePlayer = action.getActivePlayer();
-        playerPos = activePlayer.getPosition();
         assertSame(activePlayer.getType(), PlayerType.PILOT);
         activePlayerController.showSpecialAbility();
         activePlayerController.cancelSpecialAbility();
@@ -317,7 +312,6 @@ public class ActivePlayerControllerTest {
         action.getActivePlayer().setActionsLeft(3);
 
         activePlayer = action.getActivePlayer();
-        playerPos = activePlayer.getPosition();
         assertSame(activePlayer.getType(), PlayerType.DIVER);
         activePlayerController.showSpecialAbility();
         activePlayerController.cancelSpecialAbility();

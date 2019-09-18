@@ -4,12 +4,7 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
-import de.sopra.javagame.util.Pair;
-import de.sopra.javagame.util.Point;
-import de.sopra.javagame.util.Triple;
-
+import de.sopra.javagame.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +52,7 @@ public class ExplorerTest {
 
     }
 
+    @SuppressWarnings("UnusedAssignment")
     @Test
     public void constructorTest() {
         Explorer explorer = new Explorer("Bob", new Point(4, 4), action);

@@ -291,7 +291,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         movePoints = new LinkedList<>();
         drainablePoints = new LinkedList<>();
         setFloodCardStackHighlighted(false);
-        mapPane.forEach(tile -> tile.dehighlightAll());
+        mapPane.forEach(MapPaneTile::dehighlightAll);
     }
 
     @Override
