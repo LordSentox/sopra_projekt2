@@ -128,32 +128,32 @@ public class Action implements Copyable<Action>, Serializable {
      * @param difficulty Die Startschwierigkeit des Spiels
      * @param map        Die Map des Spiels
      */
-    public static Action createInitialAction(Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
-        if (Boolean.logicalOr(map == null, difficulty == null) || players == null)
+       
+    public static Action createInitialAction(Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players, Triple<MapFull, CardStack<ArtifactCard>, CardStack<FloodCard>> tournamentTriple) throws NullPointerException, IllegalArgumentException {
+        
+        if (Boolean.logicalOr(tournamentTriple == null, difficulty == null) || players == null)
             throw new IllegalArgumentException("Argument is null");
-
+        
         if (Boolean.logicalOr(players.isEmpty(), players.size() < 2) || players.size() > 4)
             throw new IllegalStateException();
-
+        
         //players.replaceAll(pair -> pair.getFirst().equals(other));
-
+        
         Action action = new Action();
         action.discoveredArtifacts = EnumSet.noneOf(ArtifactType.class);
         action.description = "Spielstart";
-        action.map = map;
-        action.floodCardStack = CardStackUtil.createFloodCardStack(map.raw());
-        action.floodCardStack.shuffleDrawStack();
+        action.map = tournamentTriple.getFirst();
+        action.artifactCardStack = tournamentTriple.getSecond();
+        action.floodCardStack = tournamentTriple.getThird();
         action.waterLevel = new WaterLevel(difficulty);
-        action.artifactCardStack = CardStackUtil.createArtifactCardStack();
-        action.artifactCardStack.shuffleDrawStack();
         action.players = new LinkedList<>();
         players.forEach(triple -> {
             if (triple.getFirst() != PlayerType.NONE)
-                action.players.add(createPlayerByType(triple.getFirst(), triple.getSecond(), map.getPlayerSpawnPoint(triple.getFirst()), action));
+                action.players.add(createPlayerByType(triple.getFirst(), triple.getSecond(), action.map.getPlayerSpawnPoint(triple.getFirst()), action));
             else
                 action.players.add(null);
         });
-
+        
         IntStream.range(0, players.size()).forEach(i ->
         {
             Player player = action.players.get(i);
@@ -163,18 +163,19 @@ public class Action implements Copyable<Action>, Serializable {
                         .filter(pType -> !pType.equals(PlayerType.NONE))
                         .filter(pType -> action.players.stream().filter(Objects::nonNull).noneMatch(p -> p.getType() == pType))
                         .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList());
-
+                
                 Collections.shuffle(list);
                 Player playerCreated = createPlayerByType(list.get(0), triple.getSecond(),
-                        map.getPlayerSpawnPoint(list.get(0)), action);
+                        action.map.getPlayerSpawnPoint(list.get(0)), action);
                 action.players.set(i, playerCreated);
             }
         });
-
+        
         //TODO darf nicht initial auf FLOOD stehen, sondern soll ordentlich die 6 felder zu beginn fluten
         action.state = TurnState.PLAYER_ACTION;
-
+        
         return action;
+        
     }
 
     public static Player createPlayerByType(PlayerType type, String name, Point start, Action action) {
@@ -279,4 +280,9 @@ public class Action implements Copyable<Action>, Serializable {
     public int getFloodCardsToDraw() {
         return floodCardsToDraw;
     }
+    
+    public static Action createInitialAction(Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players, MapFull map) throws NullPointerException, IllegalArgumentException {
+            return null;   
+    }
+        
 }

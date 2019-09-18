@@ -7,6 +7,8 @@ import de.sopra.javagame.model.player.Explorer;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
+import de.sopra.javagame.view.GamePreparationsViewController;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -122,10 +124,15 @@ public class AIControllerTest {
 
     @Test
     public void getDrainablePositionsOneMoveAway() throws IOException {
+        String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
+        MapFull fixMap = MapUtil.readFullMapFromString(testMapString);
+        String testArtifactCardString = new String(Files.readAllBytes(Paths.get(GamePreparationsViewController.DEV_ARTIFACT_STACK_FOLDER)), StandardCharsets.UTF_8);
+        CardStack<ArtifactCard> artifactCardStack = CardStackUtil.readArtifactCardStackFromString(testArtifactCardString);
+        String testFloodCardString = new String(Files.readAllBytes(Paths.get(GamePreparationsViewController.DEV_FLOOD_STACK_FOLDER)), StandardCharsets.UTF_8);
+        CardStack<FloodCard>  floodCardStack = CardStackUtil.readFloodCardStackFromString(testFloodCardString);
+        Triple<MapFull, CardStack<ArtifactCard>, CardStack<FloodCard>> tournamentTriple = new Triple<>(fixMap, artifactCardStack, floodCardStack);
         
-        final String testMapFixString = new String (Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        final MapFull fixMap = MapUtil.readFullMapFromString(testMapFixString);
-        controllerChan.startNewGame("fixMapFull", fixMap, players, Difficulty.NORMAL);
+        controllerChan.startNewGame("fixMapFull", tournamentTriple, players, Difficulty.NORMAL);
 
         MapTile[][] completeCard = aiControl.getCurrentAction().getMap().raw();
         /*

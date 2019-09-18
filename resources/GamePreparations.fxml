@@ -52,9 +52,18 @@
    	   <Label layoutX="55" layoutY="460" text="Karte" />
    	   <JFXComboBox fx:id="chooseMapComboBox" layoutX="55" layoutY="480" prefHeight="30"  prefWidth="170" />
    	   
-   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="chooseMapButton" layoutX="55" layoutY="535" prefHeight="30"  prefWidth="170" text="Karte erstellen" onAction="#onMapEditorClicked" />
+   	   <JFXButton styleClass="mainmenuJFXButton" fx:id="openMapEditorButton" layoutX="55" layoutY="535" prefHeight="30"  prefWidth="170" text="Karte erstellen" onAction="#onMapEditorClicked" />
    	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="menuButton" layoutX="425" layoutY="535" text="Hauptmenü" prefHeight="30"  prefWidth="170" onAction="#onCloseClicked"/>
 
+
+
+
+   	   <Label fx:id="developerArtifactLabel" layoutX="240" layoutY="340" text="Artefaktkarten" />
+   	   <Label fx:id="developerFloodLabel" layoutX="240" layoutY="400" text="Flutkarten" />
+		<JFXComboBox fx:id="chooseArtifactCardStackComboBox" layoutX="240" layoutY="360" prefHeight="30"  prefWidth="170" />
+		<JFXComboBox fx:id="chooseFloodCardStackComboBox" layoutX="240" layoutY="420" prefHeight="30"  prefWidth="170" /> 
+
+   	   <JFXComboBox fx:id="chooseDeveloperMapComboBox" layoutX="55" layoutY="480" prefHeight="30"  prefWidth="170" />
    </children>
 </AnchorPane>

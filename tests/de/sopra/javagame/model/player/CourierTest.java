@@ -3,13 +3,18 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.Difficulty;
+import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.JavaGame;
+import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.CardStackUtil;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.view.GamePreparationsViewController;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,13 +31,22 @@ public class CourierTest {
 
     private Action action;
     private List<Triple<PlayerType,String, Boolean>> players;
+    private MapFull testMap;
+    private CardStack<ArtifactCard> artifactCardStack;
+    private CardStack<FloodCard> floodCardStack;
+    private Triple<MapFull, CardStack<ArtifactCard>, CardStack<FloodCard>> tournamentTriple;
 
     @Before
     public void setUp() throws Exception {
         ControllerChan controllerChan = TestDummy.getDummyControllerChan();
 
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        MapFull testMap = MapUtil.readFullMapFromString(testMapString);
+        this.testMap = MapUtil.readFullMapFromString(testMapString);
+        String testArtifactCardString = new String(Files.readAllBytes(Paths.get(GamePreparationsViewController.DEV_ARTIFACT_STACK_FOLDER)), StandardCharsets.UTF_8);
+        this.artifactCardStack = CardStackUtil.readArtifactCardStackFromString(testArtifactCardString);
+        String testFloodCardString = new String(Files.readAllBytes(Paths.get(GamePreparationsViewController.DEV_FLOOD_STACK_FOLDER)), StandardCharsets.UTF_8);
+        this.floodCardStack = CardStackUtil.readFloodCardStackFromString(testFloodCardString);
+        tournamentTriple = new Triple<>(testMap, artifactCardStack, floodCardStack);
 
         players = Arrays.asList(
                 new Triple<>(PlayerType.COURIER,"", false),
@@ -40,7 +54,7 @@ public class CourierTest {
                 new Triple<>(PlayerType.NAVIGATOR,"", false),
                 new Triple<>(PlayerType.PILOT,"", false));
 
-        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", tournamentTriple, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();

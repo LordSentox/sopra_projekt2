@@ -2,7 +2,11 @@ package de.sopra.javagame.model;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.CardStackUtil;
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapFull;
+import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Triple;
 
@@ -68,7 +72,22 @@ public class JavaGame implements Serializable {
      * @param players    Die Spieler, die das Spiel spielen
      * @return Der erste Zug, der von Spielern gemacht wird.
      */
-    public static Pair<JavaGame, Action> newGame(String mapName, MapFull map, Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players)
+    public static Pair<JavaGame, Action> newGame(String mapName, MapBlackWhite map, Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players)
+            throws NullPointerException, IllegalArgumentException {
+
+        MapFull fullMap = MapUtil.createAndFillMap(map);
+        
+        CardStack<FloodCard> floodCardStack = CardStackUtil.createFloodCardStack(fullMap.raw());
+        CardStack<ArtifactCard> artifactCardStack = CardStackUtil.createArtifactCardStack();       
+        
+        floodCardStack.shuffleDrawStack();
+        artifactCardStack.shuffleDrawStack();     
+        
+        return newGame(mapName, new Triple<> (fullMap, artifactCardStack, floodCardStack), difficulty, players);
+        
+    }
+    
+    public static Pair<JavaGame, Action> newGame(String mapName, Triple<MapFull, CardStack<ArtifactCard>, CardStack<FloodCard>> tournamentTriple, Difficulty difficulty, List<Triple<PlayerType, String, Boolean>> players)
             throws NullPointerException, IllegalArgumentException {
         JavaGame game = new JavaGame();
 
@@ -87,10 +106,11 @@ public class JavaGame implements Serializable {
             game.difficulty = difficulty;
         }
 
-        Action initialAction = Action.createInitialAction(difficulty, players, map);
+        Action initialAction = Action.createInitialAction(difficulty, players, tournamentTriple);
 
         return new Pair<>(game, initialAction);
     }
+    
 
     /**
      * Bekommt die zuletzt getätigte Aktion und erstellt eine neüe, die für den nächsten Zug benutzt werden kann. Gab es
