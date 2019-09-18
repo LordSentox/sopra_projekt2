@@ -4,6 +4,9 @@ import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 public class MapFull extends Map<MapTile> {
     MapFull() {
         super();
@@ -37,6 +40,18 @@ public class MapFull extends Map<MapTile> {
         }
 
         return null;
+    }
+
+    public Collection<Point> validPoints() {
+        Collection<Point> points = new LinkedList<>();
+        for (int y = 0; y < SIZE_Y; ++y) {
+            for (int x = 0; x < SIZE_X; ++x) {
+                if (get(x, y) != null) {
+                    points.add(new Point(x, y));
+                }
+            }
+        }
+        return points;
     }
 
     public MapTile get(MapTileProperties tileProperties) {
