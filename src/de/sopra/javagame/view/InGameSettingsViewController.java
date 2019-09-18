@@ -80,6 +80,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     public void onSaveClicked() {
         //eigentlich soll hier das Spiel gespeichert werden und nicht die Einstellungen
         getGameWindow().getSettings().save();
+        changeState(ViewState.IN_GAME_SETTINGS, ViewState.SAVE_GAME);
     }
 
     public void onBackToMenuClicked() {

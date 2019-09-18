@@ -9,6 +9,8 @@ import javafx.scene.image.ImageView;
 
 import static de.sopra.javagame.view.abstraction.ViewState.*;
 
+import java.io.IOException;
+
 /**
  * GUI für das Hauptfenster
  *
@@ -33,7 +35,7 @@ public class MainMenuViewController extends AbstractViewController {
     }
 
     public void onLoadGameClicked() {
-        
+        changeState(ViewState.MENU, ViewState.LOAD_GAME);
     }
 
     public void onMapEditorClicked() {

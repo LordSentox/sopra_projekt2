@@ -4,6 +4,8 @@ public enum ViewState {
 
     MENU,
     SETTINGS,
+    LOAD_GAME,
+    SAVE_GAME,
     IN_GAME_SETTINGS,
     IN_GAME(true),
     MAP_EDITOR(true),

@@ -216,7 +216,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onSettingsClicked() {
 
         try {
-            SettingsViewController.openModal(getGameWindow());
+            InGameSettingsViewController.openModal(getGameWindow());
         } catch (IOException e) {
             e.printStackTrace();
         }

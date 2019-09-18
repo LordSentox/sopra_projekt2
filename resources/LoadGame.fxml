@@ -1,0 +1,22 @@
+<?import javafx.scene.control.Button ?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.Label?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXButton?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.LoadGameViewController">
+   <children>
+   	<ImageView fx:id="mainPane"/>
+   
+   	<JFXButton styleClass="close-Button" fx:id="closeButton" layoutX="365" layoutY="5" prefHeight="30" prefWidth="30" text="x" onAction="#onCloseClicked"/>
+   	
+   	<JFXListView fx:id="loadMapListView" layoutX="10.0" layoutY="80.0" prefHeight="450.0" prefWidth="380.0"/>
+   	<Label fx:id="loadMapViewLabel" layoutX="10.0" layoutY="80.0" prefHeight="50.0" prefWidth="380.0" text="keine Spielstände vorhanden"/>
+   	<JFXButton styleClass="mainmenuJFXButton" fx:id="backToMenuButton" layoutX="10" layoutY="550" prefHeight="30" prefWidth="150" text="Hauptmenü" onAction="#onCloseClicked" />
+    <JFXButton styleClass="mainmenuJFXButton" fx:id="loadGameButton" layoutX="240" layoutY="550" prefHeight="30" prefWidth="150" text="Laden" onAction="#onLoadGameClicked" />
+   </children>
+</AnchorPane>
