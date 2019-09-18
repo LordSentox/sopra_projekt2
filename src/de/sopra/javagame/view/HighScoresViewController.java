@@ -16,6 +16,7 @@ import javafx.scene.paint.Paint;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,39 +43,41 @@ public class HighScoresViewController extends AbstractViewController implements 
                 "gull_cove", "island_of_death", "island_of_shadows", "skull_island", "vulcan_island"};
         List<String> standardMaps = Arrays.asList(arr);
         */
-        
-        File mapFile = new File (MapController.MAP_FOLDER);
+
+        File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
         List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
 
-        File scoreFile = new File (HighScoresController.SCORE_FOLDER);
-        File[] scoreFiles = scoreFile.listFiles();
+        File scoreFile = new File(HighScoresController.SCORE_FOLDER);
+        File[] scoreFiles = scoreFile.listFiles(file -> !file.getName().startsWith(".")
+                && file.getName().endsWith(".score") && file.getName().length() > 6);
         List<String> scoreNames = Arrays.stream(scoreFiles).map(File::getName).collect(Collectors.toList());
-        
-        for (String currentMap : mapNames) {
-            if (!scoreNames.contains((currentMap.substring(0, currentMap.length()-4)) + ".score")) {
-                new File(HighScoresController.SCORE_FOLDER + (currentMap.substring(0, currentMap.length()-4)) + ".score").createNewFile();
-            }
-        }        
 
-        scoreFile = new File (HighScoresController.SCORE_FOLDER);
-        scoreFiles = scoreFile.listFiles();
+        for (String currentMap : mapNames) {
+            if (!scoreNames.contains((currentMap.substring(0, currentMap.length() - 4)) + ".score")) {
+                new File(HighScoresController.SCORE_FOLDER + (currentMap.substring(0, currentMap.length() - 4)) + ".score").createNewFile();
+            }
+        }
+
+        scoreFile = new File(HighScoresController.SCORE_FOLDER);
+        scoreFiles = scoreFile.listFiles(file -> !file.getName().startsWith(".")
+                && file.getName().endsWith(".score") && file.getName().length() > 6);
         scoreNames = Arrays.stream(scoreFiles).map(File::getName).collect(Collectors.toList());
-        for(String currentName : scoreNames) {
-            mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length()-6));
-            mapSelectionComboBox.getItems().sort(null);
+        for (String currentName : scoreNames) {
+            mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 6));
+            mapSelectionComboBox.getItems().sort(Comparator.naturalOrder());
             System.out.println(currentName + "\n");
         }
-        
-        
-        highScoreListViewLabel.setTextFill( Paint.valueOf("#FFFFFF"));
-        chooseMapLabel.setTextFill( Paint.valueOf("#FFFFFF"));
-        
+
+
+        highScoreListViewLabel.setTextFill(Paint.valueOf("#FFFFFF"));
+        chooseMapLabel.setTextFill(Paint.valueOf("#FFFFFF"));
+
         //mapSelectionComboBox.getItems().addAll(standardMaps);
-        mapSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) 
+        mapSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue)
                 -> getGameWindow().getControllerChan().getHighScoresController().loadHighScores(newValue));
-        
+
     }
 
     public void onResetClicked() {
@@ -96,14 +99,14 @@ public class HighScoresViewController extends AbstractViewController implements 
 
     public void onCloseClicked() {
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
-        
-        
+
+
     }
-    
+
     public void onMainMenuClicked() {
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
     }
-    
+
     @Override
     public void refreshList(List<HighScore> scores) {
         scores.sort(null);
@@ -117,7 +120,7 @@ public class HighScoresViewController extends AbstractViewController implements 
             });
         }
     }
-    
+
     private void changeHighScoreLabelVisibility(boolean active) {
         highScoreListViewLabel.setVisible(active);
     }
