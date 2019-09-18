@@ -65,6 +65,7 @@ public class InGameSettingsViewController extends AbstractViewController {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.WINDOW_MODAL);
         iInGameSettingsViewController.modalCopy = stage;
+        stage.setAlwaysOnTop(true);
         stage.show();
         stage.toFront();
         stage.requestFocus();
@@ -83,9 +84,8 @@ public class InGameSettingsViewController extends AbstractViewController {
     public void onSaveClicked() throws IOException {
         //eigentlich soll hier das Spiel gespeichert werden und nicht die Einstellungen
         getGameWindow().getSettings().save();
+        modalCopy.close();
         SaveGameViewController.openModal(getGameWindow());
-        
-        
 //        changeState(ViewState.IN_GAME_SETTINGS, ViewState.SAVE_GAME);
     }
 
@@ -93,6 +93,5 @@ public class InGameSettingsViewController extends AbstractViewController {
         getGameWindow().getSettings().save();
         modalCopy.close();
         changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
-
     }
 }
