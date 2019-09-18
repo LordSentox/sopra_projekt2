@@ -62,11 +62,14 @@ public class GamePreparationsViewController extends AbstractViewController {
 
     private Difficulty difficulty;
     private List<Triple<PlayerType, String, Boolean>> playerList = new LinkedList<>();
+    
+    private ObservableList<String> playerTypesList ;
+    private List<String> mapNames ;
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
 
-        ObservableList<String> playerTypesList =
+        playerTypesList =
                 FXCollections.observableArrayList(
                         "Taucher",
                         "Navigator",
@@ -99,7 +102,7 @@ public class GamePreparationsViewController extends AbstractViewController {
 
         File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
-        List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+        mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
         for (String currentName : mapNames) {
             chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 4));
@@ -172,6 +175,34 @@ public class GamePreparationsViewController extends AbstractViewController {
             debug("Map:" + chooseMapComboBox.getValue() + "\n");
         }
 
+        playerOneNameTextField.clear();
+        playerTwoNameTextField.clear();
+        playerThreeNameTextField.clear();
+        playerFourNameTextField.clear();
+        
+        playerOneChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
+        playerTwoChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
+        playerThreeChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
+        playerFourChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
+        editDifficultyComboBox.getSelectionModel().select(0);
+
+        playerThreeNameTextField.setDisable(true);
+        playerFourNameTextField.setDisable(true);
+        playerThreeChooseCharakterComboBox.setDisable(true);
+        playerFourChooseCharakterComboBox.setDisable(true);
+        addPlayerThreeButton.setDisable(true);
+        addPlayerFourButton.setDisable(true);
+        isPlayerOneKiCheckBox.setSelected(false);
+        isPlayerTwoKiCheckBox.setSelected(false);
+        isPlayerThreeKiCheckBox.setSelected(false);
+        isPlayerFourKiCheckBox.setSelected(false);
+        isPlayerThreeKiCheckBox.setDisable(true);
+        isPlayerFourKiCheckBox.setDisable(true);
+        
+        addPlayerThreeToggleButton.setSelected(false);
+        addPlayerFourToggleButton.setSelected(false);
+
+        chooseMapComboBox.getSelectionModel().select(mapNames.size());
 
         changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
@@ -182,6 +213,7 @@ public class GamePreparationsViewController extends AbstractViewController {
 
 
     public void onCloseClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.GAME_PREPARATIONS, ViewState.MENU);
     }
 

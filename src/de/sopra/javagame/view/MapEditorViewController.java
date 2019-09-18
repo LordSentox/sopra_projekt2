@@ -126,6 +126,7 @@ public class MapEditorViewController extends AbstractViewController implements M
     }
 
     public void onCloseClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.MAP_EDITOR, getGameWindow().getPreviousViewState());
     }
 

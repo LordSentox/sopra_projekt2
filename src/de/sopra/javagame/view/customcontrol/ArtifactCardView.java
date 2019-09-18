@@ -92,7 +92,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
                 List<ActionButton> buttons = new LinkedList<>();
                 if (type.equals(ArtifactCardType.HELICOPTER) || type.equals(ArtifactCardType.SANDBAGS))
                     buttons.add(ActionButton.PLAY_CARD);
-                if(handCardIndex >=5)
+                if(controller.getGameWindow().getControllerChan().getCurrentAction().getPlayer(ownerType).getHand().size() >=5)
                     buttons.add(ActionButton.DISCARD);
                 if (buttons.size() > 0) {
                     ap.init(buttons.toArray(new ActionButton[buttons.size()]));

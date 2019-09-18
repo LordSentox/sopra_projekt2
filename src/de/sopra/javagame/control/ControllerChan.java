@@ -1,9 +1,11 @@
 package de.sopra.javagame.control;
 
+import com.google.gson.GsonBuilder;
 import de.sopra.javagame.control.ai.GameAI;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.serialize.typeadapter.ActionTypeAdapter;
 import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
@@ -151,14 +153,15 @@ public class ControllerChan {
      * @param loadGameName ist der Name der zu ladenden Spieldatei
      */
 
-    public void loadSaveGame(String loadGameName) {
-        try (FileInputStream fileInputStream = new FileInputStream(SAVE_GAME_FOLDER + loadGameName + ".save");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            this.javaGame = (JavaGame) objectInputStream.readObject();
+    public void loadSaveGame(String loadGameName, boolean isReplay) {
+        File file = new File(isReplay ? (REPLAY_FOLDER + loadGameName + ".replay") : (SAVE_GAME_FOLDER + loadGameName + ".save"));
 
-            // Falls das Spiel nicht bis zum letzten Zug vorgespult wurde, spule es vor.
-            while (this.javaGame.canRedo())
-                this.javaGame.redoAction();
+        try (FileReader fileReader = new FileReader(file)) {
+
+            this.javaGame = new GsonBuilder()
+                    .registerTypeAdapter(Action.class, new ActionTypeAdapter())
+                    .create()
+                    .fromJson(fileReader, JavaGame.class);
 
             // Setze die momentane Aktion auf die nächste des geladenen Spiels
             this.currentAction = this.javaGame.getPreviousAction().copy();
@@ -173,17 +176,13 @@ public class ControllerChan {
         } catch (IOException e) {
             System.out.println("Beim Import ist ein Fehler aufgetreten!");
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Die Klasse wurde nicht gefunden!");
-            e.printStackTrace();
         }
     }
 
-    public void loadReplay(String replayName) {
+    public void rewindToStart() {
         while (this.javaGame.canUndo()) {
             this.javaGame.undoAction();
         }
-        this.gameName = replayName;
     }
 
     /**
@@ -193,6 +192,7 @@ public class ControllerChan {
      */
 
     public void saveGame(String gameName) {
+        boolean gameFinished = javaGame.getPreviousAction().isGameEnded();
         // FIXME: Funktioniert das wirklich so? Der Name müsste ja erst gesetzt worden sein. Vielleicht lieber auf null
         // überprüfen?
         if (gameName.isEmpty()) {
@@ -200,30 +200,21 @@ public class ControllerChan {
         } else {
             this.gameName = gameName;
         }
-        try (FileOutputStream fileOutputStream = new FileOutputStream(this.getGameName() + ".save");
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            objectOutputStream.writeObject(javaGame);
 
-            //Wenn das Spiel beendet wurde, speichere es auch in den HighScores
-            // TODO: Sollte das Spiel wirklich hier gespeichert werden und nicht, wenn es beendet wird? Außerdem gibt es
-            // verschiedene Ordner für replays und für gespeicherte Spiele. Wenn es beendet wurde sollte es nur bei den
-            // replays, nicht bei den Spielen, die man weiterspielen kann landen.
-            if (javaGame.getPreviousAction().isGameEnded()) {
-                while (javaGame.canUndo()) {
-                    javaGame.undoAction();
-                }
-                try (FileOutputStream fileOutputStreamReplay =
-                             new FileOutputStream(HighScoresController.REPLAY_FOLDER + this.gameName + ".replay");
-                     ObjectOutputStream objectOutputStreamReplay =
-                             new ObjectOutputStream(fileOutputStreamReplay)) {
-                    objectOutputStream.writeObject(javaGame);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Es gab keine solche Datei.");
-            e.printStackTrace();
+        File saveFile;
+        if (gameFinished) {
+            saveFile = new File(ControllerChan.REPLAY_FOLDER + this.getGameName() + ".replay");
+        } else {
+            saveFile = new File( ControllerChan.SAVE_GAME_FOLDER + this.getGameName() + ".save");
+        }
+
+        try (FileWriter fileWriter = new FileWriter(saveFile, false)) {
+            new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(Action.class, new ActionTypeAdapter())
+                    .create()
+                    .toJson(javaGame, fileWriter);
         } catch (IOException e) {
-            System.out.println("Beim Export ist ein Fehler aufgetreten.");
             e.printStackTrace();
         }
     }
@@ -234,9 +225,8 @@ public class ControllerChan {
     public void replayGame(String replayGameName) {
         inGameViewAUI.setIsReplayWindow(true);
         saveGame("");
-        // TODO: Bei der Erstellung des Strukturmodelles wurde noch keine Unterscheidung zwischen Replays und
-        // weiterspielbaren Spielen gemacht. Deshalb muss die loadGame/saveGame-Methode noch angepasst werden.
-        loadSaveGame(replayGameName);
+        loadSaveGame(replayGameName, true);
+        rewindToStart();
         inGameViewAUI.refreshSome();
     }
 
@@ -245,30 +235,20 @@ public class ControllerChan {
      */
     public void continueGame() {
         //Das Spiel mit Namen mapName + ".save" im Data-Ordner laden und alles refreshen
-        try (FileInputStream fileInputStream = new FileInputStream("data/current.save");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            this.javaGame = (JavaGame) objectInputStream.readObject();
+        try (FileReader fileReader = new FileReader(ControllerChan.SAVE_GAME_FOLDER + "current.save")) {
+            this.javaGame = new GsonBuilder()
+                    .registerTypeAdapter(Action.class, new ActionTypeAdapter())
+                    .create()
+                    .fromJson(fileReader, JavaGame.class);
         } catch (FileNotFoundException e) {
-            System.out.println("Es gab keine solche Datei.");
             e.printStackTrace();
+            System.err.println("Es gab keine solche Datei.");
         } catch (IOException e) {
-            System.out.println("Beim Import ist ein Fehler aufgetreten!");
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Die Klasse wurde nicht gefunden!");
-            e.printStackTrace();
+            System.err.println("Beim Import ist ein Fehler aufgetreten!");
         }
 
-        // FIXME: Datei muss wahrscheinlich nicht gelöscht werden, da sie überschrieben werden kann und der letzte Save
-        // gerne behalten werden kann, falls das Spiel abstürzt etc.
-        //lösche geladenes Spiel aus Speicher
-        boolean delete = new File(gameName).delete();
-        if (!delete) {
-            System.out.println("Die Datei wurde nicht gelöscht!");
-        }
-        //schneide ".save" ab
-        // FIXME: gameName wurde gar nicht gesetzt, nach Länge abschneiden ist nicht sicher. Lieber mittels Pattern oder gleich umgehen
-        this.gameName = this.gameName.substring(0, this.gameName.length() - 5);
+        this.gameName = "current";
     }
 
     public Action finishAction() {
