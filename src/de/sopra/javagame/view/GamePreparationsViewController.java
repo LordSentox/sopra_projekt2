@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXComboBox;
 import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
@@ -20,6 +21,10 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -72,7 +77,9 @@ public class GamePreparationsViewController extends AbstractViewController {
         playerTwoChooseCharakterComboBox.getItems().addAll(playerTypesList);
         playerTwoChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
         playerThreeChooseCharakterComboBox.getItems().addAll(playerTypesList);
+        playerThreeChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
         playerFourChooseCharakterComboBox.getItems().addAll(playerTypesList);
+        playerFourChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
 
         editDifficultyComboBox.getItems().addAll("Novize", "Normal", "Elite", "Legende");
         editDifficultyComboBox.getSelectionModel().select(0);
@@ -94,6 +101,8 @@ public class GamePreparationsViewController extends AbstractViewController {
             chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length()-4));
             chooseMapComboBox.getItems().sort(null);
         }
+        chooseMapComboBox.getItems().add("neu generieren");
+        chooseMapComboBox.getSelectionModel().select(mapNames.size());
 
     }
 
@@ -114,10 +123,11 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerFourButton.setDisable(!addPlayerFourToggleButton.isSelected());
         isPlayerFourKiCheckBox.setDisable(!addPlayerFourToggleButton.isSelected());
     }
-
-    public void onStartGameClicked() {
+    //Exception wegen Map einlesen
+    public void onStartGameClicked() throws IOException {
         playerList.clear();
-
+        MapBlackWhite currentMap;
+        
         //Spielertypen hinzufügen
         addPlayerType(playerOneChooseCharakterComboBox.getValue(),
                 !isPlayerOneKiCheckBox.isDisabled(),
@@ -139,12 +149,28 @@ public class GamePreparationsViewController extends AbstractViewController {
             return;
         }
         if (playerList.isEmpty() || difficulty == null || isTextFieldEmpty()) {
-            cannotStartGameLabel.setText("Es sind nicht alle Felder ausgefüllt");
+            cannotStartGameLabel.setText("Es sind nicht alle Namensfelder ausgefüllt");
             return;
         }
+        
+        if(chooseMapComboBox.getValue() == null ){
+            cannotStartGameLabel.setText("Es ist keine Map ausgewählt");
+            return;
+        }
+        else if(chooseMapComboBox.getValue() == "neu generieren"){
+            currentMap = MapUtil.generateRandomIsland();
+            System.out.println("Map: random \n");
+        }
+        else{
+            String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getValue() +".map")), StandardCharsets.UTF_8);
+            currentMap = MapUtil.readBlackWhiteMapFromString(mapString);
+            System.out.println("Map:" + chooseMapComboBox.getValue() + "\n");
+        }
+        
+        
         changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
-        this.getGameWindow().getControllerChan().startNewGame("Coole Carte", MapUtil.generateRandomIsland(), playerList, difficulty);
+        this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
 
         getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(0);
     }
@@ -217,4 +243,7 @@ public class GamePreparationsViewController extends AbstractViewController {
             return playerOneNameTextField.getText().isEmpty() || playerTwoNameTextField.getText().isEmpty();
         }
     }
+    
+
+    
 }
