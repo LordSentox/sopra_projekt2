@@ -120,7 +120,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void initGridPane() {
-        IntStream.range(0, 6).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(ACTIVE_CARD_SIZE-50)));
+        IntStream.range(0, 6).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(ACTIVE_CARD_SIZE - 50)));
 
         IntStream.range(0, 5).forEach(item -> {
             handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
@@ -158,7 +158,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onTransferCardClicked(int cardIndex) {
-     
+
 
     }
 
@@ -229,15 +229,15 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onArtifactCardDiscardStackClicked() {
 
     }
-    
+
     public void onSpecialCardClicked(ArtifactCardType card, int index, PlayerType owner) {
         if (card.equals(ArtifactCardType.HELICOPTER)) {
             //TODO
         } else if (card.equals(ArtifactCardType.SANDBAGS)) {
-            List<Point> drainable = new ArrayList<>(); 
+            List<Point> drainable = new ArrayList<>();
             MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
             map.forEach(mapTile -> {
-                if(mapTile.getState().equals(MapTileState.FLOODED)){
+                if (mapTile.getState().equals(MapTileState.FLOODED)) {
                     drainable.add(map.getPositionForTile(mapTile.getProperties()));
                 }
             });
@@ -269,12 +269,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void showNotification(Notification notification) {
-        if(notification.isGameWon())
-        {
+        if (notification.isGameWon()) {
 
-        }
-        else if(notification.isGameLost())
-        {
+        } else if (notification.isGameLost()) {
 
         }
         super.showNotification(notification);
@@ -344,10 +341,10 @@ public class InGameViewController extends AbstractViewController implements InGa
                 v.showFrontImage();
                 v.setInGameViewController(this);
                 v.setOwner(player);
-                if(transferActive) v.setTradeable(transferActive);
+                if (transferActive) v.setTradeable(transferActive);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
-                index ++;
+                index++;
             }
         } else {
             Action action = getGameWindow().getControllerChan().getCurrentAction();
@@ -605,6 +602,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void setSpecialActive(boolean specialActive) {
         this.specialActive = specialActive;
     }
+
     public void setTransferActive(boolean transferActive) {
         this.transferActive = transferActive;
     }
