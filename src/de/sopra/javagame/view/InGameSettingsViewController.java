@@ -1,13 +1,22 @@
 package de.sopra.javagame.view;
 
+import java.io.IOException;
+
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSlider;
 import de.sopra.javagame.util.GameSettings;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
+import de.sopra.javagame.view.abstraction.GameWindow;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class InGameSettingsViewController extends AbstractViewController {
 
@@ -17,6 +26,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     public JFXCheckBox developerToolsCheckbox;
     @FXML
     ImageView mainPane;
+    private Stage modalCopy;
 
     public void init() {
         effectVolumeSlider.getStylesheets().add(getClass().getResource("/stylesheets/sliders.css").toExternalForm());
@@ -37,18 +47,51 @@ public class InGameSettingsViewController extends AbstractViewController {
         settings.devToolsEnabled().unbind();
         settings.devToolsEnabled().bind(developerToolsCheckbox.selectedProperty());
     }
+    
+    public static void openModal(GameWindow window) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(SettingsViewController.class.getResource("/InGameSettings.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        InGameSettingsViewController iInGameSettingsViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(SettingsViewController.class.getClass().getResource("/application.css").toExternalForm());
+        iInGameSettingsViewController.setGameWindow(window);
+        iInGameSettingsViewController.setScene(mainMenuScene);
+        iInGameSettingsViewController.init();
+        Stage stage = new Stage();
+        stage.setScene(mainMenuScene);
+        stage.initOwner(window.getMainStage());
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setAlwaysOnTop(true);
+        
+        window.getMainStage().toBack();
+        mainPane.toBack();
+        
+        stage.requestFocus();
+        
+        stage.toFront();
+        iInGameSettingsViewController.modalCopy = stage;
+        stage.show();
+    }
 
 
     public void onCloseClicked() {
-        changeState(ViewState.IN_GAME_SETTINGS, ViewState.IN_GAME);
+        if(modalCopy == null) {
+            getGameWindow().getSettings().save();
+            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
+        }
+        else modalCopy.close();
     }
 
     public void onSaveClicked() {
+        //eigentlich soll hier das Spiel gespeichert werden und nicht die Einstellungen
         getGameWindow().getSettings().save();
     }
 
     public void onBackToMenuClicked() {
-        getGameWindow().getSettings().save();
-        changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
+            getGameWindow().getSettings().save();
+            modalCopy.close();
+            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
+        
     }
 }
