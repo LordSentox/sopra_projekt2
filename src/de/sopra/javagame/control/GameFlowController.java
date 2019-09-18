@@ -179,7 +179,7 @@ public class GameFlowController {
         // Überprüfe, ob einer der Spieler mehr als 5 Handkarten hat. In diesem Fall muss erst abgelegt werden,
         // bevor weitergespielt werden kann.
         for (Player player : controllerChan.getCurrentAction().getPlayers()) {
-            if (player.getHand().size() > 5) {
+            if (player.getHand().size() > Player.MAXIMUM_HANDCARDS) {
                 return true;
             }
         }
