@@ -3,10 +3,12 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.view.HighScoresViewAUI;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +64,10 @@ public class HighScoresController {
     }
 
     public void saveHighScore(HighScore scoreToSave) {
+
+        if (scoreToSave.getMapName().isEmpty())
+            System.err.println("Warning: Mapname is empty! saving highscore will still continue.");
+
         // Lade die alten High-Score-Daten, damit der neue score ihnen hinzugefügt werden kann
         List<HighScore> highScores = loadScoresNoRefresh(scoreToSave.getMapName());
 
@@ -81,8 +87,8 @@ public class HighScoresController {
         try {
             File file = new File(SCORE_FOLDER + scoreToSave.getMapName() + ".score");
 
-            if (!file.exists()) {
-                file.createNewFile();
+            if (file.exists()) {
+                file.delete();
             }
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -105,29 +111,28 @@ public class HighScoresController {
      * @param mapName Der Name der Karte, dessen Datei zurückgesetzt werden soll.
      */
     public void resetHighScores(String mapName) {
-        try {
-            FileOutputStream out = new FileOutputStream(SCORE_FOLDER + mapName + ".score");
-            out.write(new byte[0]);
-            out.close();
+        File file = new File(SCORE_FOLDER + mapName + ".score");
 
-            if (this.highScores != null)
-                this.highScores.clear();
-
-            this.highScoresViewAUI.refreshList(this.highScores);
-        } catch (IOException e) {
-            System.err.println("HighScores konnten nicht gelöscht werden.");
-            e.printStackTrace();
+        if (file.exists()) {
+            file.delete();
         }
+
+        if (this.highScores != null)
+            this.highScores.clear();
+
+        this.highScoresViewAUI.refreshList(this.highScores);
     }
 
     // Helferfunktionen ------------------------------------------------------------------------------------------------
 
     private static List<HighScore> loadScoresNoRefresh(String mapName) {
         try {
-            String scoresToString = new String(Files.readAllBytes(Paths.get(SCORE_FOLDER + mapName + ".score")), StandardCharsets.UTF_8);
-            if(scoresToString.trim().isEmpty()) {
+            File file = new File(SCORE_FOLDER, mapName + ".score");
+            if (!file.exists()) return null;
+            byte[] bytes = Files.readAllBytes(file.toPath());
+            String scoresToString = new String(bytes, StandardCharsets.UTF_8);
+            if (scoresToString.trim().isEmpty()) {
                 return new ArrayList<>();
-                
             }
             // Erstelle aus dem String eine Liste von einzelnen Zeilen und splitte diese dann mit ;, der CSV-Trennung.
             String[] scores = scoresToString.split("\n");

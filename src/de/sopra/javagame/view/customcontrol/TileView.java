@@ -1,5 +1,6 @@
 package de.sopra.javagame.view.customcontrol;
 
+import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.view.abstraction.Highlightable;
@@ -13,6 +14,18 @@ public class TileView extends ImageView implements Highlightable {
     private final Image dryImage, floodedImage, goneImage;
 
     private final MapTileProperties type;
+
+    public TileView(MapTile tile, int size) {
+        //System.out.println(id);
+        type = tile.getProperties();
+        this.dryImage = TextureLoader.getTileTextureDry(type);
+        this.floodedImage = TextureLoader.getTileTextureFlooded(type);
+        this.goneImage = TextureLoader.getGone();
+        this.setImage(TextureLoader.getTileTexture(tile));
+        setPreserveRatio(true);
+        setFitHeight(size);
+        setFitWidth(size);
+    }
 
     public TileView(int id, int size) {
         //System.out.println(id);

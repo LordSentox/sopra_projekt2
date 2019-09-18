@@ -1,8 +1,6 @@
 package de.sopra.javagame.view.textures;
 
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTileProperties;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.view.textures.ZipWrapper.ZipEntryList;
 import javafx.scene.image.Image;
@@ -13,7 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Queue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -45,6 +46,7 @@ public class TextureLoader {
     private static Image special;
     private static Image drain;
     private static Image move;
+    private static Image waterTile;
 
     static {
         PACKS.add("default.zip");
@@ -91,6 +93,7 @@ public class TextureLoader {
             special = new Image(misc.inputStreamByName("special.png"));
             drain = new Image(misc.inputStreamByName("drain.png"));
             move = new Image(misc.inputStreamByName("move.png"));
+            waterTile = new Image(misc.inputStreamByName("water-tile.png"));
             sea0 = new Image(tilesExtra.inputStreamByName("sea_0.png"));
             sea1 = new Image(tilesExtra.inputStreamByName("sea_1.png"));
             gone = new Image(tilesExtra.inputStreamByName("flooded.png"));
@@ -174,6 +177,10 @@ public class TextureLoader {
         return TILE_TEXTURES_FLOODED.get(properties);
     }
 
+    public static Image getTileTexture(MapTile tile) {
+        return tile.getState() == MapTileState.DRY ? getTileTextureDry(tile.getProperties()) : (tile.getState() == MapTileState.FLOODED ? getTileTextureFlooded(tile.getProperties()) : getGone());
+    }
+
     public static Image getBackground() {
         return background;
     }
@@ -228,6 +235,10 @@ public class TextureLoader {
 
     public static Image getMove() {
         return move;
+    }
+
+    public static Image getWaterTile() {
+        return waterTile;
     }
 
     private static URL getResource(String name) {
