@@ -82,8 +82,8 @@ public class AIController {
     public void doSteps(ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
             Player player = getCurrentAction().getPlayer(queue.getPlayer());
-            int index = -1;
-            Player targetPlayer = null;
+            int index;
+            Player targetPlayer;
             switch (action.getType()) {
 
                 case MOVE:
@@ -123,7 +123,7 @@ public class AIController {
                     }
                     controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
                             new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
-                            action.getTargetPlayers().stream().collect(Collectors.toList()));
+                            new ArrayList<>(action.getTargetPlayers()));
                     break;
                 case SPECIAL_ABILITY:
                     switch (player.getType()) {
@@ -213,7 +213,7 @@ public class AIController {
     }
 
     /**
-     * Der aktive Aktion, an welcher Änderungen vorgenommen werden dürfen
+     * Der aktive Aktion, an welcher keine Änderungen vorgenommen werden dürfen
      *
      * @return Die aktuelle Aktion
      */
@@ -291,7 +291,7 @@ public class AIController {
      * @return das MapTile zu einem Punkt
      */
     public MapTile getTile(Point point) {
-        return getCurrentAction().getMap().get(point);
+        return getCurrentAction().getMap().get(point).copy();
     }
 
     /**
@@ -300,7 +300,7 @@ public class AIController {
      * @return die Liste der Spieler im aktuellen Zustand (Action)
      */
     public List<Player> getAllPlayers() {
-        return getCurrentAction().getPlayers();
+        return CopyUtil.copyAsList(getCurrentAction().getPlayers());
     }
 
     /**
@@ -367,7 +367,7 @@ public class AIController {
         for (MapTile[] tileRow : getCurrentAction().getMap().raw()) {
             for (MapTile tile : tileRow) {
                 if (tile != null && tile.getState() == state) {
-                    return tile;
+                    return tile.copy();
                 }
             }
         }
@@ -403,7 +403,7 @@ public class AIController {
      * @return ein Tipp als {@link ActionQueue}
      * @see AIActionTip
      */
-    public ActionQueue getTip(Supplier<Player> player) {
+    public SimpleAction getTip(Supplier<Player> player) {
         setActivePlayerSupplier(player);
         return processor.getTip(this);
     }
@@ -415,7 +415,7 @@ public class AIController {
      * @return ein Tipp als {@link ActionQueue}
      * @see #getCurrentAction()
      */
-    public ActionQueue getTip() {
+    public SimpleAction getTip() {
         return getTip(() -> getCurrentAction().getActivePlayer());
     }
 

@@ -38,6 +38,13 @@
 	-fx-background-color: "#c9af06";
 	-jfx-button-type: RAISED;
 }
+.gameWriteBigButton {
+	-fx-font-weight: bold;
+	-fx-font-size: 20;
+	-fx-text-fill: "#000000";
+	-fx-background-color: "#c9af06";
+	-jfx-button-type: RAISED;
+}
 
 .close-Button {
 	-fx-text-fill: "#000000";
@@ -86,6 +93,23 @@
 .list-cell:even {
     -fx-cell-hover-color: #0093ff;
     -fx-background-color: rgb(164,133,87);
+}
+
+.dialog-pane {
+	-fx-background-color: rgb(164,133,87);
+}
+
+.dialog-pane .label {
+	-fx-text-fill: white;
+}
+
+.dialog-pane .button{
+	-fx-text-fill: "#000000";
+	-fx-background-color: "#c9af06";
+}
+
+.dialog-pane:header .header-panel {
+	-fx-background-color: rgb(102,62,3);
 }
 
 .label {

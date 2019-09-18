@@ -133,10 +133,10 @@ public class AIControllerTest {
          */
         Point explorersStartPosition = aiControl.getTile(PlayerType.EXPLORER).getLeft();
         //setze alle MapTiles auf DRY, um den Test zu starten
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.DRY);;
+        for (MapTile[] mapTiles3 : completeCard) {
+            for (int j = 0; j < mapTiles3.length; j++) {
+                if (mapTiles3[j] != null) {
+                    mapTiles3[j].setState(MapTileState.DRY);
                 }
             }
         }
@@ -201,10 +201,10 @@ public class AIControllerTest {
         List<MapTile> explorersNeighbours = explorersStartPosition.getSurrounding().stream().map(aiControl::getTile).collect(Collectors.toList());
         List<MapTile> testList = new LinkedList<>();
         //setze alle MapTiles auf DRY, um den Test zurückzusetzen
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.DRY);
+        for (MapTile[] mapTiles2 : completeCard) {
+            for (int j = 0; j < mapTiles2.length; j++) {
+                if (mapTiles2[j] != null) {
+                    mapTiles2[j].setState(MapTileState.DRY);
                 }
             }
         }
@@ -240,11 +240,11 @@ public class AIControllerTest {
          */
         Point landingSitePosition = aiControl.getTile(PlayerType.PILOT).getLeft();
         MapTile landingSite = aiControl.getTile(PlayerType.PILOT).getRight();
-        
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.DRY);
+
+        for (MapTile[] mapTiles1 : completeCard) {
+            for (int j = 0; j < mapTiles1.length; j++) {
+                if (mapTiles1[j] != null) {
+                    mapTiles1[j].setState(MapTileState.DRY);
                 }
             }
         }
@@ -259,10 +259,10 @@ public class AIControllerTest {
 //        }
         
       //setze alle MapTiles auf DRY, um den Test zu starten
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.DRY);;
+        for (MapTile[] element : completeCard) {
+            for (int j = 0; j < element.length; j++) {
+                if (element[j] != null) {
+                    element[j].setState(MapTileState.DRY);
                 }
             }
         }
@@ -276,10 +276,10 @@ public class AIControllerTest {
         
         assertTrue("Pilot kann Felder trockenlegen, obwohl er alle MapTiles sofort erreichen kann",
                 aiControl.getDrainablePositionsOneMoveAway(landingSitePosition, PlayerType.PILOT).isEmpty());
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.GONE);
+        for (MapTile[] item : completeCard) {
+            for (int j = 0; j < item.length; j++) {
+                if (item[j] != null) {
+                    item[j].setState(MapTileState.GONE);
                 }
             }
         }
@@ -289,30 +289,30 @@ public class AIControllerTest {
         
         ///setze alle MapTiles auf DRY, um den Test zu starten
         Point diversStartPosition = aiControl.getTile(PlayerType.DIVER).getLeft();
-        
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.DRY);
+
+        for (MapTile[] value : completeCard) {
+            for (int j = 0; j < value.length; j++) {
+                if (value[j] != null) {
+                    value[j].setState(MapTileState.DRY);
                 }
             }
         }
         assertTrue("Taucher kann Felder trockenlegen, obwohl alle MapTiles DRY sind",
-                aiControl.getDrainablePositionsOneMoveAway(diversStartPosition, PlayerType.DIVER).isEmpty());        
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.FLOODED);
+                aiControl.getDrainablePositionsOneMoveAway(diversStartPosition, PlayerType.DIVER).isEmpty());
+        for (MapTile[] tiles : completeCard) {
+            for (int j = 0; j < tiles.length; j++) {
+                if (tiles[j] != null) {
+                    tiles[j].setState(FLOODED);
                 }
             }
         }        
         assertTrue("Taucher kann Felder trockenlegen, obwohl er alle MapTiles sofort erreichen kann",
                 aiControl.getDrainablePositionsOneMoveAway(diversStartPosition, PlayerType.DIVER).isEmpty());
-        
-        for (int i = 0; i < completeCard.length; i++){
-            for (int j = 0; j < completeCard[i].length; j++){
-                if (completeCard[i][j] != null){
-                    completeCard[i][j].setState(MapTileState.GONE);
+
+        for (MapTile[] mapTiles : completeCard) {
+            for (int j = 0; j < mapTiles.length; j++) {
+                if (mapTiles[j] != null) {
+                    mapTiles[j].setState(MapTileState.GONE);
                 }
             }
         }

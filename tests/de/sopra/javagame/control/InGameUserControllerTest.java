@@ -2,7 +2,10 @@ package de.sopra.javagame.control;
 
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.model.player.*;
+import de.sopra.javagame.model.player.Courier;
+import de.sopra.javagame.model.player.Explorer;
+import de.sopra.javagame.model.player.Navigator;
+import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,10 +23,8 @@ import java.util.stream.IntStream;
 public class InGameUserControllerTest {
 
     private ControllerChan controllerChan;
-    private MapController mapController;
     private InGameUserController inGameCont;
     private TestDummy.InGameView inGameView;
-    private JavaGame javaGame;
     private Action action;
     private ArtifactCard fireCard;
     private ArtifactCard waterCard;
@@ -34,7 +35,6 @@ public class InGameUserControllerTest {
     private Courier courier;
     private Explorer explorer;
     private Navigator navigator;
-    private CardStack<ArtifactCard> artifactCardStack;
     private List<ArtifactCard> handCardsExpected;
     //FIXME untypisierte liste. im Laufe der tests werden Player und PlayerType Objekte in die Liste eingefuegt
     private List<PlayerType> moveablePlayers;
@@ -60,12 +60,12 @@ public class InGameUserControllerTest {
                 new Triple<>(PlayerType.EXPLORER,"", false),
                 new Triple<>(PlayerType.NAVIGATOR,"", false));
         controllerChan.startNewGame(testMapName, map, players, Difficulty.NORMAL);
-        mapController = controllerChan.getMapController();
+        MapController mapController = controllerChan.getMapController();
         inGameCont = controllerChan.getInGameUserController();
         inGameView = (TestDummy.InGameView) controllerChan.getInGameViewAUI();
-        javaGame = controllerChan.getJavaGame();
+        JavaGame javaGame = controllerChan.getJavaGame();
         action = controllerChan.getCurrentAction();
-        artifactCardStack = action.getArtifactCardStack();
+        CardStack<ArtifactCard> artifactCardStack = action.getArtifactCardStack();
         List<ArtifactCard> cardList = artifactCardStack.draw(28, false);
 
         for (ArtifactCard cur : cardList) {
@@ -96,7 +96,6 @@ public class InGameUserControllerTest {
         courier = (Courier) controllerChan.getCurrentAction().getPlayer(PlayerType.COURIER);
         explorer = (Explorer) controllerChan.getCurrentAction().getPlayer(PlayerType.EXPLORER);
         navigator = (Navigator) controllerChan.getCurrentAction().getPlayer(PlayerType.NAVIGATOR);
-        ;
 
         handCardsExpected = new ArrayList<>();
         explorer.getHand().add(fireCard);

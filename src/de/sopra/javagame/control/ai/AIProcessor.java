@@ -25,10 +25,11 @@ public interface AIProcessor {
 
     /**
      * Fordert einen Tipp von der KI an.
-     * Der Tipp wird in Befehlsform definiert durch {@link ActionQueue} dargestellt.
+     * Der Tipp wird in Befehlsform definiert durch {@link SimpleAction} dargestellt.
+     * Die Aktion kann Schritte vorraussetzen, die vorher passieren müssen.
      *
      * @return ein Tipp in Befehlsform
      */
-    ActionQueue getTip(AIController control);
+    SimpleAction getTip(AIController control);
 
 }

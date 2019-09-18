@@ -90,15 +90,15 @@ public class GameFlowController {
             floodCardCardStack.discard(card);
         }
 
+        Point position = map.getPositionForTile(card.getTile());
+        MapTile tile = map.get(card.getTile());
+        controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
+
         // Refreshe, welche Spieler gerettet werden müssen
         List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
         for (Player rescuePlayer : rescuesNeeded) {
             controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
         }
-
-        Point position = map.getPositionForTile(card.getTile());
-        MapTile tile = map.get(card.getTile());
-        controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
 
         Action nextAction = controllerChan.finishAction();
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
@@ -112,6 +112,7 @@ public class GameFlowController {
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
             controllerChan.getInGameViewAUI().refreshActivePlayer();
             controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
+            nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
         }
     }
 

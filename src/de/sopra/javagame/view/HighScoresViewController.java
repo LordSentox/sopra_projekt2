@@ -20,6 +20,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * GUI für das anzeigen der Highscores
  *
@@ -55,16 +57,18 @@ public class HighScoresViewController extends AbstractViewController implements 
         List<String> scoreNames = Arrays.stream(scoreFiles).map(File::getName).collect(Collectors.toList());
 
         for (String currentMap : mapNames) {
-            if (!scoreNames.contains((currentMap.substring(0, currentMap.length() - 4)) + ".score")) {
-                new File(HighScoresController.SCORE_FOLDER + (currentMap.substring(0, currentMap.length() - 4)) + ".score").createNewFile();
+            String fileName = currentMap.substring(0, currentMap.length() - 4);
+            if (!scoreNames.contains(fileName + ".score")) {
+                new File(HighScoresController.SCORE_FOLDER + fileName + ".score").createNewFile();
             }
         }
 
         for (String currentName : scoreNames) {
             mapSelectionComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 6));
             mapSelectionComboBox.getItems().sort(Comparator.naturalOrder());
-        }
 
+            debug(currentName + "\n");
+        }
 
         //mapSelectionComboBox.getItems().addAll(standardMaps);
         mapSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue)
@@ -73,26 +77,24 @@ public class HighScoresViewController extends AbstractViewController implements 
     }
 
     public void onResetClicked() {
-        String selectedMap = (String) mapSelectionComboBox.getSelectionModel().getSelectedItem();
+        String selectedMap = mapSelectionComboBox.getSelectionModel().getSelectedItem();
         getGameWindow().getControllerChan().getHighScoresController().resetHighScores(selectedMap);
     }
 
     public void onMapChosen() {
         HighScoresController hsController = getGameWindow().getControllerChan().getHighScoresController();
-        String selectedMap = (String) mapSelectionComboBox.getSelectionModel().getSelectedItem();
+        String selectedMap = mapSelectionComboBox.getSelectionModel().getSelectedItem();
         hsController.loadHighScores(selectedMap);
     }
 
     public void onShowReplayClicked() {
-        HighScore selectedHighScore = (HighScore) highScoreListView.getSelectionModel().getSelectedItem();
+        HighScore selectedHighScore = highScoreListView.getSelectionModel().getSelectedItem();
         changeState(ViewState.HIGH_SCORES, ViewState.IN_GAME);
         getGameWindow().getControllerChan().loadSaveGame(selectedHighScore.getReplayName());
     }
 
     public void onCloseClicked() {
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
-
-
     }
 
     public void onMainMenuClicked() {
@@ -107,9 +109,7 @@ public class HighScoresViewController extends AbstractViewController implements 
             changeHighScoreLabelVisibility(true);
         } else {
             changeHighScoreLabelVisibility(false);
-            scores.forEach(score -> {
-                highScoreListView.getItems().add(score);
-            });
+            scores.forEach(score -> highScoreListView.getItems().add(score));
         }
     }
 

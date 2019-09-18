@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @author Lisa, Hannah
  */
 public class MapEditorViewController extends AbstractViewController implements MapEditorViewAUI {
-    
+
     @FXML
     JFXButton saveButton, loadMapButton, generateButton, closeButton;
     @FXML
@@ -44,52 +44,49 @@ public class MapEditorViewController extends AbstractViewController implements M
     Label showUsedTiles, labelShowMessages;
 
     private String chosenMapName;
-    private List<String> mapNames;
-    
+
     public void init() {
         /* Set Background */
         mainPane.setImage(TextureLoader.getBackground());
         mainPane.setFitHeight(1200);
-        
+
         showUsedTiles.setFont(new Font(60));
-        showUsedTiles.setTextFill(editorMapPane.WHITE);
-        
+        showUsedTiles.setTextFill(EditorMapPane.WHITE);
+
         labelShowMessages.setFont(new Font(30));
-        labelShowMessages.setTextFill(editorMapPane.WHITE);
+        labelShowMessages.setTextFill(EditorMapPane.WHITE);
         labelShowMessages.setFont(new Font(20));
-        
+
         showUsedTiles.setTextAlignment(TextAlignment.RIGHT);
-        
+
         editorMapPane.setMapEditorViewController(this);
         editorMapPane.setTileCountLabel(showUsedTiles);
         chosenMapName = "";
-        comboBoxChooseGivenMap.valueProperty().addListener((options , oldValue, newValue) -> {
-            chosenMapName = newValue;
-        });
+        comboBoxChooseGivenMap.valueProperty().addListener((options, oldValue, newValue) -> chosenMapName = newValue);
 
         fillComboBox();
 
-        textFieldCreatedMapName.textProperty().addListener((options, oldValue, newValue) ->{
+        textFieldCreatedMapName.textProperty().addListener((options, oldValue, newValue) -> {
             boolean isValid = MapCheckUtil.checkMapValidity(editorMapPane.getBooleanMap());
             setSaveButtonDisabled(!isValid);
             if (textFieldCreatedMapName.getText().isEmpty()) {
-            showNotification("Bitte gib deiner Karte \neinen Namen");
+                showNotification("Bitte gib deiner Karte \neinen Namen");
             } else {
                 showNotification("");
             }
-            
+
         });
 
         setSaveButtonDisabled(true);
     }
 
     private void fillComboBox() {
-        File mapFile = new File (MapController.MAP_FOLDER);
+        File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
-        mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+        List<String> mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
-        for(String currentName : mapNames) {
-            comboBoxChooseGivenMap.getItems().addAll(currentName.substring(0, currentName.length()-4));
+        for (String currentName : mapNames) {
+            comboBoxChooseGivenMap.getItems().addAll(currentName.substring(0, currentName.length() - 4));
             comboBoxChooseGivenMap.getItems().sort(null);
         }
     }

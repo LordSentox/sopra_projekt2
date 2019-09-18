@@ -5,13 +5,9 @@ import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Behandelt die Funktionen des Karteneditors, bzw. Funktionen auf einfache Karten, welche noch keine gesetzten Tiles
@@ -20,8 +16,6 @@ import java.nio.file.Paths;
 public class MapController {
 
     public static final String MAP_FOLDER = "data/maps/";
-
-    private final ControllerChan controllerChan;
 
     /**
      * Die AUI mit der die angezeigten Daten im {@link de.sopra.javagame.view.MapEditorViewController} aktualisiert
@@ -33,7 +27,6 @@ public class MapController {
      * Erstellt einen neün {@link MapController}
      */
     MapController(ControllerChan controllerChan) {
-        this.controllerChan = controllerChan;
     }
 
     public void setMapEditorViewAUI(MapEditorViewAUI mapEditorViewAUI) {
@@ -59,16 +52,21 @@ public class MapController {
      * @param name Der Name der Karte, die geladen werden soll.
      */
     public void loadMapToEditor(String name) {
-        if (name.equals("")){
+        if (name.trim().isEmpty()) {
             System.err.println("Man muss einen Name angeben!");
+            return;
         }
         try {
-            String mapString = new String(Files.readAllBytes(Paths.get(MAP_FOLDER + name +".map")), StandardCharsets.UTF_8);
+            File file = new File(MAP_FOLDER, name + ".map");
+            if (!file.exists())
+                throw new FileNotFoundException(file.getAbsolutePath());
+            byte[] bytes = Files.readAllBytes(file.toPath());
+            String mapString = new String(bytes, StandardCharsets.UTF_8);
 
             MapBlackWhite map = MapUtil.readBlackWhiteMapFromString(mapString);
 
             mapEditorViewAUI.setMap(name, map);
-            
+
         } catch (IOException e) {
             System.out.println("Map konnten nicht eingelesen werden");
             e.printStackTrace();
@@ -80,16 +78,19 @@ public class MapController {
      * Speichert die Karte als Datei auf der Festplatte, sodass sie beim nächsten mal unter gleichem Namen wieder
      * geladen werden kann. Existiert die Datei bereits, überschreibt die Funktion sie. Kann die Datei nicht gespeichert
      * werden, wird eine Fehlermeldung im Karteneditor ausgegeben.
-     *  @param name  Der Name der Karte, die gespeichert werden soll.
+     *
+     * @param name  Der Name der Karte, die gespeichert werden soll.
      * @param tiles Die Tiles, die die Karte beschreiben.
      */
     public void saveMap(String name, MapBlackWhite tiles) {
-        if (name.equals("")) {
-            System.out.println("Die Karte muss einen Namen enthalten!");
+        if (name.trim().isEmpty()) {
+            System.err.println("Die Karte muss einen Namen enthalten!");
             getMapEditorViewAUI().showNotification("Die Karte muss einen Namen enthalten!");
+            return;
         }
         try {
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MAP_FOLDER + name + ".map"), StandardCharsets.UTF_8));
+            File file = new File(MAP_FOLDER, name + ".map");
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
             for (int y = 0; y < Map.SIZE_Y; y++) {
                 for (int x = 0; x < Map.SIZE_X; x++) {
                     if (tiles.get(x, y)) {
@@ -106,7 +107,7 @@ public class MapController {
             out.close();
 
         } catch (IOException e) {
-            System.out.println("Maps konnten nicht gelöscht werden.");
+            System.err.println("Maps konnten nicht gespeichert werden.");
             e.printStackTrace();
         }
     }

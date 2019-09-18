@@ -4,16 +4,15 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
+import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.control.ai2.decisions.Decision;
 import de.sopra.javagame.util.Pair;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.*;
+import static de.sopra.javagame.util.DebugUtil.debug;
 
 /**
  * <h1>projekt2</h1>
@@ -54,10 +53,12 @@ public class DecisionMaker implements AIProcessor {
                     .filter(pair -> pair.getLeft().act().equals(decisionType))
                     .collect(Collectors.toList());
 
+            debug("filtered " + towerDecisions.size() + " decision for " + decisionType.name() + "-tower");
             //generiere geordnete Queue entsprechend der Abhängigkeiten untereinander
             LinkedList<Class<? extends Decision>> buildingQueue = buildingQueue(towerDecisions);
 
             //Tower linear aus Queue generieren
+            debug("building decision tower for " + decisionType.name() + " with " + buildingQueue.size() + " elements in queue");
             Decision decisionTower = buildTower(buildingQueue);
 
             //tower der Sammlung hinzufügen
@@ -78,10 +79,13 @@ public class DecisionMaker implements AIProcessor {
 
         //Aufteilen von Decisions auf beide Listen, Queue wird nur befüllt, wenn die Abhängigkeit erfüllt ist
         towerDecisions.forEach(pair -> {
-            if (buildingQueue.stream().anyMatch(queuedPair -> queuedPair.getRight().equals(pair.getRight())))
+            if (pair.getLeft().value() == Decision.class
+                    || buildingQueue.stream().anyMatch(queuedPair -> queuedPair.getRight().equals(pair.getLeft().value())))
                 buildingQueue.offer(pair);
             else dependenciesMissing.add(pair);
         });
+
+        debug("already in queue: " + buildingQueue.size() + " / still waiting for dependency: " + dependenciesMissing.size());
 
         //Nachfüllen aller bisher nicht erfüllten Abhängigkeiten im Loop bis keine Abhängigkeit mehr gelöst werden kann
         //das passiert zum Beispiel, wenn Ring-Abhängigkeiten existieren
@@ -89,9 +93,11 @@ public class DecisionMaker implements AIProcessor {
         while (!done) {
             done = true;
             for (Pair<DoAfter, Class<? extends Decision>> pair : dependenciesMissing) {
-                if (buildingQueue.stream().anyMatch(queuedPair -> queuedPair.getRight().equals(pair.getRight()))) {
+                if (buildingQueue.stream().anyMatch(queuedPair -> queuedPair.getRight().equals(pair.getLeft().value()))) {
                     buildingQueue.offer(pair);
+                    dependenciesMissing.remove(pair);
                     done = false;
+                    break;
                 }
             }
         }
@@ -105,6 +111,7 @@ public class DecisionMaker implements AIProcessor {
         if (!queuedDecisions.isEmpty()) {
             Class<? extends Decision> poll = queuedDecisions.poll();
             Decision tower = ClassUtil.create(poll);
+            debug("created tower: " + tower);
             tower.setPreCondition(poll.getDeclaredAnnotation(PreCondition.class));
             if (tower != null) {
                 while (!queuedDecisions.isEmpty()) {
@@ -121,9 +128,11 @@ public class DecisionMaker implements AIProcessor {
 
     private Decision decide(AIController control, DecisionResult result) {
         Decision decision = decisionTowers.get(result);
-        decision = decision == null ? Decision.empty() : decision.decide();
-        decision.setControl(control);
-        
+        if (decision != null)
+            decision.setControl(control);
+        decision = decision.decide();
+        if (decision == null)
+            decision = Decision.empty();
         return decision;
     }
 
@@ -151,12 +160,21 @@ public class DecisionMaker implements AIProcessor {
 
     @Override
     public void makeStep(AIController control) {
-        ActionQueue tip = getTip(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
+        ActionQueue tip = getTipQueue(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
         control.doSteps(tip);
     }
 
     @Override
-    public ActionQueue getTip(AIController control) {
+    public SimpleAction getTip(AIController control) {
+        ActionQueue tipQueue = getTipQueue(control);
+        SimpleAction lastAction = null;
+        Iterator<SimpleAction> iterator = tipQueue.actionIterator();
+        while (iterator.hasNext())
+            lastAction = iterator.next();
+        return lastAction;
+    }
+
+    public ActionQueue getTipQueue(AIController control) {
         ActionQueue actionQueue;
         if (control.isCurrentlyDiscarding()) { //entweder ist der Spieler mit abwerfen beschäftigt
             Decision decision = makeDiscardDecision(control);
