@@ -26,8 +26,7 @@ public class MapController {
     /**
      * Erstellt einen neün {@link MapController}
      */
-    MapController(ControllerChan controllerChan) {
-    }
+    //MapController(ControllerChan controllerChan) {}
 
     public void setMapEditorViewAUI(MapEditorViewAUI mapEditorViewAUI) {
         this.mapEditorViewAUI = mapEditorViewAUI;
