@@ -20,7 +20,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
  */
 @DoAfter(act = TURN_ACTION, value = TurnMovePlayersTowardsOtherPlayersTheyCanGiveCardsTo.class)
 public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
-
+    private final int TWO_POSITIONS = 2;
     private Point move;
     private Point firstDrain;
     private Point secondDrain;
@@ -31,7 +31,6 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
             return null;
         }
         Player activePlayer = control.getActivePlayer();
-        int TWO_POSITIONS = 2;
         if (!(activePlayer.drainablePositions().size() < TWO_POSITIONS)) {
             return null;
         }
