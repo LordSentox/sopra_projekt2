@@ -122,7 +122,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     private void initGridPane() {
-        IntStream.range(0, 9).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(item % 2 == 0 ? ACTIVE_CARD_SIZE : 5)));
+        IntStream.range(0, 6).forEach(item -> cardGridPane.getColumnConstraints().add(new ColumnConstraints(ACTIVE_CARD_SIZE-50)));
 
         IntStream.range(0, 5).forEach(item -> {
             handOneCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
@@ -348,13 +348,13 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index / 2);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index);
                 v.showFrontImage();
                 v.setInGameViewController(this);
                 v.setOwner(player);
                 cardGridPane.getChildren().add(v);
                 GridPane.setConstraints(v, index, 0);
-                index += 2;
+                index ++;
             }
         } else {
             Action action = getGameWindow().getControllerChan().getCurrentAction();
