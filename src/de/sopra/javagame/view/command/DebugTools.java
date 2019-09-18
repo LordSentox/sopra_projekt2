@@ -1,6 +1,6 @@
 package de.sopra.javagame.view.command;
 
-import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.view.abstraction.GameWindow;
 import de.spaceparrots.api.command.annotation.Command;
 import de.spaceparrots.api.command.annotation.Scope;
@@ -35,7 +35,7 @@ public class DebugTools {
 
     @Command("tip")
     public void getTip(@Scope GameWindow window) {
-        ActionQueue tip = window.getControllerChan().getAiController().getTip();
+        SimpleAction tip = window.getControllerChan().getAiController().getTip();
         window.getControllerChan().getInGameViewAUI().showTip(tip);
     }
 

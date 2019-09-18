@@ -2,6 +2,7 @@ package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.CardStack;
@@ -158,7 +159,7 @@ public interface InGameViewAUI {
      *
      * @param queue die queue an Aktionen, welche als Tipp ausgeführt würden (KI erstellt den Tipp)
      */
-    void showTip(ActionQueue queue);
+    void showTip(SimpleAction queue);
 
     /**
      * Soll den aktuellen Turnstate anzeigen.

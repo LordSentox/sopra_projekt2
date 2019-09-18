@@ -403,7 +403,7 @@ public class AIController {
      * @return ein Tipp als {@link ActionQueue}
      * @see AIActionTip
      */
-    public ActionQueue getTip(Supplier<Player> player) {
+    public SimpleAction getTip(Supplier<Player> player) {
         setActivePlayerSupplier(player);
         return processor.getTip(this);
     }
@@ -415,7 +415,7 @@ public class AIController {
      * @return ein Tipp als {@link ActionQueue}
      * @see #getCurrentAction()
      */
-    public ActionQueue getTip() {
+    public SimpleAction getTip() {
         return getTip(() -> getCurrentAction().getActivePlayer());
     }
 

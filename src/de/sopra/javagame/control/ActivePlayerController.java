@@ -1,6 +1,6 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.control.ai.ActionQueue;
+import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -221,9 +221,8 @@ public class ActivePlayerController {
     public void showTip(Player player) {
         Action currentAction = controllerChan.getCurrentAction();
         controllerChan.getJavaGame().markCheetah();
-        ActionQueue tipps = controllerChan.getAiController().getTip(() -> player);
-
-        controllerChan.getInGameViewAUI().showTip(tipps);
+        SimpleAction tipp = controllerChan.getAiController().getTip(() -> player);
+        controllerChan.getInGameViewAUI().showTip(tipp);
     }
 
     /**

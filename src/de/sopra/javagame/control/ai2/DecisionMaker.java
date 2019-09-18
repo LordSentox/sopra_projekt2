@@ -4,13 +4,11 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ai.AIProcessor;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
+import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.control.ai2.decisions.Decision;
 import de.sopra.javagame.util.Pair;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.*;
@@ -162,12 +160,21 @@ public class DecisionMaker implements AIProcessor {
 
     @Override
     public void makeStep(AIController control) {
-        ActionQueue tip = getTip(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
+        ActionQueue tip = getTipQueue(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
         control.doSteps(tip);
     }
 
     @Override
-    public ActionQueue getTip(AIController control) {
+    public SimpleAction getTip(AIController control) {
+        ActionQueue tipQueue = getTipQueue(control);
+        SimpleAction lastAction = null;
+        Iterator<SimpleAction> iterator = tipQueue.actionIterator();
+        while (iterator.hasNext())
+            lastAction = iterator.next();
+        return lastAction;
+    }
+
+    public ActionQueue getTipQueue(AIController control) {
         ActionQueue actionQueue;
         if (control.isCurrentlyDiscarding()) { //entweder ist der Spieler mit abwerfen beschäftigt
             Decision decision = makeDiscardDecision(control);
