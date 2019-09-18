@@ -41,7 +41,7 @@ public class ControllerChan {
         this.activePlayerController = new ActivePlayerController(this);
         this.gameFlowController = new GameFlowController(this);
         this.inGameUserController = new InGameUserController(this);
-        this.highScoresController = new HighScoresController(this);
+        this.highScoresController = new HighScoresController();
         this.mapController = new MapController(this);
         this.aiController = new AIController(this); //setAI um die AI festzulegen
     }
