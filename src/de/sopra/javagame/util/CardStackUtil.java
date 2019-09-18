@@ -1,12 +1,12 @@
 package de.sopra.javagame.util;
 
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.MapTile;
+import de.sopra.javagame.model.*;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Helferfunktionen für den Artefaktkartenstapel und den Flutkartenstapel
@@ -43,5 +43,44 @@ public class CardStackUtil {
                 cards.add(new ArtifactCard(type));
         }
         return new CardStack<>(cards);
+    }
+
+    /**
+     * Lade die Karten in der im String vorgegebenen Reihenfolge in den Kartenstapel und gebe ihn zurück
+     */
+    public static CardStack<FloodCard> readFloodCardStackFromString(String toParse) {
+        // Parse die Karten aus dem Flutstapel
+        List<String> cardStrings = Arrays.stream(toParse.split(",")).map(String::trim).collect(Collectors.toList());
+
+        // Überprüfe, ob es genau 24 Karten, für jedes Tile eines ist
+        if (cardStrings.size() != MapTileProperties.values().length) {
+            System.err.println("Korrumpierte Flutkartenstapeldatei. Sie konnte nicht gelesen werden");
+            return null;
+        }
+
+        Collections.reverse(cardStrings);
+        List<FloodCard> floodCards = cardStrings.stream().map(string -> new FloodCard(MapTileProperties.getByIndex(Integer.parseInt(string)))).collect(Collectors.toList());
+
+        return new CardStack<>(floodCards);
+    }
+
+
+    /**
+     * Lade die Karten in der im String vorgegebenen Reihenfolge in den Kartenstapel und gebe ihn zurück
+     */
+    public static CardStack<ArtifactCard> readArtifactCardStackFromString(String toParse) {
+        // Parse die Karten aus dem Flutstapel
+        List<String> cardStrings = Arrays.stream(toParse.split(",")).map(String::trim).collect(Collectors.toList());
+
+        // Überprüfe, ob es genau 28 Karten, für jedes Tile eines ist
+        if (cardStrings.size() != 28) {
+            System.err.println("Korrumpierte Artefaktkartenstapeldatei. Sie konnte nicht gelesen werden");
+            return null;
+        }
+
+        Collections.reverse(cardStrings);
+        List<ArtifactCard> artifactCards = cardStrings.stream().map(string -> new ArtifactCard(ArtifactCardType.getByIndex(Integer.parseInt(string)))).collect(Collectors.toList());
+
+        return new CardStack<>(artifactCards);
     }
 }
