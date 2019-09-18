@@ -333,7 +333,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             cardGridPane.getChildren().clear();
             int index = 0;
             for (ArtifactCard card : cards) {
-                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index);
+                ArtifactCardView v = new ArtifactCardView(card.getType(), ACTIVE_CARD_SIZE, index / 2);
                 v.showFrontImage();
                 v.setInGameViewController(this);
                 v.setOwner(player);
@@ -373,6 +373,15 @@ public class InGameViewController extends AbstractViewController implements InGa
             //TODO
         } else if (card.equals(ArtifactCardType.SANDBAGS)) {
             //TODO
+            List<Point> drainable = new ArrayList<>(); 
+            MapFull map = getGameWindow().getControllerChan().getCurrentAction().getMap();
+            map.forEach(mapTile -> {
+               if(mapTile.getState().equals(MapTileState.FLOODED)){
+                   drainable.add(map.getPositionForTile(mapTile.getProperties()));
+               }
+            });
+            System.out.println("on card clicked: " + card + " " + index + " " + owner);
+            drainable.forEach(point -> mapPane.getMapStackPane(point).setCanSandBagAndCardIndex(true, index));
         }
     }
 

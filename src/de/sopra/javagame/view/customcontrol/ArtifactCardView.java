@@ -21,6 +21,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     private  InGameViewController controller;
     private boolean selected;
     private PlayerType ownerType;
+    private ActionPicker ap;
 
     public ArtifactCardView(ArtifactCardType type, int size, int index) {
         super(TextureLoader.getArtifactCardTexture(type), TextureLoader.getArtifactCardBack(), size);
@@ -28,6 +29,8 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
         this.handCardIndex = index;
         this.selected = false;
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
+
+        this.ap = new ActionPicker(this, MouseButton.NONE);
     }
 
     public ArtifactCardType getType() {
@@ -54,6 +57,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     }
     public void setInGameViewController(InGameViewController igvc){
         this.controller = igvc;
+        this.ap.setInGameViewController(igvc);
     }
     public InGameViewController getInGameViewController(){
         return this.controller;
@@ -65,15 +69,13 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
             selected = !selected;
             updateHighlight();
             if(!(handCardIndex == -1)){
-                ActionPicker ap = new ActionPicker(this, MouseButton.NONE);
                 ap.setCardIndex(handCardIndex);
                 ap.setArtifactCardType(this.getType());
-                ap.setInGameViewController(controller);
                 ap.setDelegatingPlayer(ownerType);
+                controller.setTargetPlayer(ownerType);
                 List<ActionButton> buttons = new LinkedList<>();
                 if (type.equals(ArtifactCardType.HELICOPTER) || type.equals(ArtifactCardType.SANDBAGS))
                     buttons.add(ActionButton.PLAY_CARD);
-                buttons.add(ActionButton.DISCARD);
                 if (buttons.size() > 0) {
                     ap.init(buttons.toArray(new ActionButton[buttons.size()]));
                     ap.show(event);

@@ -32,6 +32,8 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     private GridPane fourPlayerPane = new GridPane();
     private boolean canDrain;
     private boolean canMoveTo;
+    private boolean canSandBag = false;
+    private int cardIndex;
     private ActionPicker contextPicker;
 
     public MapPaneTile(InGameViewController control, TileView base, Point position) {
@@ -105,6 +107,15 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     public boolean canDrain() {
         return canDrain;
     }
+    public void setCanSandBagAndCardIndex(boolean canDrain, int index) {
+        this.canSandBag = canDrain;
+        this.cardIndex = index;
+        updateHighlight();
+    }
+
+    public boolean canSandbag() {
+        return canSandBag;
+    }
 
     public boolean canMoveTo() {
         return canMoveTo;
@@ -113,6 +124,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     public void dehighlightAll() {
         this.canDrain = false;
         this.canMoveTo = false;
+        this.canSandBag = false;
         playersOnTile.forEach(type -> {
             PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
             view.dehighlight();
@@ -128,7 +140,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     }
 
     public boolean isHighlighted() {
-        return this.canDrain || this.canMoveTo;
+        return this.canDrain || this.canMoveTo || this.canSandBag;
     }
 
     public Point getPosition() {
@@ -163,6 +175,10 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
             buttons.add(ActionButton.MOVE);
         if (canDrain && control.getTargetPlayer().getType() == activePlayerType)
             buttons.add(ActionButton.DRAIN);
+        if(canSandBag){
+            contextPicker.setCardIndex(cardIndex);
+            buttons.add(ActionButton.SANDBAG);
+        }
         if (buttons.size() > 0) {
             contextPicker.setDelegatingPlayer(activePlayerType);
             contextPicker.setMovingPlayer(control.getTargetPlayer().getType());

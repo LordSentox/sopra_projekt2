@@ -195,7 +195,28 @@ public class ActionPicker extends CirclePopupMenu {
 
                 return playcardButtonMenuItem;
             } 
-        }
+        },
+        SANDBAG{
+            @Override
+            public CustomMenuItem apply(ActionPicker picker) {
+                EventHandler<ActionEvent> sandBagHandler = new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        //SANDBAG
+                        System.out.println("on card clicked: " + "keine card mehr? " + picker.cardIndex + " " + picker.movingPlayer + " " + picker.mapPaneTile.getPosition());
+                        picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getInGameUserController().playSandbagCard(picker.movingPlayer, picker.cardIndex,
+                                picker.mapPaneTile.getPosition());
+                        picker.mapPaneTile.getControl().resetTargetPlayer();
+                        picker.mapPaneTile.dehighlightAll();
+                    }
+                };
+                CustomMenuItem sandBagButtonMenuItem = new CustomMenuItem(new Button("special"));
+                sandBagButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
+                sandBagButtonMenuItem.setOnAction(sandBagHandler);
+
+                return sandBagButtonMenuItem;
+            } 
+        },
         ;
 
     }
