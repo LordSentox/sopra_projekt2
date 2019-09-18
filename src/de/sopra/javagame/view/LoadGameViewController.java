@@ -59,6 +59,7 @@ public class LoadGameViewController extends AbstractViewController {
 
 
     public void onCloseClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.LOAD_GAME, ViewState.MENU);
 
 

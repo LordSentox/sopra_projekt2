@@ -36,13 +36,21 @@ public class SaveGameViewController extends AbstractViewController {
     JFXTextField saveGameTextField;
     
     private Stage modalCopy;
+    private File[] loadFiles;
 
     public void init() throws IOException {
         mainPane.setImage(TextureLoader.getBackground());
 
+        fillListView();
+        final int NO_SAVE_FILES = 0;
+        loadMapViewLabel.setDisable(loadFiles.length == NO_SAVE_FILES);
+        notificationLabel.setTextFill(EditorMapPane.RED);
+    }
 
+
+    private void fillListView() {
         File loadFile = new File(getGameWindow().getControllerChan().SAVE_GAME_FOLDER);
-        File[] loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
+        loadFiles = loadFile.listFiles(file -> !file.getName().startsWith(".")
                 && file.getName().endsWith(".save") && file.getName().length() > 5);
         List<String> loadNames = Arrays.stream(loadFiles).map(File::getName).collect(Collectors.toList());
 
@@ -51,9 +59,6 @@ public class SaveGameViewController extends AbstractViewController {
             loadGameListViewLabel.getItems().sort(Comparator.naturalOrder());
             System.out.println(currentName + "\n");
         }
-        final int NO_SAVE_FILES = 0;
-        loadMapViewLabel.setDisable(loadFiles.length == NO_SAVE_FILES);
-        notificationLabel.setTextFill(EditorMapPane.RED);
     }
 
 
@@ -71,6 +76,7 @@ public class SaveGameViewController extends AbstractViewController {
             showNotificatoin("Das Feld ist nicht ausgefüllt");
             return;
         }
+       fillListView();
         getGameWindow().getControllerChan().saveGame(selectedGame);
         
     }

@@ -94,10 +94,12 @@ public class HighScoresViewController extends AbstractViewController implements 
     }
 
     public void onCloseClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
     }
 
     public void onMainMenuClicked() {
+        ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.HIGH_SCORES, ViewState.MENU);
     }
 

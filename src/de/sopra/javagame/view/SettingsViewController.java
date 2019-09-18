@@ -80,6 +80,7 @@ public class SettingsViewController extends AbstractViewController {
     public void onCloseClicked() {
         if (modalCopy == null) {
             getGameWindow().getSettings().save();
+            ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
             changeState(ViewState.SETTINGS, ViewState.MENU);
         } else modalCopy.close();
     }
