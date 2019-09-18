@@ -15,8 +15,14 @@ import de.sopra.javagame.view.abstraction.GameWindow;
 import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class SaveGameViewController extends AbstractViewController {
     @FXML
@@ -27,6 +33,8 @@ public class SaveGameViewController extends AbstractViewController {
     Label loadMapViewLabel;
     @FXML
     JFXTextField saveGameTextField, notificationLabel;
+    
+    private Stage modalCopy;
 
     public void init() throws IOException {
         mainPane.setImage(TextureLoader.getBackground());
@@ -49,7 +57,9 @@ public class SaveGameViewController extends AbstractViewController {
 
 
     public void onCloseClicked() {
-        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
+//        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
+        
+        modalCopy.close();
 
 
     }
@@ -61,6 +71,26 @@ public class SaveGameViewController extends AbstractViewController {
             return;
         }
         getGameWindow().getControllerChan().loadSaveGame(selectedGame);
+    }
+    
+    public static void openModal(GameWindow window) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(SettingsViewController.class.getResource("/SaveGame.fxml"));
+        AnchorPane mainPane = fxmlLoader.load();
+        SaveGameViewController saveGameViewController = fxmlLoader.getController();
+        Scene mainMenuScene = new Scene(mainPane);
+        mainMenuScene.getStylesheets().add(SettingsViewController.class.getClass().getResource("/application.css").toExternalForm());
+        saveGameViewController.setGameWindow(window);
+        saveGameViewController.setScene(mainMenuScene);
+        saveGameViewController.init();
+        Stage stage = new Stage();
+        stage.setScene(mainMenuScene);
+        stage.initOwner(window.getMainStage());
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initModality(Modality.WINDOW_MODAL);
+        saveGameViewController.modalCopy = stage;
+        stage.show();
+        stage.toFront();
+        stage.requestFocus();
     }
     
     

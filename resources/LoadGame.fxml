@@ -16,7 +16,7 @@
    	
    	<JFXListView fx:id="loadMapListView" layoutX="10.0" layoutY="80.0" prefHeight="450.0" prefWidth="380.0"/>
    	<Label fx:id="loadMapViewLabel" layoutX="10.0" layoutY="80.0" prefHeight="50.0" prefWidth="380.0" text="keine Spielstände vorhanden"/>
-   	<JFXButton styleClass="mainmenuJFXButton" fx:id="backToMenuButton" layoutX="10" layoutY="550" prefHeight="30" prefWidth="150" text="Hauptmenü" onAction="#onCloseClicked" />
+   	<JFXButton styleClass="mainmenuJFXButton" fx:id="backToMenuButton" layoutX="10" layoutY="550" prefHeight="30" prefWidth="150" text="Zurück" onAction="#onCloseClicked" />
     <JFXButton styleClass="mainmenuJFXButton" fx:id="loadGameButton" layoutX="240" layoutY="550" prefHeight="30" prefWidth="150" text="Laden" onAction="#onLoadGameClicked" />
    </children>
 </AnchorPane>
