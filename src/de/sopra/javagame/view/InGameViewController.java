@@ -186,7 +186,10 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void onRedoClicked() {
         getGameWindow().getControllerChan().getGameFlowController().redo();
     }
-
+    
+    public void onGetHintClicked() {
+        
+    }
     public void onUndoClicked() {
         //TODO Fenster öffnen, das Bescheid gibt über Löschen aus HighScoreListe
         getGameWindow().getControllerChan().getGameFlowController().undo();
