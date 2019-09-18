@@ -112,6 +112,10 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     public void dehighlightAll() {
         this.canDrain = false;
         this.canMoveTo = false;
+        playersOnTile.forEach(type -> {
+            PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
+            view.dehighlight();
+        });
         updateHighlight();
     }
 
@@ -140,6 +144,13 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
             return EnhancedPlayerHand.ofPlayer(player).getAmount(base.getType().getHidden()) >= 4;
         }
         return false;
+    }
+    
+    public void highlightPlayerForPlayerType (PlayerType type) {
+        if (playersOnTile.contains(type)) {
+            PlayerImageView view = new PlayerImageView(this, type, TextureLoader.getPlayerIconTexture(type));
+            view.highlight();
+        }
     }
 
     @Override

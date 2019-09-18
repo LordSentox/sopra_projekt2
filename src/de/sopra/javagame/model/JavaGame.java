@@ -88,8 +88,8 @@ public class JavaGame implements Serializable {
         }
 
         Action initialAction = Action.createInitialAction(difficulty, players, map);
-
-        return new Pair<>(game, game.finishAction(initialAction));
+        
+        return new Pair<>(game, initialAction);
     }
 
     /**
