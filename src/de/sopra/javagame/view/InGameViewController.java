@@ -276,6 +276,8 @@ public class InGameViewController extends AbstractViewController implements InGa
         //TODO mapPane darf nur noch vollständig refresht werdne, nicht neu gebaut ´!
         mapPane.buildMap(getGameWindow().getControllerChan().getCurrentAction().getMap());
         this.refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
+        List<Player> list = getGameWindow().getControllerChan().getCurrentAction().getPlayers();
+        list.forEach(player -> this.refreshPlayerPosition(player.getPosition(), player.getType()));
 
         //Always fix docs in InGameViewAUI if you change this
 //        refreshHand(getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType(), Arrays.asList(new ArtifactCard[]{new ArtifactCard(ArtifactCardType.AIR)}));
