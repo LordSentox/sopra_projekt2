@@ -59,6 +59,7 @@ public class MainMenuViewController extends AbstractViewController {
     }
     
     private void startGame() {
+        ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         changeState(ViewState.MENU, ViewState.GAME_PREPARATIONS);
     }
 

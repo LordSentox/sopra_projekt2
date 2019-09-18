@@ -104,14 +104,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         editDifficultyComboBox.getItems().addAll("Novize", "Normal", "Elite", "Legende");
         editDifficultyComboBox.getSelectionModel().select(0);
 
-        playerThreeNameTextField.setDisable(true);
-        playerFourNameTextField.setDisable(true);
-        playerThreeChooseCharakterComboBox.setDisable(true);
-        playerFourChooseCharakterComboBox.setDisable(true);
-        addPlayerThreeButton.setDisable(true);
-        addPlayerFourButton.setDisable(true);
-        isPlayerThreeKiCheckBox.setDisable(true);
-        isPlayerFourKiCheckBox.setDisable(true);
+        disablePlayerThreeAndFour(!getGameWindow().getSettings().devToolsEnabled().get());
 
         File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
@@ -139,6 +132,10 @@ public class GamePreparationsViewController extends AbstractViewController {
             }
             chooseDeveloperMapComboBox.getItems().sort(null);
         } 
+        
+        chooseDeveloperMapComboBox.getSelectionModel().select(0);
+        
+        
         File devArtifactStackFile = new File(DEV_ARTIFACT_STACK_FOLDER);
         File[] devArtifactStackFiles = devArtifactStackFile.listFiles();
         devFloodStackNames = Arrays.stream(devArtifactStackFiles).map(File::getName).collect(Collectors.toList());
@@ -149,6 +146,9 @@ public class GamePreparationsViewController extends AbstractViewController {
             }
             chooseArtifactCardStackComboBox.getItems().sort(null);
         } 
+
+        chooseArtifactCardStackComboBox.getSelectionModel().select(0);
+        
         File devFloodStackFile = new File(DEV_FLOOD_STACK_FOLDER);
         File[] devFloodStackFiles = devFloodStackFile.listFiles();
         devFloodStackNames = Arrays.stream(devFloodStackFiles).map(File::getName).collect(Collectors.toList());
@@ -159,9 +159,37 @@ public class GamePreparationsViewController extends AbstractViewController {
             }
             chooseFloodCardStackComboBox.getItems().sort(null);
         }
+
+        chooseFloodCardStackComboBox.getSelectionModel().select(0);
+        
         
         makeDeveloperToolsVisible(getGameWindow().getSettings().devToolsEnabled().get());
+        
+        if (getGameWindow().getSettings().devToolsEnabled().get()) {
+            playerOneNameTextField.setText("Hartmut im Spanienurlaub");
+            playerOneChooseCharakterComboBox.getSelectionModel().select("Taucher");
+            playerTwoNameTextField.setText("Hartmut trägt Pizza aus");
+            playerTwoChooseCharakterComboBox.getSelectionModel().select("Bote");
+            playerThreeNameTextField.setText("Hartmut im Dschungelcamp");
+            playerThreeChooseCharakterComboBox.getSelectionModel().select("Entdecker");
+            playerFourNameTextField.setText("Helmut steht der Helm gut");
+            playerFourChooseCharakterComboBox.getSelectionModel().select("Ingenieur");
+            addPlayerThreeToggleButton.setSelected(true);
+            addPlayerFourToggleButton.setSelected(true);
+            
+        }
 
+    }
+
+    private void disablePlayerThreeAndFour(boolean developerToolsOff) {
+        playerThreeNameTextField.setDisable(developerToolsOff);
+        playerFourNameTextField.setDisable(developerToolsOff);
+        playerThreeChooseCharakterComboBox.setDisable(developerToolsOff);
+        playerFourChooseCharakterComboBox.setDisable(developerToolsOff);
+        addPlayerThreeButton.setDisable(developerToolsOff);
+        addPlayerFourButton.setDisable(developerToolsOff);
+        isPlayerThreeKiCheckBox.setDisable(developerToolsOff);
+        isPlayerFourKiCheckBox.setDisable(developerToolsOff);
     }
 
     private void makeDeveloperToolsVisible(boolean visible) {
@@ -281,7 +309,7 @@ public class GamePreparationsViewController extends AbstractViewController {
                 cannotStartGameLabel.setText("Es ist kein Artefaktkartenstapel ausgewählt");
                 return;
             } else {
-                String devMapString = new String(Files.readAllBytes(Paths.get(DEV_MAP_FOLDER + chooseDeveloperMapComboBox.getValue() + ".map")), StandardCharsets.UTF_8);
+                String devMapString = new String(Files.readAllBytes(Paths.get(DEV_MAP_FOLDER + chooseDeveloperMapComboBox.getValue() + ".extmap")), StandardCharsets.UTF_8);
                 tournamentMap = MapUtil.readFullMapFromString(devMapString);
                 debug("Map:" + chooseMapComboBox.getValue() + "\n");
                 
