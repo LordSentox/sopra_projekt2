@@ -38,14 +38,16 @@ public class TurnMoveToCollectTreasureWithThreeCards extends Decision {
         int range;
         EnumSet<ArtifactType> artifacts = EnumSet.of(ArtifactType.EARTH, ArtifactType.FIRE, ArtifactType.WATER, ArtifactType.AIR);
         for (ArtifactType artifact : artifacts) {
-            if (hand.getAmount(artifact) > TWO_CARDS) {
-                for (Pair<Point, MapTile> temple : temples) {
-                    if (temple.getRight().getProperties().getHidden() == artifact && temple.getRight().getState() != MapTileState.GONE) {
-                        range = control.getMinimumActionsNeededToReachTarget(player().getPosition(), temple.getLeft(), player().getType());
-                        if (range < minRange) {
-                            minRange = range;
-                            moveTowards = control.getClosestPointInDirectionOf(player().legalMoves(true), temple.getLeft(), player().getType());
-                        }
+            if (hand.getAmount(artifact) <= TWO_CARDS) {
+                continue;
+            }
+
+            for (Pair<Point, MapTile> temple : temples) {
+                if (temple.getRight().getProperties().getHidden() == artifact && temple.getRight().getState() != MapTileState.GONE) {
+                    range = control.getMinimumActionsNeededToReachTarget(player().getPosition(), temple.getLeft(), player().getType());
+                    if (range < minRange) {
+                        minRange = range;
+                        moveTowards = control.getClosestPointInDirectionOf(player().legalMoves(true), temple.getLeft(), player().getType());
                     }
                 }
             }
