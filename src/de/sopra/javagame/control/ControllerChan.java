@@ -99,15 +99,19 @@ public class ControllerChan {
      * @param players    ein Listli, welches die teilnehmenden Spielfiguren enthält
      * @param difficulty die Schwierigkeitsstufe des JavaGames {@link Difficulty}
      */
-
+    
     public void startNewGame(String mapName, MapBlackWhite map, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
-        MapFull fullMap = MapUtil.createAndFillMap(map);
-        startNewGame(mapName, fullMap, players, difficulty);
+        Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, map, difficulty, players);
+        
+        startGame(pair);
+    }    
+    public void startNewGame(String mapName, Triple<MapFull, CardStack<ArtifactCard>, CardStack<FloodCard>> tournamentTriple, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
+        Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, tournamentTriple, difficulty, players);
+        
+        startGame(pair);
     }
-
-    public void startNewGame(String mapName, MapFull fullMap, List<Triple<PlayerType, String, Boolean>> players, Difficulty difficulty) {
-        Pair<JavaGame, Action> pair = JavaGame.newGame(mapName, fullMap, difficulty, players);
-
+    
+    public void startGame(Pair<JavaGame, Action> pair) {
         this.currentAction = pair.getRight();
         debug("initial players: " + currentAction.getPlayers().size());
         aiController.connectTrackers();

@@ -95,4 +95,9 @@ public class InGameSettingsViewController extends AbstractViewController {
         ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
     }
+    
+    public void onDeveloperSettingsCheckboxClicked() {
+        getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
+        ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
+    }
 }

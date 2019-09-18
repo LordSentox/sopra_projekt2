@@ -59,7 +59,7 @@ public class CardStackUtil {
         }
 
         Collections.reverse(cardStrings);
-        List<FloodCard> floodCards = cardStrings.stream().map(string -> new FloodCard(MapTileProperties.getByIndex(Integer.parseInt(string)))).collect(Collectors.toList());
+        List<FloodCard> floodCards = cardStrings.stream().map(string -> new FloodCard(MapTileProperties.getByIndex(Integer.parseInt(string)%24))).collect(Collectors.toList());
 
         return new CardStack<>(floodCards);
     }

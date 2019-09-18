@@ -5,6 +5,8 @@ import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.util.*;
+import de.sopra.javagame.view.GamePreparationsViewController;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +22,9 @@ import java.util.Set;
 public class ExplorerTest {
 
     private MapFull testMap;
+    private CardStack<ArtifactCard> artifactCardStack;
+    private CardStack<FloodCard> floodCardStack;
+    private Triple<MapFull, CardStack<ArtifactCard>, CardStack<FloodCard>> tournamentTriple;
     private Action action;
 
     @Before
@@ -30,14 +35,20 @@ public class ExplorerTest {
 
         String testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
         this.testMap = MapUtil.readFullMapFromString(testMapString);
-
+        String testArtifactCardString = new String(Files.readAllBytes(Paths.get(GamePreparationsViewController.DEV_ARTIFACT_STACK_FOLDER)), StandardCharsets.UTF_8);
+        this.artifactCardStack = CardStackUtil.readArtifactCardStackFromString(testArtifactCardString);
+        String testFloodCardString = new String(Files.readAllBytes(Paths.get(GamePreparationsViewController.DEV_FLOOD_STACK_FOLDER)), StandardCharsets.UTF_8);
+        this.floodCardStack = CardStackUtil.readFloodCardStackFromString(testFloodCardString);
+        tournamentTriple = new Triple<>(testMap, artifactCardStack, floodCardStack);
+        
+        
         List<Triple<PlayerType, String, Boolean>> players = Arrays.asList(
                 new Triple<>(PlayerType.EXPLORER, "", false),
                 new Triple<>(PlayerType.COURIER, "", false),
                 new Triple<>(PlayerType.NAVIGATOR, "", false),
                 new Triple<>(PlayerType.PILOT, "", false));
 
-        Pair<JavaGame, Action> pair = JavaGame.newGame("test", testMap, Difficulty.NORMAL, players);
+        Pair<JavaGame, Action> pair = JavaGame.newGame("test", tournamentTriple, Difficulty.NORMAL, players);
         TestDummy.injectJavaGame(controllerChan, pair.getLeft());
         TestDummy.injectCurrentAction(controllerChan, pair.getRight());
         action = pair.getRight();

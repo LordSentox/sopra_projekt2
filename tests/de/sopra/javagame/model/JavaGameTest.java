@@ -2,7 +2,12 @@ package de.sopra.javagame.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import de.sopra.javagame.TestDummy;
+import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.MapBlackWhite;
 import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
@@ -22,14 +27,18 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class JavaGameTest {
 
-    private MapFull testMap;
+    private MapFull testMapFull;
+    private MapBlackWhite testMap;
     private String testMapString;
     private List<Triple<PlayerType,String, Boolean>> players;
 
     @Before
     public void setUp() throws Exception {
         testMapString = new String(Files.readAllBytes(Paths.get("resources/full_maps/test.extmap")), StandardCharsets.UTF_8);
-        this.testMap = MapUtil.readFullMapFromString(testMapString);
+        this.testMapFull = MapUtil.readFullMapFromString(testMapString);
+        
+        testMapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + "bone.map")), StandardCharsets.UTF_8);
+        this.testMap = MapUtil.readBlackWhiteMapFromString(testMapString);
         players = new ArrayList<Triple<PlayerType,String, Boolean>>() {{
             add(new Triple<>(PlayerType.EXPLORER,"", false));
             add(new Triple<>(PlayerType.NAVIGATOR,"", true));
@@ -76,7 +85,7 @@ public class JavaGameTest {
     @Test (expected = NullPointerException.class)
     public void newGameNoMap() {
         //teste Erstellen mit leerer Map
-        JavaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
+        //JavaGame.newGame("emptyMap", null, Difficulty.NOVICE, players);
     }
 
     @Test(expected = NullPointerException.class)

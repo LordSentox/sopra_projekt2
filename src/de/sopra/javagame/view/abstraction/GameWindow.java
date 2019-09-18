@@ -39,6 +39,7 @@ public class GameWindow implements NotificationAUI {
 
     private ViewState previousViewState;
     private ViewState currentViewState;
+    private boolean developerSettings;
 
     public GameWindow(Stage stage) {
         this.settings = GameSettings.load();
@@ -267,5 +268,13 @@ public class GameWindow implements NotificationAUI {
             pack.open();
             System.out.println("info: " + notification.message());
         }
+    }
+    
+    public void setDeveloperSettingsActive (boolean setActive) {
+        this.developerSettings = setActive;
+    }
+    
+    public boolean getDeveloperSettingsActive () {
+        return this.developerSettings;
     }
 }

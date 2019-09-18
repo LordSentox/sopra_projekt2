@@ -35,7 +35,7 @@ public enum ArtifactCardType {
     }
 
     public static ArtifactCardType getByIndex(int index) {
-        return values()[index];
+        return values()[index - 1];
     }
 
     public ArtifactType toArtifactType() {
