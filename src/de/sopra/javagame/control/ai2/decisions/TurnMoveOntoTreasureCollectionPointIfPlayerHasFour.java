@@ -4,7 +4,6 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
-import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
@@ -12,6 +11,7 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
@@ -33,42 +33,15 @@ public class TurnMoveOntoTreasureCollectionPointIfPlayerHasFour extends Decision
         EnhancedPlayerHand hand = playerHand();
         int minRange = Integer.MAX_VALUE;
         int range;
-        if (hand.getAmount(ArtifactCardType.EARTH) >= FOUR_CARDS) {
-            for (Pair<Point, MapTile> temple : temples) {
-                if (temple.getRight().getProperties().getHidden() == ArtifactType.EARTH &&
-                        !(temple.getRight().getState() == MapTileState.GONE)) {
-                    range = control.getMinimumActionsNeededToReachTarget(player().getPosition(), temple.getLeft(), player().getType());
-                    if (range < minRange) {
-                        minRange = range;
-                        moveTowards = control.getClosestPointInDirectionOf(player().legalMoves(true), temple.getLeft(), player().getType());
-                    }
-                }
+
+        EnumSet<ArtifactType> artifacts = EnumSet.of(ArtifactType.EARTH, ArtifactType.FIRE, ArtifactType.WATER, ArtifactType.AIR);
+        for (ArtifactType artifact : artifacts) {
+            if (hand.getAmount(artifact) < FOUR_CARDS) {
+                continue;
             }
-        } else if (hand.getAmount(ArtifactCardType.FIRE) >= FOUR_CARDS) {
+
             for (Pair<Point, MapTile> temple : temples) {
-                if (temple.getRight().getProperties().getHidden() == ArtifactType.FIRE &&
-                        !(temple.getRight().getState() == MapTileState.GONE)) {
-                    range = control.getMinimumActionsNeededToReachTarget(player().getPosition(), temple.getLeft(), player().getType());
-                    if (range < minRange) {
-                        minRange = range;
-                        moveTowards = control.getClosestPointInDirectionOf(player().legalMoves(true), temple.getLeft(), player().getType());
-                    }
-                }
-            }
-        } else if (hand.getAmount(ArtifactCardType.AIR) >= FOUR_CARDS) {
-            for (Pair<Point, MapTile> temple : temples) {
-                if (temple.getRight().getProperties().getHidden() == ArtifactType.AIR &&
-                        !(temple.getRight().getState() == MapTileState.GONE)) {
-                    range = control.getMinimumActionsNeededToReachTarget(player().getPosition(), temple.getLeft(), player().getType());
-                    if (range < minRange) {
-                        minRange = range;
-                        moveTowards = control.getClosestPointInDirectionOf(player().legalMoves(true), temple.getLeft(), player().getType());
-                    }
-                }
-            }
-        } else if (hand.getAmount(ArtifactCardType.WATER) >= FOUR_CARDS) {
-            for (Pair<Point, MapTile> temple : temples) {
-                if (temple.getRight().getProperties().getHidden() == ArtifactType.WATER &&
+                if (temple.getRight().getProperties().getHidden() == artifact &&
                         !(temple.getRight().getState() == MapTileState.GONE)) {
                     range = control.getMinimumActionsNeededToReachTarget(player().getPosition(), temple.getLeft(), player().getType());
                     if (range < minRange) {
@@ -78,7 +51,6 @@ public class TurnMoveOntoTreasureCollectionPointIfPlayerHasFour extends Decision
                 }
             }
         }
-
 
         return null;
     }
