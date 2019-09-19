@@ -5,6 +5,8 @@ import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.DebugUtil;
+import de.sopra.javagame.util.GameSettings;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.cardstack.CardStack;
@@ -29,17 +31,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.sopra.javagame.util.DebugUtil.debug;
-
+//Todo: Todo fixen
 /**
  * GUI für den Spielablauf
  *
@@ -80,7 +86,53 @@ public class InGameViewController extends AbstractViewController implements InGa
     Label roundNumber;
     private Timeline timeline;
 
+    private MediaPlayer ripPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/landstrassen.wav").toExternalForm()));
+    private List<MediaPlayer> bgmPlayers;
+    private int currentBgm = 0;
+
+    {
+        File[] files = new File("resources/sounds/bgm/").listFiles();
+        List<String> wavFiles = Arrays.stream(files)
+                .map(File::getAbsolutePath)
+                .collect(Collectors.toList());
+        Collections.shuffle(wavFiles);
+        bgmPlayers = wavFiles.stream().map(fileName -> {
+            String path = Paths.get(fileName).toUri().toString();
+            debug(path);
+            MediaPlayer m = new MediaPlayer(new Media(path));
+            m.setOnEndOfMedia(() -> {
+                m.stop();
+                System.out.println("SOOOS");
+                playNext();
+            });
+            return m;
+        }).collect(Collectors.toList());
+    }
+
+    private void playNext() {
+        if(currentBgm == bgmPlayers.size()) {
+            currentBgm = 0;
+            Collections.shuffle(bgmPlayers);
+        }
+        bgmPlayers.get(currentBgm++).play();
+        currentBgm %= bgmPlayers.size();
+    }
+
+    public void playBgm() {
+        bgmPlayers.get(currentBgm).play();
+    }
+
+    public void pauseBgm() {
+        bgmPlayers.get(currentBgm).pause();
+    }
+
+    public void stopBgm() {
+        bgmPlayers.get(currentBgm).stop();
+    }
+
     public void init() {
+        bgmPlayers.forEach(mediaPlayer -> getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> mediaPlayer.volumeProperty().set(newVal.doubleValue() / 100.0)));
+
         this.helicopterHelper = null;
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
         waterLevelView.setProgress(7);
@@ -207,7 +259,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                     "Möchtest du dir wirklich einen Tipp anzeigen lassen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
                             + "aus der Highscore-Liste verbannt!");
-            pack.addButton("Tipp zeigen", () -> getHint());
+            pack.addButton("Tipp zeigen", this::getHint);
             pack.addButton("Abbrechen", () -> {
             });
             pack.setAlertType(AlertType.CONFIRMATION);
@@ -230,7 +282,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                     "Möchtest du einen Zug rückgängig machen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
                             + "aus der Highscore-Liste verbannt!");
-            pack.addButton("Rückgängig machen", () -> undo());
+            pack.addButton("Rückgängig machen", this::undo);
             pack.addButton("Abbrechen", () -> {
             });
             pack.setAlertType(AlertType.CONFIRMATION);
@@ -269,6 +321,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         try {
             InGameSettingsViewController.openModal(getGameWindow());
+            pauseBgm();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -331,6 +384,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             header = "Herzlichen Glückwunsch! Ihr habt die Insel besiegt.";
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
+            ripPlayer.play();
         }
         System.out.println("Hallo hier");
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
