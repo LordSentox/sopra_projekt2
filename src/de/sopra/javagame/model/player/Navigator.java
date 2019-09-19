@@ -89,6 +89,11 @@ public class Navigator extends Player {
 
         return success;
     }
+    
+    @Override
+    public boolean canDoAction() {
+        return super.canDoAction() || this.hasExtraPush;
+    }
 
     @Override
     public Player copy() {
