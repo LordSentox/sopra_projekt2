@@ -79,7 +79,8 @@ public final class Commands {
                 .registerType(ArtifactCard.class, "artifactcard",
                         PropertyResolver.create("type", ArtifactCardType.class, ArtifactCard::getType))
                 .registerType(Player.class, "player",
-                        TypeResolver.create(PlayerType.class, this::toPlayer, Player::getType))
+                        TypeResolver.create(PlayerType.class, this::toPlayer, Player::getType),
+                        PropertyResolver.create("ai", Boolean.class, Player::isAi))
                 .registerType(JavaGame.class, "javagame",
                         TypeResolver.simple(window.getControllerChan()::getJavaGame),
                         PropertyResolver.create("mapname", String.class, JavaGame::getMapName),
