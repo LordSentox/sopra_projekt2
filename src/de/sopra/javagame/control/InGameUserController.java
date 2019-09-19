@@ -100,7 +100,7 @@ public class InGameUserController {
      *                      Standardbewegungsmöglichkeiten angezeigt.
      */
     public void showMovements(PlayerType playerType, boolean specialActive) {
-        if (playerType == PlayerType.PILOT) specialActive = true;
+        if (playerType == PlayerType.DIVER) specialActive = true;
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getPlayer(playerType);
         List<Point> movements = player.legalMoves(specialActive);
