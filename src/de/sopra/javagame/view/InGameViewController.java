@@ -33,6 +33,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.sopra.javagame.util.DebugUtil.debug;
@@ -136,7 +137,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
         });
 
-        IntStream.range(0, 28).forEach(item -> {
+        IntStream.range(0, 280).forEach(item -> {
             artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
             artifactCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
@@ -144,7 +145,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, 240).forEach(item -> {
+        IntStream.range(0, 1024).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -296,11 +297,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card->card.getTile().getName()).collect(Collectors.joining("\n")));
     }
 
     public void onArtifactCardDrawStackClicked() {
-
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
     }
 
     public void onFloodCardDrawStackClicked() {
@@ -608,6 +609,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 break;
             case DRAW_ARTIFACT_CARD:
                 this.rotateTurnSpinner(-240);
+                this.endTurnButton.setDisable(true);
                 break;
             case FLOOD:
                 this.rotateTurnSpinner(-300);
