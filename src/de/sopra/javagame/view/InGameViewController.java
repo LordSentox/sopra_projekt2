@@ -6,17 +6,11 @@ import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.DebugUtil;
-import de.sopra.javagame.util.GameSettings;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.cardstack.CardStack;
 import de.sopra.javagame.util.map.MapFull;
-import de.sopra.javagame.view.abstraction.AbstractViewController;
-import de.sopra.javagame.view.abstraction.DialogPack;
-import de.sopra.javagame.view.abstraction.Notification;
-import de.sopra.javagame.view.abstraction.ViewState;
-import de.sopra.javagame.view.abstraction.Notifications;
+import de.sopra.javagame.view.abstraction.*;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -88,6 +82,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     Label roundNumber;
     private Timeline timeline;
 
+    public final MediaPlayer dorfPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/villager.wav").toExternalForm()));
     private MediaPlayer ripPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/landstrassen.wav").toExternalForm()));
     private List<MediaPlayer> bgmPlayers;
     private int currentBgm = 0;
@@ -109,6 +104,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             });
             return m;
         }).collect(Collectors.toList());
+        dorfPlayer.setVolume(1);
     }
 
     private void playNext() {
@@ -134,6 +130,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void init() {
         bgmPlayers.forEach(mediaPlayer -> getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> mediaPlayer.volumeProperty().set(newVal.doubleValue() / 100.0)));
+        getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> dorfPlayer.volumeProperty().set(newVal.doubleValue() / 100.0));
 
         this.helicopterHelper = null;
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
@@ -158,7 +155,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         //debug
 //        refreshWaterLevel(4);
-
         //setze Timeline für Replays
         timeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
             getGameWindow().getControllerChan().getGameFlowController().redo();
@@ -320,6 +316,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onSettingsClicked() {
+        dorfPlayer.play();
 
         try {
             InGameSettingsViewController.openModal(getGameWindow());
@@ -384,6 +381,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
         if (notification.isGameWon()) {
             header = "Herzlichen Glückwunsch! Ihr habt die Insel besiegt.";
+            dorfPlayer.play();
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
             ripPlayer.play();
