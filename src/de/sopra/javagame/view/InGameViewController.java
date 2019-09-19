@@ -33,6 +33,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.sopra.javagame.util.DebugUtil.debug;
@@ -296,11 +297,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card->card.getTile().getName()).collect(Collectors.joining("\n")));
     }
 
     public void onArtifactCardDrawStackClicked() {
-
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
     }
 
     public void onFloodCardDrawStackClicked() {
