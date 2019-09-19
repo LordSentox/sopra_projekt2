@@ -1,9 +1,11 @@
 package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.control.ai.EnhancedPlayerHand;
+import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.customcontrol.ActionPicker.ActionButton;
@@ -176,6 +178,9 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
     public void handle(MouseEvent event) {
         // Wenn Spieler zum Helikoptern ausgewählt wurden, sollen sie geflogen werden
         //control.getGameWindow().getControllerChan().getInGameUserController().playHelicopterCard();
+
+        MapTile tile = control.getGameWindow().getControllerChan().getCurrentAction().getMap().get(this.position);
+        DebugUtil.debug("Peace brudi, das tile is " + tile + ": " + position.xPos + ", " + position.yPos + " " + tile.getState());
 
         // Wenn gerade eine Helikopterkarte gespielt wird, und das Tile angeklickt wird, versuche abzuheben
         if (this.getControl().getHelicopterHelper() != null && this.getControl().getHelicopterHelper().getDestinationTile() != this) {
