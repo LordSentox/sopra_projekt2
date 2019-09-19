@@ -68,7 +68,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
             artifactCardDiscardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
     @FXML
-    Button endTurnButton;
+    Button endTurnButton, floodCardDiscardStackButton, artifactCardDiscardStackButton;
     @FXML
     ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
@@ -453,6 +453,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
+            this.artifactCardDiscardStackButton.toFront();
         }
     }
 
@@ -475,6 +476,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
+            this.floodCardDiscardStackButton.toFront();
         }
     }
 
