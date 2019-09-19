@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.text.View;
 import java.io.IOException;
 
 public class InGameSettingsViewController extends AbstractViewController {
@@ -78,25 +79,30 @@ public class InGameSettingsViewController extends AbstractViewController {
 //            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
 //        }
 //        else
+        getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
+        ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
+        ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
             modalCopy.close();
     }
 
     public void onSaveClicked() throws IOException {
         //eigentlich soll hier das Spiel gespeichert werden und nicht die Einstellungen
+        getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
+        ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         getGameWindow().getSettings().save();
         modalCopy.close();
+        ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
         SaveGameViewController.openModal(getGameWindow());
 //        changeState(ViewState.IN_GAME_SETTINGS, ViewState.SAVE_GAME);
     }
 
     public void onBackToMenuClicked() {
+        getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
+        ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         modalCopy.close();
+        ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
         ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
     }
 
-    public void onDeveloperSettingsCheckboxClicked() {
-        getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
-        ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
-    }
 }
