@@ -1,6 +1,7 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.control.GameFlowController;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
@@ -15,6 +16,7 @@ import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.ViewState;
+import de.sopra.javagame.view.abstraction.Notifications;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -386,7 +388,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             header = "Ihr habt leider verloren!";
             ripPlayer.play();
         }
-        System.out.println("Hallo hier");
+       getGameWindow().getControllerChan().getAiController().setActive(false);
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
         endGameDialogue.setAlertType(AlertType.CONFIRMATION);
         endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
@@ -446,6 +448,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshCardsTransferable(boolean transferable) {
+        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
+        this.doAIActionActivePlayer();
+
         //FIXME
 //        if (transferable) {
 //            List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
@@ -462,6 +467,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
+        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
+        this.doAIAction(player);
+
         if (getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
             cardGridPane.getChildren().clear();
             int index = 0;
@@ -507,11 +515,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         EnumSet<ArtifactType> artifacts = this.getGameWindow().getControllerChan().getCurrentAction().getDiscoveredArtifacts();
 
         highlightArtifacts(artifacts);
-
-        debug("found fire: " + artifacts.contains(ArtifactType.FIRE));
-        debug("found water: " + artifacts.contains(ArtifactType.WATER));
-        debug("found earth: " + artifacts.contains(ArtifactType.EARTH));
-        debug("found air: " + artifacts.contains(ArtifactType.AIR));
     }
 
     @Override
@@ -580,6 +583,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActivePlayer() {
+        this.doAIActionActivePlayer();
+
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         resetHighlighting();
@@ -678,7 +683,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             case WAIT_AND_DRINK_TEA:
                 notification = "Zug abgeben.";
         }
-        showNotification(notification);
+        showNotification(Notifications.info(notification));
     }
 
     @Override
@@ -736,6 +741,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void setSpecialActive(boolean specialActive) {
         this.specialActive = specialActive;
+        debug("special is active: " + specialActive);
     }
 
     public void setTransferActive(boolean transferActive) {
@@ -778,5 +784,15 @@ public class InGameViewController extends AbstractViewController implements InGa
         // Dehighlight all and reset Helicopter card
         this.resetHighlighting();
         this.helicopterHelper = null;
+    }
+
+    private void doAIActionActivePlayer() {
+        PlayerType activePlayer = this.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
+        this.doAIAction(activePlayer);
+    }
+
+    private void doAIAction(PlayerType player) {
+        GameFlowController flowController = this.getGameWindow().getControllerChan().getGameFlowController();
+        flowController.letAIAct(player);
     }
 }

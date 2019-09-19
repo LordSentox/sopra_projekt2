@@ -33,7 +33,6 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         List<Point> drainable = player.drainablePositions();
         controllerChan.getInGameViewAUI().refreshDrainOptions(drainable);
-
     }
 
     /**
