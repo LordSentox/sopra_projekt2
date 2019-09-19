@@ -3,9 +3,9 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class GameFlowController {
         if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
             controllerChan.getInGameViewAUI().showNotification("Du hast zu viele Handkarten. Bitte wähle " +
                     (activePlayer.getHand().size() - 5) + " Karten zum Abwerfen aus.");
-            }
+        }
         if (shuffleBack) {
             CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
             stack.shuffleBack();
@@ -66,11 +66,11 @@ public class GameFlowController {
     private void gameLostNotification() {
         controllerChan.getCurrentAction().setGameWon(false);
         controllerChan.getCurrentAction().setGameEnded(true);
-        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt leider verloren!\n" 
+        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt leider verloren!\n"
                 + "Das Wasser ist viel zu schnell gestiegen \n"
-                + "und nun ist die ganze Insel versunken.\n" 
+                + "und nun ist die ganze Insel versunken.\n"
                 + "Keiner von euch konnte sich retten.\n"
-                + "Ihr alle seid einen qualvollen Tod " 
+                + "Ihr alle seid einen qualvollen Tod "
                 + "gestorben."));
     }
 
@@ -113,7 +113,7 @@ public class GameFlowController {
         }
 
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
-        endFloodCardDrawAction(floodCardCardStack);      
+        endFloodCardDrawAction(floodCardCardStack);
     }
 
 
@@ -129,22 +129,25 @@ public class GameFlowController {
         }
         return playersToRescue;
     }
-    
+
     private void endFloodCardDrawAction(CardStack<FloodCard> floodCardCardStack) {
         Action nextAction = controllerChan.finishAction();
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
+        //Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen
+        letAIAct(nextAction.getActivePlayer().getType());
 
         if (nextAction.getFloodCardsToDraw() <= 0) {
             nextAction.nextPlayerActive();
             nextAction.setState(TurnState.PLAYER_ACTION);
-    
+
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
             controllerChan.getInGameViewAUI().refreshActivePlayer();
             controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
             nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
-            if(nextAction.getActivePlayer().isAi()){
-                controllerChan.getAiController().makeStep();
+            //Wenn die KI am Zug ist, soll sie einfach alle Aktionen aufbrauchen, 10 einfach so, hat keine Bedeutung
+            for (int i = 0; i < 10; i++) {
+                letAIAct(nextAction.getActivePlayer().getType());
             }
         }
     }
@@ -189,4 +192,11 @@ public class GameFlowController {
 
         return false;
     }
+
+    public void letAIAct(PlayerType playerType) {
+        if (controllerChan.getCurrentAction().getPlayer(playerType).isAi()) {
+            controllerChan.getAiController().makeStep(() -> controllerChan.getCurrentAction().getPlayer(playerType));
+        }
+    }
+
 }

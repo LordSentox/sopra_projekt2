@@ -1,6 +1,6 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.util.MapFull;
+import de.sopra.javagame.util.map.MapFull;
 
 import java.io.Serializable;
 import java.util.Objects;

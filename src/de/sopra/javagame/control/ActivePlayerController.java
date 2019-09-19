@@ -5,6 +5,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Pilot;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.util.Point;
@@ -115,8 +116,8 @@ public class ActivePlayerController {
         if (player.getActionsLeft() <= 0) {
             return;
         }
-        System.out.println(handCardIndex);
-        System.out.println(targetPlayer.toString());
+        DebugUtil.debug("handIndex in transfer: " + handCardIndex);
+        DebugUtil.debug("targetplayer in transfer: " + targetPlayer.toString());
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
@@ -168,7 +169,7 @@ public class ActivePlayerController {
 
             controllerChan.finishAction();
         } else {
-            System.out.println("du dulli");
+            DebugUtil.debug("du dulli");
         }
     }
 
@@ -242,8 +243,14 @@ public class ActivePlayerController {
         if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
             currentAction = controllerChan.finishAction();
             currentAction.setState(TurnState.FLOOD);
-            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getDrawAmount());
+            int drawAmount = currentAction.getWaterLevel().getDrawAmount();
+            currentAction.setFloodCardsToDraw(drawAmount);
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
+            if (currentAction.getPlayers().stream().allMatch(Player::isAi)) {
+                for (int i = 0; i < drawAmount; i++) {
+                    controllerChan.getGameFlowController().drawFloodCard();
+                }
+            }
         }
 
         controllerChan.getInGameViewAUI().refreshSome();

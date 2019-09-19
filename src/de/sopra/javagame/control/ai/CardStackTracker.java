@@ -1,9 +1,9 @@
 package de.sopra.javagame.control.ai;
 
 import de.sopra.javagame.model.Copyable;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.CardStackChange;
-import de.sopra.javagame.util.CardStackObserver;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.cardstack.CardStackChange;
+import de.sopra.javagame.util.cardstack.CardStackObserver;
 
 import java.util.Collection;
 import java.util.LinkedList;

@@ -1,7 +1,11 @@
 package de.sopra.javagame.model;
 
 import de.sopra.javagame.model.player.*;
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.map.MapFull;
 
 import java.io.Serializable;
 import java.util.*;

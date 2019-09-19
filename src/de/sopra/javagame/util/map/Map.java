@@ -1,4 +1,6 @@
-package de.sopra.javagame.util;
+package de.sopra.javagame.util.map;
+
+import de.sopra.javagame.util.Point;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -47,10 +49,6 @@ public abstract class Map<T> {
     public T get(int posX, int posY) {
         if (posX >= SIZE_X || posY >= SIZE_Y)
             return null;
-        
-        System.out.println(this.raw.length);
-        System.out.println(this.raw[0].length);
-        
         return this.raw[posY + 1][posX + 1];
     }
 

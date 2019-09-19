@@ -5,10 +5,10 @@ import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
@@ -191,14 +191,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
     }
 
-    public void onSpecialCardPlayClicked(int cardIndex) {
-
-    }
-
-    public void onDiscardSelectedCardsClicked() {
-
-    }
-
     public void onRedoClicked() {
         getGameWindow().getControllerChan().getGameFlowController().redo();
     }
@@ -279,6 +271,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDiscardStackClicked() {
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
 
     }
 
@@ -304,7 +297,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDrawStackClicked() {
-        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
     }
 
     public void onFloodCardDrawStackClicked() {

@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.abstraction;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.GameSettings;
 import de.sopra.javagame.view.*;
 import de.sopra.javagame.view.command.Commands;
@@ -266,7 +267,7 @@ public class GameWindow implements NotificationAUI {
             pack.setAlertType(Alert.AlertType.INFORMATION);
             pack.setStageStyle(StageStyle.UNDECORATED);
             pack.open();
-            System.out.println("info: " + notification.message());
+            DebugUtil.debug("info notification: " + notification.message());
         }
     }
     

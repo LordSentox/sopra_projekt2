@@ -188,7 +188,7 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
         List<ActionButton> buttons = new LinkedList<>();
         if (canMoveTo)
             buttons.add(ActionButton.MOVE);
-        if (canDrain && control.getTargetPlayer().getType() == activePlayerType)
+        if (canDrain)
             buttons.add(ActionButton.DRAIN);
         if(canSandBag){
             contextPicker.setCardIndex(cardIndex);
