@@ -33,7 +33,6 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
 
     @Override
     public Decision decide() {
-
 //        if (control.getTotalAmountOfCardsOnHands(ArtifactCardType.HELICOPTER) > ONE_CARD) {
 //            return this;
 //        }
@@ -43,13 +42,7 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
         for (Player player : allPlayers) {
             if (control.getMinimumActionsNeededToReachTarget
                     (player.getPosition(), landingSitePosition, player.getType()) == Integer.MAX_VALUE) {
-                start = player.getPosition();
-                target = control.getTile(PlayerType.PILOT).getLeft();
-                for (Player otherPlayer : control.getAllPlayers()) {
-                    if (otherPlayer.getPosition().equals(player.getPosition())) {
-                        rescued.add(otherPlayer.getType());
-                    }
-                }
+                findAllRescuedPlayers(player);
                 return this;
             }
         }
@@ -61,32 +54,32 @@ public class SpecialFlyPlayersToLandingSiteForDeparture extends Decision {
                         (player.getPosition(), landingSitePosition, player.getType());
                 if (currentRange > maxRange) {
                     maxRange = currentRange;
-                    start = player.getPosition();
-                    target = control.getTile(PlayerType.PILOT).getLeft();
-                    for (Player otherPlayer : control.getAllPlayers()) {
-                        if (otherPlayer.getPosition().equals(player.getPosition())) {
-                            rescued.add(otherPlayer.getType());
-                        }
-                    }
+                    findAllRescuedPlayers(player);
                 }
             }
             return this;
         }
 
-
-
         /* TODO wahrscheinlichkeit berechnen: einzige Helikopterkarte gespielt
          * bis neue Helikopterkarte gezogen wird ist Wasserlevel tödlich
          * dann spieler lieber laufen lassen und heli sparen
          */
-        CardStackTracker<FloodCard> floodCards = control.getFloodCardStackTracker();
-        CardStackTracker<ArtifactCard> artifactCards = control.getArtifactCardStackTracker();
-        int helisInDiscardPile = artifactCards.cardsInDiscardPile(card -> card.getType() == ArtifactCardType.HELICOPTER);
-
-
+        //CardStackTracker<FloodCard> floodCards = control.getFloodCardStackTracker();
+        //CardStackTracker<ArtifactCard> artifactCards = control.getArtifactCardStackTracker();
+        //int helisInDiscardPile = artifactCards.cardsInDiscardPile(card -> card.getType() == ArtifactCardType.HELICOPTER);
         return null;
     }
 
+    private void findAllRescuedPlayers(Player player) {
+        start = player.getPosition();
+        target = control.getTile(PlayerType.PILOT).getLeft();
+        for (Player otherPlayer : control.getAllPlayers()) {
+            if (otherPlayer.getPosition().equals(player.getPosition())) {
+                rescued.add(otherPlayer.getType());
+            }
+        }
+    }
+    
     @Override
     public ActionQueue act() {
         return startActionQueue().helicopterCard(start, target, rescued);
