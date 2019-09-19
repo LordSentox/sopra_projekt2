@@ -1,5 +1,8 @@
 package de.sopra.javagame.util;
 
+import de.sopra.javagame.util.map.Map;
+import de.sopra.javagame.util.map.MapBlackWhite;
+import de.sopra.javagame.util.map.MapCheckUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

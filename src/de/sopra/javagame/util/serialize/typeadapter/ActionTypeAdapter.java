@@ -7,7 +7,7 @@ import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.FloodCard;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.Player;
-import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.cardstack.CardStack;
 
 import java.lang.reflect.Type;
 

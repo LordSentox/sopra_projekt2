@@ -1,4 +1,4 @@
-package de.sopra.javagame.util;
+package de.sopra.javagame.util.map;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

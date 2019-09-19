@@ -3,9 +3,9 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.map.MapFull;
 
 import java.util.ArrayList;
 import java.util.Collections;
