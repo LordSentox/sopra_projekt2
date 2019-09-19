@@ -334,7 +334,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
         }
-        System.out.println("Hallo hier");
+       getGameWindow().getControllerChan().getAiController().setActive(false);
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
         endGameDialogue.setAlertType(AlertType.CONFIRMATION);
         endGameDialogue.setStageStyle(StageStyle.UNDECORATED);

@@ -310,6 +310,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
 
         getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(getGameWindow().getControllerChan().getCurrentAction().getWaterLevel().getLevel());
+        getGameWindow().getControllerChan().getAiController().setActive(true);
     }
     
     public void onDeveloperCardStacksClicked () {
