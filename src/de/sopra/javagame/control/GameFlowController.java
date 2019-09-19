@@ -138,6 +138,9 @@ public class GameFlowController {
 
     private void endFloodCardDrawAction(CardStack<FloodCard> floodCardCardStack) {
         Action nextAction = controllerChan.finishAction();
+        if (nextAction == null) {
+            return;
+        }
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
         //Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen

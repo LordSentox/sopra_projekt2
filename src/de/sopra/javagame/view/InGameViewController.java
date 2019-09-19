@@ -12,6 +12,7 @@ import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
+import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -302,7 +303,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDrawStackClicked() {
-        if (getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD)
+        if ((getGameWindow().getControllerChan().getCurrentAction() != null &&
+                getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD))
             this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
     }
 
@@ -315,13 +317,40 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void showNotification(Notification notification) {
-        if (notification.isGameWon()) {
-
-        } else if (notification.isGameLost()) {
-
-        }
+    public void showNotification(Notification notification)  {
+        String header = "";
+        String confirmationButtonText = "Spielstand speichern";
+        String cancelButtonText = "zurück ins Hauptmenü";
+        if (!notification.isGameWon() && !notification.isGameLost()) {
         super.showNotification(notification);
+           return;
+        }
+        if (notification.isGameWon()) {
+            header = "Herzlichen Glückwunsch! Ihr habt die Insel besiegt.";
+        } else if (notification.isGameLost()) {
+            header = "Ihr habt leider verloren!";
+        }
+        DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
+        endGameDialogue.setAlertType(AlertType.INFORMATION);
+        endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
+        endGameDialogue.addButton(confirmationButtonText, () -> {
+            try {
+                openSaveDialogue();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        endGameDialogue.addButton(cancelButtonText, () -> endGameBackToMenu());
+    }
+
+    private void openSaveDialogue () throws IOException {
+        ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
+        changeState(ViewState.IN_GAME, ViewState.SAVE_GAME);
+    }
+
+    private void endGameBackToMenu () {
+        ((InGameViewController)getGameWindow().getView(ViewState.IN_GAME)).init();
+        changeState(ViewState.IN_GAME, ViewState.MENU);
     }
 
     @Override
