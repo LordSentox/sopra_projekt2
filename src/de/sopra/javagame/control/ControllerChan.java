@@ -149,6 +149,9 @@ public class ControllerChan {
             this.inGameViewAUI.refreshHand(player.getType(), player.getHand());
         });
 
+        //Pilot braucht auch im ersten Zug seine Spezialfähigkeit
+        this.getCurrentAction().getActivePlayer().onTurnStarted();
+
     }
 
     /**
