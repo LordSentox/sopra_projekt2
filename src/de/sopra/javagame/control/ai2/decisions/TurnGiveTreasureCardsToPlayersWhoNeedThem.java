@@ -8,6 +8,7 @@ import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
@@ -29,44 +30,28 @@ public class TurnGiveTreasureCardsToPlayersWhoNeedThem extends Decision {
     @Override
     public Decision decide() {
 
-        int water = playerHand().getAmount(WATER);
-        int fire = playerHand().getAmount(FIRE);
-        int earth = playerHand().getAmount(EARTH);
-        int air = playerHand().getAmount(AIR);
+        List<ArtifactCardType> allTypes = new ArrayList<ArtifactCardType>();
+        allTypes.add(FIRE);
+        allTypes.add(EARTH);
+        allTypes.add(AIR);
+        allTypes.add(WATER);
 
         List<Player> allPlayers = control.getAllPlayers();
         List<PlayerType> receivers = player().legalReceivers();
         allPlayers.removeIf(player -> !receivers.contains(player.getType()));
 
         for (Player player : allPlayers) {
-            EnhancedPlayerHand hand = hand(player);
-            int water2 = hand.getAmount(WATER);
-            int fire2 = hand.getAmount(FIRE);
-            int earth2 = hand.getAmount(EARTH);
-            int air2 = hand.getAmount(AIR);
-            if (all(air > ZERO_CARDS, air < air2, air2 < FOUR_CARDS)) {
-                given = AIR;
-                target = player.getType();
-                courier = !player.getPosition().equals(player().getPosition());
-                return this;
-            }
-            if (all(earth > ZERO_CARDS, earth < earth2, earth2 < FOUR_CARDS)) {
-                given = EARTH;
-                target = player.getType();
-                courier = !player.getPosition().equals(player().getPosition());
-                return this;
-            }
-            if (all(fire > ZERO_CARDS, fire < fire2, fire2 < FOUR_CARDS)) {
-                given = FIRE;
-                target = player.getType();
-                courier = !player.getPosition().equals(player().getPosition());
-                return this;
-            }
-            if (all(water > ZERO_CARDS, water < water2, water2 < FOUR_CARDS)) {
-                given = WATER;
-                target = player.getType();
-                courier = !player.getPosition().equals(player().getPosition());
-                return this;
+            for (ArtifactCardType currentType : allTypes) {                
+                EnhancedPlayerHand enhancedHand = hand(player);
+                int oldAmount = playerHand().getAmount(currentType);
+                int newAmount = enhancedHand.getAmount(currentType);
+                
+                if (all(oldAmount > ZERO_CARDS, oldAmount < newAmount, newAmount < FOUR_CARDS)) {
+                    given = currentType;
+                    target = player.getType();
+                    courier = !player.getPosition().equals(player().getPosition());
+                    return this;
+                }
             }
         }
         return null;
