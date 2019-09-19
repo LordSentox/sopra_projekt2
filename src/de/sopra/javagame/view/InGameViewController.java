@@ -1,6 +1,7 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.control.GameFlowController;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
@@ -364,6 +365,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshCardsTransferable(boolean transferable) {
+        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
+        this.doAIActionActivePlayer();
+
         //FIXME
 //        if (transferable) {
 //            List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
@@ -380,6 +384,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
+        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
+        this.doAIAction(player);
+
         if (getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
             cardGridPane.getChildren().clear();
             int index = 0;
@@ -493,6 +500,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActivePlayer() {
+        this.doAIActionActivePlayer();
+
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         resetHighlighting();
@@ -692,5 +701,15 @@ public class InGameViewController extends AbstractViewController implements InGa
         // Dehighlight all and reset Helicopter card
         this.resetHighlighting();
         this.helicopterHelper = null;
+    }
+
+    private void doAIActionActivePlayer() {
+        PlayerType activePlayer = this.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
+        this.doAIAction(activePlayer);
+    }
+
+    private void doAIAction(PlayerType player) {
+        GameFlowController flowController = this.getGameWindow().getControllerChan().getGameFlowController();
+        flowController.letAIAct(player);
     }
 }
