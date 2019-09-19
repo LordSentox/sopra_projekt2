@@ -16,7 +16,7 @@
    	   <Label fx:id="musicVolumeLabel" layoutX="27" layoutY="75" text="Musiklautstärke" />
    	   <JFXSlider fx:id="musicVolumeSlider" layoutX="27" layoutY="95"/>
    	   
-   	   <JFXCheckBox fx:id="developerToolsCheckbox" layoutX="27" layoutY="130" text="Developer Tools"/>
+   	   <JFXCheckBox fx:id="developerToolsCheckbox" layoutX="27" layoutY="130" text="Developer Tools" onAction="#onDeveloperSettingsCheckboxClicked"/>
    	   
    	   <JFXButton styleClass="mainmenuJFXButton" fx:id="saveButton" layoutX="50" layoutY="165" text="Speichern" prefHeight="30"  prefWidth="100" onAction ="#onSaveClicked"/>
    	   
