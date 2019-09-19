@@ -6,9 +6,15 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Explorer;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.cardstack.CardStackUtil;
+import de.sopra.javagame.util.map.MapBlackWhite;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 import de.sopra.javagame.view.GamePreparationsViewController;
-
 import org.junit.Before;
 import org.junit.Test;
 

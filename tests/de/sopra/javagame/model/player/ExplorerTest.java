@@ -4,9 +4,14 @@ import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.*;
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.cardstack.CardStackUtil;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 import de.sopra.javagame.view.GamePreparationsViewController;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

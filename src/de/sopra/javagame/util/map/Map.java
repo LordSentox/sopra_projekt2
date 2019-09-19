@@ -1,4 +1,6 @@
-package de.sopra.javagame.util;
+package de.sopra.javagame.util.map;
+
+import de.sopra.javagame.util.Point;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;

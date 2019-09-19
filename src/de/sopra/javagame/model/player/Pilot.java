@@ -4,9 +4,9 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.util.CopyUtil;
-import de.sopra.javagame.util.Map;
-import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.map.Map;
+import de.sopra.javagame.util.map.MapFull;
 
 import java.util.ArrayList;
 import java.util.List;
