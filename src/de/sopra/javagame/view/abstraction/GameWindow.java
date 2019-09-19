@@ -271,10 +271,7 @@ public class GameWindow implements NotificationAUI {
     }
     
     public void setDeveloperSettingsActive (boolean setActive) {
+        //this.settings.setDevTools(setActive);
         this.developerSettings = setActive;
-    }
-    
-    public boolean getDeveloperSettingsActive () {
-        return this.developerSettings;
     }
 }

@@ -16,7 +16,6 @@ import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.ViewState;
-import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
+import jdk.nashorn.internal.objects.NativeArray;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +71,9 @@ public class GamePreparationsViewController extends AbstractViewController {
     
     private ObservableList<String> playerTypesList ;
     private List<String> devFloodStackNames ;
+    private List<String> devArtifactStackNames;
+    private List<String> devMapNames;
+    private List<String> mapNames;
     
     public static final String DEV_MAP_FOLDER = "resources/ai_tournament/maps/";
     public static final String DEV_ARTIFACT_STACK_FOLDER = "resources/ai_tournament/artifact_stack/";
@@ -109,25 +111,29 @@ public class GamePreparationsViewController extends AbstractViewController {
 
         File mapFile = new File(MapController.MAP_FOLDER);
         File[] files = mapFile.listFiles();
-        devFloodStackNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+        mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
-        for (String currentName : devFloodStackNames) {
+        int comboBoxFillCount = 0;
+        chooseMapComboBox.getItems().clear();
+        for (String currentName : mapNames) {
             if (!currentName.startsWith(".")) {
-                chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 4));
+                chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_MAP_ENDING_LENGTH));
+                comboBoxFillCount++;
             }
             chooseMapComboBox.getItems().sort(null);
         }
         chooseMapComboBox.getItems().add("neu generieren");
-        chooseMapComboBox.getSelectionModel().select(devFloodStackNames.size());
+        chooseMapComboBox.getSelectionModel().select(comboBoxFillCount);
         
         cannotStartGameLabel.setTextFill(Paint.valueOf("#FF0000"));
         
         
         File devMapFile = new File(DEV_MAP_FOLDER);
         File[] devMapFiles = devMapFile.listFiles();
-        devFloodStackNames = Arrays.stream(devMapFiles).map(File::getName).collect(Collectors.toList());
+        devMapNames = Arrays.stream(devMapFiles).map(File::getName).collect(Collectors.toList());
 
-        for (String currentName : devFloodStackNames) {
+        chooseDeveloperMapComboBox.getItems().clear();
+        for (String currentName : devMapNames) {
             if (!currentName.startsWith(".")) {
             chooseDeveloperMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_EXTMAP_ENDING_LENGTH ));
             }
@@ -139,9 +145,10 @@ public class GamePreparationsViewController extends AbstractViewController {
         
         File devArtifactStackFile = new File(DEV_ARTIFACT_STACK_FOLDER);
         File[] devArtifactStackFiles = devArtifactStackFile.listFiles();
-        devFloodStackNames = Arrays.stream(devArtifactStackFiles).map(File::getName).collect(Collectors.toList());
+        devArtifactStackNames = Arrays.stream(devArtifactStackFiles).map(File::getName).collect(Collectors.toList());
 
-        for (String currentName : devFloodStackNames) {
+        chooseArtifactCardStackComboBox.getItems().clear();
+        for (String currentName : devArtifactStackNames) {
             if (!currentName.startsWith(".")) {
                 chooseArtifactCardStackComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_CSV_ENDING_LENGTH));
             }
@@ -154,6 +161,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         File[] devFloodStackFiles = devFloodStackFile.listFiles();
         devFloodStackNames = Arrays.stream(devFloodStackFiles).map(File::getName).collect(Collectors.toList());
 
+        chooseFloodCardStackComboBox.getItems().clear();
         for (String currentName : devFloodStackNames) {
             if (!currentName.startsWith(".")) {
                 chooseFloodCardStackComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_CSV_ENDING_LENGTH));
@@ -242,8 +250,6 @@ public class GamePreparationsViewController extends AbstractViewController {
         setDifficulty();
 
         //PLayerList muss mind. zwei Spieler enthalten
-        //TODO Button disablen wenn die Bedingungen nicht erfüllt sind
-
         if (!playerList.stream().map(Triple::getFirst).filter(playerType -> !playerType.equals(PlayerType.NONE)).allMatch(new HashSet<PlayerType>()::add)) {
             cannotStartGameLabel.setText("Mindestens zwei Spieler haben den gleichen Typ");
             return;
@@ -280,7 +286,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerThreeToggleButton.setSelected(false);
         addPlayerFourToggleButton.setSelected(false);
 
-        chooseMapComboBox.getSelectionModel().select(devFloodStackNames.size());
+        chooseMapComboBox.getSelectionModel().select(mapNames.size());
 
         if (!getGameWindow().getSettings().devToolsEnabled().get()) {
             
@@ -291,13 +297,15 @@ public class GamePreparationsViewController extends AbstractViewController {
                 currentMap = MapUtil.generateRandomIsland();
                 debug("Map: random \n");
             } else {
-                String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getValue() + ".map")), StandardCharsets.UTF_8);
+                String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getSelectionModel().getSelectedItem() + ".map")), StandardCharsets.UTF_8);
                 currentMap = MapUtil.readBlackWhiteMapFromString(mapString);
-                debug("Map:" + chooseMapComboBox.getValue() + "\n");
+                debug("Map:" + chooseMapComboBox.getSelectionModel().getSelectedItem() + "\n");
             }
             
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
+            System.out.println(chooseMapComboBox.getSelectionModel().getSelectedItem() );
+            System.out.println(currentMap.toString());
         } else {
             
             if (chooseDeveloperMapComboBox.getValue() == null) {
@@ -310,14 +318,14 @@ public class GamePreparationsViewController extends AbstractViewController {
                 cannotStartGameLabel.setText("Es ist kein Artefaktkartenstapel ausgewählt");
                 return;
             } else {
-                String devMapString = new String(Files.readAllBytes(Paths.get(DEV_MAP_FOLDER + chooseDeveloperMapComboBox.getValue() + ".extmap")), StandardCharsets.UTF_8);
+                String devMapString = new String(Files.readAllBytes(Paths.get(DEV_MAP_FOLDER + chooseDeveloperMapComboBox.getSelectionModel().getSelectedItem() + ".extmap")), StandardCharsets.UTF_8);
                 tournamentMap = MapUtil.readFullMapFromString(devMapString);
                 debug("Map:" + chooseMapComboBox.getValue() + "\n");
                 
-                String artifactStackString = new String(Files.readAllBytes(Paths.get(DEV_ARTIFACT_STACK_FOLDER + chooseArtifactCardStackComboBox.getValue() + ".csv")), StandardCharsets.UTF_8);
+                String artifactStackString = new String(Files.readAllBytes(Paths.get(DEV_ARTIFACT_STACK_FOLDER + chooseArtifactCardStackComboBox.getSelectionModel().getSelectedItem()  + ".csv")), StandardCharsets.UTF_8);
                 CardStack<ArtifactCard> artifactStack = CardStackUtil.readArtifactCardStackFromString(artifactStackString);
                 
-                String flooodStackString = new String(Files.readAllBytes(Paths.get(DEV_FLOOD_STACK_FOLDER + chooseFloodCardStackComboBox.getValue() + ".csv")), StandardCharsets.UTF_8);
+                String flooodStackString = new String(Files.readAllBytes(Paths.get(DEV_FLOOD_STACK_FOLDER + chooseFloodCardStackComboBox.getSelectionModel().getSelectedItem() + ".csv")), StandardCharsets.UTF_8);
                 CardStack<FloodCard> floodStack = CardStackUtil.readFloodCardStackFromString(flooodStackString);
                 
                 tournamentTriple = new Triple<>(tournamentMap, artifactStack, floodStack);

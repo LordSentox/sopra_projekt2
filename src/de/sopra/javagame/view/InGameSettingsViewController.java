@@ -77,7 +77,7 @@ public class InGameSettingsViewController extends AbstractViewController {
 //            getGameWindow().getSettings().save();
 //            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
 //        }
-//        else 
+//        else
             modalCopy.close();
     }
 
@@ -90,12 +90,11 @@ public class InGameSettingsViewController extends AbstractViewController {
     }
 
     public void onBackToMenuClicked() {
-        getGameWindow().getSettings().save();
         modalCopy.close();
         ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
     }
-    
+
     public void onDeveloperSettingsCheckboxClicked() {
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
