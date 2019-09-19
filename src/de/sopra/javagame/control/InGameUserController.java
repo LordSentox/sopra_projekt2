@@ -260,8 +260,7 @@ public class InGameUserController {
 
     }
     
-    public void rescueMove(Player rescuePlayer){
-        Point destination = new Point(); //TEMP
+    public void rescueMove(Player rescuePlayer, Point destination){
         if (rescuePlayer.move(destination, false, true)) {
             controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayer.getType());
         } else {
