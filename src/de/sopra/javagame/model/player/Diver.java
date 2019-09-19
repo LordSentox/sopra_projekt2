@@ -42,6 +42,9 @@ public class Diver extends Player {
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> legalMoves = super.legalMoves(false);
 
+        if(!specialActive)
+            return legalMoves;
+
         //Diver soll seine Special nicht benutzen müssen!
 
         boolean[][] reachable = this.reachableDestinations();
@@ -116,7 +119,7 @@ public class Diver extends Player {
      */
     private boolean setTrueAround(boolean[][] reachable, Point around) {
         boolean somethingChanged = false;
-        List<Point> neighbours = around.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X, Map.SIZE_Y));
+        List<Point> neighbours = around.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X-1, Map.SIZE_Y-1));
         for (Point neighbour : neighbours) {
             if (!reachable[neighbour.yPos][neighbour.xPos]) {
                 reachable[neighbour.yPos][neighbour.xPos] = true;

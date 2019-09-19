@@ -50,7 +50,7 @@ public class InGameUserController {
 
         //Nur, wenn vorher nicht abgebrochen wurde waren alle Werte korrekt.
         //Bewege die Spieler, wie vorgesehen
-        Pair sourceInformation = new Pair<PlayerType, Integer> (sourcePlayer, handCardIndex);
+        Pair sourceInformation = new Pair<PlayerType, Integer>(sourcePlayer, handCardIndex);
         actuallyMovePlayers(sourceInformation, flightRoute, players, currentAction);
         controllerChan.finishAction();
     }
@@ -58,13 +58,11 @@ public class InGameUserController {
     /**
      * bewegt die Spieler, entfernt die gespielte Karte aus der Hand des Spielers und sendet refreshs an die AUI
      *
-     * @param sourcePlayer  Spieler, der die Helikopterkarte spielt
-     * @param handCardIndex der Index, an dem sich die Karte befindet
      * @param flightRoute   Start- und Endpunkt der Flugroute
      * @param players       die Spieler, die bewegt werden sollen
      * @param currentAction die aktuelle Action, die dann beendet werden muss
      */
-    private void actuallyMovePlayers(Pair<PlayerType, Integer>sourceInformation, Pair<Point, Point> flightRoute, List<PlayerType> players, Action currentAction) {
+    private void actuallyMovePlayers(Pair<PlayerType, Integer> sourceInformation, Pair<Point, Point> flightRoute, List<PlayerType> players, Action currentAction) {
         //wenn nicht alle Gewinnbedingungen erfüllt sind, bewege nun players von FlyFrom nach FlyTo
         if (flightRoute.getLeft() == null || flightRoute.getRight() == null
                 || currentAction.getMap().get(flightRoute.getRight()) == null
@@ -72,7 +70,7 @@ public class InGameUserController {
             throw new IllegalStateException("Mindestens einer der übergebenen Points war null. " +
                     "Fliegen ist so nicht möglich!");
         }
-        
+
         PlayerType sourcePlayer = sourceInformation.getLeft();
         int handCardIndex = sourceInformation.getRight();
         //entferne die gespielte Karte von der Spieler-Hand
@@ -102,6 +100,7 @@ public class InGameUserController {
      *                      Standardbewegungsmöglichkeiten angezeigt.
      */
     public void showMovements(PlayerType playerType, boolean specialActive) {
+        if (playerType == PlayerType.PILOT) specialActive = true;
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getPlayer(playerType);
         List<Point> movements = player.legalMoves(specialActive);
