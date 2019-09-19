@@ -143,7 +143,7 @@ public class Action implements Copyable<Action>, Serializable {
         action.players = new LinkedList<>();
         players.forEach(triple -> {
             if (triple.getFirst() != PlayerType.NONE)
-                action.players.add(createPlayerByType(triple.getFirst(), triple.getSecond(), action.map.getPlayerSpawnPoint(triple.getFirst()), action));
+                action.players.add(createPlayerByType(triple, action.map.getPlayerSpawnPoint(triple.getFirst()), action));
             else
                 action.players.add(null);
         });
@@ -158,8 +158,8 @@ public class Action implements Copyable<Action>, Serializable {
                         .sorted((item1, item2) -> (new Random()).nextInt()).collect(Collectors.toList());
                 
                 Collections.shuffle(list);
-                Player playerCreated = createPlayerByType(list.get(0), triple.getSecond(),
-                        action.map.getPlayerSpawnPoint(list.get(0)), action);
+                triple.setFirst(list.get(0));
+                Player playerCreated = createPlayerByType(triple, action.map.getPlayerSpawnPoint(list.get(0)), action);
                 action.players.set(i, playerCreated);
             }
         }
@@ -168,20 +168,20 @@ public class Action implements Copyable<Action>, Serializable {
         return action;
     }
 
-    public static Player createPlayerByType(PlayerType type, String name, Point start, Action action) {
-        switch (type) {
+    public static Player createPlayerByType(Triple<PlayerType, String, Boolean> player, Point start, Action action) {
+        switch (player.getFirst()) {
             case COURIER:
-                return new Courier(name, start, action);
+                return new Courier(player.getSecond(), start, action, player.getThird());
             case DIVER:
-                return new Diver(name, start, action);
+                return new Diver(player.getSecond(), start, action, player.getThird());
             case PILOT:
-                return new Pilot(name, start, action);
+                return new Pilot(player.getSecond(), start, action, player.getThird());
             case NAVIGATOR:
-                return new Navigator(name, start, action);
+                return new Navigator(player.getSecond(), start, action, player.getThird());
             case EXPLORER:
-                return new Explorer(name, start, action);
+                return new Explorer(player.getSecond(), start, action, player.getThird());
             case ENGINEER:
-                return new Engineer(name, start, action);
+                return new Engineer(player.getSecond(), start, action, player.getThird());
             default:
                 return null;
         }

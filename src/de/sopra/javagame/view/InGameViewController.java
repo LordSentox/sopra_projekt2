@@ -137,7 +137,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
         });
 
-        IntStream.range(0, 28).forEach(item -> {
+        IntStream.range(0, 280).forEach(item -> {
             artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
             artifactCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
@@ -145,7 +145,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, 240).forEach(item -> {
+        IntStream.range(0, 1024).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -607,6 +607,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 break;
             case DRAW_ARTIFACT_CARD:
                 this.rotateTurnSpinner(-240);
+                this.endTurnButton.setDisable(true);
                 break;
             case FLOOD:
                 this.rotateTurnSpinner(-300);
