@@ -532,7 +532,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshPlayerName(String nendFloodCardDrawActioname, PlayerType player) {
+    public void refreshPlayerName(String name, PlayerType player) {
 
     }
 

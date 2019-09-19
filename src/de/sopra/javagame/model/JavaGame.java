@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 /**
  * Repräsentiert ein JavaSpiel im Gesamten bis zu dem letzten Zug, der gemacht wurde. Der momentane Zug kann verändert
  * werden mit undo und redo.
@@ -117,6 +119,7 @@ public class JavaGame implements Serializable {
      * noch spätere Aktionen, werden diese vom Stapel entfernt.
      */
     public Action finishAction(Action currentAction) {
+        debug("Finished Action: " + currentAction.toString());
         this.undoActions.push(currentAction);
         while (!redoActions.empty()) {
             redoActions.pop();
@@ -216,9 +219,14 @@ public class JavaGame implements Serializable {
     }
 
     public void undoAction() {
+
         if (canUndo()) {
             Action undoneAction = this.undoActions.pop();
             this.redoActions.push(undoneAction);
+            debug("After Undo:");
+            debug("Undo Stack:\n" + undoActions);
+            debug("Redo Stack:\n" + redoActions);
+            System.out.println();
         }
     }
 
@@ -226,6 +234,10 @@ public class JavaGame implements Serializable {
         if (canRedo()) {
             Action redoneAction = this.redoActions.pop();
             this.undoActions.push(redoneAction);
+            debug("After Redo:");
+            debug("Undo Stack:\n" + undoActions);
+            debug("Redo Stack:\n" + redoActions);
+            System.out.println();
         }
     }
 }

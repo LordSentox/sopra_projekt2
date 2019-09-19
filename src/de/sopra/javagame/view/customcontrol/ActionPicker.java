@@ -2,7 +2,9 @@ package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.TurnState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Direction;
@@ -225,6 +227,13 @@ public class ActionPicker extends CirclePopupMenu {
                                 picker.mapPaneTile.getPosition());
                         picker.mapPaneTile.getControl().resetTargetPlayer();
                         picker.mapPaneTile.getControl().resetHighlighting();
+                        ControllerChan cChan = picker.mapPaneTile.getControl().getGameWindow().getControllerChan();
+                        Action currentAction = cChan.getCurrentAction();
+                        if(!cChan.getGameFlowController().isPausedToDiscard()){
+                            currentAction.setState(TurnState.FLOOD);
+                            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getLevel());
+                            picker.mapPaneTile.getControl().refreshTurnState(currentAction.getState());
+                        }
                     }
                 };
                 CustomMenuItem sandBagButtonMenuItem = new CustomMenuItem(new Button("special"));
