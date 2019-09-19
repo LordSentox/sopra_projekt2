@@ -101,6 +101,15 @@ public class AIController {
     }
 
     /**
+     * Ob der aktive Spieler am Zug ist oder er außerhalb seines Zuges etwas ausführen soll
+     *
+     * @return <code>true</code> wenn der aktive Spieler gleich dem aktiven Spieler im Spiel ist
+     */
+    public boolean isAIsTurn() {
+        return getCurrentAction().getActivePlayer().getType() == getActivePlayer().getType();
+    }
+
+    /**
      * Ob der aktive Spieler sich selber retten muss, d.h. auf einem versunkenen Feld steht
      *
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>

@@ -161,7 +161,8 @@ public class DecisionMaker implements AIProcessor {
     @Override
     public void makeStep(AIController control) {
         ActionQueue tip = getTipQueue(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
-        control.doSteps(tip);
+        if (tip.actions() > 0)
+            control.doSteps(tip);
     }
 
     @Override
@@ -175,14 +176,14 @@ public class DecisionMaker implements AIProcessor {
     }
 
     public ActionQueue getTipQueue(AIController control) {
-        ActionQueue actionQueue;
+        ActionQueue actionQueue = null;
         if (control.isCurrentlyDiscarding()) { //entweder ist der Spieler mit abwerfen beschäftigt
             Decision decision = makeDiscardDecision(control);
             actionQueue = decision.act();
         } else if (control.isCurrentlyRescueingHimself()) { //oder damit sich selbst zu retten
             Decision decision = makeSafetyDecision(control);
             actionQueue = decision.act();
-        } else { //ansonsten ist er einfach am Zug
+        } else if (control.isAIsTurn()) { //ansonsten ist er einfach am Zug
             Decision turn = makeTurnDecision(control);
             actionQueue = turn.act();
         }
@@ -190,8 +191,11 @@ public class DecisionMaker implements AIProcessor {
         if (actionQueue == null)
             actionQueue = new ActionQueue(control.getActivePlayer().getType());
         Decision special = makeSpecialCardDecision(control);
-        if (special != null) //Nicht immer müssen Spezialkarten gespielt werden
-            actionQueue.nextActions(special.act());
+        if (special != null) {//Nicht immer müssen Spezialkarten gespielt werden
+            ActionQueue action = special.act();
+            if (action != null && action.actions() > 0)
+                actionQueue.nextActions(action);
+        }
         return actionQueue;
     }
 
