@@ -302,7 +302,8 @@ public class GamePreparationsViewController extends AbstractViewController {
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", tournamentTriple, playerList, difficulty);
         }
-
+        
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
         changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
 
