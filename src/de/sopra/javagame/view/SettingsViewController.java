@@ -55,7 +55,6 @@ public class SettingsViewController extends AbstractViewController {
         developerToolsCheckbox.selectedProperty().set(settings.devToolsEnabled().get());
         settings.devToolsEnabled().unbind();
         settings.devToolsEnabled().bind(developerToolsCheckbox.selectedProperty());
-        getGameWindow().setDeveloperSettingsActive(settings.devToolsEnabled().get());
     }
 
     public static void openModal(GameWindow window) throws IOException {
@@ -81,14 +80,17 @@ public class SettingsViewController extends AbstractViewController {
     public void onCloseClicked() {
         if (modalCopy == null) {
             getGameWindow().getSettings().save();
-            ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
+            ((MainMenuViewController) getGameWindow().getView(ViewState.MENU)).init();
             changeState(ViewState.SETTINGS, ViewState.MENU);
-        } else modalCopy.close();
-    }  
-    
+        } else {
+            getGameWindow().getSettings().save();
+            modalCopy.close();
+        }
+    }
+
     public void onDeveloperSettingsCheckboxClicked() {
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
-        ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
+        ((GamePreparationsViewController) getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
     }
 
 }
