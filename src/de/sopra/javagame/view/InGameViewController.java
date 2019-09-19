@@ -188,14 +188,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
     }
 
-    public void onSpecialCardPlayClicked(int cardIndex) {
-
-    }
-
-    public void onDiscardSelectedCardsClicked() {
-
-    }
-
     public void onRedoClicked() {
         getGameWindow().getControllerChan().getGameFlowController().redo();
     }
@@ -455,6 +447,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             GridPane.setConstraints(v, index, 0);
             index += 2;
             this.artifactCardDiscardStackButton.toFront();
+            this.artifactCardDiscardStackButton.setVisible(true);
         }
     }
 
@@ -478,6 +471,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             GridPane.setConstraints(v, index, 0);
             index += 2;
             this.floodCardDiscardStackButton.toFront();
+            this.floodCardDiscardStackButton.setVisible(true);
         }
     }
 

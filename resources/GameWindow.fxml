@@ -60,7 +60,7 @@
    		<WaterLevelView fx:id="waterLevelView" layoutX="377" layoutY="850"/>
 
    		<Button fx:id="artifactCardDrawStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="20.0" layoutY="720" visible="false" disable="true" onAction="#onArtifactCardDrawStackClicked"/>
-   		<Button fx:id="artifactCardDiscarStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="200.0" layoutY="720" visible="false" onAction="#onArtifactCardDiscardStackClicked"/>
+   		<Button fx:id="artifactCardDiscardStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="200.0" layoutY="720" visible="false" onAction="#onArtifactCardDiscardStackClicked"/>
    		<Button fx:id="floodCardDrawStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="20.0" layoutY="960" visible="false" disable="true" onAction="#onFloodCardDrawStackClicked"/>
    		<Button fx:id="floodCardDiscardStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="200.0" layoutY="960" visible="false" onAction="#onFloodCardDiscardStackClicked"/>
    		
