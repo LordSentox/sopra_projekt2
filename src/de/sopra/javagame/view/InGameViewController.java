@@ -268,6 +268,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDiscardStackClicked() {
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
 
     }
 
@@ -293,7 +294,6 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDrawStackClicked() {
-        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
     }
 
     public void onFloodCardDrawStackClicked() {
@@ -447,7 +447,6 @@ public class InGameViewController extends AbstractViewController implements InGa
             GridPane.setConstraints(v, index, 0);
             index += 2;
             this.artifactCardDiscardStackButton.toFront();
-            this.artifactCardDiscardStackButton.setVisible(true);
         }
     }
 
@@ -471,7 +470,6 @@ public class InGameViewController extends AbstractViewController implements InGa
             GridPane.setConstraints(v, index, 0);
             index += 2;
             this.floodCardDiscardStackButton.toFront();
-            this.floodCardDiscardStackButton.setVisible(true);
         }
     }
 
