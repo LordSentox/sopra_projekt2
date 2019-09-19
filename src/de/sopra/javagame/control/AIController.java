@@ -106,7 +106,8 @@ public class AIController {
      * @return <code>true</code> wenn der Spieler sich in seiner aktuellen Situation selbst retten muss, sonst <code>false</code>
      */
     public boolean isCurrentlyRescueingHimself() {
-        return getTile(getActivePlayer().getPosition()).getState() == MapTileState.GONE;
+        MapTile tile = getTile(getActivePlayer().getPosition());
+        return tile == null || tile.getState() == MapTileState.GONE;
     }
 
     /**
@@ -188,7 +189,8 @@ public class AIController {
      * @return das MapTile zu einem Punkt
      */
     public MapTile getTile(Point point) {
-        return getCurrentAction().getMap().get(point).copy();
+        MapTile mapTile = getCurrentAction().getMap().get(point);
+        return mapTile != null ? mapTile.copy() : null;
     }
 
     /**
