@@ -36,7 +36,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
         Player activePlayer = tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer();
         if (activePlayer.getType() != type) {
             //wenn der gewählte Spieler nicht der aktive ist und der aktive der Navigator ist
-            return activePlayer.getType() == PlayerType.NAVIGATOR && tile.getControl().isSpecialActive();
+            return activePlayer.getType() == PlayerType.NAVIGATOR; //  && tile.getControl().isSpecialActive();
         }
         switch (activePlayer.getType()) {
             case COURIER:
@@ -87,7 +87,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
                     if (tile.getPlayers().size() >= 2 || activePlayer.getType() == PlayerType.COURIER){
                         buttons.add(ActionButton.GIVE_CARD);
                         picker.setMapPaneTile(tile);
-                        picker.setMovingPlayer(type);;
+                        picker.setMovingPlayer(type);
                         picker.setDelegatingPlayer(tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType());
                     }
                 }
