@@ -13,6 +13,7 @@ import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
+import de.sopra.javagame.view.abstraction.Notifications;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -150,7 +151,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, floodCardDiscardPileSize+24).forEach(item -> {
+        IntStream.range(0, floodCardDiscardPileSize + 24).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -202,19 +203,20 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (getGameWindow().getControllerChan().getJavaGame().getIsCheetah()) {
             getHint();
         } else {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
-                    null, 
-                    "Möchtest du dir wirklich einen Tipp anzeigen lassen?", 
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(),
+                    null,
+                    "Möchtest du dir wirklich einen Tipp anzeigen lassen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
-                    + "aus der Highscore-Liste verbannt!");  
+                            + "aus der Highscore-Liste verbannt!");
             pack.addButton("Tipp zeigen", () -> getHint());
-            pack.addButton("Abbrechen", () -> {});
+            pack.addButton("Abbrechen", () -> {
+            });
             pack.setAlertType(AlertType.CONFIRMATION);
             pack.setStageStyle(StageStyle.UNDECORATED);
             pack.open();
         }
     }
-    
+
     private void getHint() {
         SimpleAction tip = getGameWindow().getControllerChan().getAiController().getTip();
         getGameWindow().getControllerChan().getInGameViewAUI().showTip(tip);
@@ -224,19 +226,20 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (getGameWindow().getControllerChan().getJavaGame().getIsCheetah()) {
             undo();
         } else {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
-                    null, 
-                    "Möchtest du einen Zug rückgängig machen?", 
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(),
+                    null,
+                    "Möchtest du einen Zug rückgängig machen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
-                    + "aus der Highscore-Liste verbannt!");  
+                            + "aus der Highscore-Liste verbannt!");
             pack.addButton("Rückgängig machen", () -> undo());
-            pack.addButton("Abbrechen", () -> {});
+            pack.addButton("Abbrechen", () -> {
+            });
             pack.setAlertType(AlertType.CONFIRMATION);
             pack.setStageStyle(StageStyle.UNDECORATED);
             pack.open();
         }
     }
-    
+
     private void undo() {
         //TODO Fenster öffnen, das Bescheid gibt über Löschen aus HighScoreListe
         getGameWindow().getControllerChan().getGameFlowController().undo();
@@ -274,7 +277,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDiscardStackClicked() {
-        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card -> card.getType().name()).collect(Collectors.joining("\n")));
 
     }
 
@@ -296,7 +299,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card->card.getTile().getName()).collect(Collectors.joining("\n")));
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card -> card.getTile().getName()).collect(Collectors.joining("\n")));
     }
 
     public void onArtifactCardDrawStackClicked() {
@@ -452,7 +455,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index ++;
+            index++;
             this.artifactCardDiscardStackButton.toFront();
         }
     }
@@ -505,9 +508,9 @@ public class InGameViewController extends AbstractViewController implements InGa
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         resetHighlighting();
-        
-        roundNumber.setText("Runde: "+getGameWindow().getControllerChan().getJavaGame().numTurns());
-        }
+
+        roundNumber.setText("Runde: " + getGameWindow().getControllerChan().getJavaGame().numTurns());
+    }
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
@@ -600,7 +603,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             case WAIT_AND_DRINK_TEA:
                 notification = "Zug abgeben.";
         }
-        showNotification(notification);
+        showNotification(Notifications.info(notification));
     }
 
     @Override
