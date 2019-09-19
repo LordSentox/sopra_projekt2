@@ -57,6 +57,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private boolean specialActive = false;
     private boolean transferActive = false;
     private Supplier<Player> targetPlayer;
+    private int floodCardDiscardPileSize = 24;
 
     // Wird gesetzt, wenn eine Helikopterkarte gespielt werden soll
     private HelicopterHelper helicopterHelper;
@@ -148,7 +149,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, 1024).forEach(item -> {
+        IntStream.range(0, floodCardDiscardPileSize).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -466,6 +467,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
         List<FloodCard> discardPile = stack.getDiscardPile();
         int index = 0;
+        floodCardDiscardPileSize = discardPile.size();
         floodCardDiscardGridPane.getChildren().clear();
         for (FloodCard card : discardPile) {
             CardView v = new FloodCardView(card.getTile(), ACTIVE_CARD_SIZE);
