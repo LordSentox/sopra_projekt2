@@ -4,7 +4,10 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
-import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -67,15 +70,19 @@ public class AIControllerUtil {
     }
 
     private static void movePlayer(ControllerChan controller, SimpleAction action, Player player) {
-        boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
-        player.move(action.getTargetPoint(), !isRescuing, isRescuing);
-        controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
+        //boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
+        //player.move(action.getTargetPoint(), !isRescuing, isRescuing);
+        //controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
+
+        // TODO
+        controller.getActivePlayerController().move(action.getTargetPoint(), false);
     }
 
     private static void drain(ControllerChan controllerChan, SimpleAction action, Player player) {
-        player.drain(action.getTargetPoint());
-        controllerChan.getInGameViewAUI().refreshMapTile(action.getTargetPoint(),
-                controllerChan.getCurrentAction().getMap().get(action.getTargetPoint()));
+        //player.drain(action.getTargetPoint());
+        //controllerChan.getInGameViewAUI().refreshMapTile(action.getTargetPoint(),
+        //       controllerChan.getCurrentAction().getMap().get(action.getTargetPoint()));
+        controllerChan.getActivePlayerController().drain(action.getTargetPoint());
     }
 
     private static void endTurn(ControllerChan controllerChan) {
