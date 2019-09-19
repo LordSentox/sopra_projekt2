@@ -53,35 +53,23 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 
             Point orphanedTemplePoint = temple.getLeft();
             MapTile orphanedTemple = temple.getRight();
-
-            //prüfe, ob Player auf betroffenem Tempel steht
-            if (orphanedTemplePoint.equals(activePlayerPosition)) {
-                continue;
-            }
-
-            //prüfe, ob Tempelartefakt bereits geborgen ist
+            
             ArtifactType templeType = orphanedTemple.getProperties().getHidden();
             EnumSet<ArtifactType> discoveredArtifacts = action().getDiscoveredArtifacts();
 
-            if (discoveredArtifacts.contains(templeType)) {
-                continue;
-            }
-
             List<Point> surroundingPoints = surroundingPoints(orphanedTemplePoint, true);
             List<MapTile> surroundingTiles = surroundingPoints.stream().map(control::getTile).collect(Collectors.toList());
-            //prüfe, ob Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
-            if (!checkAll(tile -> tile.getState() == GONE, surroundingTiles)) {
+
+            //prüfe, ob Player auf betroffenem Tempel steht
+            //       oder Tempelartefakt bereits geborgen ist
+            //       oder Inselfeld Nachbarfelder hat, die nicht GONE oder NULL sind
+            if (orphanedTemplePoint.equals(activePlayerPosition) || 
+                    discoveredArtifacts.contains(templeType) || 
+                    (!checkAll(tile -> tile.getState() == GONE, surroundingTiles))) {
                 continue;
             }
-
             //Prüfe für Sonderfall: --Player steht auf Tempel, kann dort Schatz bergen-- ob Sandsack spielbar
-            EnhancedPlayerHand hand = playerHand();
-
-            if (any(all(hand.getAmount(FIRE) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.FIRE),
-                    all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
-                    all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
-                    all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))
-                    && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
+            if (playerOnTempleAndPlaySandbag()) {
                 continue;
             }
             targetPoint = orphanedTemplePoint;
@@ -93,6 +81,17 @@ public class TurnFlyActivePlayerToOrphanedTempleMapForDraining extends Decision 
 
     }
 
+    private boolean playerOnTempleAndPlaySandbag() {
+        EnhancedPlayerHand hand = playerHand();
+        boolean conditionsMet =
+                any(all(hand.getAmount(FIRE) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.FIRE),
+                all(hand.getAmount(EARTH) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.EARTH),
+                all(hand.getAmount(WATER) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.WATER),
+                all(hand.getAmount(AIR) > THREE_CARDS, tile().getProperties().getHidden() == ArtifactType.AIR))
+                && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS);
+        return conditionsMet;
+    }
+    
     @Override
     public ActionQueue act() {
         return startActionQueue().helicopterCard(start, targetPoint, dude).drain(targetPoint);
