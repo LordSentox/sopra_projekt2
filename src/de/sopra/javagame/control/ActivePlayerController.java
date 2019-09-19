@@ -5,6 +5,7 @@ import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Pilot;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.util.Point;
@@ -115,8 +116,8 @@ public class ActivePlayerController {
         if (player.getActionsLeft() <= 0) {
             return;
         }
-        System.out.println(handCardIndex);
-        System.out.println(targetPlayer.toString());
+        DebugUtil.debug("handIndex in transfer: " + handCardIndex);
+        DebugUtil.debug("targetplayer in transfer: " + targetPlayer.toString());
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
@@ -168,6 +169,9 @@ public class ActivePlayerController {
 
             controllerChan.finishAction();
         } 
+         else {
+            DebugUtil.debug("du dulli");
+        }
     }
 
     /**
