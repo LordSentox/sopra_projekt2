@@ -240,8 +240,14 @@ public class ActivePlayerController {
         if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
             currentAction = controllerChan.finishAction();
             currentAction.setState(TurnState.FLOOD);
-            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getDrawAmount());
+            int drawAmount = currentAction.getWaterLevel().getDrawAmount();
+            currentAction.setFloodCardsToDraw(drawAmount);
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
+            if (currentAction.getPlayers().stream().allMatch(Player::isAi)) {
+                for (int i = 0; i < drawAmount; i++) {
+                    controllerChan.getGameFlowController().drawFloodCard();
+                }
+            }
         }
 
         controllerChan.getInGameViewAUI().refreshSome();
