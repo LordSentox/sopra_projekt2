@@ -305,17 +305,23 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDrawStackClicked() {
+        System.out.println("Vor dem Check ob Karte ziehen");
         if ((getGameWindow().getControllerChan().getCurrentAction() != null &&
                 getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD))
+            System.out.println("Wir ziehen eine Karte");
             this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
+            refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
     }
 
     public void setFloodCardStackHighlighted(boolean highlight) {
         ObservableList<String> styleClass = floodCardDrawStackGridPane.getStyleClass();
+        System.out.println("ich leuchte");
+        System.out.println(styleClass);
         if (!styleClass.contains(HIGHLIGHT) && highlight)
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
+        refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
     }
 
     @Override
@@ -490,6 +496,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showBackImage();
             v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onFloodCardDrawStackClicked());
+            System.out.println("Stapel wurde geklickt!!");
             floodCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
@@ -630,6 +637,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshTurnState(TurnState turnState) {
         resetHighlighting();
+        System.out.println("Hallo hier: " + turnState);
         switch (turnState) {
             case PLAYER_ACTION:
                 this.rotateTurnSpinner(0);
@@ -641,6 +649,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 break;
             case FLOOD:
                 this.rotateTurnSpinner(-300);
+                System.out.println("Flutkarten Ziehen!");
                 setFloodCardStackHighlighted(true);
                 this.endTurnButton.setDisable(true);
                 break;

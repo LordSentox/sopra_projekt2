@@ -46,7 +46,7 @@ public class InGameUserController {
         if (checkWonOnHelicopter(currentAction)) {
             controllerChan.getInGameViewAUI().showNotification(Notifications.gameWon(
                     "Euch allen eine sichere und schnelle Heimreise " +
-                    "und auf ein baldiges Wiedersehen~"));
+                            "und auf ein baldiges Wiedersehen~"));
             return;
         }
 
@@ -55,6 +55,7 @@ public class InGameUserController {
         Pair sourceInformation = new Pair<PlayerType, Integer>(sourcePlayer, handCardIndex);
         actuallyMovePlayers(sourceInformation, flightRoute, players, currentAction);
         controllerChan.finishAction();
+        refreshAfterOneCardLess();
     }
 
     /**
@@ -221,6 +222,7 @@ public class InGameUserController {
         currentAction.getMap().get(destination).drain();
         controllerChan.getInGameViewAUI().refreshMapTile(destination, tileToDrain);
         controllerChan.finishAction();
+        refreshAfterOneCardLess();
     }
 
 
@@ -257,16 +259,35 @@ public class InGameUserController {
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
         }
 
+        refreshAfterOneCardLess();
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
         controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
 
     }
-    
-    public void rescueMove(Player rescuePlayer, Point destination){
+
+    public void rescueMove(Player rescuePlayer, Point destination) {
         if (rescuePlayer.move(destination, false, true)) {
             controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayer.getType());
         } else {
             System.out.println("du Dulli rescue");
         }
+    }
+
+    private void refreshAfterOneCardLess() {
+        List<Player> players = controllerChan.getCurrentAction().getPlayers();
+        boolean keepTurnState = false;
+        for (Player checkedPlayer : players) {
+            if (checkedPlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
+                keepTurnState = true;
+            }
+        }
+        if (keepTurnState || (controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION)) {
+            return;
+        }
+        Action currentAction = controllerChan.getCurrentAction();
+        currentAction.setState(TurnState.FLOOD);
+        currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getDrawAmount());
+        controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
+
     }
 }
