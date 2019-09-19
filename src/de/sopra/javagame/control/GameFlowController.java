@@ -9,6 +9,7 @@ import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -53,10 +54,7 @@ public class GameFlowController {
             controllerChan.finishAction();
         }
         controllerChan.getInGameViewAUI().refreshHand(activePlayer.getType(), activePlayer.getHand());
-        if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
-            controllerChan.getInGameViewAUI().showNotification("Du hast zu viele Handkarten. Bitte wähle " +
-                    (activePlayer.getHand().size() - 5) + " Karten zum Abwerfen aus.");
-        }
+        maybeTellPlayerToDiscardCards(activePlayer);
         if (shuffleBack) {
             CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
             stack.shuffleBack();
@@ -64,11 +62,29 @@ public class GameFlowController {
         }
     }
 
+    private void maybeTellPlayerToDiscardCards(Player activePlayer) {
+        if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
+
+            int amountOfSurplusCards = activePlayer.getHand().size() - Player.MAXIMUM_HANDCARDS;
+            int oneCardToDiscard = 1;
+            if (amountOfSurplusCards == oneCardToDiscard){
+                controllerChan.getInGameViewAUI()
+                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                + "\nhat eine Karte zu viel!\nWirf eine Karte von " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+            }else{
+                controllerChan.getInGameViewAUI()
+                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf "
+                        + amountOfSurplusCards + " Karten bei " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+            }
+        }
+    }
+
     private void gameLostNotification() {
         controllerChan.getCurrentAction().setGameWon(false);
         controllerChan.getCurrentAction().setGameEnded(true);
-        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt leider verloren!\n"
-                + "Das Wasser ist viel zu schnell gestiegen \n"
+        System.out.println("Verloren");
+        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Das Wasser ist viel zu schnell gestiegen \n"
                 + "und nun ist die ganze Insel versunken.\n"
                 + "Keiner von euch konnte sich retten.\n"
                 + "Ihr alle seid einen qualvollen Tod "
@@ -131,10 +147,15 @@ public class GameFlowController {
 
     private void endFloodCardDrawAction(CardStack<FloodCard> floodCardCardStack) {
         Action nextAction = controllerChan.finishAction();
+        if (nextAction == null) {
+            return;
+        }
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
         //Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen
         letAIAct(nextAction.getActivePlayer().getType());
+
+        int emptyStack = 0;
 
         if (nextAction.getFloodCardsToDraw() <= 0) {
             nextAction.nextPlayerActive();
@@ -148,6 +169,10 @@ public class GameFlowController {
             for (int i = 0; i < 10; i++) {
                 letAIAct(nextAction.getActivePlayer().getType());
             }
+        }
+        if (nextAction.getFloodCardStack().size() == emptyStack) {
+            nextAction.getFloodCardStack().shuffleBack();
+            controllerChan.getInGameViewAUI().refreshFloodStack(nextAction.getFloodCardStack());
         }
     }
 
@@ -190,6 +215,17 @@ public class GameFlowController {
         }
 
         return false;
+    }
+
+    public List<Player> playersPausedToDiscard(){
+        //Überprüfe, welcher der Spieler mehr als 5 Handkarten hat
+        List<Player> players = new LinkedList<Player>();
+        for (Player player : controllerChan.getCurrentAction().getPlayers()) {
+            if (player.getHand().size() > Player.MAXIMUM_HANDCARDS) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     public void letAIAct(PlayerType playerType) {

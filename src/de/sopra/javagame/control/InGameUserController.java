@@ -7,6 +7,7 @@ import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,9 +44,9 @@ public class InGameUserController {
 
         //Überprüfen, ob das Spiel gewonnen ist --> TODO inGameViewAUI.setGameEnded(gameWon = true) nutzen, Speichern abfangen!
         if (checkWonOnHelicopter(currentAction)) {
-            controllerChan.getInGameViewAUI().showNotification("Herzlichen Glückwunsch! Ihr habt die Insel besiegt." +
+            controllerChan.getInGameViewAUI().showNotification(Notifications.gameWon(
                     "Euch allen eine sichere und schnelle Heimreise " +
-                    "und auf ein baldiges Wiedersehen~");
+                    "und auf ein baldiges Wiedersehen~"));
             return;
         }
 
@@ -235,7 +236,7 @@ public class InGameUserController {
         //Prüfe, ob genug Karten auf der Hand des Spielers vorhanden sind
         if (handCards.size() <= Player.MAXIMUM_HANDCARDS) {
             controllerChan.getInGameViewAUI().showNotification("Es darf keine Karte abgeworfen werden!");
-            throw new IllegalStateException("Es darf keine Karte abgeworfen werden!");
+            return;
         }
         //Falls sich am handCardIndex des sourcePlayers keine Karte befindet war der Aufruf ungültig
         if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null) {

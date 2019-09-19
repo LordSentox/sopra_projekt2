@@ -110,6 +110,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         playerFourChooseCharakterComboBox.getItems().addAll(playerTypesList);
         playerFourChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
 
+        editDifficultyComboBox.getItems().clear();
         editDifficultyComboBox.getItems().addAll("Novize", "Normal", "Elite", "Legende");
         editDifficultyComboBox.getSelectionModel().select(0);
 
@@ -273,7 +274,7 @@ public class GamePreparationsViewController extends AbstractViewController {
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
             System.out.println(chooseMapComboBox.getSelectionModel().getSelectedItem() );
             System.out.println(chooseMapComboBox.getValue());
-            System.out.println(currentMap.toString());
+            System.out.println(currentMap);
         } else {
             
             if (chooseDeveloperMapComboBox.getValue() == null) {
@@ -301,10 +302,12 @@ public class GamePreparationsViewController extends AbstractViewController {
             
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", tournamentTriple, playerList, difficulty);
+            ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).playBgm();
         }
         
         getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
         changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
 
         getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(getGameWindow().getControllerChan().getCurrentAction().getWaterLevel().getLevel());

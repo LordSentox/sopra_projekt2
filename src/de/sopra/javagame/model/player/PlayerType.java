@@ -43,6 +43,20 @@ public enum PlayerType {
     /**
      * Es liegt keine der Figuren vor
      */
-    NONE
+    NONE; 
+    
+    @Override
+    public String toString(){
+        switch (this){
+        case COURIER: return "Bote";
+        case DIVER: return "Taucher";
+        case ENGINEER: return "Ingenieur";
+        case EXPLORER: return "Forscher";
+        case NAVIGATOR: return "Navigator";
+        case PILOT: return "Pilot";
+        case NONE: return "";
+        default: return "";
+        }
+    }
 
 }

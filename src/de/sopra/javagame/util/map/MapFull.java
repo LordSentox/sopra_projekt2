@@ -5,6 +5,7 @@ import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -14,11 +15,21 @@ public class MapFull extends Map<MapTile> {
     }
 
     public MapFull(MapFull from) {
-        super(from.raw);
+        this(from.raw);
     }
 
     MapFull(MapTile[][] raw) throws IllegalArgumentException {
-        super(raw);
+        if (raw == null || raw.length - 2 != SIZE_Y)
+            throw new IllegalArgumentException();
+        if (Arrays.stream(raw).anyMatch(row -> row.length - 2 != SIZE_X)) throw new IllegalArgumentException();
+
+        this.raw = this.newEmptyRaw();
+        for (int y = 0; y < raw.length; y++) {
+            for (int x = 0; x < raw[y].length; x++) {
+                MapTile tile = raw[y][x];
+                this.raw[y][x] = tile == null ? null : tile.copy();
+            }
+        }
     }
 
     /**

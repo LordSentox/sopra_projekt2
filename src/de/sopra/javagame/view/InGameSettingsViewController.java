@@ -16,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import javax.swing.text.View;
 import java.io.IOException;
 
 public class InGameSettingsViewController extends AbstractViewController {
@@ -79,6 +78,9 @@ public class InGameSettingsViewController extends AbstractViewController {
 //            changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
 //        }
 //        else
+
+
+        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).playBgm();
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
@@ -97,6 +99,8 @@ public class InGameSettingsViewController extends AbstractViewController {
     }
 
     public void onBackToMenuClicked() {
+
+        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).stopBgm();
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         modalCopy.close();

@@ -12,6 +12,7 @@ import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
+import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -28,17 +29,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.sopra.javagame.util.DebugUtil.debug;
-
+//Todo: Todo fixen
 /**
  * GUI für den Spielablauf
  *
@@ -82,7 +87,53 @@ public class InGameViewController extends AbstractViewController implements InGa
     Label roundNumber;
     private Timeline timeline;
 
+    private MediaPlayer ripPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/landstrassen.wav").toExternalForm()));
+    private List<MediaPlayer> bgmPlayers;
+    private int currentBgm = 0;
+
+    {
+        File[] files = new File("resources/sounds/bgm/").listFiles();
+        List<String> wavFiles = Arrays.stream(files)
+                .map(File::getAbsolutePath)
+                .collect(Collectors.toList());
+        Collections.shuffle(wavFiles);
+        bgmPlayers = wavFiles.stream().map(fileName -> {
+            String path = Paths.get(fileName).toUri().toString();
+            debug(path);
+            MediaPlayer m = new MediaPlayer(new Media(path));
+            m.setOnEndOfMedia(() -> {
+                m.stop();
+                System.out.println("SOOOS");
+                playNext();
+            });
+            return m;
+        }).collect(Collectors.toList());
+    }
+
+    private void playNext() {
+        if(currentBgm == bgmPlayers.size()) {
+            currentBgm = 0;
+            Collections.shuffle(bgmPlayers);
+        }
+        bgmPlayers.get(currentBgm++).play();
+        currentBgm %= bgmPlayers.size();
+    }
+
+    public void playBgm() {
+        bgmPlayers.get(currentBgm).play();
+    }
+
+    public void pauseBgm() {
+        bgmPlayers.get(currentBgm).pause();
+    }
+
+    public void stopBgm() {
+        bgmPlayers.get(currentBgm).stop();
+    }
+
     public void init() {
+        bgmPlayers.forEach(mediaPlayer -> getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> mediaPlayer.volumeProperty().set(newVal.doubleValue() / 100.0)));
+
         this.helicopterHelper = null;
         this.rescueHelper = new RescueHelper(this);
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
@@ -153,7 +204,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, floodCardDiscardPileSize).forEach(item -> {
+        IntStream.range(0, floodCardDiscardPileSize + 24).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -205,19 +256,20 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (getGameWindow().getControllerChan().getJavaGame().getIsCheetah()) {
             getHint();
         } else {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
-                    null, 
-                    "Möchtest du dir wirklich einen Tipp anzeigen lassen?", 
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(),
+                    null,
+                    "Möchtest du dir wirklich einen Tipp anzeigen lassen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
-                    + "aus der Highscore-Liste verbannt!");  
-            pack.addButton("Tipp zeigen", () -> getHint());
-            pack.addButton("Abbrechen", () -> {});
+                            + "aus der Highscore-Liste verbannt!");
+            pack.addButton("Tipp zeigen", this::getHint);
+            pack.addButton("Abbrechen", () -> {
+            });
             pack.setAlertType(AlertType.CONFIRMATION);
             pack.setStageStyle(StageStyle.UNDECORATED);
             pack.open();
         }
     }
-    
+
     private void getHint() {
         SimpleAction tip = getGameWindow().getControllerChan().getAiController().getTip();
         getGameWindow().getControllerChan().getInGameViewAUI().showTip(tip);
@@ -227,19 +279,20 @@ public class InGameViewController extends AbstractViewController implements InGa
         if (getGameWindow().getControllerChan().getJavaGame().getIsCheetah()) {
             undo();
         } else {
-            DialogPack pack = new DialogPack(getGameWindow().getMainStage(), 
-                    null, 
-                    "Möchtest du einen Zug rückgängig machen?", 
+            DialogPack pack = new DialogPack(getGameWindow().getMainStage(),
+                    null,
+                    "Möchtest du einen Zug rückgängig machen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
-                    + "aus der Highscore-Liste verbannt!");  
-            pack.addButton("Rückgängig machen", () -> undo());
-            pack.addButton("Abbrechen", () -> {});
+                            + "aus der Highscore-Liste verbannt!");
+            pack.addButton("Rückgängig machen", this::undo);
+            pack.addButton("Abbrechen", () -> {
+            });
             pack.setAlertType(AlertType.CONFIRMATION);
             pack.setStageStyle(StageStyle.UNDECORATED);
             pack.open();
         }
     }
-    
+
     private void undo() {
         //TODO Fenster öffnen, das Bescheid gibt über Löschen aus HighScoreListe
         getGameWindow().getControllerChan().getGameFlowController().undo();
@@ -270,6 +323,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         try {
             InGameSettingsViewController.openModal(getGameWindow());
+            pauseBgm();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -277,7 +331,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDiscardStackClicked() {
-        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card -> card.getType().name()).collect(Collectors.joining("\n")));
 
     }
 
@@ -299,14 +353,15 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card->card.getTile().getName()).collect(Collectors.joining("\n")));
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card -> card.getTile().getName()).collect(Collectors.joining("\n")));
     }
 
     public void onArtifactCardDrawStackClicked() {
     }
 
     public void onFloodCardDrawStackClicked() {
-        if (getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD)
+        if ((getGameWindow().getControllerChan().getCurrentAction() != null &&
+                getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD))
             this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
     }
 
@@ -320,12 +375,37 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void showNotification(Notification notification) {
-        if (notification.isGameWon()) {
-
-        } else if (notification.isGameLost()) {
-
+        String header = "";
+        String confirmationButtonText = "Spielstand speichern";
+        String cancelButtonText = "Zurück ins Hauptmenü";
+        if (!getGameWindow().getControllerChan().getCurrentAction().isGameEnded()) {
+            super.showNotification(notification);
+            return;
         }
-        super.showNotification(notification);
+        if (notification.isGameWon()) {
+            header = "Herzlichen Glückwunsch! Ihr habt die Insel besiegt.";
+        } else if (notification.isGameLost()) {
+            header = "Ihr habt leider verloren!";
+            ripPlayer.play();
+        }
+        System.out.println("Hallo hier");
+        DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
+        endGameDialogue.setAlertType(AlertType.CONFIRMATION);
+        endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
+        endGameDialogue.addButton(confirmationButtonText, () -> openSaveDialogue());
+        endGameDialogue.addButton(cancelButtonText, () -> endGameBackToMenu());
+        endGameDialogue.open();
+    }
+
+    private void openSaveDialogue()  {
+        ((SettingsViewController) getGameWindow().getView(ViewState.SETTINGS)).init();
+        ((InGameViewController) getGameWindow().getView(ViewState.IN_GAME)).init();
+        changeState(ViewState.IN_GAME, ViewState.SAVE_GAME);
+    }
+
+    private void endGameBackToMenu() {
+        ((InGameViewController) getGameWindow().getView(ViewState.IN_GAME)).init();
+        changeState(ViewState.IN_GAME, ViewState.MENU);
     }
 
     @Override
@@ -454,7 +534,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index++;
             this.artifactCardDiscardStackButton.toFront();
         }
     }
@@ -478,7 +558,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index++;
             this.floodCardDiscardStackButton.toFront();
         }
     }
@@ -505,9 +585,9 @@ public class InGameViewController extends AbstractViewController implements InGa
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         resetHighlighting();
-        
-        roundNumber.setText("Runde: "+getGameWindow().getControllerChan().getJavaGame().numTurns());
-        }
+
+        roundNumber.setText("Runde: " + getGameWindow().getControllerChan().getJavaGame().numTurns());
+    }
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
@@ -541,7 +621,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshPlayerName(String nendFloodCardDrawActioname, PlayerType player) {
+    public void refreshPlayerName(String name, PlayerType player) {
 
     }
 
@@ -632,6 +712,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         resetHighlighting();
         resetTargetPlayer();
         setSpecialActive(false);
+        System.out.println(action.getDiscoveredArtifacts().size());
         //refreshArtifacts found
         highlightArtifacts(action.getDiscoveredArtifacts());
         //refresh active player

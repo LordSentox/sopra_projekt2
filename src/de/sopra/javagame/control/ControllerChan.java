@@ -121,7 +121,7 @@ public class ControllerChan {
         aiController.connectTrackers();
         aiController.setAI(GameAI.DECISION_BASED_AI);
 
-        this.currentAction = pair.getLeft().finishAction(this.currentAction);
+        this.currentAction = pair.getRight();
 
         this.javaGame = pair.getLeft();
 
@@ -153,11 +153,14 @@ public class ControllerChan {
             this.inGameViewAUI.refreshHand(player.getType(), player.getHand());
         });
 
+        this.currentAction = pair.getLeft().finishAction(currentAction);
+
         //Pilot braucht auch im ersten Zug seine Spezialfähigkeit
         this.getCurrentAction().getActivePlayer().onTurnStarted();
 
         //start KI wenns ihr Zug ist
         //TODO
+        getInGameViewAUI().refreshHopefullyAll(getCurrentAction());
 
     }
 
