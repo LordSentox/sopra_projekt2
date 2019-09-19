@@ -55,7 +55,7 @@ public class ActivePlayerController {
                 aui.showNotification("Der Pilot darf einmal pro Zug fliegen. Du bist diesen Zug bereits geflogen");
             else aui.refreshMovementOptions(player.legalMoves(true));
         } else if (player.getType() == DIVER) {
-            aui.refreshMovementOptions(player.legalMoves(true));
+            aui.showNotification("Der Taucher darf durch überflutete Inselfelder tauchen!");
         } else if (player.getType() == PlayerType.COURIER) {
             aui.showNotification("Der Bote darf die Artefaktkarten an einen beliebigen Mitspieler übergeben!");
         } else if (player.getType() == PlayerType.EXPLORER) {

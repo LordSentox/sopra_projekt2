@@ -20,8 +20,8 @@ import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -143,8 +143,11 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
+        });
+        IntStream.range(0, 240).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
+
     }
 
     private void initPlayerHands() {
@@ -179,6 +182,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onEndTurnClicked() {
+        getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().setActionsLeft(0);
+        refreshActionsLeft(0);
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
     }
 
@@ -529,7 +534,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshPlayerName(String name, PlayerType player) {
+    public void refreshPlayerName(String nendFloodCardDrawActioname, PlayerType player) {
 
     }
 
@@ -597,6 +602,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         switch (turnState) {
             case PLAYER_ACTION:
                 this.rotateTurnSpinner(0);
+                this.endTurnButton.setDisable(false);
                 break;
             case DRAW_ARTIFACT_CARD:
                 this.rotateTurnSpinner(-240);
@@ -604,6 +610,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             case FLOOD:
                 this.rotateTurnSpinner(-300);
                 setFloodCardStackHighlighted(true);
+                this.endTurnButton.setDisable(true);
                 break;
             default:
                 this.rotateTurnSpinner(0);

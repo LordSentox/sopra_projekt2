@@ -87,7 +87,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
     public void handle(MouseEvent event) {
         if (isFrontShown()) {
             if (!(handCardIndex == -1)) {
-                if (tradeable) {
+                if (tradeable && type.isTransferable()) {
                     controller.getGameWindow().getControllerChan().getActivePlayerController().transferCard(handCardIndex, controller.getTargetPlayer().getType());
                     controller.resetTargetPlayer();
                     controller.setTransferActive(false);

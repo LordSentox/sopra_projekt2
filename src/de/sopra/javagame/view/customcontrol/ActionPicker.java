@@ -94,11 +94,14 @@ public class ActionPicker extends CirclePopupMenu {
         DRAIN {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
-                EventHandler<ActionEvent> drainHandler = e -> picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().drain(picker.mapPaneTile.getPosition());
+                EventHandler<ActionEvent> drainHandler = e -> {
+                    picker.mapPaneTile.getControl().getGameWindow().getControllerChan()
+                            .getActivePlayerController().drain(picker.mapPaneTile.getPosition());
+                    picker.mapPaneTile.getControl().resetHighlighting();
+                };
                 CustomMenuItem drainButtonMenuItem = new CustomMenuItem(new Button("drain"));
                 drainButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
                 drainButtonMenuItem.setOnAction(drainHandler);
-
                 return drainButtonMenuItem;
             }
         },
@@ -116,7 +119,8 @@ public class ActionPicker extends CirclePopupMenu {
                     }
                     //Navigator hat auf einen anderen Spieler geklickt
                     else if (picker.mapPaneTile.getControl().isSpecialActive() && picker.delegatingPlayer == PlayerType.NAVIGATOR) {
-
+                        picker.mapPaneTile.getControl().resetHighlighting();
+                        controllerChan.getInGameUserController().showMovements(picker.movingPlayer, false);
                     }
                 };
                 CustomMenuItem specialButtonMenuItem = new CustomMenuItem(new Button("move"));
@@ -134,7 +138,7 @@ public class ActionPicker extends CirclePopupMenu {
                     picker.mapPaneTile.getControl().setTransferActive(true);
                     picker.mapPaneTile.getControl().setTargetPlayer(picker.movingPlayer);
                     picker.mapPaneTile.getControl().refreshHand(picker.delegatingPlayer, picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getHand());
-                    
+
                 };
                 CustomMenuItem giveCardButtonMenuItem = new CustomMenuItem(new Button("give"));
                 giveCardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getGiveCard()));
@@ -157,12 +161,10 @@ public class ActionPicker extends CirclePopupMenu {
         DISCARD {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
-                EventHandler<ActionEvent> discardHandler = new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        //TODO wie genau discarden wir?
-                        picker.controller.getGameWindow().getControllerChan().getInGameUserController().discardCard(picker.delegatingPlayer, picker.cardIndex);
-                    }
+                EventHandler<ActionEvent> discardHandler = e -> {
+                    //TODO wie genau discarden wir?
+                    picker.controller.getGameWindow().getControllerChan().getInGameUserController().discardCard(picker.delegatingPlayer, picker.cardIndex);
+                    picker.controller.resetTargetPlayer();
                 };
                 CustomMenuItem discardButtonMenuItem = new CustomMenuItem(new Button("discard"));
                 discardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
@@ -187,9 +189,9 @@ public class ActionPicker extends CirclePopupMenu {
 
                 return playcardButtonMenuItem;
 
-            } 
+            }
         },
-        SANDBAG{
+        SANDBAG {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> sandBagHandler = new EventHandler<ActionEvent>() {
@@ -208,10 +210,9 @@ public class ActionPicker extends CirclePopupMenu {
                 sandBagButtonMenuItem.setOnAction(sandBagHandler);
 
                 return sandBagButtonMenuItem;
-            } 
-        }
-        ;
-       }
+            }
+        };
     }
+}
 
 
