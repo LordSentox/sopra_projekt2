@@ -69,6 +69,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
 
         Player activePlayer = tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer();
         boolean hasSpecial = shallShowSpecial();
+        if(activePlayer.getActionsLeft() == 0) return; //Keine Optionen wenn keine Aktionen verfügbar
         //Mit der linken Maustaste soll die Special deaktiviert und
         if (event.getButton() == MouseButton.PRIMARY && activePlayer.getType() == type) {
             tile.getControl().getGameWindow().getControllerChan().getInGameUserController().showMovements(type, false);
