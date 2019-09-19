@@ -39,6 +39,7 @@ public class GameFlowController {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
                 shuffleBack = true;
+                controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
                     gameLostNotification();
                     return;

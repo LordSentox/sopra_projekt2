@@ -75,7 +75,7 @@ public class InGameUserController {
         PlayerType sourcePlayer = sourceInformation.getLeft();
         int handCardIndex = sourceInformation.getRight();
         //entferne die gespielte Karte von der Spieler-Hand
-        currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
+        discardCard(sourcePlayer, handCardIndex);
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
         //bewege die players
         for (PlayerType currentPlayerType : players) {
@@ -213,7 +213,7 @@ public class InGameUserController {
         }
 
         //entferne die gespielte Karte von der Spieler-Hand
-        currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
+        discardCard(sourcePlayer, handCardIndex);
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
 
         //lege das gewählte MapTile trocken
