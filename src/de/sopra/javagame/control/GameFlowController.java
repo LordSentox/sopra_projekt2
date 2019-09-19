@@ -154,8 +154,10 @@ public class GameFlowController {
             controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
             nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
             //Wenn die KI am Zug ist, soll sie einfach alle Aktionen aufbrauchen, 10 einfach so, hat keine Bedeutung
-            for (int i = 0; i < 10; i++) {
-                letAIAct(nextAction.getActivePlayer().getType());
+            if (nextAction.getActivePlayer().isAi()) {
+                PlayerType activePlayer = nextAction.getActivePlayer().getType();
+                for (int i = 0; i < 10; i++)
+                    letAIAct(activePlayer);
             }
         }
         if (nextAction.getFloodCardStack().size() == emptyStack) {

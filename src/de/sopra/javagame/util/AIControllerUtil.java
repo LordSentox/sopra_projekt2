@@ -4,10 +4,7 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -35,12 +32,11 @@ public class AIControllerUtil {
             switch (action.getType()) {
                 case MOVE:
                     debug(" --> latest action is move");
-                    boolean isRescuing = controller.getTile(player.getPosition()).getState() == MapTileState.GONE;
-                    player.move(action.getTargetPoint(), !isRescuing, isRescuing);
+                    movePlayer(controllerChan, action, player);
                     break;
                 case DRAIN:
                     debug(" --> latest action is drain");
-                    player.drain(action.getTargetPoint());
+                    drain(controllerChan, action, player);
                     break;
                 case DISCARD_CARD:
                     debug(" --> latest action is discard");
@@ -70,6 +66,18 @@ public class AIControllerUtil {
         });
     }
 
+    private static void movePlayer(ControllerChan controller, SimpleAction action, Player player) {
+        boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
+        player.move(action.getTargetPoint(), !isRescuing, isRescuing);
+        controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
+    }
+
+    private static void drain(ControllerChan controllerChan, SimpleAction action, Player player) {
+        player.drain(action.getTargetPoint());
+        controllerChan.getInGameViewAUI().refreshMapTile(action.getTargetPoint(),
+                controllerChan.getCurrentAction().getMap().get(action.getTargetPoint()));
+    }
+
     private static void endTurn(ControllerChan controllerChan) {
         controllerChan.getCurrentAction().getActivePlayer().setActionsLeft(0);
         controllerChan.getActivePlayerController().endActionPhase();
@@ -81,9 +89,16 @@ public class AIControllerUtil {
             if (player.getHand().get(i).getType() == action.getCardType())
                 index = i;
         }
-        controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
-                new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
-                new ArrayList<>(action.getTargetPlayers()));
+        if (action.getCardType() == ArtifactCardType.HELICOPTER) {
+            controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
+                    new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
+                    new ArrayList<>(action.getTargetPlayers()));
+            debug("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString()
+                    + " from " + action.getStartingPoint().toString() + " with " + action.getTargetPlayers().toString());
+        } else if (action.getCardType() == ArtifactCardType.SANDBAGS) {
+            controllerChan.getInGameUserController().playSandbagCard(player.getType(), index, action.getTargetPoint());
+            debug("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString());
+        } else debug("THIS SHOULD NEVER HAPPEN!!! action: " + action.toString());
     }
 
     private static void collectTreasure(ControllerChan controllerChan, AIController controller, Player player) {
@@ -107,14 +122,16 @@ public class AIControllerUtil {
             case PILOT:
             case EXPLORER:
                 player.move(action.getTargetPoint(), true, true);
+                controllerChan.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
                 break;
             case ENGINEER:
-                player.drain(action.getTargetPoint());
+                drain(controllerChan, action, player);
                 break;
             case NAVIGATOR:
                 targetPlayer = controller.getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
                 Direction direction = targetPlayer.getPosition().getPrimaryDirection(action.getTargetPoint());
                 player.forcePush(direction, targetPlayer);
+                controllerChan.getInGameViewAUI().refreshPlayerPosition(targetPlayer.getPosition(), targetPlayer.getType());
                 break;
             default:
                 break;

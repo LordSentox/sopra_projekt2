@@ -42,8 +42,10 @@ public class ConsoleView {
             public void println(String x) {
                 printStream.println(x);
                 elements.add(x);
-                if (listView != null)
+                if (listView != null) {
                     listView.getItems().setAll(elements);
+                    listView.scrollTo(elements.size() - 1);
+                }
             }
         });
     }
@@ -56,6 +58,7 @@ public class ConsoleView {
                 elements.clear();
                 elements.add("Console cleared.");
                 listView.getItems().setAll(elements);
+                listView.scrollTo(elements.size() - 1);
             }
         });
         listView.setMinSize(600, 600);
