@@ -199,7 +199,10 @@ public class AIController {
      * @return die Liste der Spieler im aktuellen Zustand (Action)
      */
     public List<Player> getAllPlayers() {
-        return CopyUtil.copyAsList(getCurrentAction().getPlayers());
+        List<Player> players = CopyUtil.copyAsList(getCurrentAction().getPlayers());
+        for (Player player : players)
+            player.setAction(getCurrentAction());
+        return players;
     }
 
     /**
