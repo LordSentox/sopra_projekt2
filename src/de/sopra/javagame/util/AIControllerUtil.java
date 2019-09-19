@@ -145,7 +145,7 @@ public class AIControllerUtil {
         Map<Integer> stepMap = new Map<Integer>() {
             @Override
             protected Integer[][] newEmptyRaw() {
-                return new Integer[Map.SIZE_Y][Map.SIZE_X];
+                return new Integer[Map.SIZE_Y + 2][Map.SIZE_X + 2];
             }
         };
 
