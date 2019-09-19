@@ -20,8 +20,8 @@ import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -182,6 +182,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onEndTurnClicked() {
+        getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().setActionsLeft(0);
+        refreshActionsLeft(0);
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
     }
 
