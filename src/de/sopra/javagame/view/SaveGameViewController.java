@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTextField;
 import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.GameWindow;
+import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
@@ -64,7 +65,12 @@ public class SaveGameViewController extends AbstractViewController {
 
     public void onCloseClicked() {
 //        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
+        if (getGameWindow().getPreviousViewState() == ViewState.SETTINGS) {
         modalCopy.close();
+        } else if (getGameWindow().getPreviousViewState() == ViewState.IN_GAME) {
+            changeState(ViewState.SAVE_GAME, ViewState.MENU);
+        }
+
     }
 
     public void onSaveGameClicked() {
@@ -76,7 +82,7 @@ public class SaveGameViewController extends AbstractViewController {
         getGameWindow().getControllerChan().saveGame(selectedGame);
         loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
         fillListView();
-
+        onCloseClicked();
     }
 
     public static void openModal(GameWindow window) throws IOException {

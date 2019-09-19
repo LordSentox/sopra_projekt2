@@ -6,6 +6,8 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.view.abstraction.Notification;
+import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,9 +44,9 @@ public class InGameUserController {
 
         //Überprüfen, ob das Spiel gewonnen ist --> TODO inGameViewAUI.setGameEnded(gameWon = true) nutzen, Speichern abfangen!
         if (checkWonOnHelicopter(currentAction)) {
-            controllerChan.getInGameViewAUI().showNotification("Herzlichen Glückwunsch! Ihr habt die Insel besiegt." +
+            controllerChan.getInGameViewAUI().showNotification(Notifications.gameWon(
                     "Euch allen eine sichere und schnelle Heimreise " +
-                    "und auf ein baldiges Wiedersehen~");
+                    "und auf ein baldiges Wiedersehen~"));
             return;
         }
 

@@ -77,8 +77,8 @@ public class GameFlowController {
     private void gameLostNotification() {
         controllerChan.getCurrentAction().setGameWon(false);
         controllerChan.getCurrentAction().setGameEnded(true);
-        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Ihr habt leider verloren!\n"
-                + "Das Wasser ist viel zu schnell gestiegen \n"
+        System.out.println("Verloren");
+        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Das Wasser ist viel zu schnell gestiegen \n"
                 + "und nun ist die ganze Insel versunken.\n"
                 + "Keiner von euch konnte sich retten.\n"
                 + "Ihr alle seid einen qualvollen Tod "
