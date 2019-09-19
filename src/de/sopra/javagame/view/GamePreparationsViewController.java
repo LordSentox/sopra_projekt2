@@ -302,6 +302,7 @@ public class GamePreparationsViewController extends AbstractViewController {
             
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", tournamentTriple, playerList, difficulty);
+            ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).playBgm();
         }
         
         getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());

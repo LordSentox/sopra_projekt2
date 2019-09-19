@@ -39,6 +39,7 @@ public class GameFlowController {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
                 shuffleBack = true;
+                controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
                     gameLostNotification();
                     return;
@@ -53,24 +54,29 @@ public class GameFlowController {
             controllerChan.finishAction();
         }
         controllerChan.getInGameViewAUI().refreshHand(activePlayer.getType(), activePlayer.getHand());
-        if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {            
-            
+        maybeTellPlayerToDiscardCards(activePlayer);
+        if (shuffleBack) {
+            CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
+            stack.shuffleBack();
+            controllerChan.getInGameViewAUI().refreshFloodStack(stack);
+        }
+    }
+
+    private void maybeTellPlayerToDiscardCards(Player activePlayer) {
+        if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
+
             int amountOfSurplusCards = activePlayer.getHand().size() - Player.MAXIMUM_HANDCARDS;
-            if (amountOfSurplusCards == 1){
+            int oneCardToDiscard = 1;
+            if (amountOfSurplusCards == oneCardToDiscard){
                 controllerChan.getInGameViewAUI()
                 .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
                 + "\nhat eine Karte zu viel!\nWirf eine Karte von " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
             }else{
                 controllerChan.getInGameViewAUI()
                 .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
-                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf " 
+                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf "
                         + amountOfSurplusCards + " Karten bei " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
             }
-        }
-        if (shuffleBack) {
-            CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
-            stack.shuffleBack();
-            controllerChan.getInGameViewAUI().refreshFloodStack(stack);
         }
     }
 
@@ -94,19 +100,16 @@ public class GameFlowController {
         if (this.controllerChan.getCurrentAction().getFloodCardsToDraw() <= 0) {
             return;
         }
-
         // Ziehe die nächste Flutkarte
         CardStack<FloodCard> floodCardCardStack = controllerChan.getCurrentAction().getFloodCardStack();
         FloodCard card = floodCardCardStack.draw(false);
         MapFull map = controllerChan.getCurrentAction().getMap();
         card.flood(map);
-
         // Lege die Karte auf den Ablagestapel, wenn die Insel nur überflutet wurde, ansonsten kann sie aus dem
         // Spiel entfernt werden
         if (map.get(card.getTile()).getState() != GONE) {
             floodCardCardStack.discard(card);
         }
-
         Point position = map.getPositionForTile(card.getTile());
         MapTile tile = map.get(card.getTile());
         controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
@@ -128,7 +131,6 @@ public class GameFlowController {
             gameLostNotification();
             return;
         }
-
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
         endFloodCardDrawAction(floodCardCardStack);
     }

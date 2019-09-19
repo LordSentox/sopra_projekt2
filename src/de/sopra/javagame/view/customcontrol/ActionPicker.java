@@ -230,9 +230,7 @@ public class ActionPicker extends CirclePopupMenu {
                         ControllerChan cChan = picker.mapPaneTile.getControl().getGameWindow().getControllerChan();
                         Action currentAction = cChan.getCurrentAction();
                         if(!cChan.getGameFlowController().isPausedToDiscard()){
-                            currentAction.setState(TurnState.FLOOD);
                             currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getLevel());
-                            picker.mapPaneTile.getControl().refreshTurnState(currentAction.getState());
                         }
                     }
                 };
