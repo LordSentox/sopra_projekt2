@@ -105,6 +105,12 @@ public class GameFlowController {
         for (Player rescuePlayer : rescuesNeeded) {
             controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
         }
+//        Nicht löschen:
+//        if(!rescuesNeeded.isEmpty()){
+//            for(Player player : rescuesNeeded){
+//                controllerChan.getInGameUserController().showMovements(player.getType(), true); //funktioniert eventuell nicht, weil action im showMovements
+//            }
+//        }
 
         //Spiel ist verloren
         if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {

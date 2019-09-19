@@ -168,7 +168,8 @@ public class ActivePlayerController {
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
 
             controllerChan.finishAction();
-        } else {
+        } 
+         else {
             DebugUtil.debug("du dulli");
         }
     }
