@@ -136,13 +136,16 @@ public class GameFlowController {
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
 
         if (nextAction.getFloodCardsToDraw() <= 0) {
-        nextAction.nextPlayerActive();
-        nextAction.setState(TurnState.PLAYER_ACTION);
-
-        controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
-        controllerChan.getInGameViewAUI().refreshActivePlayer();
-        controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
-        nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
+            nextAction.nextPlayerActive();
+            nextAction.setState(TurnState.PLAYER_ACTION);
+    
+            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
+            controllerChan.getInGameViewAUI().refreshActivePlayer();
+            controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
+            nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
+            if(nextAction.getActivePlayer().isAi()){
+                controllerChan.getAiController().makeStep();
+            }
         }
     }
 
