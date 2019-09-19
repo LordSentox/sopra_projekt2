@@ -2,13 +2,13 @@ package de.sopra.javagame.model;
 
 import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.CardStackUtil;
-import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.cardstack.CardStackUtil;
+import de.sopra.javagame.util.map.MapBlackWhite;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 
 import java.io.Serializable;
 import java.util.List;

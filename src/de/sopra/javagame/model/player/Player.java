@@ -263,4 +263,8 @@ public abstract class Player implements Copyable<Player>, Serializable {
     public void setAction(Action action) {
         this.action = action;
     }
+    
+    public boolean isAi(){
+        return this.isAI;
+    }
 }

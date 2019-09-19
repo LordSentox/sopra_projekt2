@@ -3,9 +3,9 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
@@ -136,13 +136,16 @@ public class GameFlowController {
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
 
         if (nextAction.getFloodCardsToDraw() <= 0) {
-        nextAction.nextPlayerActive();
-        nextAction.setState(TurnState.PLAYER_ACTION);
-
-        controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
-        controllerChan.getInGameViewAUI().refreshActivePlayer();
-        controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
-        nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
+            nextAction.nextPlayerActive();
+            nextAction.setState(TurnState.PLAYER_ACTION);
+    
+            controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
+            controllerChan.getInGameViewAUI().refreshActivePlayer();
+            controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
+            nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
+            if(nextAction.getActivePlayer().isAi()){
+                controllerChan.getAiController().makeStep();
+            }
         }
     }
 

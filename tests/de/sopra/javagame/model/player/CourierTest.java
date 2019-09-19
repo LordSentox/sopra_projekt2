@@ -2,20 +2,15 @@ package de.sopra.javagame.model.player;
 
 import de.sopra.javagame.TestDummy;
 import de.sopra.javagame.control.ControllerChan;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.Difficulty;
-import de.sopra.javagame.model.FloodCard;
-import de.sopra.javagame.model.JavaGame;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.CardStackUtil;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.cardstack.CardStackUtil;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 import de.sopra.javagame.view.GamePreparationsViewController;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

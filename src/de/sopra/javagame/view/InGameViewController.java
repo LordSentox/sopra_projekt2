@@ -5,10 +5,10 @@ import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
-import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.cardstack.CardStack;
+import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.Notification;
@@ -33,6 +33,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.sopra.javagame.util.DebugUtil.debug;
@@ -68,7 +69,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
             artifactCardDiscardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
     @FXML
-    Button endTurnButton;
+    Button endTurnButton, floodCardDiscardStackButton, artifactCardDiscardStackButton;
     @FXML
     ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
@@ -136,7 +137,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             handThreeCardGridPane.getColumnConstraints().add(new ColumnConstraints(PASSIVE_CARD_SIZE / 2));
         });
 
-        IntStream.range(0, 28).forEach(item -> {
+        IntStream.range(0, 280).forEach(item -> {
             artifactCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
             artifactCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
@@ -144,7 +145,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, 240).forEach(item -> {
+        IntStream.range(0, 1024).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -185,14 +186,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().setActionsLeft(0);
         refreshActionsLeft(0);
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
-    }
-
-    public void onSpecialCardPlayClicked(int cardIndex) {
-
-    }
-
-    public void onDiscardSelectedCardsClicked() {
-
     }
 
     public void onRedoClicked() {
@@ -275,6 +268,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onArtifactCardDiscardStackClicked() {
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
 
     }
 
@@ -296,11 +290,10 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card->card.getTile().getName()).collect(Collectors.joining("\n")));
     }
 
     public void onArtifactCardDrawStackClicked() {
-
     }
 
     public void onFloodCardDrawStackClicked() {
@@ -453,6 +446,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
+            this.artifactCardDiscardStackButton.toFront();
         }
     }
 
@@ -475,6 +469,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
+            this.floodCardDiscardStackButton.toFront();
         }
     }
 
@@ -606,6 +601,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 break;
             case DRAW_ARTIFACT_CARD:
                 this.rotateTurnSpinner(-240);
+                this.endTurnButton.setDisable(true);
                 break;
             case FLOOD:
                 this.rotateTurnSpinner(-300);

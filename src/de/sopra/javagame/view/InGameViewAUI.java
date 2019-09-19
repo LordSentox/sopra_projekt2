@@ -5,8 +5,8 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.CardStack;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.cardstack.CardStack;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.List;

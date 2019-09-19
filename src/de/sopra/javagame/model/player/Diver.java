@@ -3,8 +3,8 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.util.CopyUtil;
-import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.map.Map;
 
 import java.util.List;
 import java.util.function.Function;
@@ -41,6 +41,9 @@ public class Diver extends Player {
     @Override
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> legalMoves = super.legalMoves(false);
+
+        if(!specialActive)
+            return legalMoves;
 
         //Diver soll seine Special nicht benutzen müssen!
 
@@ -116,7 +119,7 @@ public class Diver extends Player {
      */
     private boolean setTrueAround(boolean[][] reachable, Point around) {
         boolean somethingChanged = false;
-        List<Point> neighbours = around.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X, Map.SIZE_Y));
+        List<Point> neighbours = around.getNeighbours(new Point(0, 0), new Point(Map.SIZE_X-1, Map.SIZE_Y-1));
         for (Point neighbour : neighbours) {
             if (!reachable[neighbour.yPos][neighbour.xPos]) {
                 reachable[neighbour.yPos][neighbour.xPos] = true;

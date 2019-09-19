@@ -10,6 +10,7 @@ import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.map.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,7 +146,7 @@ public class AIControllerUtil {
         Map<Integer> stepMap = new Map<Integer>() {
             @Override
             protected Integer[][] newEmptyRaw() {
-                return new Integer[Map.SIZE_Y][Map.SIZE_X];
+                return new Integer[Map.SIZE_Y + 2][Map.SIZE_X + 2];
             }
         };
 
