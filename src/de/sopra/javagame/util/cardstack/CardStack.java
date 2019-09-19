@@ -1,8 +1,9 @@
-package de.sopra.javagame.util;
+package de.sopra.javagame.util.cardstack;
 
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.Copyable;
 import de.sopra.javagame.model.FloodCard;
+import de.sopra.javagame.util.CopyUtil;
 
 import java.util.*;
 import java.util.function.Predicate;

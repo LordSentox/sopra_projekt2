@@ -1,8 +1,9 @@
-package de.sopra.javagame.util;
+package de.sopra.javagame.util.map;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.MapTileProperties;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Point;
 
 import java.util.Collection;
 import java.util.LinkedList;

@@ -1,6 +1,6 @@
 package de.sopra.javagame.view;
 
-import de.sopra.javagame.util.MapBlackWhite;
+import de.sopra.javagame.util.map.MapBlackWhite;
 
 /**
  * bietet Methoden zum aktualisieren des MapEditors

@@ -3,8 +3,8 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.util.CopyUtil;
-import de.sopra.javagame.util.Map;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.map.Map;
 
 import java.util.List;
 import java.util.function.Function;

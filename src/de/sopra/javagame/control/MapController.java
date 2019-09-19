@@ -1,8 +1,8 @@
 package de.sopra.javagame.control;
 
-import de.sopra.javagame.util.Map;
-import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.map.Map;
+import de.sopra.javagame.util.map.MapBlackWhite;
+import de.sopra.javagame.util.map.MapUtil;
 import de.sopra.javagame.view.MapEditorViewAUI;
 
 import java.io.*;

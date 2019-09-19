@@ -2,16 +2,13 @@ package de.sopra.javagame.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import de.sopra.javagame.TestDummy;
-import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.MapController;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.MapBlackWhite;
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.map.MapBlackWhite;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 import de.sopra.javagame.util.serialize.typeadapter.ActionTypeAdapter;
 import org.junit.Assert;
 import org.junit.Before;

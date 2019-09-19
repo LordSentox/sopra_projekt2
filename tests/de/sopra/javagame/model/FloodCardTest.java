@@ -1,7 +1,7 @@
 package de.sopra.javagame.model;
 
-import de.sopra.javagame.util.MapFull;
-import de.sopra.javagame.util.MapUtil;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
