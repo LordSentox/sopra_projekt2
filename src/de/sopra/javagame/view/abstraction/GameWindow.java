@@ -202,11 +202,11 @@ public class GameWindow implements NotificationAUI {
                 if (result.isPresent()) {
                     CommandResult commandResult = Commands.processCommand(this, result.get());
                     if (!commandResult.wasSuccessful()) {
-                        System.out.println(commandResult.getResultMessage());
+                        DebugUtil.debug(commandResult.getResultMessage());
                         if (commandResult.get() instanceof Exception)
                             ((Exception) commandResult.get()).printStackTrace();
                         else System.err.println("error result: " + commandResult.get());
-                    } else System.out.println("result: " + commandResult.get());
+                    } else DebugUtil.debug("result: " + commandResult.get());
                 }
             }
         });

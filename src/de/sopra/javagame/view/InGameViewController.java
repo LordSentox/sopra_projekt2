@@ -420,11 +420,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         EnumSet<ArtifactType> artifacts = this.getGameWindow().getControllerChan().getCurrentAction().getDiscoveredArtifacts();
 
         highlightArtifacts(artifacts);
-
-        debug("found fire: " + artifacts.contains(ArtifactType.FIRE));
-        debug("found water: " + artifacts.contains(ArtifactType.WATER));
-        debug("found earth: " + artifacts.contains(ArtifactType.EARTH));
-        debug("found air: " + artifacts.contains(ArtifactType.AIR));
     }
 
     @Override

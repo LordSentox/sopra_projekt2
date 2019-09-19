@@ -271,9 +271,9 @@ public class GamePreparationsViewController extends AbstractViewController {
             
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
-            System.out.println(chooseMapComboBox.getSelectionModel().getSelectedItem() );
-            System.out.println(chooseMapComboBox.getValue());
-            System.out.println(currentMap.toString());
+            debug(chooseMapComboBox.getSelectionModel().getSelectedItem() );
+            debug(chooseMapComboBox.getValue());
+            debug(currentMap.toString());
         } else {
             
             if (chooseDeveloperMapComboBox.getValue() == null) {

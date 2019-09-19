@@ -185,11 +185,11 @@ public class ControllerChan {
             this.gameName = loadGameName;
             this.inGameViewAUI.refreshSome();
         } catch (FileNotFoundException e) {
-            System.out.println("Es gab keine solche Datei.");
             e.printStackTrace();
+            System.err.println("Es gab keine solche Datei.");
         } catch (IOException e) {
-            System.out.println("Beim Import ist ein Fehler aufgetreten!");
             e.printStackTrace();
+            System.err.println("Beim Import ist ein Fehler aufgetreten!");
         }
     }
 

@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 
 public class ActionPicker extends CirclePopupMenu {
 
@@ -198,7 +200,7 @@ public class ActionPicker extends CirclePopupMenu {
                     @Override
                     public void handle(ActionEvent e) {
                         //SANDBAG
-                        System.out.println("on card clicked: " + "keine card mehr? " + picker.cardIndex + " " + picker.movingPlayer + " " + picker.mapPaneTile.getPosition());
+                        debug("on card clicked: " + "keine card mehr? " + picker.cardIndex + " " + picker.movingPlayer + " " + picker.mapPaneTile.getPosition());
                         picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getInGameUserController().playSandbagCard(picker.movingPlayer, picker.cardIndex,
                                 picker.mapPaneTile.getPosition());
                         picker.mapPaneTile.getControl().resetTargetPlayer();

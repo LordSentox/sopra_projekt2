@@ -14,6 +14,8 @@ import javafx.scene.input.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 public class ArtifactCardView extends CardView implements EventHandler<MouseEvent>, Highlightable {
 
     private ArtifactCardType type;
@@ -94,7 +96,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
                 }
                 ap.setDelegatingPlayer(ownerType);
                 controller.setTargetPlayer(ownerType);
-                System.out.println(this.handCardIndex + "+" + this.getType() + "#" + this.ownerType);
+                debug(this.handCardIndex + "+" + this.getType() + "#" + this.ownerType);
                 List<ActionButton> buttons = new LinkedList<>();
                 if (type.equals(ArtifactCardType.HELICOPTER) || type.equals(ArtifactCardType.SANDBAGS))
                     buttons.add(ActionButton.PLAY_CARD);
