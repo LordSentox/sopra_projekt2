@@ -450,7 +450,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index ++;
             this.artifactCardDiscardStackButton.toFront();
         }
     }
@@ -474,7 +474,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index++;
             this.floodCardDiscardStackButton.toFront();
         }
     }
