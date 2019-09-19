@@ -30,11 +30,6 @@ public class TurnGivePlayerTheFourthTreasureCard extends Decision {
 
     @Override
     public Decision decide() {
-        int water = playerHand().getAmount(WATER);
-        int fire = playerHand().getAmount(FIRE);
-        int earth = playerHand().getAmount(EARTH);
-        int air = playerHand().getAmount(AIR);
-
         List<Player> allPlayers = control.getAllPlayers();
         List<PlayerType> receivers = player().legalReceivers();
         allPlayers.removeIf(player -> !receivers.contains(player.getType()));
