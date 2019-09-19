@@ -260,4 +260,12 @@ public class InGameUserController {
         controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
 
     }
+    
+//    public void rescueMove(PlayerType rescuePlayerType){
+//        if (rescuePlayerType.move(destination, false, true)) {
+//            controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayerType);
+//        } else {
+//            System.out.println("rescue Move geht nicht");
+//        }
+//    }
 }

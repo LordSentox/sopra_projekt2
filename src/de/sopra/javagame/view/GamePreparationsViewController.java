@@ -113,7 +113,7 @@ public class GamePreparationsViewController extends AbstractViewController {
 
         for (String currentName : devFloodStackNames) {
             if (!currentName.startsWith(".")) {
-                chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_MAP_ENDING_LENGTH));
+                chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - 4));
             }
             chooseMapComboBox.getItems().sort(null);
         }
