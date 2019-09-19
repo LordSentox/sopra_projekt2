@@ -120,6 +120,22 @@ public class ActivePlayerController {
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
+            if(controllerChan.getGameFlowController().isPausedToDiscard()){
+                List<Player> players = controllerChan.getGameFlowController().playersPausedToDiscard();
+                    for (Player playersPaused : players){
+                        int amountOfSurplusCards = playersPaused.getHand().size() - Player.MAXIMUM_HANDCARDS;
+                        if (amountOfSurplusCards == 1){
+                            controllerChan.getInGameViewAUI()
+                            .showNotification("Der Spieler " + playersPaused.getName() + " (" + playersPaused.getType() + ")" 
+                            + "\nhat eine Karte zu viel!\nWirf eine Karte von " + playersPaused.getName() + " ab,\num weiterspielen zu können.");
+                        }else{
+                            controllerChan.getInGameViewAUI()
+                            .showNotification("Der Spieler " + playersPaused.getName() + " (" + playersPaused.getType() + ")"
+                            + "\nhat " + amountOfSurplusCards + " Karte zu viel!\nWirf " 
+                                    + amountOfSurplusCards + " Karte bei " + playersPaused.getName() + " ab,\num weiterspielen zu können.");
+                        }
+                    }
+            }       
 
             //  Wird hierfür tatsächlich jedes Mal eine Aktion benötigt? JA
             player.setActionsLeft(player.getActionsLeft() - 1);
@@ -237,8 +253,8 @@ public class ActivePlayerController {
     public void endActionPhase() {
         Action currentAction = controllerChan.finishAction();
         currentAction.setState(TurnState.DRAW_ARTIFACT_CARD);
-        controllerChan.getGameFlowController().drawArtifactCards();
-
+        controllerChan.getGameFlowController().drawArtifactCards();        
+        
         // Wenn keine Karten abgeworfen werden müssen, kann direkt in den Flutkartenziehstatus gewechselt werden
         if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
             currentAction = controllerChan.finishAction();

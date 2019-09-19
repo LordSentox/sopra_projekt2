@@ -67,6 +67,11 @@ public class Engineer extends Player {
     public boolean hasExtraDrain() {
         return hasExtraDrain;
     }
+    
+    @Override
+    public boolean canDoAction() {
+        return super.canDoAction() || this.hasExtraDrain ;
+    }
 
     @Override
     public Player copy() {

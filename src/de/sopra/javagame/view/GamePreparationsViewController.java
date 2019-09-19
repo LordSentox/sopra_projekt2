@@ -110,6 +110,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         playerFourChooseCharakterComboBox.getItems().addAll(playerTypesList);
         playerFourChooseCharakterComboBox.getSelectionModel().select(playerTypesList.size() - 1);
 
+        editDifficultyComboBox.getItems().clear();
         editDifficultyComboBox.getItems().addAll("Novize", "Normal", "Elite", "Legende");
         editDifficultyComboBox.getSelectionModel().select(0);
 
