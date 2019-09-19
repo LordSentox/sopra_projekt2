@@ -146,16 +146,13 @@ public abstract class Player implements Copyable<Player>, Serializable {
      */
     public boolean drain(Point position) {
         // Kann man sie trockenlegen und sind noch ausreichend Aktionen vorhanden?
+
         if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
             return false;
         }
-
+        
         MapTile toDrain = this.action.getMap().get(position);
-
-        if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
-            return false;
-        }
-
+        
         // Muss überhaupt noch etwas getan werden?
         if (toDrain.getState() == DRY) {
             return false;
