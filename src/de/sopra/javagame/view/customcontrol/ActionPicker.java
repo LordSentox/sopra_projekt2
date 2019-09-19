@@ -85,6 +85,9 @@ public class ActionPicker extends CirclePopupMenu {
                                     .mapPaneTile
                                     .getControl()
                                     .isSpecialActive());
+                    picker.mapPaneTile.getControl().resetHighlighting();
+                    debug("view - delegate move to: " + picker.mapPaneTile.getPosition().toString()
+                            + " -> with special: " + picker.mapPaneTile.getControl().isSpecialActive());
                 };
                 CustomMenuItem moveButtonMenuItem = new CustomMenuItem(new Button("move"));
                 moveButtonMenuItem.setGraphic(new ImageView(TextureLoader.getMove()));
@@ -100,6 +103,7 @@ public class ActionPicker extends CirclePopupMenu {
                     picker.mapPaneTile.getControl().getGameWindow().getControllerChan()
                             .getActivePlayerController().drain(picker.mapPaneTile.getPosition());
                     picker.mapPaneTile.getControl().resetHighlighting();
+                    debug("view delegate drain: " + picker.mapPaneTile.getPosition().toString());
                 };
                 CustomMenuItem drainButtonMenuItem = new CustomMenuItem(new Button("drain"));
                 drainButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
@@ -120,9 +124,12 @@ public class ActionPicker extends CirclePopupMenu {
                         picker.mapPaneTile.getControl().setSpecialActive(true);
                     }
                     //Navigator hat auf einen anderen Spieler geklickt
-                    else if (picker.mapPaneTile.getControl().isSpecialActive() && picker.delegatingPlayer == PlayerType.NAVIGATOR) {
+                    else if (picker.mapPaneTile.getControl().isSpecialActive()
+                            && picker.delegatingPlayer == PlayerType.NAVIGATOR
+                            && picker.mapPaneTile.getControl().getTargetPlayer() != null) {
                         picker.mapPaneTile.getControl().resetHighlighting();
                         controllerChan.getInGameUserController().showMovements(picker.movingPlayer, false);
+                        debug("navigator clicked on different player, showing movements for: " + picker.movingPlayer.name());
                     }
                 };
                 CustomMenuItem specialButtonMenuItem = new CustomMenuItem(new Button("move"));

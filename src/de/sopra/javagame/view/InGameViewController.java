@@ -641,6 +641,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void setSpecialActive(boolean specialActive) {
         this.specialActive = specialActive;
+        debug("special is active: " + specialActive);
     }
 
     public void setTransferActive(boolean transferActive) {

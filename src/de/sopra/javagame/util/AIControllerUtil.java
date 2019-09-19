@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.sopra.javagame.model.ArtifactType.NONE;
+import static de.sopra.javagame.util.DebugUtil.debug;
 
 /**
  * <h1>Projekt2</h1>
@@ -29,36 +30,49 @@ public class AIControllerUtil {
 
     public static void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
-            DebugUtil.debug("executing action: " + action.toString());
+            debug("executing action: " + action.toString());
             Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
             switch (action.getType()) {
                 case MOVE:
+                    debug(" --> latest action is move");
                     boolean isRescuing = controller.getTile(player.getPosition()).getState() == MapTileState.GONE;
                     player.move(action.getTargetPoint(), !isRescuing, isRescuing);
                     break;
                 case DRAIN:
+                    debug(" --> latest action is drain");
                     player.drain(action.getTargetPoint());
                     break;
                 case DISCARD_CARD:
+                    debug(" --> latest action is discard");
                     discardCard(controllerChan, action, player);
                     break;
                 case TRADE_CARD:
+                    debug(" --> latest action is trade");
                     tradeCard(controllerChan, controller, action, player);
                     break;
                 case SPECIAL_CARD:
+                    debug(" --> latest action is special card");
                     specialCard(controllerChan, action, player);
                     break;
                 case SPECIAL_ABILITY:
+                    debug(" --> latest action is special ability");
                     specialAbility(controllerChan, controller, action, player);
                     break;
                 case COLLECT_TREASURE:
+                    debug(" --> latest action is collect treasure");
                     collectTreasure(controllerChan, controller, player);
                     break;
                 case WAIT_AND_DRINK_TEA:
-                    //TODO remove action or end turn
+                    debug(" --> latest action is wait and drink tea");
+                    endTurn(controllerChan);
                     break;
             }
         });
+    }
+
+    private static void endTurn(ControllerChan controllerChan) {
+        controllerChan.getCurrentAction().getActivePlayer().setActionsLeft(0);
+        controllerChan.getActivePlayerController().endActionPhase();
     }
 
     private static void specialCard(ControllerChan controllerChan, SimpleAction action, Player player) {

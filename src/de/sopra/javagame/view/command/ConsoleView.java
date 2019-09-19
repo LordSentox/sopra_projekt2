@@ -52,10 +52,13 @@ public class ConsoleView {
         root = new AnchorPane();
         listView = new ListView<>();
         listView.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            if (event.getButton() == MouseButton.MIDDLE)
-                listView.getItems().clear();
+            if (event.getButton() == MouseButton.MIDDLE) {
+                elements.clear();
+                elements.add("Console cleared.");
+                listView.getItems().setAll(elements);
+            }
         });
-        listView.setMinSize(300, 300);
+        listView.setMinSize(600, 600);
         root.getChildren().add(listView);
     }
 
@@ -68,8 +71,8 @@ public class ConsoleView {
         stage.initOwner(owner);
         stage.initModality(Modality.NONE);
         stage.initStyle(StageStyle.DECORATED);
-        stage.setMinWidth(300);
-        stage.setMinHeight(300);
+        stage.setMinWidth(600);
+        stage.setMinHeight(600);
         stage.heightProperty().addListener((observable, oldValue, newValue) -> listView.setPrefHeight(newValue.doubleValue()));
         stage.widthProperty().addListener((observable, oldValue, newValue) -> listView.setPrefWidth(newValue.doubleValue()));
         stage.setOnHidden(event -> listView = null);
