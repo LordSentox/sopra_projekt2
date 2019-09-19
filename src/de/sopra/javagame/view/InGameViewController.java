@@ -33,6 +33,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.sopra.javagame.util.DebugUtil.debug;
@@ -68,7 +69,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     GridPane cardGridPane, handOneCardGridPane, handTwoCardGridPane, handThreeCardGridPane, artifactCardDrawStackGridPane,
             artifactCardDiscardGridPane, floodCardDrawStackGridPane, floodCardDiscardGridPane;
     @FXML
-    Button endTurnButton;
+    Button endTurnButton, floodCardDiscardStackButton, artifactCardDiscardStackButton;
     @FXML
     ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
@@ -296,11 +297,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDiscardStackClicked() {
-
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack().getDiscardPile().stream().map(card->card.getTile().getName()).collect(Collectors.joining("\n")));
     }
 
     public void onArtifactCardDrawStackClicked() {
-
+        showNotification(this.getGameWindow().getControllerChan().getCurrentAction().getArtifactCardStack().getDiscardPile().stream().map(card->card.getType().name()).collect(Collectors.joining("\n")));
     }
 
     public void onFloodCardDrawStackClicked() {
@@ -453,6 +454,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
+            this.artifactCardDiscardStackButton.toFront();
         }
     }
 
@@ -475,6 +477,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
             index += 2;
+            this.floodCardDiscardStackButton.toFront();
         }
     }
 
