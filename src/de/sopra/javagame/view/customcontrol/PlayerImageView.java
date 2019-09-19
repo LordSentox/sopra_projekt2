@@ -74,7 +74,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
         if (event.getButton() == MouseButton.PRIMARY && activePlayer.getType() == type) {
             tile.getControl().getGameWindow().getControllerChan().getInGameUserController().showMovements(type, false);
             tile.getControl().getGameWindow().getControllerChan().getActivePlayerController().showDrainOptions();
-            tile.getControl().setSpecialActive(false);
+            tile.getControl().setSpecialActive(type == PlayerType.DIVER);
         } else {
 
             if (event.getButton() == MouseButton.SECONDARY) {
