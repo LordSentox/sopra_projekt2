@@ -151,6 +151,6 @@ public class Point implements Serializable {
     }
 
     public String toString() {
-        return this.getClass().getName() + "[x=" + this.xPos + ",y=" + this.yPos + "]";
+        return "Point{x=" + this.xPos + ",y=" + this.yPos + "}";
     }
 }

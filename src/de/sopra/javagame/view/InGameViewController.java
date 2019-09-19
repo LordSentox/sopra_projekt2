@@ -22,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -73,6 +74,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     @FXML
     ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
+    @FXML
+    Label roundNumber;
     private Timeline timeline;
 
     public void init() {
@@ -186,6 +189,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().setActionsLeft(0);
         refreshActionsLeft(0);
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
+        setFloodCardStackHighlighted(true);
     }
 
     public void onRedoClicked() {
@@ -495,8 +499,9 @@ public class InGameViewController extends AbstractViewController implements InGa
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         resetHighlighting();
-
-    }
+        
+        roundNumber.setText("Runde: "+getGameWindow().getControllerChan().getJavaGame().numTurns());
+        }
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {

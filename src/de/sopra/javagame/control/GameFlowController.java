@@ -99,7 +99,7 @@ public class GameFlowController {
         Point position = map.getPositionForTile(card.getTile());
         MapTile tile = map.get(card.getTile());
         controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
-
+        controllerChan.getInGameViewAUI().refreshTurnState(controllerChan.getCurrentAction().getState());
         // Refreshe, welche Spieler gerettet werden müssen
         List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
         for (Player rescuePlayer : rescuesNeeded) {
