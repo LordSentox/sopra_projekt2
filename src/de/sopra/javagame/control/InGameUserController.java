@@ -260,11 +260,12 @@ public class InGameUserController {
 
     }
     
-//    public void rescueMove(PlayerType rescuePlayerType){
-//        if (rescuePlayerType.move(destination, false, true)) {
-//            controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayerType);
-//        } else {
-//            System.out.println("rescue Move geht nicht");
-//        }
-//    }
+    public void rescueMove(Player rescuePlayer){
+        Point destination = new Point(); //TEMP
+        if (rescuePlayer.move(destination, false, true)) {
+            controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayer.getType());
+        } else {
+            System.out.println("du Dulli rescue");
+        }
+    }
 }
