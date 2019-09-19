@@ -66,6 +66,7 @@ public class GameWindow implements NotificationAUI {
 
         mainStage.setResizable(false);
         mainStage.initStyle(StageStyle.UNDECORATED);
+        mainStage.setAlwaysOnTop(false);
         this.setState(ViewState.CLOSE, ViewState.MENU);
         mainStage.show();
     }
@@ -270,8 +271,8 @@ public class GameWindow implements NotificationAUI {
             DebugUtil.debug("info notification: " + notification.message());
         }
     }
-    
-    public void setDeveloperSettingsActive (boolean setActive) {
+
+    public void setDeveloperSettingsActive(boolean setActive) {
         //this.settings.setDevTools(setActive);
         this.developerSettings = setActive;
     }

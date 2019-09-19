@@ -56,7 +56,7 @@ public class TurnMoveTowardsMiddle extends Decision {
 
         //wenn der Spieler da schon steht, passts
         Point playerPosition = player().getPosition();
-        if (playerPosition.equals(middle))
+        if (playerPosition.equals(middle) || middle == null)
             return null;
 
         //Punkt auf einen erreichbaren Punkt setzen
