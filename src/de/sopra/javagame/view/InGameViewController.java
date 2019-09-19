@@ -149,7 +149,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, floodCardDiscardPileSize).forEach(item -> {
+        IntStream.range(0, floodCardDiscardPileSize+24).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -450,7 +450,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index ++;
             this.artifactCardDiscardStackButton.toFront();
         }
     }
@@ -474,7 +474,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index++;
             this.floodCardDiscardStackButton.toFront();
         }
     }

@@ -143,6 +143,8 @@ public class GameFlowController {
         //Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen
         letAIAct(nextAction.getActivePlayer().getType());
 
+        int emptyStack = 0;
+
         if (nextAction.getFloodCardsToDraw() <= 0) {
             nextAction.nextPlayerActive();
             nextAction.setState(TurnState.PLAYER_ACTION);
@@ -155,6 +157,10 @@ public class GameFlowController {
             for (int i = 0; i < 10; i++) {
                 letAIAct(nextAction.getActivePlayer().getType());
             }
+        }
+        if (nextAction.getFloodCardStack().size() == emptyStack) {
+            nextAction.getFloodCardStack().shuffleBack();
+            controllerChan.getInGameViewAUI().refreshFloodStack(nextAction.getFloodCardStack());
         }
     }
 
