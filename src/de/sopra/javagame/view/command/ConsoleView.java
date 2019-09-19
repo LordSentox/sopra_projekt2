@@ -76,9 +76,9 @@ public class ConsoleView {
         stage.initStyle(StageStyle.DECORATED);
         stage.setMinWidth(600);
         stage.setMinHeight(600);
-        stage.heightProperty().addListener((observable, oldValue, newValue) -> listView.setPrefHeight(newValue.doubleValue()));
+        stage.heightProperty().addListener((observable, oldValue, newValue) -> listView.setPrefHeight(newValue.doubleValue()-25));
         stage.widthProperty().addListener((observable, oldValue, newValue) -> listView.setPrefWidth(newValue.doubleValue()));
-        stage.setOnHidden(event -> listView = null);
+        stage.setOnCloseRequest(event -> listView = null);
         stage.show();
     }
 
