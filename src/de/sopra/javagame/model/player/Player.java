@@ -267,4 +267,11 @@ public abstract class Player implements Copyable<Player>, Serializable {
     public boolean isAi(){
         return this.isAI;
     }
+    /**
+     * wenn noch teile der special action übrig sind, wird true zurückgegeben
+     * @return true wenn ürbig, sonst false
+     */
+    public boolean canDoAction(){
+        return actionsLeft != 0;
+    }
 }
