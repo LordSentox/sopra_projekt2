@@ -3,6 +3,7 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.map.MapFull;
@@ -263,8 +264,9 @@ public class InGameUserController {
     public void rescueMove(Player rescuePlayer, Point destination){
         if (rescuePlayer.move(destination, false, true)) {
             controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayer.getType());
+            controllerChan.finishAction();
         } else {
-            System.out.println("du Dulli rescue");
+            DebugUtil.debug("du Dulli rescue");
         }
     }
 }

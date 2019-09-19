@@ -3,12 +3,15 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.cardstack.CardStack;
 import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.Notifications;
+import sun.security.ssl.Debug;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static de.sopra.javagame.model.MapTileState.GONE;
@@ -105,12 +108,15 @@ public class GameFlowController {
         for (Player rescuePlayer : rescuesNeeded) {
             controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
         }
-//        Nicht löschen:
-//        if(!rescuesNeeded.isEmpty()){
-//            for(Player player : rescuesNeeded){
-//                controllerChan.getInGameUserController().showMovements(player.getType(), true); //funktioniert eventuell nicht, weil action im showMovements
-//            }
-//        }
+
+        if(!rescuesNeeded.isEmpty()){
+           DebugUtil.debug("Hilfe ich ertrinke");
+            for(Player player : rescuesNeeded){
+                controllerChan.getInGameViewAUI().refreshMovementOptions(player.legalMoves(true));
+                controllerChan.getInGameViewAUI().refreshDrainOptions(Collections.emptyList()); //reset Drain options
+                
+            }
+        }
 
         //Spiel ist verloren
         if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {
