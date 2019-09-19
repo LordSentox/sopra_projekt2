@@ -3,7 +3,9 @@ package de.sopra.javagame.view.customcontrol;
 import de.sopra.javagame.control.ActivePlayerController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Direction;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.event.ActionEvent;
@@ -74,6 +76,17 @@ public class ActionPicker extends CirclePopupMenu {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> moveHandler = e -> {
+                    // Wenn der aktive Spieler der Navigater ist, überprüfe, ob ein anderer Spieler bewegt werden soll
+                    if (picker.delegatingPlayer == PlayerType.NAVIGATOR && picker.mapPaneTile.getControl().isSpecialActive()) {
+                        Player targetPlayer = picker.mapPaneTile.getControl().getTargetPlayer();
+                        if (targetPlayer != null) {
+                            Direction direction = targetPlayer.getPosition().getPrimaryDirection(picker.mapPaneTile.getPosition());
+                            picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().moveOther(direction, targetPlayer.getType());
+                        }
+
+                        return;
+                    }
+
                     //TODO
                     picker.mapPaneTile.getControl()
                             .getGameWindow()
@@ -117,17 +130,17 @@ public class ActionPicker extends CirclePopupMenu {
                 ControllerChan controllerChan = picker.mapPaneTile.getControl().getGameWindow().getControllerChan();
                 ActivePlayerController control = controllerChan.getActivePlayerController();
                 EventHandler<ActionEvent> specialHandler = e -> {
-                    //Immer show damit Nachrichten oder ähnliches gezeigt werden
-                    control.showSpecialAbility();
                     //player clicked on himself
                     if (picker.delegatingPlayer == picker.movingPlayer) {
+                        // show damit Nachrichten oder ähnliches gezeigt werden
+                        control.showSpecialAbility();
                         picker.mapPaneTile.getControl().setSpecialActive(true);
                     }
                     //Navigator hat auf einen anderen Spieler geklickt
-                    else if (picker.mapPaneTile.getControl().isSpecialActive()
-                            && picker.delegatingPlayer == PlayerType.NAVIGATOR
-                            && picker.mapPaneTile.getControl().getTargetPlayer() != null) {
+                    else if (picker.delegatingPlayer == PlayerType.NAVIGATOR) {
+                        picker.mapPaneTile.getControl().setSpecialActive(true);
                         picker.mapPaneTile.getControl().resetHighlighting();
+                        picker.mapPaneTile.getControl().setTargetPlayer(picker.movingPlayer);
                         controllerChan.getInGameUserController().showMovements(picker.movingPlayer, false);
                         debug("navigator clicked on different player, showing movements for: " + picker.movingPlayer.name());
                     }

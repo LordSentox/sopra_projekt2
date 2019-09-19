@@ -259,4 +259,12 @@ public class InGameUserController {
         controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
 
     }
+    
+    public void rescueMove(Player rescuePlayer, Point destination){
+        if (rescuePlayer.move(destination, false, true)) {
+            controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayer.getType());
+        } else {
+            System.out.println("du Dulli rescue");
+        }
+    }
 }

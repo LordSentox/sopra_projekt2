@@ -158,6 +158,7 @@ public class ControllerChan {
 
         //start KI wenns ihr Zug ist
         //TODO
+        getInGameViewAUI().refreshHopefullyAll(getCurrentAction());
 
     }
 

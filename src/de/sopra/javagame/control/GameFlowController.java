@@ -99,12 +99,18 @@ public class GameFlowController {
         Point position = map.getPositionForTile(card.getTile());
         MapTile tile = map.get(card.getTile());
         controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
-
+        controllerChan.getInGameViewAUI().refreshTurnState(controllerChan.getCurrentAction().getState());
         // Refreshe, welche Spieler gerettet werden müssen
         List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
         for (Player rescuePlayer : rescuesNeeded) {
             controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
         }
+//        Nicht löschen:
+//        if(!rescuesNeeded.isEmpty()){
+//            for(Player player : rescuesNeeded){
+//                controllerChan.getInGameUserController().showMovements(player.getType(), true); //funktioniert eventuell nicht, weil action im showMovements
+//            }
+//        }
 
         //Spiel ist verloren
         if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {
@@ -137,6 +143,8 @@ public class GameFlowController {
         //Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen
         letAIAct(nextAction.getActivePlayer().getType());
 
+        int emptyStack = 0;
+
         if (nextAction.getFloodCardsToDraw() <= 0) {
             nextAction.nextPlayerActive();
             nextAction.setState(TurnState.PLAYER_ACTION);
@@ -149,6 +157,10 @@ public class GameFlowController {
             for (int i = 0; i < 10; i++) {
                 letAIAct(nextAction.getActivePlayer().getType());
             }
+        }
+        if (nextAction.getFloodCardStack().size() == emptyStack) {
+            nextAction.getFloodCardStack().shuffleBack();
+            controllerChan.getInGameViewAUI().refreshFloodStack(nextAction.getFloodCardStack());
         }
     }
 

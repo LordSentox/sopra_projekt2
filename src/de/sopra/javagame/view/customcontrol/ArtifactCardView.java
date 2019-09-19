@@ -86,6 +86,7 @@ public class ArtifactCardView extends CardView implements EventHandler<MouseEven
 
     @Override
     public void handle(MouseEvent event) {
+        System.out.println("DEBUG: "+this.handCardIndex + "+" + this.getType() + "#" + this.ownerType);
         if (isFrontShown()) {
             if (!(handCardIndex == -1)) {
                 if (tradeable && type.isTransferable()) {

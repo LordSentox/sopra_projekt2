@@ -22,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -56,6 +57,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     private boolean specialActive = false;
     private boolean transferActive = false;
     private Supplier<Player> targetPlayer;
+    private int floodCardDiscardPileSize = 24;
 
     // Wird gesetzt, wenn eine Helikopterkarte gespielt werden soll
     private HelicopterHelper helicopterHelper;
@@ -73,6 +75,8 @@ public class InGameViewController extends AbstractViewController implements InGa
     @FXML
     ImageView mainPane, activePlayerTypeImageView, playerOneTypeImageView, playerTwoTypeImageView, playerThreeTypeImageView,
             fireArtefactImageView, waterArtefactImageView, earthArtefactImageView, airArtefactImageView, turnSpinnerWithoutMarkerImageView, markerForSpinnerImageView;
+    @FXML
+    Label roundNumber;
     private Timeline timeline;
 
     public void init() {
@@ -145,7 +149,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         IntStream.range(0, 24).forEach(item -> {
             floodCardDrawStackGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
-        IntStream.range(0, 1024).forEach(item -> {
+        IntStream.range(0, floodCardDiscardPileSize+24).forEach(item -> {
             floodCardDiscardGridPane.getColumnConstraints().add(new ColumnConstraints(1));
         });
 
@@ -186,6 +190,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().setActionsLeft(0);
         refreshActionsLeft(0);
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
+        setFloodCardStackHighlighted(true);
     }
 
     public void onRedoClicked() {
@@ -440,7 +445,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             v.showFrontImage();
             artifactCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index ++;
             this.artifactCardDiscardStackButton.toFront();
         }
     }
@@ -457,13 +462,14 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
         List<FloodCard> discardPile = stack.getDiscardPile();
         int index = 0;
+        floodCardDiscardPileSize = discardPile.size();
         floodCardDiscardGridPane.getChildren().clear();
         for (FloodCard card : discardPile) {
             CardView v = new FloodCardView(card.getTile(), ACTIVE_CARD_SIZE);
             v.showFrontImage();
             floodCardDiscardGridPane.getChildren().add(v);
             GridPane.setConstraints(v, index, 0);
-            index += 2;
+            index++;
             this.floodCardDiscardStackButton.toFront();
         }
     }
@@ -490,8 +496,9 @@ public class InGameViewController extends AbstractViewController implements InGa
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         resetHighlighting();
-
-    }
+        
+        roundNumber.setText("Runde: "+getGameWindow().getControllerChan().getJavaGame().numTurns());
+        }
 
     @Override
     public void refreshActionsLeft(int actionsLeft) {
@@ -616,6 +623,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         resetHighlighting();
         resetTargetPlayer();
         setSpecialActive(false);
+        System.out.println(action.getDiscoveredArtifacts().size());
         //refreshArtifacts found
         highlightArtifacts(action.getDiscoveredArtifacts());
         //refresh active player

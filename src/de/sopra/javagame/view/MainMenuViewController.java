@@ -69,6 +69,7 @@ public class MainMenuViewController extends AbstractViewController {
 
     }
     public void onContinueClicked(){
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
         setContinueButtonDisabled(getGameWindow().getControllerChan().getCurrentAction() == null);
         changeState(ViewState.MENU, ViewState.IN_GAME);
     }
