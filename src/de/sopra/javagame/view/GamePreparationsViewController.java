@@ -67,13 +67,10 @@ public class GamePreparationsViewController extends AbstractViewController {
 
     private Difficulty difficulty;
     private List<Triple<PlayerType, String, Boolean>> playerList = new LinkedList<>();
-    
+
     private ObservableList<String> playerTypesList ;
     private List<String> devFloodStackNames ;
-    private List<String> devArtifactStackNames;
-    private List<String> devMapNames;
-    private List<String> mapNames;
-    
+
     public static final String DEV_MAP_FOLDER = "resources/ai_tournament/maps/";
     public static final String DEV_ARTIFACT_STACK_FOLDER = "resources/ai_tournament/artifact_stack/";
     public static final String DEV_FLOOD_STACK_FOLDER = "resources/ai_tournament/flood_stack/";
@@ -83,6 +80,16 @@ public class GamePreparationsViewController extends AbstractViewController {
 
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
+
+        chooseFloodCardStackComboBox.getItems().clear();
+        chooseArtifactCardStackComboBox.getItems().clear();
+        chooseDeveloperMapComboBox.getItems().clear();
+        chooseMapComboBox.getItems().clear();
+        playerOneChooseCharakterComboBox.getItems().clear();
+        playerTwoChooseCharakterComboBox.getItems().clear();
+        playerThreeChooseCharakterComboBox.getItems().clear();
+        playerFourChooseCharakterComboBox.getItems().clear();
+        cannotStartGameLabel.setText("");
 
         playerTypesList =
                 FXCollections.observableArrayList(
@@ -108,71 +115,18 @@ public class GamePreparationsViewController extends AbstractViewController {
 
         disablePlayerThreeAndFour(!getGameWindow().getSettings().devToolsEnabled().get());
 
-        File mapFile = new File(MapController.MAP_FOLDER);
-        File[] files = mapFile.listFiles();
-        mapNames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
 
-        int comboBoxFillCount = 0;
-        chooseMapComboBox.getItems().clear();
-        for (String currentName : mapNames) {
-            if (!currentName.startsWith(".")) {
-                chooseMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_MAP_ENDING_LENGTH));
-                comboBoxFillCount++;
-            }
-            chooseMapComboBox.getItems().sort(null);
-        }
+        initComboBox(chooseMapComboBox, MapController.MAP_FOLDER, DOT_MAP_ENDING_LENGTH, null);
+        initComboBox(chooseArtifactCardStackComboBox, DEV_ARTIFACT_STACK_FOLDER, DOT_CSV_ENDING_LENGTH, 0);
+        initComboBox(chooseFloodCardStackComboBox, DEV_FLOOD_STACK_FOLDER, DOT_CSV_ENDING_LENGTH, 0);
+        initComboBox(chooseDeveloperMapComboBox, DEV_MAP_FOLDER, DOT_EXTMAP_ENDING_LENGTH, 0);
+
         chooseMapComboBox.getItems().add("neu generieren");
-        chooseMapComboBox.getSelectionModel().select(comboBoxFillCount);
-        
+        chooseMapComboBox.getSelectionModel().selectLast();
         cannotStartGameLabel.setTextFill(Paint.valueOf("#FF0000"));
-        
-        
-        File devMapFile = new File(DEV_MAP_FOLDER);
-        File[] devMapFiles = devMapFile.listFiles();
-        devMapNames = Arrays.stream(devMapFiles).map(File::getName).collect(Collectors.toList());
 
-        chooseDeveloperMapComboBox.getItems().clear();
-        for (String currentName : devMapNames) {
-            if (!currentName.startsWith(".")) {
-            chooseDeveloperMapComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_EXTMAP_ENDING_LENGTH ));
-            }
-            chooseDeveloperMapComboBox.getItems().sort(null);
-        } 
-        
-        chooseDeveloperMapComboBox.getSelectionModel().select(0);
-        
-        
-        File devArtifactStackFile = new File(DEV_ARTIFACT_STACK_FOLDER);
-        File[] devArtifactStackFiles = devArtifactStackFile.listFiles();
-        devArtifactStackNames = Arrays.stream(devArtifactStackFiles).map(File::getName).collect(Collectors.toList());
-
-        chooseArtifactCardStackComboBox.getItems().clear();
-        for (String currentName : devArtifactStackNames) {
-            if (!currentName.startsWith(".")) {
-                chooseArtifactCardStackComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_CSV_ENDING_LENGTH));
-            }
-            chooseArtifactCardStackComboBox.getItems().sort(null);
-        } 
-
-        chooseArtifactCardStackComboBox.getSelectionModel().select(0);
-        
-        File devFloodStackFile = new File(DEV_FLOOD_STACK_FOLDER);
-        File[] devFloodStackFiles = devFloodStackFile.listFiles();
-        devFloodStackNames = Arrays.stream(devFloodStackFiles).map(File::getName).collect(Collectors.toList());
-
-        chooseFloodCardStackComboBox.getItems().clear();
-        for (String currentName : devFloodStackNames) {
-            if (!currentName.startsWith(".")) {
-                chooseFloodCardStackComboBox.getItems().addAll(currentName.substring(0, currentName.length() - DOT_CSV_ENDING_LENGTH));
-            }
-            chooseFloodCardStackComboBox.getItems().sort(null);
-        }
-
-        chooseFloodCardStackComboBox.getSelectionModel().select(0);
-        
-        
         makeDeveloperToolsVisible(getGameWindow().getSettings().devToolsEnabled().get());
-        
+
         if (getGameWindow().getSettings().devToolsEnabled().get()) {
             playerOneNameTextField.setText("Hartmut im Spanienurlaub");
             playerOneChooseCharakterComboBox.getSelectionModel().select("Taucher");
@@ -187,6 +141,22 @@ public class GamePreparationsViewController extends AbstractViewController {
             
         }
 
+    }
+
+
+    private void initComboBox(JFXComboBox<String> combobox, String folder, int ending, Integer selection ) {
+        File devFloodStackFile = new File(folder);
+        File[] devFloodStackFiles = devFloodStackFile.listFiles();
+        devFloodStackNames = Arrays.stream(devFloodStackFiles).map(File::getName).collect(Collectors.toList());
+        Integer comboBoxFillCount = 0;
+        for (String currentName : devFloodStackNames) {
+            if (!currentName.startsWith(".")) {
+                combobox.getItems().addAll(currentName.substring(0, currentName.length() - ending));
+                comboBoxFillCount++;
+            }
+            combobox.getItems().sort(null);
+        }
+        combobox.getSelectionModel().select(selection == null ? comboBoxFillCount : selection);
     }
 
     private void disablePlayerThreeAndFour(boolean developerToolsOff) {
@@ -285,8 +255,6 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerThreeToggleButton.setSelected(false);
         addPlayerFourToggleButton.setSelected(false);
 
-        chooseMapComboBox.getSelectionModel().select(mapNames.size());
-
         if (!getGameWindow().getSettings().devToolsEnabled().get()) {
             
             if (chooseMapComboBox.getValue() == null) {
@@ -296,7 +264,7 @@ public class GamePreparationsViewController extends AbstractViewController {
                 currentMap = MapUtil.generateRandomIsland();
                 debug("Map: random \n");
             } else {
-                String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getSelectionModel().getSelectedItem() + ".map")), StandardCharsets.UTF_8);
+                String mapString = new String(Files.readAllBytes(Paths.get(MapController.MAP_FOLDER + chooseMapComboBox.getValue() + ".map")), StandardCharsets.UTF_8);
                 currentMap = MapUtil.readBlackWhiteMapFromString(mapString);
                 debug("Map:" + chooseMapComboBox.getSelectionModel().getSelectedItem() + "\n");
             }
@@ -304,6 +272,7 @@ public class GamePreparationsViewController extends AbstractViewController {
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
             System.out.println(chooseMapComboBox.getSelectionModel().getSelectedItem() );
+            System.out.println(chooseMapComboBox.getValue());
             System.out.println(currentMap.toString());
         } else {
             

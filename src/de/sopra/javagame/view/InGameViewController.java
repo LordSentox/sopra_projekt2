@@ -495,6 +495,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         resetHighlighting();
+
     }
 
     @Override
