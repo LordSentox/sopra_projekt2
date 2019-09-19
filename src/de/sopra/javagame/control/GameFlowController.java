@@ -107,7 +107,7 @@ public class GameFlowController {
         }
         if(!rescuesNeeded.isEmpty()){
             for(Player player : rescuesNeeded){
-                controllerChan.getInGameUserController().showMovements(player.getType(), true);
+                controllerChan.getInGameUserController().showMovements(player.getType(), true); //funktioniert eventuell nicht, weil action im showMovements
             }
         }
 
