@@ -102,6 +102,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     public void onBackToMenuClicked() {
 
         ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).stopBgm();
+        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).dorfPlayer.stop();
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         modalCopy.close();
