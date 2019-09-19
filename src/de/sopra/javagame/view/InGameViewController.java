@@ -186,6 +186,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().setActionsLeft(0);
         refreshActionsLeft(0);
         getGameWindow().getControllerChan().getActivePlayerController().endActionPhase();
+        setFloodCardStackHighlighted(true);
     }
 
     public void onRedoClicked() {
