@@ -2,6 +2,7 @@ package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXListView;
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.DialogPack;
 import de.sopra.javagame.view.abstraction.ViewState;
@@ -47,7 +48,7 @@ public class LoadGameViewController extends AbstractViewController {
         for (String currentName : loadNames) {
             loadMapListView.getItems().addAll(currentName.substring(0, currentName.length() - 5));
             loadMapListView.getItems().sort(Comparator.naturalOrder());
-            System.out.println(currentName + "\n");
+            DebugUtil.debug("currentName in init: " + currentName);
         }
         final int NO_SAVE_FILES = 0;
         loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);

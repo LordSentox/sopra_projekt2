@@ -2,10 +2,9 @@ package de.sopra.javagame.view;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.view.abstraction.AbstractViewController;
 import de.sopra.javagame.view.abstraction.GameWindow;
-import de.sopra.javagame.view.abstraction.ViewState;
 import de.sopra.javagame.view.customcontrol.EditorMapPane;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.fxml.FXML;
@@ -34,7 +33,7 @@ public class SaveGameViewController extends AbstractViewController {
     Label loadMapViewLabel, notificationLabel;
     @FXML
     JFXTextField saveGameTextField;
-    
+
     private Stage modalCopy;
     private File[] loadFiles;
     private final int NO_SAVE_FILES = 0;
@@ -58,7 +57,7 @@ public class SaveGameViewController extends AbstractViewController {
         for (String currentName : loadNames) {
             loadMapListView.getItems().addAll(currentName.substring(0, currentName.length() - 5));
             loadMapListView.getItems().sort(Comparator.naturalOrder());
-            System.out.println(currentName + "\n");
+            DebugUtil.debug("currentName: " + currentName);
         }
     }
 
@@ -67,19 +66,19 @@ public class SaveGameViewController extends AbstractViewController {
 //        changeState(ViewState.LOAD_GAME, ViewState.IN_GAME_SETTINGS);
         modalCopy.close();
     }
-    
-    public void onSaveGameClicked(){
+
+    public void onSaveGameClicked() {
         String selectedGame = saveGameTextField.getText();
-        if(selectedGame.isEmpty()){
+        if (selectedGame.isEmpty()) {
             showNotificatoin("Das Feld ist nicht ausgefüllt");
             return;
         }
         getGameWindow().getControllerChan().saveGame(selectedGame);
         loadMapViewLabel.setVisible(loadFiles.length == NO_SAVE_FILES);
         fillListView();
-        
+
     }
-    
+
     public static void openModal(GameWindow window) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SettingsViewController.class.getResource("/SaveGame.fxml"));
         AnchorPane mainPane = fxmlLoader.load();
@@ -100,10 +99,10 @@ public class SaveGameViewController extends AbstractViewController {
         stage.toFront();
         stage.requestFocus();
     }
-    
+
     public void showNotificatoin(String notification) {
         notificationLabel.setText(notification);
     }
-    
+
 
 }

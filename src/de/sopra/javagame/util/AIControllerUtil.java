@@ -8,6 +8,7 @@ import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTileState;
+import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.map.Map;
@@ -28,6 +29,7 @@ public class AIControllerUtil {
 
     public static void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
+            DebugUtil.debug("executing action: " + action.toString());
             Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
             switch (action.getType()) {
                 case MOVE:
@@ -162,6 +164,10 @@ public class AIControllerUtil {
         // Erstelle einen Fake-Spieler und eine Fake-Action, auf dem gearbeitet werden kann
         Action action = currentAction.copy();
         Player player = action.getPlayer(playerType);
+
+        //ugly NullPointer fix
+        if (player == null && playerType == PlayerType.COURIER)
+            player = new Courier("kannstMich", startPosition, action);
 
         // Gehe solange durch die map, wie noch Möglichkeiten offen sind, die man gehen kann.
         checkPossibleWays(stepMap, player);

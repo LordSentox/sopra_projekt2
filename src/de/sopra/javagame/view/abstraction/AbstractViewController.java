@@ -1,5 +1,6 @@
 package de.sopra.javagame.view.abstraction;
 
+import de.sopra.javagame.util.DebugUtil;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.StageStyle;
@@ -57,7 +58,7 @@ public abstract class AbstractViewController {
             pack.setAlertType(Alert.AlertType.INFORMATION);
             pack.setStageStyle(StageStyle.UNDECORATED);
             pack.open();
-            System.out.println("info: " + notification.message());
+            DebugUtil.debug("info notification: " + notification.message());
         }
     }
 
