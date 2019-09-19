@@ -9,7 +9,8 @@ import de.sopra.javagame.util.Point;
 import java.util.List;
 import java.util.function.Function;
 
-import static de.sopra.javagame.model.MapTileState.*;
+import static de.sopra.javagame.model.MapTileState.DRY;
+import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
  * Diver implementiert die Spielfigur "Taucher".
@@ -41,9 +42,8 @@ public class Diver extends Player {
     public List<Point> legalMoves(boolean specialActive) {
         List<Point> legalMoves = super.legalMoves(false);
 
-        if (!specialActive) {
-            return legalMoves;
-        }
+        //Diver soll seine Special nicht benutzen müssen!
+
         boolean[][] reachable = this.reachableDestinations();
         
         // Gebe alle Positionen zurück, welche der Taucher erreichen kann, aber filtere alle heraus, welche überflutet
