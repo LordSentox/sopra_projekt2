@@ -3,7 +3,7 @@
 <?import com.jfoenix.controls.*?>
 <?import de.sopra.javagame.view.customcontrol.MapPane?>
 <?import de.sopra.javagame.view.customcontrol.WaterLevelView?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1200.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.sopra.javagame.view.InGameViewController">
@@ -58,6 +58,8 @@
    		<GridPane fx:id="floodCardDiscardGridPane" layoutX="200" layoutY="960.0"/>
    		
    		<WaterLevelView fx:id="waterLevelView" layoutX="377" layoutY="850"/>
+   		
+   		<Label fx:id="roundNumber" layoutX="398" layoutY="1040" text="Runde: "/>
 
    		<Button fx:id="artifactCardDrawStackButton" prefHeight="200.0" prefWidth="150.0" layoutX="20.0" layoutY="720" visible="false" disable="true" onAction="#onArtifactCardDrawStackClicked"/>
    		<Button fx:id="artifactCardDiscardStackButton" prefHeight="215.0" prefWidth="165.0" layoutX="200.0" layoutY="720" opacity="0.01" onAction="#onArtifactCardDiscardStackClicked"/>

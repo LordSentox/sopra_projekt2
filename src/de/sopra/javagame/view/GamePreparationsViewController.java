@@ -207,14 +207,14 @@ public class GamePreparationsViewController extends AbstractViewController {
 
         //Spielertypen hinzufügen
         addPlayerType(playerOneChooseCharakterComboBox.getValue(),
-                !isPlayerOneKiCheckBox.isSelected(),
+                isPlayerOneKiCheckBox.isSelected(),
                 playerOneNameTextField.getText());
-        addPlayerType(playerTwoChooseCharakterComboBox.getValue(), !isPlayerTwoKiCheckBox.isSelected(), playerTwoNameTextField.getText());
+        addPlayerType(playerTwoChooseCharakterComboBox.getValue(), isPlayerTwoKiCheckBox.isSelected(), playerTwoNameTextField.getText());
         if (addPlayerThreeToggleButton.isSelected()) {
-            addPlayerType(playerThreeChooseCharakterComboBox.getValue(), !isPlayerThreeKiCheckBox.isSelected(), playerThreeNameTextField.getText());
+            addPlayerType(playerThreeChooseCharakterComboBox.getValue(), isPlayerThreeKiCheckBox.isSelected(), playerThreeNameTextField.getText());
         }
         if (addPlayerFourToggleButton.isSelected()) {
-            addPlayerType(playerFourChooseCharakterComboBox.getValue(), !isPlayerFourKiCheckBox.isSelected(), playerFourNameTextField.getText());
+            addPlayerType(playerFourChooseCharakterComboBox.getValue(), isPlayerFourKiCheckBox.isSelected(), playerFourNameTextField.getText());
         }
         setDifficulty();
 
