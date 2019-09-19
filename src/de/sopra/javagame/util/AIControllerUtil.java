@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.sopra.javagame.model.ArtifactType.NONE;
-import static de.sopra.javagame.util.DebugUtil.debug;
+import static de.sopra.javagame.util.DebugUtil.debugAI;
 
 /**
  * <h1>Projekt2</h1>
@@ -27,42 +27,35 @@ public class AIControllerUtil {
 
     public static void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
-            debug("executing action: " + action.toString());
+            debugAI(" ---> decided to do: " + action.toString());
             Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
             switch (action.getType()) {
                 case MOVE:
-                    debug(" --> latest action is move");
                     movePlayer(controllerChan, action, player);
                     break;
                 case DRAIN:
-                    debug(" --> latest action is drain");
                     drain(controllerChan, action, player);
                     break;
                 case DISCARD_CARD:
-                    debug(" --> latest action is discard");
                     discardCard(controllerChan, action, player);
                     break;
                 case TRADE_CARD:
-                    debug(" --> latest action is trade");
                     tradeCard(controllerChan, controller, action, player);
                     break;
                 case SPECIAL_CARD:
-                    debug(" --> latest action is special card");
                     specialCard(controllerChan, action, player);
                     break;
                 case SPECIAL_ABILITY:
-                    debug(" --> latest action is special ability");
                     specialAbility(controllerChan, controller, action, player);
                     break;
                 case COLLECT_TREASURE:
-                    debug(" --> latest action is collect treasure");
                     collectTreasure(controllerChan, controller, player);
                     break;
                 case WAIT_AND_DRINK_TEA:
-                    debug(" --> latest action is wait and drink tea");
                     endTurn(controllerChan);
                     break;
             }
+            debugAI(" ---> action should be done by now: ");
         });
     }
 
@@ -93,12 +86,12 @@ public class AIControllerUtil {
             controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
                     new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
                     new ArrayList<>(action.getTargetPlayers()));
-            debug("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString()
+            debugAI("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString()
                     + " from " + action.getStartingPoint().toString() + " with " + action.getTargetPlayers().toString());
         } else if (action.getCardType() == ArtifactCardType.SANDBAGS) {
             controllerChan.getInGameUserController().playSandbagCard(player.getType(), index, action.getTargetPoint());
-            debug("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString());
-        } else debug("THIS SHOULD NEVER HAPPEN!!! action: " + action.toString());
+            debugAI("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString());
+        } else debugAI("THIS SHOULD NEVER HAPPEN!!! action: " + action.toString());
     }
 
     private static void collectTreasure(ControllerChan controllerChan, AIController controller, Player player) {

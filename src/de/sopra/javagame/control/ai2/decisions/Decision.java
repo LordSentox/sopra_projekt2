@@ -42,7 +42,7 @@ public abstract class Decision {
     private PreCondition preCondition;
 
     protected void debug(String debug) {
-        DebugUtil.debug(debug);
+        DebugUtil.debugAI(debug);
     }
 
     public static Decision empty() {
