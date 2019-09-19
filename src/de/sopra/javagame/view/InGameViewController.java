@@ -62,6 +62,9 @@ public class InGameViewController extends AbstractViewController implements InGa
     // Wird gesetzt, wenn eine Helikopterkarte gespielt werden soll
     private HelicopterHelper helicopterHelper;
 
+    // Kümmert sich darum, dass Spieler gerettet werden können.
+    private RescueHelper rescueHelper;
+
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
     MapPane mapPane;
@@ -81,6 +84,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void init() {
         this.helicopterHelper = null;
+        this.rescueHelper = new RescueHelper(this);
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
         waterLevelView.setProgress(7);
 
@@ -647,6 +651,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshWaterLevel(action.getWaterLevel().getLevel());
     }
 
+    @Override
+    public void refreshPlayersToRescue(Set<PlayerType> players) {
+        this.rescueHelper.refreshPlayersToRescue(players);
+    }
+
     public boolean isSpecialActive() {
         return specialActive;
     }
@@ -682,6 +691,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         return this.helicopterHelper;
     }
 
+    public RescueHelper getRescueHelper() {
+        return this.rescueHelper;
+    }
+
     public void tryPlayHelicopterCard() {
         if (this.helicopterHelper == null || !this.helicopterHelper.readyToTransport()) {
             return;
@@ -695,5 +708,9 @@ public class InGameViewController extends AbstractViewController implements InGa
         // Dehighlight all and reset Helicopter card
         this.resetHighlighting();
         this.helicopterHelper = null;
+    }
+
+    public MapPane getMapPane() {
+        return mapPane;
     }
 }

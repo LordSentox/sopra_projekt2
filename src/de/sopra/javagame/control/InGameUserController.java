@@ -261,9 +261,9 @@ public class InGameUserController {
 
     }
     
-    public void rescueMove(Player rescuePlayer, Point destination){
-        if (rescuePlayer.move(destination, false, true)) {
-            controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayer.getType());
+    public void rescueMove(PlayerType rescuePlayer, Point destination){
+        if (controllerChan.getCurrentAction().getPlayer(rescuePlayer).move(destination, false, true)) {
+            controllerChan.getInGameViewAUI().refreshPlayerPosition(destination, rescuePlayer);
             controllerChan.finishAction();
         } else {
             DebugUtil.debug("du Dulli rescue");

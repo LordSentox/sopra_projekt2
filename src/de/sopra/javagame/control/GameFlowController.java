@@ -3,16 +3,14 @@ package de.sopra.javagame.control;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.cardstack.CardStack;
 import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.Notifications;
-import sun.security.ssl.Debug;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static de.sopra.javagame.model.MapTileState.GONE;
 
@@ -104,19 +102,8 @@ public class GameFlowController {
         controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
         controllerChan.getInGameViewAUI().refreshTurnState(controllerChan.getCurrentAction().getState());
         // Refreshe, welche Spieler gerettet werden müssen
-        List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
-        for (Player rescuePlayer : rescuesNeeded) {
-            controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
-        }
-
-        if(!rescuesNeeded.isEmpty()){
-           DebugUtil.debug("Hilfe ich ertrinke");
-            for(Player player : rescuesNeeded){
-                controllerChan.getInGameViewAUI().refreshMovementOptions(player.legalMoves(true));
-                controllerChan.getInGameViewAUI().refreshDrainOptions(Collections.emptyList()); //reset Drain options
-                
-            }
-        }
+        Set<PlayerType> rescuesNeeded = playersToRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
+        controllerChan.getInGameViewAUI().refreshPlayersToRescue(rescuesNeeded);
 
         //Spiel ist verloren
         if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {
@@ -129,13 +116,13 @@ public class GameFlowController {
     }
 
 
-    private List<Player> playersNeedRescue(Point positionToCheck) {
+    private Set<PlayerType> playersToRescue(Point positionToCheck) {
         MapFull map = controllerChan.getCurrentAction().getMap();
-        List<Player> playersToRescue = new ArrayList<>();
+        Set<PlayerType> playersToRescue = new HashSet<>();
         if (map.get(positionToCheck).getState() == GONE) {
             for (Player currentPlayer : controllerChan.getCurrentAction().getPlayers()) {
                 if (currentPlayer.getPosition().equals(positionToCheck)) {
-                    playersToRescue.add(currentPlayer);
+                    playersToRescue.add(currentPlayer.getType());
                 }
             }
         }
