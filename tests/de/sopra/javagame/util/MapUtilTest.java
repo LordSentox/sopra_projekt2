@@ -2,6 +2,10 @@ package de.sopra.javagame.util;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.map.Map;
+import de.sopra.javagame.util.map.MapBlackWhite;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

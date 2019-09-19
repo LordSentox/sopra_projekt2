@@ -3,7 +3,11 @@ package de.sopra.javagame.model.player;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.Difficulty;
 import de.sopra.javagame.model.MapTileState;
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.Direction;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.Triple;
+import de.sopra.javagame.util.map.MapFull;
+import de.sopra.javagame.util.map.MapUtil;
 import org.junit.Before;
 import org.junit.Test;
 
