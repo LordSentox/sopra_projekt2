@@ -107,12 +107,19 @@ public final class SimpleAction implements Copyable<SimpleAction> {
                 + ",card:"
                 + (cardType == null ? "null" : cardType.name())
                 + ",players:[");
-        for (PlayerType type : targetPlayers)
-            value.append(type.name()).append(",");
+//        for (PlayerType type : targetPlayers)
+//            value.append(type.name()).append(",");
+        appendKomma(targetPlayers, value);
         String string = value.toString();
         if (targetPlayers.size() > 0)
             string = string.substring(0, string.length() - 1);
         return string + "]}";
+    }
+    
+    //cause PMD
+    public void appendKomma(EnumSet<PlayerType> targetPlayers, StringBuilder value){
+        for (PlayerType type : targetPlayers)
+            value.append(type.name()).append(",");
     }
 
     @Override
