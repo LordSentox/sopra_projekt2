@@ -6,6 +6,7 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.control.ai2.decisions.Decision;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Pair;
 
 import java.util.*;
@@ -161,6 +162,7 @@ public class DecisionMaker implements AIProcessor {
     @Override
     public void makeStep(AIController control) {
         ActionQueue tip = getTipQueue(control); //makeStep soll eigentlich nur den Tip in die Tat umsetzen
+        DebugUtil.debug("Do actions: " + tip.toString());
         control.doSteps(tip);
     }
 

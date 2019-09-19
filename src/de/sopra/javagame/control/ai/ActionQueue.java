@@ -139,4 +139,10 @@ public final class ActionQueue {
         return this;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder action = new StringBuilder();
+        actionIterator().forEachRemaining(element -> action.append(element.toString() + ","));
+        return action.toString();
+    }
 }
