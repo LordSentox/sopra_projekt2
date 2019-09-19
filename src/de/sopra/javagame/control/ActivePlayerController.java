@@ -167,9 +167,7 @@ public class ActivePlayerController {
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
 
             controllerChan.finishAction();
-        } else {
-            System.out.println("du dulli");
-        }
+        } 
     }
 
     /**
