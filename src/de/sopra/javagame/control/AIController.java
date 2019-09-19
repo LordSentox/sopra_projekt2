@@ -30,11 +30,14 @@ public class AIController {
 
     private Supplier<Player> activePlayerSupplier;
 
+    private boolean active;
+
     public AIController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
         this.artifactCardStackTracker = new CardStackTracker<>();
         this.floodCardStackTracker = new CardStackTracker<>();
         this.processor = null;
+        this.active = false;
     }
 
     /**
@@ -45,6 +48,14 @@ public class AIController {
      */
     public boolean hasAI() {
         return processor != null;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     /**
@@ -292,6 +303,7 @@ public class AIController {
      *               beinhaltet den Spieler, welche die Aktion durchführen soll
      */
     public void makeStep(Supplier<Player> player) {
+        if (!isActive()) return;
         setActivePlayerSupplier(player);
         processor.makeStep(this);
     }
@@ -315,6 +327,7 @@ public class AIController {
      * @see AIActionTip
      */
     public SimpleAction getTip(Supplier<Player> player) {
+        if (!isActive()) return null;
         setActivePlayerSupplier(player);
         return processor.getTip(this);
     }
