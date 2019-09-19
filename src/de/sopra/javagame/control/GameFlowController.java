@@ -9,6 +9,7 @@ import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static de.sopra.javagame.model.MapTileState.GONE;
@@ -52,9 +53,19 @@ public class GameFlowController {
             controllerChan.finishAction();
         }
         controllerChan.getInGameViewAUI().refreshHand(activePlayer.getType(), activePlayer.getHand());
-        if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
-            controllerChan.getInGameViewAUI().showNotification("Du hast zu viele Handkarten. Bitte wähle " +
-                    (activePlayer.getHand().size() - 5) + " Karten zum Abwerfen aus.");
+        if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {            
+            
+            int amountOfSurplusCards = activePlayer.getHand().size() - Player.MAXIMUM_HANDCARDS;
+            if (amountOfSurplusCards == 1){
+                controllerChan.getInGameViewAUI()
+                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                + "\nhat eine Karte zu viel!\nWirf eine Karte von " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+            }else{
+                controllerChan.getInGameViewAUI()
+                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf " 
+                        + amountOfSurplusCards + " Karten bei " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+            }
         }
         if (shuffleBack) {
             CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
@@ -197,6 +208,17 @@ public class GameFlowController {
         }
 
         return false;
+    }
+    
+    public List<Player> playersPausedToDiscard(){
+        //Überprüfe, welcher der Spieler mehr als 5 Handkarten hat
+        List<Player> players = new LinkedList<Player>();
+        for (Player player : controllerChan.getCurrentAction().getPlayers()) {
+            if (player.getHand().size() > Player.MAXIMUM_HANDCARDS) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     public void letAIAct(PlayerType playerType) {
