@@ -10,6 +10,7 @@ import de.sopra.javagame.model.ArtifactType;
 import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.map.Map;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,10 @@
 package de.sopra.javagame.view.customcontrol;
 
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.DebugUtil;
+import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.map.Map;
+import de.sopra.javagame.util.map.MapBlackWhite;
+import de.sopra.javagame.util.map.MapCheckUtil;
 import de.sopra.javagame.view.MapEditorViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import javafx.scene.control.Label;

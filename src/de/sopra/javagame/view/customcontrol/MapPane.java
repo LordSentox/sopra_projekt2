@@ -2,9 +2,9 @@ package de.sopra.javagame.view.customcontrol;
 
 import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.Map;
-import de.sopra.javagame.util.MapFull;
 import de.sopra.javagame.util.Point;
+import de.sopra.javagame.util.map.Map;
+import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.InGameViewController;
 import de.sopra.javagame.view.textures.TextureLoader;
 import de.sopra.javagame.view.textures.TextureLoader.PlayerTexture;

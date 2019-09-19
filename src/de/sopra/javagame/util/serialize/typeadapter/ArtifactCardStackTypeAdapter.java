@@ -3,7 +3,7 @@ package de.sopra.javagame.util.serialize.typeadapter;
 import com.google.gson.*;
 import de.sopra.javagame.model.ArtifactCard;
 import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.util.CardStack;
+import de.sopra.javagame.util.cardstack.CardStack;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
