@@ -97,6 +97,25 @@ public final class SimpleAction implements Copyable<SimpleAction> {
     }
 
     @Override
+    public String toString() {
+        StringBuilder value = new StringBuilder("{type:"
+                + (type == null ? "null" : type.name())
+                + ",start:"
+                + (startingPoint == null ? "null" : startingPoint.toString())
+                + ",target:"
+                + (targetPoint == null ? "null" : targetPoint.toString())
+                + ",card:"
+                + (cardType == null ? "null" : cardType.name())
+                + ",players:[");
+        for (PlayerType type : targetPlayers)
+            value.append(type.name()).append(",");
+        String string = value.toString();
+        if (targetPlayers.size() > 0)
+            string = string.substring(0, string.length() - 1);
+        return string + "]}";
+    }
+
+    @Override
     public SimpleAction copy() {
         return this; //should not actually copy, is here to by usable for
     }

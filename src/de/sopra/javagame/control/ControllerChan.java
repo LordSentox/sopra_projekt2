@@ -152,6 +152,9 @@ public class ControllerChan {
         //Pilot braucht auch im ersten Zug seine Spezialfähigkeit
         this.getCurrentAction().getActivePlayer().onTurnStarted();
 
+        //start KI wenns ihr Zug ist
+        //TODO
+
     }
 
     /**
