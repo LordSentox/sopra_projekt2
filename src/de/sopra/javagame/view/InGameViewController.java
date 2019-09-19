@@ -532,7 +532,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     @Override
-    public void refreshPlayerName(String name, PlayerType player) {
+    public void refreshPlayerName(String nendFloodCardDrawActioname, PlayerType player) {
 
     }
 
@@ -600,6 +600,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         switch (turnState) {
             case PLAYER_ACTION:
                 this.rotateTurnSpinner(0);
+                this.endTurnButton.setDisable(false);
                 break;
             case DRAW_ARTIFACT_CARD:
                 this.rotateTurnSpinner(-240);
@@ -607,6 +608,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             case FLOOD:
                 this.rotateTurnSpinner(-300);
                 setFloodCardStackHighlighted(true);
+                this.endTurnButton.setDisable(true);
                 break;
             default:
                 this.rotateTurnSpinner(0);
