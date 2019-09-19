@@ -45,7 +45,9 @@ public abstract class Map<T> {
      * @return Tile an der Position
      */
     public T get(int posX, int posY) {
-        if (posX + 1 >= SIZE_X || posY + 1 >= SIZE_Y)
+        if (posX >= SIZE_X || posY >= SIZE_Y)
+            return null;
+        if (this.raw.length >= posY + 1 || this.raw[posY + 1].length >= posX + 1)
             return null;
         return this.raw[posY + 1][posX + 1];
     }
