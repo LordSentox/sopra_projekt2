@@ -6,7 +6,6 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.map.MapFull;
-import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
@@ -236,7 +235,7 @@ public class InGameUserController {
         //Prüfe, ob genug Karten auf der Hand des Spielers vorhanden sind
         if (handCards.size() <= Player.MAXIMUM_HANDCARDS) {
             controllerChan.getInGameViewAUI().showNotification("Es darf keine Karte abgeworfen werden!");
-            throw new IllegalStateException("Es darf keine Karte abgeworfen werden!");
+            return;
         }
         //Falls sich am handCardIndex des sourcePlayers keine Karte befindet war der Aufruf ungültig
         if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null) {
