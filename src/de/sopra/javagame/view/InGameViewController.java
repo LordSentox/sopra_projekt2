@@ -628,6 +628,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         resetHighlighting();
         resetTargetPlayer();
         setSpecialActive(false);
+        System.out.println(action.getDiscoveredArtifacts().size());
         //refreshArtifacts found
         highlightArtifacts(action.getDiscoveredArtifacts());
         //refresh active player

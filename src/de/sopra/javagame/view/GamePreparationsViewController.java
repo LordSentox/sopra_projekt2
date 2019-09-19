@@ -304,6 +304,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         }
 
         changeState(ViewState.GAME_PREPARATIONS, ViewState.IN_GAME);
+        getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
 
         getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(getGameWindow().getControllerChan().getCurrentAction().getWaterLevel().getLevel());
