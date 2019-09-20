@@ -41,8 +41,7 @@ public class GameFlowController {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
                 shuffleBack = true;
-                //FIXME was und wofür ist das?
-                //controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
+               controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
                     gameLostNotification();
                     return;
