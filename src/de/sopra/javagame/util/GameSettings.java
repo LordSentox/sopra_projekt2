@@ -24,11 +24,11 @@ public class GameSettings {
 
     private static final boolean UWU = true;
 
+    { if (UWU) {}}
 
     public void save() {
         SerializedSettings settings = new SerializedSettings(this);
         String serialized = settings.serialize();
-
         debug("Saved Settings: " + serialized);
     }
 

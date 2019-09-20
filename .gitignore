@@ -10,4 +10,4 @@ src/de/sopra/javagame/application/Yeet.java
 *.score
 /data/settings.json
 /data/high_scores/scores/git.score
-data/high_scores/scores/
+/data/high_scores/scores/

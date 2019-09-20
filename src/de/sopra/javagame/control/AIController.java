@@ -4,7 +4,10 @@ import de.sopra.javagame.control.ai.*;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
-import de.sopra.javagame.util.*;
+import de.sopra.javagame.util.AIControllerUtil;
+import de.sopra.javagame.util.CopyUtil;
+import de.sopra.javagame.util.Pair;
+import de.sopra.javagame.util.Point;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -331,7 +334,6 @@ public class AIController {
      * @param player der supplier für den für die KI aktiven Spieler,
      *               beinhaltet den Spieler, welche die Aktion durchführen soll
      * @return ein Tipp als {@link ActionQueue}
-     * @see AIActionTip
      */
     public SimpleAction getTip(Supplier<Player> player) {
         if (!isActive()) return null;

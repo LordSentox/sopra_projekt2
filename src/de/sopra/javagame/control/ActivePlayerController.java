@@ -114,11 +114,9 @@ public class ActivePlayerController {
         Player player = currentAction.getActivePlayer();
         Player target = currentAction.getPlayer(targetPlayer);
         ArtifactCard card = player.getHand().get(handCardIndex);
-        if (player.getActionsLeft() <= 0) {
+        if (player.getActionsLeft() <= 0)
             return;
-        }
-        DebugUtil.debug("handIndex in transfer: " + handCardIndex);
-        DebugUtil.debug("targetplayer in transfer: " + targetPlayer.toString());
+
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
@@ -147,7 +145,6 @@ public class ActivePlayerController {
             //  Wird hierfür tatsächlich jedes Mal eine Aktion benötigt? JA
             player.setActionsLeft(player.getActionsLeft() - 1);
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
-
             controllerChan.finishAction();
         }
     }

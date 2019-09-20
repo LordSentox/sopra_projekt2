@@ -6,7 +6,7 @@
    	  <ImageView fx:id="mainPane"/>
       <JFXButton styleClass="mainmenuJFXButton" fx:id="settingsButton" layoutX="5" layoutY="5" prefHeight="30" prefWidth="30" text="⚙" onAction="#onSettingsClicked"/>
       <JFXButton styleClass="close-Button" fx:id="closeButton" layoutX="265" layoutY="5" prefHeight="30" prefWidth="30" text="x" onAction="#onCloseClicked"/>
-      <JFXButton styleClass="mainmenuJFXButton" fx:id="startGameButton" layoutX="50" layoutY="50" prefHeight="30" prefWidth="200" onAction="#onMaybeStartGameClicked"/>
+      <JFXButton styleClass="mainmenuJFXButton" fx:id="startGameButton" layoutX="50" layoutY="50" prefHeight="30" prefWidth="200" text="Neues Spiel" onAction="#onMaybeStartGameClicked"/>
       <JFXButton styleClass="mainmenuJFXButton" fx:id="loadGameButton" layoutX="50" layoutY="100" prefHeight="30" prefWidth="200" text="Spiel laden" onAction="#onLoadGameClicked"/>
       <JFXButton styleClass="mainmenuJFXButton" fx:id="continueGameButton" layoutX="50" layoutY="150" prefHeight="30" prefWidth="200" text="Spiel fortsetzen" onAction="#onContinueClicked"/>
       <JFXButton styleClass="mainmenuJFXButton" fx:id="mapEditorButton" layoutX="50" layoutY="200" prefHeight="30" prefWidth="200" text="Map-Editor" onAction="#onMapEditorClicked"/>
