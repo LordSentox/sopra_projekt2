@@ -390,14 +390,21 @@ public class InGameViewController extends AbstractViewController implements InGa
             dorfPlayer.play();
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
+            stopBgm();
             ripPlayer.play();
         }
        getGameWindow().getControllerChan().getAiController().setActive(false);
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
         endGameDialogue.setAlertType(AlertType.CONFIRMATION);
         endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
-        endGameDialogue.addButton(confirmationButtonText, () -> openSaveDialogue());
-        endGameDialogue.addButton(cancelButtonText, () -> endGameBackToMenu());
+        endGameDialogue.addButton(confirmationButtonText, () -> {
+            openSaveDialogue();
+            dorfPlayer.stop();
+        });
+        endGameDialogue.addButton(cancelButtonText, () -> {
+            endGameBackToMenu();
+            dorfPlayer.stop();
+        });
         endGameDialogue.open();
     }
 

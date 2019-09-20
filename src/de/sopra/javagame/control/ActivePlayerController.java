@@ -125,6 +125,11 @@ public class ActivePlayerController {
             if (controllerChan.getGameFlowController().isPausedToDiscard()) {
                 List<Player> players = controllerChan.getGameFlowController().playersPausedToDiscard();
                 for (Player playersPaused : players) {
+                    //AI should solve this probably
+                    if (playersPaused.isAi()) {
+                        controllerChan.getGameFlowController().letAIAct(playersPaused.getType());
+                        continue;
+                    }
                     int amountOfSurplusCards = playersPaused.getHand().size() - Player.MAXIMUM_HANDCARDS;
                     if (amountOfSurplusCards == ONE) {
                         controllerChan.getInGameViewAUI()
