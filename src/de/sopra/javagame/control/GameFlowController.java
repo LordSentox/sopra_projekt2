@@ -244,7 +244,8 @@ public class GameFlowController {
     }
 
     private boolean isPlayersTurn(PlayerType playerType) {
-        return controllerChan.getCurrentAction().getActivePlayer().getType() == playerType;
+        return controllerChan.getCurrentAction().getActivePlayer().getType() == playerType
+                && controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION;
     }
 
     //KI wenn sie sich retten soll
