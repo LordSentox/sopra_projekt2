@@ -98,7 +98,27 @@ public final class SimpleAction implements Copyable<SimpleAction> {
 
     @Override
     public String toString() {
-        StringBuilder value = new StringBuilder("{type:"
+        StringBuilder value = buildStringBuilder();
+//        StringBuilder value = new StringBuilder("{type:"
+//                + (type == null ? "null" : type.name())
+//                + ",start:"
+//                + (startingPoint == null ? "null" : startingPoint.toString())
+//                + ",target:"
+//                + (targetPoint == null ? "null" : targetPoint.toString())
+//                + ",card:"
+//                + (cardType == null ? "null" : cardType.name())
+//                + ",players:[");
+        for (PlayerType type : targetPlayers)
+            value.append(type.name()).append(",");
+        String string = value.toString();
+        if (targetPlayers.size() > 0)
+            string = string.substring(0, string.length() - 1);
+        return string + "]}";
+    }
+    
+    //cause PMD
+    public StringBuilder buildStringBuilder(){
+        return new StringBuilder("{type:"
                 + (type == null ? "null" : type.name())
                 + ",start:"
                 + (startingPoint == null ? "null" : startingPoint.toString())
@@ -107,19 +127,6 @@ public final class SimpleAction implements Copyable<SimpleAction> {
                 + ",card:"
                 + (cardType == null ? "null" : cardType.name())
                 + ",players:[");
-//        for (PlayerType type : targetPlayers)
-//            value.append(type.name()).append(",");
-        appendKomma(targetPlayers, value);
-        String string = value.toString();
-        if (targetPlayers.size() > 0)
-            string = string.substring(0, string.length() - 1);
-        return string + "]}";
-    }
-    
-    //cause PMD
-    public void appendKomma(EnumSet<PlayerType> targetPlayers, StringBuilder value){
-        for (PlayerType type : targetPlayers)
-            value.append(type.name()).append(",");
     }
 
     @Override
