@@ -51,7 +51,7 @@ public class Point implements Serializable {
     }
 
     public Direction getPrimaryDirection(Point target) {
-        if (this.equals(target)) return null;
+        if (this.equals(target) || target == null) return null;
         int xDiff = target.xPos - this.xPos;
         int yDiff = target.yPos - this.yPos;
         //LEFT or RIGHT

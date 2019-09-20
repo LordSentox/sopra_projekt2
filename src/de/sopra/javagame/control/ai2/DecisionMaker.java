@@ -6,6 +6,7 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.control.ai2.decisions.Decision;
+import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Pair;
 
 import java.util.*;
@@ -131,6 +132,8 @@ public class DecisionMaker implements AIProcessor {
         if (decision != null)
             decision.setControl(control);
         decision = decision.decide();
+        if (decision != null)
+            DebugUtil.debugAI("# made decision by " + decision.getClass().getSimpleName());
         if (decision == null)
             decision = Decision.empty();
         return decision;

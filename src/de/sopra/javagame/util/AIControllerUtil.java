@@ -28,38 +28,42 @@ import static de.sopra.javagame.util.DebugUtil.debugAI;
  */
 public class AIControllerUtil {
 
-    public static void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
+
+    public static synchronized void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
-            debugAI(" ---> decided to do: " + action.toString());
-            Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
-            switch (action.getType()) {
-                case MOVE:
-                    movePlayer(controllerChan, action, player);
-                    break;
-                case DRAIN:
-                    drain(controllerChan, action, player);
-                    break;
-                case DISCARD_CARD:
-                    discardCard(controllerChan, action, player);
-                    break;
-                case TRADE_CARD:
-                    tradeCard(controllerChan, controller, action, player);
-                    break;
-                case SPECIAL_CARD:
-                    specialCard(controllerChan, action, player);
-                    break;
-                case SPECIAL_ABILITY:
-                    specialAbility(controllerChan, controller, action, player);
-                    break;
-                case COLLECT_TREASURE:
-                    collectTreasure(controllerChan, controller, player);
-                    break;
-                case WAIT_AND_DRINK_TEA:
-                    endTurn(controllerChan);
-                    break;
-            }
-            debugAI(" ---> action should be done by now: ");
+            step(controllerChan, controller, queue, action);
         });
+    }
+
+    private static void step(ControllerChan controllerChan, AIController controller, ActionQueue queue, SimpleAction action) {
+        debugAI(" ---> decided to do: " + action.toString());
+        Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
+        switch (action.getType()) {
+            case MOVE:
+                movePlayer(controllerChan, action, player);
+                break;
+            case DRAIN:
+                drain(controllerChan, action, player);
+                break;
+            case DISCARD_CARD:
+                discardCard(controllerChan, action, player);
+                break;
+            case TRADE_CARD:
+                tradeCard(controllerChan, controller, action, player);
+                break;
+            case SPECIAL_CARD:
+                specialCard(controllerChan, action, player);
+                break;
+            case SPECIAL_ABILITY:
+                specialAbility(controllerChan, controller, action, player);
+                break;
+            case COLLECT_TREASURE:
+                collectTreasure(controllerChan, controller, player);
+                break;
+            case WAIT_AND_DRINK_TEA:
+                endTurn(controllerChan);
+                break;
+        }
     }
 
     private static void movePlayer(ControllerChan controller, SimpleAction action, Player player) {
