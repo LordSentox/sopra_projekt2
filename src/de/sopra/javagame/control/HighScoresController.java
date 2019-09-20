@@ -60,6 +60,7 @@ public class HighScoresController {
     }
 
     public void saveHighScore(HighScore scoreToSave) {
+        System.out.println("speichern" + scoreToSave);
         if (scoreToSave.getMapName().isEmpty())
             System.err.println("Warning: Mapname is empty! saving highscore will still continue.");
 
@@ -81,6 +82,7 @@ public class HighScoresController {
             if (file.exists()) {
                 file.delete();
             }
+            System.out.println("speichern2: " + file);
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             for (HighScore score : highScores) {
                 writer.write(score.getName() + ", ");

@@ -212,6 +212,7 @@ public class ControllerChan {
         }
 
         File saveFile;
+        System.out.println(gameFinished);
         if (gameFinished) {
             saveFile = new File(ControllerChan.REPLAY_FOLDER + this.getGameName() + ".replay");
             HighScore score = new HighScore(gameName, getJavaGame().getMapName(), getJavaGame().calculateScore(), gameName);
@@ -219,7 +220,7 @@ public class ControllerChan {
         } else {
             saveFile = new File( ControllerChan.SAVE_GAME_FOLDER + this.getGameName() + ".save");
         }
-
+        
         try (FileWriter fileWriter = new FileWriter(saveFile, false)) {
             new GsonBuilder()
                     .setPrettyPrinting()

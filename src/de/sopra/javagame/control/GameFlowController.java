@@ -139,8 +139,10 @@ public class GameFlowController {
         }
 
         if (checkIsLost(position, tile)) {
-            gameLostNotification();
             controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
+            controllerChan.getCurrentAction().setGameEnded(true);
+            controllerChan.getCurrentAction().setGameWon(false);
+            gameLostNotification();
         }
 
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
@@ -164,6 +166,7 @@ public class GameFlowController {
             if (!controllerChan.getCurrentAction().getDiscoveredArtifacts().contains(hidden))
                 lost |= hidden != NONE && controllerChan.getCurrentAction().getMap().stream().filter(til -> til.getProperties().getHidden() == hidden && til.getState() == GONE).count() == 2;
         }
+
         return lost;
     }
 
@@ -273,6 +276,13 @@ public class GameFlowController {
     private boolean isPlayersTurn(PlayerType playerType) {
         return controllerChan.getCurrentAction().getActivePlayer().getType() == playerType
                 && controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION;
+    }
+
+    //KI wenn sie sich retten soll
+    private void makeMoveToRescue(PlayerType type) {
+        //KI auffordern sich selbst zu retten
+        //KI erkennt die Rettungssituation indem der gegebene Spieler auf MapTile mit GONE steht
+        letAIAct(type);
     }
 
     //KI - Neuer Zug
