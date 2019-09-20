@@ -107,6 +107,8 @@ public class GameWindow implements NotificationAUI {
     public void sugoiSugoi() {
         sugoiPlayer = new MediaPlayer(new Media(sugoiFile));
         sugoiPlayer.setVolume(1);
+        sugoiPlayer.setOnEndOfMedia(currentPlayer::play);
+        currentPlayer.pause();
         sugoiPlayer.play();
     }
 
