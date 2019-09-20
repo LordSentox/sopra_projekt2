@@ -13,6 +13,7 @@ import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.map.Map;
+import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class AIControllerUtil {
 
     public static synchronized void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
         if (lastQueue != null && queue.toString().equals(lastQueue.toString()) && lastQueue.actionIterator().next().getType() != ActionType.DISCARD_CARD) {
+            controllerChan.getInGameViewAUI().showNotification(Notifications.error("AI collapsed... sad little thing"));
             throw new RuntimeException(" !! ERROR - want to do it twice: " + queue.toString()
                     + " (actions left: " + controllerChan.getCurrentAction().getPlayer(queue.getPlayer()).getActionsLeft() + ")");
         } else lastQueue = queue;
