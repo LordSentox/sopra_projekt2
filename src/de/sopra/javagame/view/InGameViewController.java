@@ -392,6 +392,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
         if (notification.isGameWon()) {
             header = "Herzlichen Glückwunsch! Ihr habt die Insel besiegt.";
+            stopBgm();
             dorfPlayer.play();
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
