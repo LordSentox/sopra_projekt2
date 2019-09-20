@@ -32,7 +32,8 @@ public class AIControllerUtil {
 
     public static synchronized void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
         if (lastQueue != null && queue.toString().equals(lastQueue.toString())) {
-            throw new RuntimeException(" !! ERROR - want to do it twice: " + queue.toString());
+            throw new RuntimeException(" !! ERROR - want to do it twice: " + queue.toString()
+                    + " (actions left: " + controllerChan.getCurrentAction().getPlayer(queue.getPlayer()).getActionsLeft() + ")");
         } else lastQueue = queue;
         queue.actionIterator().forEachRemaining(action -> {
             step(controllerChan, controller, queue, action);

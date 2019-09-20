@@ -256,7 +256,7 @@ public class GameFlowController {
     }
 
     //KI - Neuer Zug
-    private void beginNewTurn() {
+    public void beginNewTurn() {
         //wenn am Anfang des Zuges die KI dran ist, dann soll die KI ihren Zug machen
         PlayerType activePlayer = controllerChan.getCurrentAction().getActivePlayer().getType();
         //solange dieser Spieler am Zug ist, sollen Aktionen ausgeführt werden

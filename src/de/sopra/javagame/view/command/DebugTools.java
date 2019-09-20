@@ -49,6 +49,12 @@ public class DebugTools {
         consoleView.show(window.getMainStage());
     }
 
+    @Command("startai")
+    public void startAI(@Scope GameWindow window) {
+        window.getControllerChan().getAiController().setActive(true);
+        window.getControllerChan().getGameFlowController().beginNewTurn();
+    }
+
     @Command("test")
     public void test(@Scope GameWindow window) {
         //use for testing, dont commit

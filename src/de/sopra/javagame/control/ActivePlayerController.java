@@ -184,7 +184,7 @@ public class ActivePlayerController {
 
             controllerChan.finishAction();
         } else {
-            DebugUtil.debug("du dulli");
+            DebugUtil.debugAI("Illegal move: " + player.getPosition().toString() + " -> " + destination.toString() + " with" + (useSpecial ? " special" : "out special"));
         }
     }
 
