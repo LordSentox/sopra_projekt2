@@ -8,9 +8,10 @@ import de.sopra.javagame.util.cardstack.CardStack;
 import de.sopra.javagame.util.map.MapFull;
 import de.sopra.javagame.view.abstraction.Notifications;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.sopra.javagame.model.ArtifactType.NONE;
@@ -40,6 +41,7 @@ public class GameFlowController {
         for (ArtifactCard currentCard : drawnCards) {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
+                controllerChan.getInGameViewAUI().refreshWaterLevel(waterLevel.getLevel());
                 shuffleBack = true;
                controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
@@ -109,31 +111,26 @@ public class GameFlowController {
         if (this.controllerChan.getCurrentAction().getFloodCardsToDraw() <= 0) {
             return;
         }
+
         // Ziehe die nächste Flutkarte
         CardStack<FloodCard> floodCardCardStack = controllerChan.getCurrentAction().getFloodCardStack();
         FloodCard card = floodCardCardStack.draw(false);
         MapFull map = controllerChan.getCurrentAction().getMap();
         card.flood(map);
+
         // Lege die Karte auf den Ablagestapel, wenn die Insel nur überflutet wurde, ansonsten kann sie aus dem
         // Spiel entfernt werden
         if (map.get(card.getTile()).getState() != GONE) {
             floodCardCardStack.discard(card);
         }
+
         Point position = map.getPositionForTile(card.getTile());
         MapTile tile = map.get(card.getTile());
         controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
         controllerChan.getInGameViewAUI().refreshTurnState(controllerChan.getCurrentAction().getState());
         // Refreshe, welche Spieler gerettet werden müssen
-        List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
-        for (Player rescuePlayer : rescuesNeeded) {
-            controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
-        }
-//        Nicht löschen:
-//        if(!rescuesNeeded.isEmpty()){
-//            for(Player player : rescuesNeeded){
-//                controllerChan.getInGameUserController().showMovements(player.getType(), true); //funktioniert eventuell nicht, weil action im showMovements
-//            }
-//        }
+        Set<PlayerType> rescuesNeeded = playersToRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
+        controllerChan.getInGameViewAUI().refreshPlayersToRescue(rescuesNeeded);
 
         //Spiel ist verloren
         if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {
@@ -167,13 +164,14 @@ public class GameFlowController {
         endFloodCardDrawAction(floodCardCardStack);
     }
 
-    private List<Player> playersNeedRescue(Point positionToCheck) {
+
+    private Set<PlayerType> playersToRescue(Point positionToCheck) {
         MapFull map = controllerChan.getCurrentAction().getMap();
-        List<Player> playersToRescue = new ArrayList<>();
+        Set<PlayerType> playersToRescue = new HashSet<>();
         if (map.get(positionToCheck).getState() == GONE) {
             for (Player currentPlayer : controllerChan.getCurrentAction().getPlayers()) {
                 if (currentPlayer.getPosition().equals(positionToCheck)) {
-                    playersToRescue.add(currentPlayer);
+                    playersToRescue.add(currentPlayer.getType());
                 }
             }
         }
@@ -307,7 +305,7 @@ public class GameFlowController {
                 .forEach(this::letAIAct);
     }
 
-    private void letAIAct(PlayerType playerType) {
+    public void letAIAct(PlayerType playerType) {
         if (controllerChan.getCurrentAction().getPlayer(playerType).isAi()) {
             controllerChan.getAiController().makeStep(() -> controllerChan.getCurrentAction().getPlayer(playerType));
         }

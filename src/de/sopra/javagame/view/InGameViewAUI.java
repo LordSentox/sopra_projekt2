@@ -10,6 +10,7 @@ import de.sopra.javagame.util.cardstack.CardStack;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * bietet Methoden zum aktualisieren der InGameView
@@ -159,4 +160,11 @@ public interface InGameViewAUI extends NotificationAUI {
      * @param turnState der aktuelle state, der angezeigt werden soll.
      */
     void refreshTurnState(TurnState turnState);
+
+    /**
+     * Setze, welche Spieler gerettet werden müssen, bevor das Spiel weiterlaufen kann
+     *
+     * @param toBeRescued Die zu rettenden Spieler, oder ein leeres Set, wenn keine Spieler gerettet werden müssen
+     */
+    void refreshPlayersToRescue(Set<PlayerType> toBeRescued);
 }

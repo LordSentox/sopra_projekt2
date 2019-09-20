@@ -96,6 +96,16 @@ public class AIControllerUtil {
             if (player.getHand().get(i).getType() == action.getCardType())
                 index = i;
         }
+        if (index == -1) {
+            for (Player currentPlayer : controllerChan.getCurrentAction().getPlayers()) {
+                for (int i = 0; i < currentPlayer.getHand().size(); i++) {
+                    if (currentPlayer.getHand().get(i).getType() == action.getCardType()) {
+                        index = i;
+                        player = currentPlayer;
+                    }
+                }
+            }
+        }
         if (action.getCardType() == ArtifactCardType.HELICOPTER) {
             controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
                     new Pair<>(action.getStartingPoint(), action.getTargetPoint()),

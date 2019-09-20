@@ -10,9 +10,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.stage.StageStyle;
 
-import static de.sopra.javagame.view.abstraction.ViewState.*;
-
 import java.io.IOException;
+
+import static de.sopra.javagame.view.abstraction.ViewState.*;
 
 /**
  * GUI für das Hauptfenster

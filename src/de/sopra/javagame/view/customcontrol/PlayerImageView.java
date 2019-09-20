@@ -54,6 +54,15 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
     public void handle(MouseEvent event) {
         List<ActionButton> buttons = new LinkedList<>();
 
+        // Wenn der Spieler gerade gerettet wird hat dies die oberste Priorität. Versuche ihn als gerade zu rettenden
+        // Spieler zu setzen.
+        RescueHelper rescueHelper = this.tile.getControl().getRescueHelper();
+        if (event.getButton() == MouseButton.PRIMARY && rescueHelper.getCurrentlyRescueing() == this.type) {
+            rescueHelper.setCurrentlyRescueing(this.type);
+            this.tile.getControl().refreshMovementOptions(this.tile.getControl().getGameWindow().getControllerChan().getCurrentAction().getPlayer(this.type).legalMoves(true));
+            return;
+        }
+
         // Wenn gerade eine Helikopterkarte gespielt wird, soll der Spieler zu ihr hinzugefügt werden oder von ihr
         // entfernt werden
         HelicopterHelper helicopterHelper = this.tile.getControl().getHelicopterHelper();
@@ -75,7 +84,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
                 tile.getControl().getGameWindow().getControllerChan().getActivePlayerController().showDrainOptions();
                 tile.getControl().setSpecialActive(type == PlayerType.DIVER);
             } else {
-                
+
                 if (event.getButton() == MouseButton.SECONDARY) {
                     //wenn der Spieler der aktive Spieler ist
                     if (activePlayer.getType() == type) {
@@ -92,7 +101,7 @@ public class PlayerImageView extends ImageView implements EventHandler<MouseEven
                     }
                     if (hasSpecial)
                         buttons.add(ActionButton.SPECIAL);
-                    
+
                     if (buttons.size() > 0) {
                         picker.setDelegatingPlayer(activePlayer.getType());
                         picker.setMapPaneTile(tile);

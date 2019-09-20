@@ -1,6 +1,7 @@
 package de.sopra.javagame.view.command;
 
 import de.sopra.javagame.control.ai.SimpleAction;
+import de.sopra.javagame.model.Action;
 import de.sopra.javagame.view.abstraction.GameWindow;
 import de.spaceparrots.api.command.annotation.Command;
 import de.spaceparrots.api.command.annotation.Scope;
@@ -55,9 +56,24 @@ public class DebugTools {
         window.getControllerChan().getGameFlowController().beginNewTurn();
     }
 
+    @Command("wakeup")
+    public void aiWakeUp(@Scope GameWindow window) {
+        window.getControllerChan().getCurrentAction().getPlayers().forEach(player ->
+        {
+            window.getControllerChan().getGameFlowController().letAIAct(player.getType());
+        });
+    }
+
     @Command("test")
     public void test(@Scope GameWindow window) {
         //use for testing, dont commit
+    }
+
+    @Command("level")
+    public void level(@Scope GameWindow window, Integer level) {
+        Action currentAction = window.getControllerChan().getCurrentAction();
+        currentAction.getWaterLevel().setLevel(level);
+        window.getControllerChan().getInGameViewAUI().refreshWaterLevel(currentAction.getWaterLevel().getLevel());
     }
 
 }

@@ -1,6 +1,7 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.control.GameFlowController;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
@@ -63,6 +64,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     // Wird gesetzt, wenn eine Helikopterkarte gespielt werden soll
     private HelicopterHelper helicopterHelper;
+
+    // Kümmert sich darum, dass Spieler gerettet werden können.
+    private RescueHelper rescueHelper;
 
     //mal dem ganzen current-kram zwischenspeichern
     @FXML
@@ -132,6 +136,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> dorfPlayer.volumeProperty().set(newVal.doubleValue() / 100.0));
 
         this.helicopterHelper = null;
+        this.rescueHelper = new RescueHelper(this);
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
         waterLevelView.setProgress(7);
 
@@ -390,14 +395,21 @@ public class InGameViewController extends AbstractViewController implements InGa
             dorfPlayer.play();
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
+            stopBgm();
             ripPlayer.play();
         }
        getGameWindow().getControllerChan().getAiController().setActive(false);
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
         endGameDialogue.setAlertType(AlertType.CONFIRMATION);
         endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
-        endGameDialogue.addButton(confirmationButtonText, () -> openSaveDialogue());
-        endGameDialogue.addButton(cancelButtonText, () -> endGameBackToMenu());
+        endGameDialogue.addButton(confirmationButtonText, () -> {
+            openSaveDialogue();
+            dorfPlayer.stop();
+        });
+        endGameDialogue.addButton(cancelButtonText, () -> {
+            endGameBackToMenu();
+            dorfPlayer.stop();
+        });
         endGameDialogue.open();
     }
 
@@ -734,6 +746,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         refreshWaterLevel(action.getWaterLevel().getLevel());
     }
 
+    @Override
+    public void refreshPlayersToRescue(Set<PlayerType> players) {
+        this.rescueHelper.refreshPlayersToRescue(players);
+    }
+
     public boolean isSpecialActive() {
         return specialActive;
     }
@@ -770,6 +787,10 @@ public class InGameViewController extends AbstractViewController implements InGa
         return this.helicopterHelper;
     }
 
+    public RescueHelper getRescueHelper() {
+        return this.rescueHelper;
+    }
+
     public void tryPlayHelicopterCard() {
         if (this.helicopterHelper == null || !this.helicopterHelper.readyToTransport()) {
             return;
@@ -785,4 +806,17 @@ public class InGameViewController extends AbstractViewController implements InGa
         this.helicopterHelper = null;
     }
 
+    public MapPane getMapPane() {
+        return mapPane;
+    }
+
+    private void doAIActionActivePlayer() {
+        PlayerType activePlayer = this.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
+        this.doAIAction(activePlayer);
+    }
+
+    private void doAIAction(PlayerType player) {
+        GameFlowController flowController = this.getGameWindow().getControllerChan().getGameFlowController();
+        flowController.letAIAct(player);
+    }
 }
