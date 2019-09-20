@@ -218,7 +218,6 @@ public class InGameUserController {
         //entferne die gespielte Karte von der Spieler-Hand
         currentAction.getArtifactCardStack().discard(handCards.get(handCardIndex));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
-        currentAction = controllerChan.finishAction();
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
 
         //lege das gewählte MapTile trocken
