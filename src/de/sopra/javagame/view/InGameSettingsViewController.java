@@ -96,7 +96,7 @@ public class InGameSettingsViewController extends AbstractViewController {
         modalCopy.close();
         ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
         SaveGameViewController.openModal(getGameWindow());
-//        changeState(ViewState.IN_GAME_SETTINGS, ViewState.SAVE_GAME);
+       changeState(ViewState.IN_GAME_SETTINGS, ViewState.SAVE_GAME);
     }
 
     public void onBackToMenuClicked() {
