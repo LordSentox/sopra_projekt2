@@ -43,7 +43,7 @@ public class GameFlowController {
                 waterLevel.increment();
                 controllerChan.getInGameViewAUI().refreshWaterLevel(waterLevel.getLevel());
                 shuffleBack = true;
-               controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
+                controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
                     gameLostNotification();
                     return;
@@ -139,8 +139,10 @@ public class GameFlowController {
         }
 
         if (checkIsLost(position, tile)) {
-            gameLostNotification();
             controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
+            controllerChan.getCurrentAction().setGameEnded(true);
+            controllerChan.getCurrentAction().setGameWon(false);
+            gameLostNotification();
         }
 
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
@@ -164,6 +166,7 @@ public class GameFlowController {
             if (!controllerChan.getCurrentAction().getDiscoveredArtifacts().contains(hidden))
                 lost |= hidden != NONE && controllerChan.getCurrentAction().getMap().stream().filter(til -> til.getProperties().getHidden() == hidden && til.getState() == GONE).count() == 2;
         }
+
         return lost;
     }
 
@@ -275,6 +278,13 @@ public class GameFlowController {
                 && controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION;
     }
 
+    //KI wenn sie sich retten soll
+    private void makeMoveToRescue(PlayerType type) {
+        //KI auffordern sich selbst zu retten
+        //KI erkennt die Rettungssituation indem der gegebene Spieler auf MapTile mit GONE steht
+        letAIAct(type);
+    }
+
     //KI - Neuer Zug
     public void beginNewTurn() {
         //wenn am Anfang des Zuges die KI dran ist, dann soll die KI ihren Zug machen
@@ -284,6 +294,16 @@ public class GameFlowController {
         while (isPlayersTurn(activePlayer)) {
             letAIAct(activePlayer);
         }
+    }
+
+    //wake up AI as the command does
+    public void wakeUpAI() {
+        controllerChan.getCurrentAction().getPlayers()
+                .stream()
+                .filter(player -> player.isAi())
+                .filter(player -> player.getActionsLeft() == 0) //aktiver Spieler soll die Klappe halten xD
+                .map(Player::getType)
+                .forEach(this::letAIAct);
     }
 
     //Fordere Spieler auf Spezialkarten ausspielen zu können
@@ -296,7 +316,7 @@ public class GameFlowController {
         //Ob der Spieler eine KI ist, wird in letAIAct gefiltert
         controllerChan.getCurrentAction().getPlayers()
                 .stream()
-                .filter(player -> player.getActionsLeft() > 0) //aktiver Spieler soll entfernt werden, falls dieser noch Züge hat
+                .filter(player -> player.getActionsLeft() == 0) //aktiver Spieler soll entfernt werden, falls dieser noch Züge hat
                 .map(Player::getType)
                 .forEach(this::letAIAct);
     }

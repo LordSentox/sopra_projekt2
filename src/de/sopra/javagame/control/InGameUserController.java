@@ -266,6 +266,8 @@ public class InGameUserController {
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
         controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
 
+        controllerChan.getGameFlowController().wakeUpAI();
+
     }
     
     public void rescueMove(PlayerType rescuePlayer, Point destination){
