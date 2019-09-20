@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.util.Point;
 
 import java.util.Collection;
@@ -18,6 +19,7 @@ import static de.sopra.javagame.model.player.PlayerType.COURIER;
  * @version 11.09.2019
  * @since 11.09.2019
  */
+@PreCondition(allFalse = Condition.PLAYER_NO_ACTION_LEFT)
 @DoAfter(act = TURN_ACTION, value = TurnMoveToDrainTile.class)
 public class TurnMoveTowardsMiddle extends Decision {
 
@@ -55,8 +57,11 @@ public class TurnMoveTowardsMiddle extends Decision {
         if (playerPosition.equals(middle) || middle == null)
             return null;
         //Punkt auf einen erreichbaren Punkt setzen
-        if (!player().legalMoves(true).contains(middle))
+        List<Point> legalMoves = player().legalMoves(true);
+        if (!legalMoves.contains(middle)) //try to translate into directional movement
             middle = playerPosition.getPrimaryDirection(middle).translate(playerPosition);
+        if(!legalMoves.contains(middle)) //should still be reachable
+            return null;
         return this;
     }
     

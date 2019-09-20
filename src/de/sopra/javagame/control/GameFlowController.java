@@ -54,30 +54,37 @@ public class GameFlowController {
             }
             controllerChan.getInGameViewAUI().refreshArtifactStack(artifactCardStack);
             controllerChan.finishAction();
+            activePlayer = controllerChan.getCurrentAction().getActivePlayer();
         }
         controllerChan.getInGameViewAUI().refreshHand(activePlayer.getType(), activePlayer.getHand());
-        maybeTellPlayerToDiscardCards(activePlayer);
         if (shuffleBack) {
             CardStack<FloodCard> stack = controllerChan.getCurrentAction().getFloodCardStack();
             stack.shuffleBack();
             controllerChan.getInGameViewAUI().refreshFloodStack(stack);
         }
+        maybeTellPlayerToDiscardCards(activePlayer); //als letztes, da hier die KI ausgelöst wird
     }
 
     private void maybeTellPlayerToDiscardCards(Player activePlayer) {
         if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
 
+            if (activePlayer.isAi()) {
+                for (int i = 0; i < activePlayer.getHand().size() - Player.MAXIMUM_HANDCARDS; i++)
+                    letAIAct(activePlayer.getType()); //Lass AI über Discard entscheiden
+                return;
+            }
+
             int amountOfSurplusCards = activePlayer.getHand().size() - Player.MAXIMUM_HANDCARDS;
             int oneCardToDiscard = 1;
-            if (amountOfSurplusCards == oneCardToDiscard){
+            if (amountOfSurplusCards == oneCardToDiscard) {
                 controllerChan.getInGameViewAUI()
-                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
-                + "\nhat eine Karte zu viel!\nWirf eine Karte von " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
-            }else{
+                        .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                                + "\nhat eine Karte zu viel!\nWirf eine Karte von " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+            } else {
                 controllerChan.getInGameViewAUI()
-                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
-                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf "
-                        + amountOfSurplusCards + " Karten bei " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+                        .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf "
+                                + amountOfSurplusCards + " Karten bei " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
             }
         }
     }
@@ -174,18 +181,27 @@ public class GameFlowController {
     }
 
     private void endFloodCardDrawAction(CardStack<FloodCard> floodCardCardStack) {
+        PlayerType oldActivePlayer = controllerChan.getCurrentAction().getActivePlayer().getType();
         Action nextAction = controllerChan.finishAction();
         if (nextAction == null) {
             return;
         }
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
-        // Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen
-        letAIAct(nextAction.getActivePlayer().getType());
+        //Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen - Jemand hat etwas getan
+        someoneDidSomething(oldActivePlayer);
+        //da karten schmeißen durch KI etc die Aktion verändern kann, hier neu holen
+        nextAction = controllerChan.getCurrentAction();
 
-        int emptyStack = 0;
+        final int EMPTY_STACK = 0;
+
+        if (nextAction.getFloodCardStack().size() == EMPTY_STACK) {
+            nextAction.getFloodCardStack().shuffleBack();
+            controllerChan.getInGameViewAUI().refreshFloodStack(nextAction.getFloodCardStack());
+        }
 
         if (nextAction.getFloodCardsToDraw() <= 0) {
+            //der nächste Spieler ist aktiv am Zug
             nextAction.nextPlayerActive();
             nextAction.setState(TurnState.PLAYER_ACTION);
 
@@ -193,16 +209,11 @@ public class GameFlowController {
             controllerChan.getInGameViewAUI().refreshActivePlayer();
             controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
             nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
-            //Wenn die KI am Zug ist, soll sie einfach alle Aktionen aufbrauchen, 10 einfach so, hat keine Bedeutung
+            //Wenn die KI am Zug ist, soll sie einfach alle Aktionen aufbrauchen
             if (nextAction.getActivePlayer().isAi()) {
-                PlayerType activePlayer = nextAction.getActivePlayer().getType();
-                for (int i = 0; i < 10; i++)
-                    letAIAct(activePlayer);
+                beginNewTurn();
+                //return weil die Aktion sich wieder ändert
             }
-        }
-        if (nextAction.getFloodCardStack().size() == emptyStack) {
-            nextAction.getFloodCardStack().shuffleBack();
-            controllerChan.getInGameViewAUI().refreshFloodStack(nextAction.getFloodCardStack());
         }
     }
 
@@ -246,8 +257,8 @@ public class GameFlowController {
 
         return false;
     }
-    
-    public List<Player> playersPausedToDiscard(){
+
+    public List<Player> playersPausedToDiscard() {
         //Überprüfe, welcher der Spieler mehr als 5 Handkarten hat
         List<Player> players = new LinkedList<Player>();
         for (Player player : controllerChan.getCurrentAction().getPlayers()) {
@@ -258,7 +269,45 @@ public class GameFlowController {
         return players;
     }
 
-    public void letAIAct(PlayerType playerType) {
+    private boolean isPlayersTurn(PlayerType playerType) {
+        return controllerChan.getCurrentAction().getActivePlayer().getType() == playerType
+                && controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION;
+    }
+
+    //KI wenn sie sich retten soll
+    private void makeMoveToRescue(PlayerType type) {
+        //KI auffordern sich selbst zu retten
+        //KI erkennt die Rettungssituation indem der gegebene Spieler auf MapTile mit GONE steht
+        letAIAct(type);
+    }
+
+    //KI - Neuer Zug
+    public void beginNewTurn() {
+        //wenn am Anfang des Zuges die KI dran ist, dann soll die KI ihren Zug machen
+        PlayerType activePlayer = controllerChan.getCurrentAction().getActivePlayer().getType();
+        //solange dieser Spieler am Zug ist, sollen Aktionen ausgeführt werden
+        //Die KI sollte ihren Zug über WAIT_AND_DRINK_TEA von selbst über AIControllerUtil abgeben können
+        while (isPlayersTurn(activePlayer)) {
+            letAIAct(activePlayer);
+        }
+    }
+
+    //Fordere Spieler auf Spezialkarten ausspielen zu können
+    //Das ist nur nötig, wenn der ausführende Spieler keine KI ist,
+    //denn die KI wird nicht zwischen ihre eigenen Züge schmeißen.
+    public void someoneDidSomething(PlayerType playerWhoDidIt) {
+        //Wenn ein Spieler, der nicht die KI ist, etwas gemacht hat, dann soll die KI darauf reagieren können
+        if (controllerChan.getCurrentAction().getPlayer(playerWhoDidIt).isAi()) return;
+        //Für alle KI Spieler, die nicht der ausführende Spieler sind
+        //Ob der Spieler eine KI ist, wird in letAIAct gefiltert
+        controllerChan.getCurrentAction().getPlayers()
+                .stream()
+                .filter(player -> player.getActionsLeft() > 0) //aktiver Spieler soll entfernt werden, falls dieser noch Züge hat
+                .map(Player::getType)
+                .forEach(this::letAIAct);
+    }
+
+    private void letAIAct(PlayerType playerType) {
         if (controllerChan.getCurrentAction().getPlayer(playerType).isAi()) {
             controllerChan.getAiController().makeStep(() -> controllerChan.getCurrentAction().getPlayer(playerType));
         }

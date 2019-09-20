@@ -2,6 +2,7 @@ package de.sopra.javagame.control.ai2.decisions;
 
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai2.DoAfter;
+import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
@@ -18,6 +19,7 @@ import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
  * @version 11.09.2019
  * @since 11.09.2019
  */
+@PreCondition(allTrue = Condition.PLAYER_HAS_MORE_THAN_1_ACTION_LEFT)
 @DoAfter(act = TURN_ACTION, value = TurnMoveToDrainCorePositions.class)
 public class TurnMoveToDrainTile extends Decision {
     private Point move;

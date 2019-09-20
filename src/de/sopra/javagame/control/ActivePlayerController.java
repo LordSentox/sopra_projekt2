@@ -19,7 +19,7 @@ import static de.sopra.javagame.model.player.PlayerType.PILOT;
 public class ActivePlayerController {
 
     private final ControllerChan controllerChan;
-    
+
     private final int ONE = 1;
 
     ActivePlayerController(ControllerChan controllerChan) {
@@ -122,22 +122,22 @@ public class ActivePlayerController {
         if (currentAction.transferArtifactCard(card, player, target)) {
             controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
             controllerChan.getInGameViewAUI().refreshHand(targetPlayer, target.getHand());
-            if(controllerChan.getGameFlowController().isPausedToDiscard()){
+            if (controllerChan.getGameFlowController().isPausedToDiscard()) {
                 List<Player> players = controllerChan.getGameFlowController().playersPausedToDiscard();
-                    for (Player playersPaused : players){
-                        int amountOfSurplusCards = playersPaused.getHand().size() - Player.MAXIMUM_HANDCARDS;
-                        if (amountOfSurplusCards == ONE){
-                            controllerChan.getInGameViewAUI()
-                            .showNotification("Der Spieler " + playersPaused.getName() + " (" + playersPaused.getType() + ")" 
-                            + "\nhat eine Karte zu viel!\nWirf eine Karte von " + playersPaused.getName() + " ab,\num weiterspielen zu können.");
-                        }else{
-                            controllerChan.getInGameViewAUI()
-                            .showNotification("Der Spieler " + playersPaused.getName() + " (" + playersPaused.getType() + ")"
-                            + "\nhat " + amountOfSurplusCards + " Karte zu viel!\nWirf " 
-                                    + amountOfSurplusCards + " Karte bei " + playersPaused.getName() + " ab,\num weiterspielen zu können.");
-                        }
+                for (Player playersPaused : players) {
+                    int amountOfSurplusCards = playersPaused.getHand().size() - Player.MAXIMUM_HANDCARDS;
+                    if (amountOfSurplusCards == ONE) {
+                        controllerChan.getInGameViewAUI()
+                                .showNotification("Der Spieler " + playersPaused.getName() + " (" + playersPaused.getType() + ")"
+                                        + "\nhat eine Karte zu viel!\nWirf eine Karte von " + playersPaused.getName() + " ab,\num weiterspielen zu können.");
+                    } else {
+                        controllerChan.getInGameViewAUI()
+                                .showNotification("Der Spieler " + playersPaused.getName() + " (" + playersPaused.getType() + ")"
+                                        + "\nhat " + amountOfSurplusCards + " Karte zu viel!\nWirf "
+                                        + amountOfSurplusCards + " Karte bei " + playersPaused.getName() + " ab,\num weiterspielen zu können.");
                     }
-            }       
+                }
+            }
 
             //  Wird hierfür tatsächlich jedes Mal eine Aktion benötigt? JA
             player.setActionsLeft(player.getActionsLeft() - 1);
@@ -185,9 +185,8 @@ public class ActivePlayerController {
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
 
             controllerChan.finishAction();
-        } 
-         else {
-            DebugUtil.debug("du dulli");
+        } else {
+            DebugUtil.debugAI("Illegal move: " + player.getPosition().toString() + " -> " + destination.toString() + " with" + (useSpecial ? " special" : "out special"));
         }
     }
 
@@ -218,22 +217,18 @@ public class ActivePlayerController {
     /**
      * Legt alle Felder trocken an den gegebenen Positionen.
      *
-     * @param positions next =
-     *                  Die Positionen aller Felder die Trockengelegt werden sollen.
+     * @param position next =
+     *                 Die Position des Feldes, welches trockengelegt werden sollen.
      */
-    public void drain(Point... positions) {
-        //FIXME Es werden NIIEMALS mehrere Positionen gedraint, auch Engineer macht draint atomar beschees
+    public void drain(Point position) {
         Action currentAction = controllerChan.getCurrentAction();
         Player player = currentAction.getActivePlayer();
-        for (Point point : positions) {
-            if (player.drain(point)) {
-                controllerChan.getInGameViewAUI().refreshMapTile(point, currentAction.getMap().get(point));
-                controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
-                controllerChan.getInGameViewAUI().refreshDrainOptions(player.drainablePositions());
-            }
+        if (player.drain(position)) {
+            controllerChan.getInGameViewAUI().refreshMapTile(position, currentAction.getMap().get(position));
+            controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+            controllerChan.getInGameViewAUI().refreshDrainOptions(player.drainablePositions());
+            this.controllerChan.finishAction();
         }
-
-        this.controllerChan.finishAction();
     }
 
     /**
@@ -255,8 +250,8 @@ public class ActivePlayerController {
     public void endActionPhase() {
         Action currentAction = controllerChan.finishAction();
         currentAction.setState(TurnState.DRAW_ARTIFACT_CARD);
-        controllerChan.getGameFlowController().drawArtifactCards();        
-        
+        controllerChan.getGameFlowController().drawArtifactCards();
+
         // Wenn keine Karten abgeworfen werden müssen, kann direkt in den Flutkartenziehstatus gewechselt werden
         if (!controllerChan.getGameFlowController().isPausedToDiscard()) {
             currentAction = controllerChan.finishAction();
@@ -264,11 +259,6 @@ public class ActivePlayerController {
             int drawAmount = currentAction.getWaterLevel().getDrawAmount();
             currentAction.setFloodCardsToDraw(drawAmount);
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
-            if (currentAction.getPlayers().stream().allMatch(Player::isAi)) {
-                for (int i = 0; i < drawAmount; i++) {
-                    controllerChan.getGameFlowController().drawFloodCard();
-                }
-            }
         }
 
         controllerChan.getInGameViewAUI().refreshSome();
