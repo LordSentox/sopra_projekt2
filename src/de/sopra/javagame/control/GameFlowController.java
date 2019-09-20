@@ -43,7 +43,7 @@ public class GameFlowController {
                 waterLevel.increment();
                 controllerChan.getInGameViewAUI().refreshWaterLevel(waterLevel.getLevel());
                 shuffleBack = true;
-               controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
+                controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
                     gameLostNotification();
                     return;
@@ -286,6 +286,16 @@ public class GameFlowController {
         }
     }
 
+    //wake up AI as the command does
+    public void wakeUpAI() {
+        controllerChan.getCurrentAction().getPlayers()
+                .stream()
+                .filter(player -> player.isAi())
+                .filter(player -> player.getActionsLeft() == 0) //aktiver Spieler soll die Klappe halten xD
+                .map(Player::getType)
+                .forEach(this::letAIAct);
+    }
+
     //Fordere Spieler auf Spezialkarten ausspielen zu können
     //Das ist nur nötig, wenn der ausführende Spieler keine KI ist,
     //denn die KI wird nicht zwischen ihre eigenen Züge schmeißen.
@@ -296,7 +306,7 @@ public class GameFlowController {
         //Ob der Spieler eine KI ist, wird in letAIAct gefiltert
         controllerChan.getCurrentAction().getPlayers()
                 .stream()
-                .filter(player -> player.getActionsLeft() > 0) //aktiver Spieler soll entfernt werden, falls dieser noch Züge hat
+                .filter(player -> player.getActionsLeft() == 0) //aktiver Spieler soll entfernt werden, falls dieser noch Züge hat
                 .map(Player::getType)
                 .forEach(this::letAIAct);
     }

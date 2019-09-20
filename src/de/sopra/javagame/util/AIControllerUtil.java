@@ -5,7 +5,10 @@ import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.control.ai1.ActionType;
-import de.sopra.javagame.model.*;
+import de.sopra.javagame.model.Action;
+import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
+import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -14,7 +17,6 @@ import de.sopra.javagame.util.map.Map;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.sopra.javagame.model.ArtifactType.NONE;
 import static de.sopra.javagame.util.DebugUtil.debugAI;
 
 /**
@@ -60,7 +62,7 @@ public class AIControllerUtil {
                 specialAbility(controllerChan, controller, action, queue.getPlayer());
                 break;
             case COLLECT_TREASURE:
-                collectTreasure(controllerChan, controller, queue.getPlayer());
+                collectTreasure(controllerChan);
                 break;
             case WAIT_AND_DRINK_TEA:
                 endTurn(controllerChan);
@@ -119,15 +121,8 @@ public class AIControllerUtil {
         } else debugAI("THIS SHOULD NEVER HAPPEN!!! action: " + action.toString());
     }
 
-    private static void collectTreasure(ControllerChan controllerChan, AIController controller, PlayerType playerType) {
-        Player player = controllerChan.getCurrentAction().getPlayer(playerType);
-        ArtifactType artifactType = player.collectArtifact();
-        if (artifactType != NONE) {
-            controllerChan.getInGameViewAUI().refreshArtifactsFound();
-            controllerChan.getInGameViewAUI().refreshArtifactStack(controller.getCurrentAction().getArtifactCardStack());
-            controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand());
-            controllerChan.getInGameViewAUI().refreshActionsLeft(controller.getCurrentAction().getActivePlayer().getActionsLeft());
-        }
+    private static void collectTreasure(ControllerChan controllerChan) {
+        controllerChan.getActivePlayerController().collectArtifact();
     }
 
     private static void specialAbility(ControllerChan controllerChan, AIController controller, SimpleAction action, PlayerType playerType) {

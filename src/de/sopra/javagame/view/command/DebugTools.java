@@ -58,10 +58,7 @@ public class DebugTools {
 
     @Command("wakeup")
     public void aiWakeUp(@Scope GameWindow window) {
-        window.getControllerChan().getCurrentAction().getPlayers().forEach(player ->
-        {
-            window.getControllerChan().getGameFlowController().letAIAct(player.getType());
-        });
+        window.getControllerChan().getGameFlowController().wakeUpAI();
     }
 
     @Command("test")
