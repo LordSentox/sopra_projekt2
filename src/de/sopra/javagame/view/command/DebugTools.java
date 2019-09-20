@@ -56,6 +56,14 @@ public class DebugTools {
         window.getControllerChan().getGameFlowController().beginNewTurn();
     }
 
+    @Command("wakeup")
+    public void aiWakeUp(@Scope GameWindow window) {
+        window.getControllerChan().getCurrentAction().getPlayers().forEach(player ->
+        {
+            window.getControllerChan().getGameFlowController().letAIAct(player.getType());
+        });
+    }
+
     @Command("test")
     public void test(@Scope GameWindow window) {
         //use for testing, dont commit
