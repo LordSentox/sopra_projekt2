@@ -307,7 +307,7 @@ public class GameFlowController {
                 .forEach(this::letAIAct);
     }
 
-    private void letAIAct(PlayerType playerType) {
+    public void letAIAct(PlayerType playerType) {
         if (controllerChan.getCurrentAction().getPlayer(playerType).isAi()) {
             controllerChan.getAiController().makeStep(() -> controllerChan.getCurrentAction().getPlayer(playerType));
         }
