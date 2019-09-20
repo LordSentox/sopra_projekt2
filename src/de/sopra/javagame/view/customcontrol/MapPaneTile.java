@@ -176,6 +176,10 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
+        // Wenn die momentane Aktion null ist, ist nichts zu tun
+        if (control.getGameWindow().getControllerChan().getCurrentAction() == null)
+            return;
+
         MapTile tile = control.getGameWindow().getControllerChan().getCurrentAction().getMap().get(this.position);
         DebugUtil.debug("Peace brudi, das tile is " + tile + ": " + position.xPos + ", " + position.yPos + " " + tile.getState());
 
