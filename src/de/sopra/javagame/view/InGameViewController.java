@@ -357,12 +357,13 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onFloodCardDrawStackClicked() {
-        System.out.println("Vor dem Check ob Karte ziehen");
         if ((getGameWindow().getControllerChan().getCurrentAction() != null &&
-                getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD))
-            System.out.println("Wir ziehen eine Karte");
+                getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD)) {
             this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
-            refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
+            if (getGameWindow().getControllerChan().getCurrentAction() != null) {
+                refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
+            }
+        }
     }
 
     public void setFloodCardStackHighlighted(boolean highlight) {
@@ -371,7 +372,9 @@ public class InGameViewController extends AbstractViewController implements InGa
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
+        if (getGameWindow().getControllerChan().getCurrentAction() != null) {
         refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
+        }
     }
 
     @Override
