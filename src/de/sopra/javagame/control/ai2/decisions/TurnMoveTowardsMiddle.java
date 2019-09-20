@@ -30,43 +30,33 @@ public class TurnMoveTowardsMiddle extends Decision {
         Collection<Point> points = action().getMap().validPoints();
         List<Path> paths = new LinkedList<>();
         //erstelle alle Pfade, werden nicht doppelt erstellt
-        for (Point start : points) {
+        points.forEach(start ->
+        {
             for (Point target : points) {
                 if (target.equals(start)) continue; //kein Weg auf sich selbst
                 Path path = new Path(start, target);
                 if (!paths.contains(path))
                     paths.add(path);
             }
-        }
+        });
         //suche den Punkt, dessen weitester Weg zu einem anderen Punkt, der kürzeste im Vergleich zu allen anderen ist
         int min = 100;
-        setMin(points,min,paths);
-//        for (Point point : points) {
-//            //maximale Strecke zu einem anderen Punkt
-//            int max = paths.stream()
-//                    .filter(path -> path.hasPoint(point))
-//                    .map(Path::getMinActions)
-//                    .reduce(Integer::max).get();
-//            if (max < min) {
-//                min = max;
-//                middle = point;
-//            }
-//        }
+        setMin(points, min, paths);
         //wenn der Spieler da schon steht, passts
         Point playerPosition = player().getPosition();
-        if (playerPosition.equals(middle) || middle == null)
+        if (any(playerPosition.equals(middle), middle == null))
             return null;
         //Punkt auf einen erreichbaren Punkt setzen
         List<Point> legalMoves = player().legalMoves(true);
         if (!legalMoves.contains(middle)) //try to translate into directional movement
             middle = playerPosition.getPrimaryDirection(middle).translate(playerPosition);
-        if(!legalMoves.contains(middle)) //should still be reachable
+        if (!legalMoves.contains(middle)) //should still be reachable
             return null;
         return this;
     }
-    
+
     //cause PMD
-    public void setMin(Collection<Point> points, int min, List<Path> paths){
+    public void setMin(Collection<Point> points, int min, List<Path> paths) {
         for (Point point : points) {
             //maximale Strecke zu einem anderen Punkt
             int max = paths.stream()
