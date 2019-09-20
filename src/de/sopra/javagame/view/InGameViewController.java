@@ -395,14 +395,21 @@ public class InGameViewController extends AbstractViewController implements InGa
             dorfPlayer.play();
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
+            stopBgm();
             ripPlayer.play();
         }
        getGameWindow().getControllerChan().getAiController().setActive(false);
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
         endGameDialogue.setAlertType(AlertType.CONFIRMATION);
         endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
-        endGameDialogue.addButton(confirmationButtonText, () -> openSaveDialogue());
-        endGameDialogue.addButton(cancelButtonText, () -> endGameBackToMenu());
+        endGameDialogue.addButton(confirmationButtonText, () -> {
+            openSaveDialogue();
+            dorfPlayer.stop();
+        });
+        endGameDialogue.addButton(cancelButtonText, () -> {
+            endGameBackToMenu();
+            dorfPlayer.stop();
+        });
         endGameDialogue.open();
     }
 
@@ -457,8 +464,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshCardsTransferable(boolean transferable) {
-        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
-        this.doAIActionActivePlayer();
 
         //FIXME
 //        if (transferable) {
@@ -476,8 +481,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
-        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
-        this.doAIAction(player);
 
         if (getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
             cardGridPane.getChildren().clear();
@@ -592,8 +595,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActivePlayer() {
-        this.doAIActionActivePlayer();
-
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());

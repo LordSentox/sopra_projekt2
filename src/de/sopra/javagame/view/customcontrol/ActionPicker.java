@@ -224,6 +224,7 @@ public class ActionPicker extends CirclePopupMenu {
                         picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getInGameUserController().playSandbagCard(picker.movingPlayer, picker.cardIndex,
                                 picker.mapPaneTile.getPosition());
                         picker.mapPaneTile.getControl().resetTargetPlayer();
+                        picker.mapPaneTile.getControl().refreshTurnState(picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getCurrentAction().getState());
                     }
                 };
                 CustomMenuItem sandBagButtonMenuItem = new CustomMenuItem(new Button("sandbag"));

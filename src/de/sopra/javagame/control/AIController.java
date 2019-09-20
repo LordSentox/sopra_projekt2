@@ -243,13 +243,20 @@ public class AIController {
 
         // Liste der Positionen, die der Spieler schon vom Startpunkt aus trockenlegen kann.
         // Diese wird später zum Abgleich benutzt, um sicherzustellen, dass diese Positionen nicht Teil der Rückgabe sind.
-        List<Pair<Point, Point>> drainableFromStart = player.drainablePositions().stream().map(pos -> new Pair<>(position, pos)).collect(Collectors.toList());
+        List<Pair<Point, Point>> drainableFromStart = player.drainablePositions().stream()
+                .map(pos -> new Pair<>(position, pos))
+                .collect(Collectors.toList());
 
         // Bewege den Spieler zu allen Positionen, zu denen er darf und schaue, welche Felder er dann trockenlegen darf
         Set<Pair<Point, Point>> drainableOneMoveAway = new HashSet<>();
-        for (Point possiblePosition : player.legalMoves(true)) {
-            player.setPosition(possiblePosition);
-            drainableOneMoveAway.addAll(player.drainablePositions().stream().map(pos -> new Pair<>(possiblePosition, pos)).collect(Collectors.toList()));
+        List<Point> oneMoveAway = player.legalMoves(true);
+        for (Point possiblePosition : oneMoveAway) {
+            final Point finalPos = possiblePosition;
+            player.setPosition(finalPos);
+            List<Pair<Point, Point>> drainableFromHere = player.drainablePositions().stream()
+                    .map(pos -> new Pair<>(finalPos, pos))
+                    .collect(Collectors.toList());
+            drainableOneMoveAway.addAll(drainableFromHere);
         }
 
         // Entferne die Felder, die er auch ohne zusätzliche Bewegung trockenlegen konnte und gib die Übrigen zurück

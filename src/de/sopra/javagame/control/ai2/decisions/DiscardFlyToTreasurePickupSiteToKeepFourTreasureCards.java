@@ -5,7 +5,9 @@ import de.sopra.javagame.control.ai.EnhancedPlayerHand;
 import de.sopra.javagame.control.ai2.DoAfter;
 import de.sopra.javagame.control.ai2.PreCondition;
 import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.MapTile;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 
 import java.util.EnumSet;
@@ -28,18 +30,22 @@ public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decis
 
     private Point startPoint;
     private Point targetPoint;
-    private EnumSet<PlayerType> activePlayer;
+    private PlayerType activePlayer;
 
     @Override
     public Decision decide() {
-        activePlayer.add(control.getActivePlayer().getType());
+        activePlayer = control.getActivePlayer().getType();
         startPoint = control.getActivePlayer().getPosition();
         EnhancedPlayerHand activeHand = playerHand();
         //Es wird der erste Tempel gewaehlt, da es zu aufwaendig waere, den optimalen Tempel zum 
         //Finden des Schatzes zu berechnen
         for (ArtifactType type : ArtifactType.values()) {
             if (activeHand.getAmount(type) == FOUR_CARDS) {
-                targetPoint = control.getTile(type).getLeft().getLeft();
+                Pair<Pair<Point, MapTile>, Pair<Point, MapTile>> temples = control.getTile(type);
+                if (temples.getRight().getRight().getState().ordinal() <
+                        temples.getLeft().getRight().getState().ordinal())
+                    targetPoint = temples.getRight().getLeft();
+                else targetPoint = temples.getLeft().getLeft();
                 return this;
             }
         }
@@ -48,6 +54,6 @@ public class DiscardFlyToTreasurePickupSiteToKeepFourTreasureCards extends Decis
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().helicopterCard(startPoint, targetPoint, activePlayer);
+        return startActionQueue().helicopterCard(startPoint, targetPoint, EnumSet.of(activePlayer));
     }
 }

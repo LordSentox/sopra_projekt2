@@ -36,4 +36,13 @@ public class Pair<L, R> {
     public void setRight(R right) {
         this.right = right;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Pair) {
+            Pair pair = (Pair) obj;
+            return pair.getLeft().equals(this.getLeft()) && pair.getRight().equals(this.getRight());
+        }
+        return super.equals(obj);
+    }
 }

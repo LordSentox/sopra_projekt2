@@ -57,22 +57,10 @@ public abstract class Player implements Copyable<Player>, Serializable {
      */
 
     public List<Point> legalMoves(boolean specialActive) {
-        List<Point> moves = this.position.getNeighbours();
-        List<Point> legalTiles = new ArrayList<>();
-        for (Point currentPoint : moves) {
-            MapTile tile = this.action.getMap().get(currentPoint);
-            if (tile != null && tile.getState() != GONE) {
-                legalTiles.add(currentPoint);
-            }
-
-        }
-        moves = moves.stream().filter(point -> {
+        return this.position.getNeighbours().stream().filter(point -> {
             MapTile tile = this.action.getMap().get(point);
-            //System.out.println(tile.getProperties().getName());
             return tile != null && tile.getState() != GONE;
         }).collect(Collectors.toList());
-
-        return moves;
     }
 
     /**
@@ -150,9 +138,9 @@ public abstract class Player implements Copyable<Player>, Serializable {
         if (!this.drainablePositions().contains(position) || this.actionsLeft < 1) {
             return false;
         }
-        
+
         MapTile toDrain = this.action.getMap().get(position);
-        
+
         // Muss überhaupt noch etwas getan werden?
         if (toDrain.getState() == DRY) {
             return false;
@@ -260,15 +248,17 @@ public abstract class Player implements Copyable<Player>, Serializable {
     public void setAction(Action action) {
         this.action = action;
     }
-    
-    public boolean isAi(){
+
+    public boolean isAi() {
         return this.isAI;
     }
+
     /**
      * wenn noch teile der special action übrig sind, wird true zurückgegeben
+     *
      * @return true wenn ürbig, sonst false
      */
-    public boolean canDoAction(){
+    public boolean canDoAction() {
         return actionsLeft != 0;
     }
 }
