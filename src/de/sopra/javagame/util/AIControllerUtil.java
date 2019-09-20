@@ -4,6 +4,7 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
+import de.sopra.javagame.control.ai1.ActionType;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
@@ -28,7 +29,7 @@ public class AIControllerUtil {
     private static ActionQueue lastQueue;
 
     public static synchronized void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
-        if (lastQueue != null && queue.toString().equals(lastQueue.toString())) {
+        if (lastQueue != null && queue.toString().equals(lastQueue.toString()) && lastQueue.actionIterator().next().getType() != ActionType.DISCARD_CARD) {
             throw new RuntimeException(" !! ERROR - want to do it twice: " + queue.toString()
                     + " (actions left: " + controllerChan.getCurrentAction().getPlayer(queue.getPlayer()).getActionsLeft() + ")");
         } else lastQueue = queue;
