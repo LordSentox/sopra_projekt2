@@ -11,12 +11,13 @@ import de.sopra.javagame.view.abstraction.Notifications;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static de.sopra.javagame.model.ArtifactType.NONE;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
- * Kontrolliert den Spielablauf, auf den kein Spieler einen direkten Einfluss
- * hat.
+ * Kontrolliert den Spielablauf, auf den kein Spieler einen direkten Einfluss hat.
  */
 public class GameFlowController {
 
@@ -27,9 +28,8 @@ public class GameFlowController {
     }
 
     /**
-     * Zieht zwei Artefaktkarten vom Artefaktkartenstapel und gibt sie dem
-     * aktiven Spieler auf die Hand. Die Karten werden atomar gezogen. Behandelt
-     * "Die Flut steigt"-Karten, falls sie gezogen werden.
+     * Zieht zwei Artefaktkarten vom Artefaktkartenstapel und gibt sie dem aktiven Spieler auf die Hand. Die Karten
+     * werden atomar gezogen. Behandelt "Die Flut steigt"-Karten, falls sie gezogen werden.
      */
     public void drawArtifactCards() {
         WaterLevel waterLevel = controllerChan.getCurrentAction().getWaterLevel();
@@ -41,6 +41,8 @@ public class GameFlowController {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
                 shuffleBack = true;
+                //FIXME was und wofür ist das?
+                controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
                     gameLostNotification();
                     return;
@@ -68,16 +70,15 @@ public class GameFlowController {
 
             int amountOfSurplusCards = activePlayer.getHand().size() - Player.MAXIMUM_HANDCARDS;
             int oneCardToDiscard = 1;
-            if (amountOfSurplusCards == oneCardToDiscard) {
+            if (amountOfSurplusCards == oneCardToDiscard){
                 controllerChan.getInGameViewAUI()
-                        .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
-                                + "\nhat eine Karte zu viel!\nWirf eine Karte von " + activePlayer.getName()
-                                + " ab,\num weiterspielen zu können.");
-            } else {
+                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                + "\nhat eine Karte zu viel!\nWirf eine Karte von " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+            }else{
                 controllerChan.getInGameViewAUI()
-                        .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
-                                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf " + amountOfSurplusCards
-                                + " Karten bei " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
+                .showNotification("Der Spieler " + activePlayer.getName() + " (" + activePlayer.getType() + ")"
+                + "\nhat " + amountOfSurplusCards + " Karten zu viel!\nWirf "
+                        + amountOfSurplusCards + " Karten bei " + activePlayer.getName() + " ab,\num weiterspielen zu können.");
             }
         }
     }
@@ -86,15 +87,15 @@ public class GameFlowController {
         controllerChan.getCurrentAction().setGameWon(false);
         controllerChan.getCurrentAction().setGameEnded(true);
         System.out.println("Verloren");
-        controllerChan.getInGameViewAUI()
-                .showNotification(Notifications.gameLost("Das Wasser ist viel zu schnell gestiegen \n"
-                        + "und nun ist die ganze Insel versunken.\n" + "Keiner von euch konnte sich retten.\n"
-                        + "Ihr alle seid einen qualvollen Tod " + "gestorben."));
+        controllerChan.getInGameViewAUI().showNotification(Notifications.gameLost("Das Wasser ist viel zu schnell gestiegen \n"
+                + "und nun ist die ganze Insel versunken.\n"
+                + "Keiner von euch konnte sich retten.\n"
+                + "Ihr alle seid einen qualvollen Tod "
+                + "gestorben."));
     }
 
     /**
-     * Zieht die Menge an Flutkarten, die laut
-     * {@link de.sopra.javagame.model.WaterLevel} gezogen werden müssen und
+     * Zieht die Menge an Flutkarten, die laut {@link de.sopra.javagame.model.WaterLevel} gezogen werden müssen und
      * überflutet bzw. versenkt die entsprechenden Felder.
      */
     public void drawFloodCard() {
@@ -107,8 +108,7 @@ public class GameFlowController {
         FloodCard card = floodCardCardStack.draw(false);
         MapFull map = controllerChan.getCurrentAction().getMap();
         card.flood(map);
-        // Lege die Karte auf den Ablagestapel, wenn die Insel nur überflutet
-        // wurde, ansonsten kann sie aus dem
+        // Lege die Karte auf den Ablagestapel, wenn die Insel nur überflutet wurde, ansonsten kann sie aus dem
         // Spiel entfernt werden
         if (map.get(card.getTile()).getState() != GONE) {
             floodCardCardStack.discard(card);
@@ -118,8 +118,7 @@ public class GameFlowController {
         controllerChan.getInGameViewAUI().refreshMapTile(position, tile);
         controllerChan.getInGameViewAUI().refreshTurnState(controllerChan.getCurrentAction().getState());
         // Refreshe, welche Spieler gerettet werden müssen
-        List<Player> rescuesNeeded = playersNeedRescue(
-                controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
+        List<Player> rescuesNeeded = playersNeedRescue(controllerChan.getCurrentAction().getMap().getPositionForTile(card.getTile()));
         for (Player rescuePlayer : rescuesNeeded) {
             controllerChan.getInGameViewAUI().refreshMovementOptions(rescuePlayer.legalMoves(true));
         }
@@ -130,11 +129,33 @@ public class GameFlowController {
 //            }
 //        }
 
-        // Spiel ist verloren
+        //Spiel ist verloren
         if (card.getTile().getSpawn() == PlayerType.PILOT && map.get(card.getTile()).getState() == GONE) {
             gameLostNotification();
             return;
         }
+
+        // Überprüfe, ob das Spiel verloren ist, wenn das Tile untergeht und ein Spieler darauf sich nicht retten kann
+        boolean lost = false;
+        if (tile.getState() == GONE) {
+            // Finde alle Spieler auf diesem Tile und setze das Spiel auf verloren, falls sich einer von ihnen nicht
+            // retten konnte
+            List<Player> playersOnTile = controllerChan.getCurrentAction().getPlayers().stream().filter(player -> player.getPosition().equals(position)).collect(Collectors.toList());
+            for (Player player : playersOnTile) {
+                // Wenn der Spieler keinen legalen Zug hat, ist das Spiel verloren.
+                lost |= player.legalMoves(true).isEmpty();
+            }
+
+            // Wenn beide Tempel eines Artefaktes versinken und dieses noch nicht eingesammelt war ist das Spiel verloren
+            ArtifactType hidden = tile.getProperties().getHidden();
+            lost |= hidden != NONE && controllerChan.getCurrentAction().getMap().stream().filter(til -> til.getProperties().getHidden() == hidden && til.getState() == GONE).count() == 2;
+        }
+
+        if (lost) {
+            gameLostNotification();
+            controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
+        }
+
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
         endFloodCardDrawAction(floodCardCardStack);
     }
@@ -171,12 +192,12 @@ public class GameFlowController {
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.PLAYER_ACTION);
             controllerChan.getInGameViewAUI().refreshActivePlayer();
             controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
-            nextAction.getPlayers().forEach(
-                    player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
-            // Wenn die KI am Zug ist, soll sie einfach alle Aktionen
-            // aufbrauchen, 10 einfach so, hat keine Bedeutung
-            for (int i = 0; i < 10; i++) {
-                letAIAct(nextAction.getActivePlayer().getType());
+            nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
+            //Wenn die KI am Zug ist, soll sie einfach alle Aktionen aufbrauchen, 10 einfach so, hat keine Bedeutung
+            if (nextAction.getActivePlayer().isAi()) {
+                PlayerType activePlayer = nextAction.getActivePlayer().getType();
+                for (int i = 0; i < 10; i++)
+                    letAIAct(activePlayer);
             }
         }
         if (nextAction.getFloodCardStack().size() == emptyStack) {
@@ -186,9 +207,8 @@ public class GameFlowController {
     }
 
     /**
-     * Wenn mindestens eine Aktion gemacht wurde, wird eine Aktion
-     * zurückgenommen. Eine Aktion heißt in diesem Fall genau ein
-     * {@link Action}. Wurde keine gemacht passiert nichts.
+     * Wenn mindestens eine Aktion gemacht wurde, wird eine Aktion zurückgenommen. Eine Aktion heißt in diesem Fall
+     * genau ein {@link Action}. Wurde keine gemacht passiert nichts.
      */
     public void undo() {
         if (controllerChan.getJavaGame().canUndo()) {
@@ -200,12 +220,10 @@ public class GameFlowController {
     }
 
     /**
-     * Wenn mindestens ein {@link #undo()} aufgerufen wurde, wird die zuletzt
-     * rückgängig gemachte Aktion wiederholt. Ist das Spiel bereits auf der
-     * letzten gemachten Aktion passiert nichts.
+     * Wenn mindestens ein {@link #undo()} aufgerufen wurde, wird die zuletzt rückgängig gemachte Aktion wiederholt.
+     * Ist das Spiel bereits auf der letzten gemachten Aktion passiert nichts.
      *
-     * @return true, falls eine Aktion wiederholt wurde, false, falls keine
-     *         wiederholt werden konnte.
+     * @return true, falls eine Aktion wiederholt wurde, false, falls keine wiederholt werden konnte.
      */
     public boolean redo() {
         if (controllerChan.getJavaGame().canRedo()) {
@@ -218,8 +236,7 @@ public class GameFlowController {
     }
 
     public boolean isPausedToDiscard() {
-        // Überprüfe, ob einer der Spieler mehr als 5 Handkarten hat. In diesem
-        // Fall muss erst abgelegt werden,
+        // Überprüfe, ob einer der Spieler mehr als 5 Handkarten hat. In diesem Fall muss erst abgelegt werden,
         // bevor weitergespielt werden kann.
         for (Player player : controllerChan.getCurrentAction().getPlayers()) {
             if (player.getHand().size() > Player.MAXIMUM_HANDCARDS) {
@@ -229,9 +246,9 @@ public class GameFlowController {
 
         return false;
     }
-
-    public List<Player> playersPausedToDiscard() {
-        // Überprüfe, welcher der Spieler mehr als 5 Handkarten hat
+    
+    public List<Player> playersPausedToDiscard(){
+        //Überprüfe, welcher der Spieler mehr als 5 Handkarten hat
         List<Player> players = new LinkedList<Player>();
         for (Player player : controllerChan.getCurrentAction().getPlayers()) {
             if (player.getHand().size() > Player.MAXIMUM_HANDCARDS) {

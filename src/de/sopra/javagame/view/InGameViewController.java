@@ -1,6 +1,7 @@
 package de.sopra.javagame.view;
 
 import de.sopra.javagame.control.ControllerChan;
+import de.sopra.javagame.control.GameFlowController;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Player;
@@ -9,10 +10,7 @@ import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.cardstack.CardStack;
 import de.sopra.javagame.util.map.MapFull;
-import de.sopra.javagame.view.abstraction.AbstractViewController;
-import de.sopra.javagame.view.abstraction.DialogPack;
-import de.sopra.javagame.view.abstraction.Notification;
-import de.sopra.javagame.view.abstraction.ViewState;
+import de.sopra.javagame.view.abstraction.*;
 import de.sopra.javagame.view.customcontrol.*;
 import de.sopra.javagame.view.skin.WaterLevelSkin;
 import de.sopra.javagame.view.textures.TextureLoader;
@@ -29,17 +27,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.sopra.javagame.util.DebugUtil.debug;
-
+//Todo: Todo fixen
 /**
  * GUI für den Spielablauf
  *
@@ -80,7 +82,56 @@ public class InGameViewController extends AbstractViewController implements InGa
     Label roundNumber;
     private Timeline timeline;
 
+    public final MediaPlayer dorfPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/villager.wav").toExternalForm()));
+    private MediaPlayer ripPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/landstrassen.wav").toExternalForm()));
+    private List<MediaPlayer> bgmPlayers;
+    private int currentBgm = 0;
+
+    {
+        File[] files = new File("resources/sounds/bgm/").listFiles();
+        List<String> wavFiles = Arrays.stream(files)
+                .map(File::getAbsolutePath)
+                .collect(Collectors.toList());
+        Collections.shuffle(wavFiles);
+        bgmPlayers = wavFiles.stream().map(fileName -> {
+            String path = Paths.get(fileName).toUri().toString();
+            debug(path);
+            MediaPlayer m = new MediaPlayer(new Media(path));
+            m.setOnEndOfMedia(() -> {
+                m.stop();
+                System.out.println("SOOOS");
+                playNext();
+            });
+            return m;
+        }).collect(Collectors.toList());
+        dorfPlayer.setVolume(1);
+    }
+
+    private void playNext() {
+        if(currentBgm == bgmPlayers.size()) {
+            currentBgm = 0;
+            Collections.shuffle(bgmPlayers);
+        }
+        bgmPlayers.get(currentBgm++).play();
+        currentBgm %= bgmPlayers.size();
+    }
+
+    public void playBgm() {
+        bgmPlayers.get(currentBgm).play();
+    }
+
+    public void pauseBgm() {
+        bgmPlayers.get(currentBgm).pause();
+    }
+
+    public void stopBgm() {
+        bgmPlayers.get(currentBgm).stop();
+    }
+
     public void init() {
+        bgmPlayers.forEach(mediaPlayer -> getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> mediaPlayer.volumeProperty().set(newVal.doubleValue() / 100.0)));
+        getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> dorfPlayer.volumeProperty().set(newVal.doubleValue() / 100.0));
+
         this.helicopterHelper = null;
         waterLevelView.setSkin(new WaterLevelSkin(waterLevelView));
         waterLevelView.setProgress(7);
@@ -104,7 +155,6 @@ public class InGameViewController extends AbstractViewController implements InGa
 
         //debug
 //        refreshWaterLevel(4);
-
         //setze Timeline für Replays
         timeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
             getGameWindow().getControllerChan().getGameFlowController().redo();
@@ -207,7 +257,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                     "Möchtest du dir wirklich einen Tipp anzeigen lassen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
                             + "aus der Highscore-Liste verbannt!");
-            pack.addButton("Tipp zeigen", () -> getHint());
+            pack.addButton("Tipp zeigen", this::getHint);
             pack.addButton("Abbrechen", () -> {
             });
             pack.setAlertType(AlertType.CONFIRMATION);
@@ -230,7 +280,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                     "Möchtest du einen Zug rückgängig machen?",
                     "Du wirst dann mit diesem Spiel für immer \n"
                             + "aus der Highscore-Liste verbannt!");
-            pack.addButton("Rückgängig machen", () -> undo());
+            pack.addButton("Rückgängig machen", this::undo);
             pack.addButton("Abbrechen", () -> {
             });
             pack.setAlertType(AlertType.CONFIRMATION);
@@ -266,9 +316,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onSettingsClicked() {
+        dorfPlayer.play();
 
         try {
             InGameSettingsViewController.openModal(getGameWindow());
+            pauseBgm();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -333,10 +385,12 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
         if (notification.isGameWon()) {
             header = "Herzlichen Glückwunsch! Ihr habt die Insel besiegt.";
+            dorfPlayer.play();
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
+            ripPlayer.play();
         }
-        System.out.println("Hallo hier");
+       getGameWindow().getControllerChan().getAiController().setActive(false);
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
         endGameDialogue.setAlertType(AlertType.CONFIRMATION);
         endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
@@ -396,6 +450,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshCardsTransferable(boolean transferable) {
+        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
+        this.doAIActionActivePlayer();
+
         //FIXME
 //        if (transferable) {
 //            List<ArtifactCardView> cardsTohighLight = cardGridPane.getChildren().stream().map(node -> (ArtifactCardView) node)
@@ -412,6 +469,9 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshHand(PlayerType player, List<ArtifactCard> cards) {
+        // Lass die KI wissen, dass sie jetzzzzzt aus dem Schlaf kommen kann
+        this.doAIAction(player);
+
         if (getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType() == player) {
             cardGridPane.getChildren().clear();
             int index = 0;
@@ -457,11 +517,6 @@ public class InGameViewController extends AbstractViewController implements InGa
         EnumSet<ArtifactType> artifacts = this.getGameWindow().getControllerChan().getCurrentAction().getDiscoveredArtifacts();
 
         highlightArtifacts(artifacts);
-
-        debug("found fire: " + artifacts.contains(ArtifactType.FIRE));
-        debug("found water: " + artifacts.contains(ArtifactType.WATER));
-        debug("found earth: " + artifacts.contains(ArtifactType.EARTH));
-        debug("found air: " + artifacts.contains(ArtifactType.AIR));
     }
 
     @Override
@@ -530,6 +585,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshActivePlayer() {
+        this.doAIActionActivePlayer();
+
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
         refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
@@ -627,7 +684,7 @@ public class InGameViewController extends AbstractViewController implements InGa
             case WAIT_AND_DRINK_TEA:
                 notification = "Zug abgeben.";
         }
-        showNotification(notification);
+        showNotification(Notifications.info(notification));
     }
 
     @Override
@@ -687,6 +744,7 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void setSpecialActive(boolean specialActive) {
         this.specialActive = specialActive;
+        debug("special is active: " + specialActive);
     }
 
     public void setTransferActive(boolean transferActive) {
@@ -729,5 +787,15 @@ public class InGameViewController extends AbstractViewController implements InGa
         // Dehighlight all and reset Helicopter card
         refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
         this.helicopterHelper = null;
+    }
+
+    private void doAIActionActivePlayer() {
+        PlayerType activePlayer = this.getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getType();
+        this.doAIAction(activePlayer);
+    }
+
+    private void doAIAction(PlayerType player) {
+        GameFlowController flowController = this.getGameWindow().getControllerChan().getGameFlowController();
+        flowController.letAIAct(player);
     }
 }
