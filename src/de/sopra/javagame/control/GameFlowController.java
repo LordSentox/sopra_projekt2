@@ -147,7 +147,8 @@ public class GameFlowController {
 
             // Wenn beide Tempel eines Artefaktes versinken und dieses noch nicht eingesammelt war ist das Spiel verloren
             ArtifactType hidden = tile.getProperties().getHidden();
-            lost |= hidden != NONE && controllerChan.getCurrentAction().getMap().stream().filter(til -> til.getProperties().getHidden() == hidden && til.getState() == GONE).count() == 2;
+            if (!controllerChan.getCurrentAction().getDiscoveredArtifacts().contains(hidden))
+                lost |= hidden != NONE && controllerChan.getCurrentAction().getMap().stream().filter(til -> til.getProperties().getHidden() == hidden && til.getState() == GONE).count() == 2;
         }
 
         if (lost) {
