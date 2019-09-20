@@ -6,6 +6,8 @@ import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Point;
 
+import java.util.List;
+
 import static de.sopra.javagame.control.ai2.DecisionResult.TURN_ACTION;
 
 /**
@@ -23,8 +25,9 @@ public class TurnDrainTile extends Decision {
     @Override
     public Decision decide() {
         Player activePlayer = control.getActivePlayer();
-        if (!activePlayer.drainablePositions().isEmpty()) {
-            drainTile = activePlayer.drainablePositions().get(0);
+        List<Point> drainable = activePlayer.drainablePositions();
+        if (!drainable.isEmpty()) {
+            drainTile = drainable.get(0);
             return this;
         }
         return null;
@@ -32,7 +35,7 @@ public class TurnDrainTile extends Decision {
 
     @Override
     public ActionQueue act() {
-        if (!(player().getType() == PlayerType.ENGINEER)) {
+        if (player().getType() != PlayerType.ENGINEER) {
             return startActionQueue().drain(drainTile);
         }
         return startActionQueue().engineersDrain(drainTile);
