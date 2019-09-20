@@ -272,13 +272,6 @@ public class GameFlowController {
                 && controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION;
     }
 
-    //KI wenn sie sich retten soll
-    private void makeMoveToRescue(PlayerType type) {
-        //KI auffordern sich selbst zu retten
-        //KI erkennt die Rettungssituation indem der gegebene Spieler auf MapTile mit GONE steht
-        letAIAct(type);
-    }
-
     //KI - Neuer Zug
     public void beginNewTurn() {
         //wenn am Anfang des Zuges die KI dran ist, dann soll die KI ihren Zug machen
