@@ -6,8 +6,8 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.model.Action;
 import de.sopra.javagame.model.ArtifactCard;
+import de.sopra.javagame.model.ArtifactCardType;
 import de.sopra.javagame.model.ArtifactType;
-import de.sopra.javagame.model.MapTileState;
 import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.sopra.javagame.model.ArtifactType.NONE;
+import static de.sopra.javagame.util.DebugUtil.debugAI;
 
 /**
  * <h1>Projekt2</h1>
@@ -29,15 +30,14 @@ public class AIControllerUtil {
 
     public static void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
         queue.actionIterator().forEachRemaining(action -> {
-            DebugUtil.debug("executing action: " + action.toString());
+            debugAI(" ---> decided to do: " + action.toString());
             Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
             switch (action.getType()) {
                 case MOVE:
-                    boolean isRescuing = controller.getTile(player.getPosition()).getState() == MapTileState.GONE;
-                    player.move(action.getTargetPoint(), !isRescuing, isRescuing);
+                    movePlayer(controllerChan, action, player);
                     break;
                 case DRAIN:
-                    player.drain(action.getTargetPoint());
+                    drain(controllerChan, action, player);
                     break;
                 case DISCARD_CARD:
                     discardCard(controllerChan, action, player);
@@ -55,10 +55,32 @@ public class AIControllerUtil {
                     collectTreasure(controllerChan, controller, player);
                     break;
                 case WAIT_AND_DRINK_TEA:
-                    //TODO remove action or end turn
+                    endTurn(controllerChan);
                     break;
             }
+            debugAI(" ---> action should be done by now: ");
         });
+    }
+
+    private static void movePlayer(ControllerChan controller, SimpleAction action, Player player) {
+        //boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
+        //player.move(action.getTargetPoint(), !isRescuing, isRescuing);
+        //controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
+
+        // TODO
+        controller.getActivePlayerController().move(action.getTargetPoint(), false);
+    }
+
+    private static void drain(ControllerChan controllerChan, SimpleAction action, Player player) {
+        //player.drain(action.getTargetPoint());
+        //controllerChan.getInGameViewAUI().refreshMapTile(action.getTargetPoint(),
+        //       controllerChan.getCurrentAction().getMap().get(action.getTargetPoint()));
+        controllerChan.getActivePlayerController().drain(action.getTargetPoint());
+    }
+
+    private static void endTurn(ControllerChan controllerChan) {
+        controllerChan.getCurrentAction().getActivePlayer().setActionsLeft(0);
+        controllerChan.getActivePlayerController().endActionPhase();
     }
 
     private static void specialCard(ControllerChan controllerChan, SimpleAction action, Player player) {
@@ -67,9 +89,16 @@ public class AIControllerUtil {
             if (player.getHand().get(i).getType() == action.getCardType())
                 index = i;
         }
-        controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
-                new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
-                new ArrayList<>(action.getTargetPlayers()));
+        if (action.getCardType() == ArtifactCardType.HELICOPTER) {
+            controllerChan.getInGameUserController().playHelicopterCard(player.getType(), index,
+                    new Pair<>(action.getStartingPoint(), action.getTargetPoint()),
+                    new ArrayList<>(action.getTargetPlayers()));
+            debugAI("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString()
+                    + " from " + action.getStartingPoint().toString() + " with " + action.getTargetPlayers().toString());
+        } else if (action.getCardType() == ArtifactCardType.SANDBAGS) {
+            controllerChan.getInGameUserController().playSandbagCard(player.getType(), index, action.getTargetPoint());
+            debugAI("playing " + action.getCardType().name() + " to " + action.getTargetPoint().toString());
+        } else debugAI("THIS SHOULD NEVER HAPPEN!!! action: " + action.toString());
     }
 
     private static void collectTreasure(ControllerChan controllerChan, AIController controller, Player player) {
@@ -93,14 +122,16 @@ public class AIControllerUtil {
             case PILOT:
             case EXPLORER:
                 player.move(action.getTargetPoint(), true, true);
+                controllerChan.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
                 break;
             case ENGINEER:
-                player.drain(action.getTargetPoint());
+                drain(controllerChan, action, player);
                 break;
             case NAVIGATOR:
                 targetPlayer = controller.getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
                 Direction direction = targetPlayer.getPosition().getPrimaryDirection(action.getTargetPoint());
                 player.forcePush(direction, targetPlayer);
+                controllerChan.getInGameViewAUI().refreshPlayerPosition(targetPlayer.getPosition(), targetPlayer.getType());
                 break;
             default:
                 break;

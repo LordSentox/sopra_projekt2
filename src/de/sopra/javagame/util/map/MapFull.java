@@ -19,8 +19,9 @@ public class MapFull extends Map<MapTile> {
     }
 
     MapFull(MapTile[][] raw) throws IllegalArgumentException {
-        if (raw == null || raw.length - 2 != SIZE_Y)
-            throw new IllegalArgumentException();
+//        if (raw == null || raw.length - 2 != SIZE_Y)
+//            throw new IllegalArgumentException();
+        checkRaw(raw);
         if (Arrays.stream(raw).anyMatch(row -> row.length - 2 != SIZE_X)) throw new IllegalArgumentException();
 
         this.raw = this.newEmptyRaw();
@@ -30,6 +31,12 @@ public class MapFull extends Map<MapTile> {
                 this.raw[y][x] = tile == null ? null : tile.copy();
             }
         }
+    }
+    
+    //#PMD
+    public void checkRaw(MapTile[][] raw){
+      if (raw == null || raw.length - 2 != SIZE_Y)
+      throw new IllegalArgumentException();
     }
 
     /**

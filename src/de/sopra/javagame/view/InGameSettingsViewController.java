@@ -81,6 +81,7 @@ public class InGameSettingsViewController extends AbstractViewController {
 
 
         ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).playBgm();
+        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).dorfPlayer.pause();
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
@@ -101,6 +102,7 @@ public class InGameSettingsViewController extends AbstractViewController {
     public void onBackToMenuClicked() {
 
         ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).stopBgm();
+        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).dorfPlayer.stop();
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         modalCopy.close();
@@ -108,5 +110,6 @@ public class InGameSettingsViewController extends AbstractViewController {
         ((MainMenuViewController)getGameWindow().getView(ViewState.MENU)).init();
         changeState(ViewState.IN_GAME_SETTINGS, ViewState.MENU);
     }
+
 
 }

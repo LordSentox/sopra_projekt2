@@ -67,8 +67,8 @@ public class MapController {
             mapEditorViewAUI.setMap(name, map);
 
         } catch (IOException e) {
-            System.out.println("Map konnten nicht eingelesen werden");
             e.printStackTrace();
+            System.err.println("Map konnten nicht eingelesen werden");
         }
 
     }

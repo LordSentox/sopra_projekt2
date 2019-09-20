@@ -66,6 +66,7 @@ public class GameWindow implements NotificationAUI {
 
         mainStage.setResizable(false);
         mainStage.initStyle(StageStyle.UNDECORATED);
+        mainStage.setAlwaysOnTop(false);
         this.setState(ViewState.CLOSE, ViewState.MENU);
         mainStage.show();
     }
@@ -202,11 +203,11 @@ public class GameWindow implements NotificationAUI {
                 if (result.isPresent()) {
                     CommandResult commandResult = Commands.processCommand(this, result.get());
                     if (!commandResult.wasSuccessful()) {
-                        System.out.println(commandResult.getResultMessage());
+                        DebugUtil.debug(commandResult.getResultMessage());
                         if (commandResult.get() instanceof Exception)
                             ((Exception) commandResult.get()).printStackTrace();
                         else System.err.println("error result: " + commandResult.get());
-                    } else System.out.println("result: " + commandResult.get());
+                    } else DebugUtil.debug("result: " + commandResult.get());
                 }
             }
         });
@@ -270,8 +271,8 @@ public class GameWindow implements NotificationAUI {
             DebugUtil.debug("info notification: " + notification.message());
         }
     }
-    
-    public void setDeveloperSettingsActive (boolean setActive) {
+
+    public void setDeveloperSettingsActive(boolean setActive) {
         //this.settings.setDevTools(setActive);
         this.developerSettings = setActive;
     }

@@ -30,11 +30,14 @@ public class AIController {
 
     private Supplier<Player> activePlayerSupplier;
 
+    private boolean active;
+
     public AIController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
         this.artifactCardStackTracker = new CardStackTracker<>();
         this.floodCardStackTracker = new CardStackTracker<>();
         this.processor = null;
+        this.active = false;
     }
 
     /**
@@ -45,6 +48,14 @@ public class AIController {
      */
     public boolean hasAI() {
         return processor != null;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     /**
@@ -98,6 +109,15 @@ public class AIController {
      */
     public boolean isCurrentlyDiscarding() {
         return getActivePlayer().getHand().size() > Player.MAXIMUM_HANDCARDS;
+    }
+
+    /**
+     * Ob der aktive Spieler am Zug ist oder er außerhalb seines Zuges etwas ausführen soll
+     *
+     * @return <code>true</code> wenn der aktive Spieler gleich dem aktiven Spieler im Spiel ist
+     */
+    public boolean isAIsTurn() {
+        return getCurrentAction().getActivePlayer().getType() == getActivePlayer().getType();
     }
 
     /**
@@ -283,6 +303,7 @@ public class AIController {
      *               beinhaltet den Spieler, welche die Aktion durchführen soll
      */
     public void makeStep(Supplier<Player> player) {
+        if (!isActive()) return;
         setActivePlayerSupplier(player);
         processor.makeStep(this);
     }
@@ -306,6 +327,7 @@ public class AIController {
      * @see AIActionTip
      */
     public SimpleAction getTip(Supplier<Player> player) {
+        if (!isActive()) return null;
         setActivePlayerSupplier(player);
         return processor.getTip(this);
     }

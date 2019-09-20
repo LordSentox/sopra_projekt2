@@ -12,7 +12,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static de.sopra.javagame.model.ArtifactType.NONE;
 import static de.sopra.javagame.model.MapTileState.GONE;
 
 /**
@@ -40,6 +42,7 @@ public class GameFlowController {
             if (currentCard.getType() == ArtifactCardType.WATERS_RISE) {
                 waterLevel.increment();
                 shuffleBack = true;
+               controllerChan.getCurrentAction().getArtifactCardStack().discard(currentCard);
                 if (waterLevel.isGameLost()) {
                     gameLostNotification();
                     return;
@@ -127,6 +130,29 @@ public class GameFlowController {
             return;
         }
 
+
+        // Überprüfe, ob das Spiel verloren ist, wenn das Tile untergeht und ein Spieler darauf sich nicht retten kann
+        boolean lost = false;
+        if (tile.getState() == GONE) {
+            // Finde alle Spieler auf diesem Tile und setze das Spiel auf verloren, falls sich einer von ihnen nicht
+            // retten konnte
+            List<Player> playersOnTile = controllerChan.getCurrentAction().getPlayers().stream().filter(player -> player.getPosition().equals(position)).collect(Collectors.toList());
+            for (Player player : playersOnTile) {
+                // Wenn der Spieler keinen legalen Zug hat, ist das Spiel verloren.
+                lost |= player.legalMoves(true).isEmpty();
+            }
+
+            // Wenn beide Tempel eines Artefaktes versinken und dieses noch nicht eingesammelt war ist das Spiel verloren
+            ArtifactType hidden = tile.getProperties().getHidden();
+            if (!controllerChan.getCurrentAction().getDiscoveredArtifacts().contains(hidden))
+                lost |= hidden != NONE && controllerChan.getCurrentAction().getMap().stream().filter(til -> til.getProperties().getHidden() == hidden && til.getState() == GONE).count() == 2;
+        }
+
+        if (lost) {
+            gameLostNotification();
+            controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
+        }
+
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
         endFloodCardDrawAction(floodCardCardStack);
     }
@@ -152,7 +178,7 @@ public class GameFlowController {
         }
         nextAction.setFloodCardsToDraw(nextAction.getFloodCardsToDraw() - 1);
         controllerChan.getInGameViewAUI().refreshFloodStack(floodCardCardStack);
-        //Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen
+        // Nachdem ne Flutkarte gezogen wurde, soll KI karten schmeißen dürfen
         letAIAct(nextAction.getActivePlayer().getType());
 
         int emptyStack = 0;
@@ -166,8 +192,10 @@ public class GameFlowController {
             controllerChan.getInGameViewAUI().refreshActionsLeft(nextAction.getActivePlayer().getActionsLeft());
             nextAction.getPlayers().forEach(player -> controllerChan.getInGameViewAUI().refreshHand(player.getType(), player.getHand()));
             //Wenn die KI am Zug ist, soll sie einfach alle Aktionen aufbrauchen, 10 einfach so, hat keine Bedeutung
-            for (int i = 0; i < 10; i++) {
-                letAIAct(nextAction.getActivePlayer().getType());
+            if (nextAction.getActivePlayer().isAi()) {
+                PlayerType activePlayer = nextAction.getActivePlayer().getType();
+                for (int i = 0; i < 10; i++)
+                    letAIAct(activePlayer);
             }
         }
         if (nextAction.getFloodCardStack().size() == emptyStack) {

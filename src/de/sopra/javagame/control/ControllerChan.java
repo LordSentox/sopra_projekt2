@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import de.sopra.javagame.control.ai.GameAI;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.util.cardstack.CardStack;
@@ -24,7 +25,7 @@ import static de.sopra.javagame.util.DebugUtil.debug;
  */
 public class ControllerChan {
     public static final String SAVE_GAME_FOLDER = "data/save_games/";
-    public static final String REPLAY_FOLDER = "data/replays/";
+    public static final String REPLAY_FOLDER = "data/high_scores/replays/";
     public static final File SETTINGS_FILE = new File("data/settings.json");
 
     private final ActivePlayerController activePlayerController;
@@ -131,37 +132,29 @@ public class ControllerChan {
         for (int i = 0; i < 6; i++) {
             //TODO: Wait
             //try{ Thread.sleep(1000); }catch(InterruptedException ignored){}
-
             MapFull map = this.getCurrentAction().getMap();
             FloodCard floodCard = floodCardCardStack.draw(true);
             floodCard.flood(map);
 
             this.inGameViewAUI.refreshMapTile(map.getPositionForTile(floodCard.getTile()), map.get(floodCard.getTile()));
             this.inGameViewAUI.refreshFloodStack(floodCardCardStack);
-
         }
         //player auf map packen
         this.currentAction.getPlayers().forEach(player -> {
             this.inGameViewAUI.refreshPlayerPosition(player.getPosition(), player.getType());
         });
-
         //2 Artefaktkarten ziehen
         this.currentAction.getPlayers().forEach(player -> {
-
             player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
             player.getHand().add(this.currentAction.getArtifactCardStack().drawAndSkip(card -> card.getType() == ArtifactCardType.WATERS_RISE));
             this.inGameViewAUI.refreshHand(player.getType(), player.getHand());
         });
-
         this.currentAction = pair.getLeft().finishAction(currentAction);
-
         //Pilot braucht auch im ersten Zug seine Spezialfähigkeit
         this.getCurrentAction().getActivePlayer().onTurnStarted();
-
         //start KI wenns ihr Zug ist
         //TODO
         getInGameViewAUI().refreshHopefullyAll(getCurrentAction());
-
     }
 
     /**
@@ -188,11 +181,11 @@ public class ControllerChan {
             this.gameName = loadGameName;
             this.inGameViewAUI.refreshSome();
         } catch (FileNotFoundException e) {
-            System.out.println("Es gab keine solche Datei.");
             e.printStackTrace();
+            System.err.println("Es gab keine solche Datei.");
         } catch (IOException e) {
-            System.out.println("Beim Import ist ein Fehler aufgetreten!");
             e.printStackTrace();
+            System.err.println("Beim Import ist ein Fehler aufgetreten!");
         }
     }
 
@@ -221,6 +214,8 @@ public class ControllerChan {
         File saveFile;
         if (gameFinished) {
             saveFile = new File(ControllerChan.REPLAY_FOLDER + this.getGameName() + ".replay");
+            HighScore score = new HighScore(gameName, getJavaGame().getMapName(), getJavaGame().calculateScore(), gameName);
+            getHighScoresController().saveHighScore(score);
         } else {
             saveFile = new File( ControllerChan.SAVE_GAME_FOLDER + this.getGameName() + ".save");
         }

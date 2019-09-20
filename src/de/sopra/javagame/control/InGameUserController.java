@@ -55,6 +55,7 @@ public class InGameUserController {
         Pair sourceInformation = new Pair<PlayerType, Integer>(sourcePlayer, handCardIndex);
         actuallyMovePlayers(sourceInformation, flightRoute, players, currentAction);
         controllerChan.finishAction();
+        refreshAfterOneCardLess();
     }
 
     /**
@@ -76,7 +77,9 @@ public class InGameUserController {
         PlayerType sourcePlayer = sourceInformation.getLeft();
         int handCardIndex = sourceInformation.getRight();
         //entferne die gespielte Karte von der Spieler-Hand
+        currentAction.getArtifactCardStack().discard((currentAction.getPlayer(sourcePlayer).getHand().get(handCardIndex)));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
+        currentAction = controllerChan.finishAction();
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
         //bewege die players
         for (PlayerType currentPlayerType : players) {
@@ -214,6 +217,7 @@ public class InGameUserController {
         }
 
         //entferne die gespielte Karte von der Spieler-Hand
+        currentAction.getArtifactCardStack().discard(handCards.get(handCardIndex));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
 
@@ -221,6 +225,7 @@ public class InGameUserController {
         currentAction.getMap().get(destination).drain();
         controllerChan.getInGameViewAUI().refreshMapTile(destination, tileToDrain);
         controllerChan.finishAction();
+        refreshAfterOneCardLess();
     }
 
 
@@ -257,6 +262,7 @@ public class InGameUserController {
             controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
         }
 
+        refreshAfterOneCardLess();
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
         controllerChan.getInGameViewAUI().refreshArtifactStack(currentAction.getArtifactCardStack());
 
@@ -269,5 +275,23 @@ public class InGameUserController {
         } else {
             DebugUtil.debug("du Dulli rescue");
         }
+    }
+
+    private void refreshAfterOneCardLess() {
+        List<Player> players = controllerChan.getCurrentAction().getPlayers();
+        boolean keepTurnState = false;
+        for (Player checkedPlayer : players) {
+            if (checkedPlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
+                keepTurnState = true;
+            }
+        }
+        if (keepTurnState || (controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION)) {
+            return;
+        }
+        Action currentAction = controllerChan.getCurrentAction();
+        currentAction.setState(TurnState.FLOOD);
+        currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getDrawAmount());
+        controllerChan.getInGameViewAUI().refreshTurnState(TurnState.FLOOD);
+
     }
 }

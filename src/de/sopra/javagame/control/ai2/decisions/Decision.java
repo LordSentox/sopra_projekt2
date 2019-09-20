@@ -42,7 +42,7 @@ public abstract class Decision {
     private PreCondition preCondition;
 
     protected void debug(String debug) {
-        DebugUtil.debug(debug);
+        DebugUtil.debugAI(debug);
     }
 
     public static Decision empty() {
@@ -88,14 +88,11 @@ public abstract class Decision {
             public Decision decide() {
                 //Wenn die PreCondition nicht erfüllt, darf die decide Methode nicht verwendet werden
                 Decision decision = self.matchPreCondition() ? self.decide() : null;
-                debug("current decision: " + decision);
                 if (decision == null) {
                     //mögliche getroffene Conditions sollen nicht neu getroffen werden (Effizienz)
                     lessImportantDecision.conditions = self.conditions;
                     //Auch hier: Wenn die PreCondition nicht erfüllt, darf die decide Methode nicht verwendet werden
                     Decision otherDecision = lessImportantDecision.matchPreCondition() ? lessImportantDecision.decide() : null;
-                    if (otherDecision == null)
-                        debug("less important decision not made: " + lessImportantDecision.getClass().getSimpleName());
                     return otherDecision;
                 } else return decision;
             }

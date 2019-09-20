@@ -16,6 +16,8 @@ import de.spaceparrots.api.command.annotation.Senior;
 @Senior
 public class DebugTools {
 
+    private static ConsoleView consoleView;
+
     @Command("fullscreen")
     public void fullscreen(@Scope GameWindow window) {
         window.getMainStage().setFullScreen(!window.getMainStage().isFullScreen());
@@ -37,6 +39,14 @@ public class DebugTools {
     public void getTip(@Scope GameWindow window) {
         SimpleAction tip = window.getControllerChan().getAiController().getTip();
         window.getControllerChan().getInGameViewAUI().showTip(tip);
+    }
+
+    @Command("console")
+    public void console(@Scope GameWindow window) {
+        if (consoleView == null) {
+            consoleView = new ConsoleView(System.out);
+        }
+        consoleView.show(window.getMainStage());
     }
 
     @Command("test")
