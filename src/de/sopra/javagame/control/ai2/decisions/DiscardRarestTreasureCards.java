@@ -27,23 +27,25 @@ public class DiscardRarestTreasureCards extends Decision {
         int fire = activeHand.getAmount(FIRE);
         int earth = activeHand.getAmount(EARTH);
         int air = activeHand.getAmount(AIR);
-        if (all(water <= fire, water <= earth, water <= air)) {
+        if (all(water <= fire, water <= earth, water <= air, water > ZERO_CARDS)) {
             discarded = WATER;
             return this;
         }
-        if (all(fire <= water, fire <= earth, fire <= air)) {
+        if (all(fire <= water, fire <= earth, fire <= air, fire > ZERO_CARDS)) {
             discarded = FIRE;
             return this;
         }
-        if (all(earth <= fire, earth <= water, earth <= air)) {
+        if (all(earth <= fire, earth <= water, earth <= air, earth > ZERO_CARDS)) {
             discarded = EARTH;
             return this;
         }
-        if (all(air <= fire, air <= earth, air <= water)) {
+        if (all(air <= fire, air <= earth, air <= water, air > ZERO_CARDS)) {
             discarded = AIR;
             return this;
         }
-        return null;
+        //discard first any
+        discarded = activeHand.getCards().get(activeHand.getCardsInHand() - 1).getType();
+        return this;
     }
 
     @Override
