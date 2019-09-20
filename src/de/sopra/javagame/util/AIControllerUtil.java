@@ -28,18 +28,18 @@ import static de.sopra.javagame.util.DebugUtil.debugAI;
  */
 public class AIControllerUtil {
 
-    private static SimpleAction lastAction;
+    private static ActionQueue lastQueue;
 
     public static synchronized void doSteps(ControllerChan controllerChan, AIController controller, ActionQueue queue) {
+        if (lastQueue != null && queue.toString().equals(lastQueue.toString())) {
+            throw new RuntimeException(" !! ERROR - want to do it twice: " + queue.toString());
+        } else lastQueue = queue;
         queue.actionIterator().forEachRemaining(action -> {
             step(controllerChan, controller, queue, action);
         });
     }
 
     private static void step(ControllerChan controllerChan, AIController controller, ActionQueue queue, SimpleAction action) {
-        if (lastAction != null && action.toString().equals(lastAction.toString())) {
-            throw new RuntimeException(" !! ERROR - want to do it twice: " + action.toString());
-        } else lastAction = action;
         debugAI(" ---> decided to do: " + action.toString());
         Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
         switch (action.getType()) {
