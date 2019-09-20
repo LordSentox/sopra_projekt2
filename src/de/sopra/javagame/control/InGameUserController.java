@@ -284,7 +284,8 @@ public class InGameUserController {
             }
         }
         if (keepTurnState || (controllerChan.getCurrentAction().getState() == TurnState.PLAYER_ACTION)) {
-            return;
+
+            controllerChan.getInGameViewAUI().refreshTurnState(controllerChan.getCurrentAction().getState());
         }
         Action currentAction = controllerChan.getCurrentAction();
         currentAction.setState(TurnState.FLOOD);

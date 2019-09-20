@@ -10,7 +10,7 @@ package de.sopra.javagame.util;
 public class DebugUtil {
 
     public static boolean debugEnabled = false;
-    public static boolean debugAI = true;
+    public static boolean debugAI = false;
 
     public static void debug(String message) {
         if (debugEnabled)

@@ -81,15 +81,7 @@ public class GamePreparationsViewController extends AbstractViewController {
     public void init() {
         mainPane.setImage(TextureLoader.getBackground());
 
-        chooseFloodCardStackComboBox.getItems().clear();
-        chooseArtifactCardStackComboBox.getItems().clear();
-        chooseDeveloperMapComboBox.getItems().clear();
-        chooseMapComboBox.getItems().clear();
-        playerOneChooseCharakterComboBox.getItems().clear();
-        playerTwoChooseCharakterComboBox.getItems().clear();
-        playerThreeChooseCharakterComboBox.getItems().clear();
-        playerFourChooseCharakterComboBox.getItems().clear();
-        cannotStartGameLabel.setText("");
+        resetAllObjets();
 
         playerTypesList =
                 FXCollections.observableArrayList(
@@ -142,6 +134,23 @@ public class GamePreparationsViewController extends AbstractViewController {
             
         }
 
+    }
+
+
+    private void resetAllObjets() {
+        chooseFloodCardStackComboBox.getItems().clear();
+        chooseArtifactCardStackComboBox.getItems().clear();
+        chooseDeveloperMapComboBox.getItems().clear();
+        chooseMapComboBox.getItems().clear();
+        playerOneChooseCharakterComboBox.getItems().clear();
+        playerTwoChooseCharakterComboBox.getItems().clear();
+        playerThreeChooseCharakterComboBox.getItems().clear();
+        playerFourChooseCharakterComboBox.getItems().clear();
+        cannotStartGameLabel.setText("");
+        playerOneNameTextField.setText("");
+        playerTwoNameTextField.setText("");
+        playerThreeNameTextField.setText("");
+        playerFourNameTextField.setText("");
     }
 
 

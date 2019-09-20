@@ -142,6 +142,7 @@ public class ActivePlayerController {
             //  Wird hierfür tatsächlich jedes Mal eine Aktion benötigt? JA
             player.setActionsLeft(player.getActionsLeft() - 1);
             controllerChan.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+            controllerChan.getInGameViewAUI().refreshTurnState(controllerChan.getCurrentAction().getState());
 
             controllerChan.finishAction();
         }

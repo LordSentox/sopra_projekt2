@@ -693,14 +693,20 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshTurnState(TurnState turnState) {
         resetHighlighting();
+        List<Player> players = getGameWindow().getControllerChan().getCurrentAction().getPlayers();
         switch (turnState) {
             case PLAYER_ACTION:
+                this.endTurnButton.setDisable(false);
+                for (Player currentPlayer : players) {
+                    if(currentPlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
+                        this.endTurnButton.setDisable(true);
+                    }
+                }
                 this.refreshActionsLeft(getGameWindow()
                         .getControllerChan()
                         .getCurrentAction()
                         .getActivePlayer()
                         .getActionsLeft());
-                this.endTurnButton.setDisable(false);
                 break;
             case DRAW_ARTIFACT_CARD:
                 this.rotateTurnSpinner(-240);
