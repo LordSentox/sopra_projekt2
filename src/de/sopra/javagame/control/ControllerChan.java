@@ -25,7 +25,7 @@ import static de.sopra.javagame.util.DebugUtil.debug;
  */
 public class ControllerChan {
     public static final String SAVE_GAME_FOLDER = "data/save_games/";
-    public static final String REPLAY_FOLDER = "data/replays/";
+    public static final String REPLAY_FOLDER = "data/high_scores/replays/";
     public static final File SETTINGS_FILE = new File("data/settings.json");
 
     private final ActivePlayerController activePlayerController;
