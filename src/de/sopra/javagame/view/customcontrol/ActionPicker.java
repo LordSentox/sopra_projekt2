@@ -168,7 +168,7 @@ public class ActionPicker extends CirclePopupMenu {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> findArtifactHandler = e -> picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().collectArtifact();
-                CustomMenuItem findArtifactButtonMenuItem = new CustomMenuItem(new Button("move"));
+                CustomMenuItem findArtifactButtonMenuItem = new CustomMenuItem(new Button("collect_artifact"));
                 findArtifactButtonMenuItem.setGraphic(new ImageView(TextureLoader.getFindArtifact()));
                 findArtifactButtonMenuItem.setOnAction(findArtifactHandler);
 
@@ -200,7 +200,7 @@ public class ActionPicker extends CirclePopupMenu {
 
                     }
                 };
-                CustomMenuItem playcardButtonMenuItem = new CustomMenuItem(new Button("special"));
+                CustomMenuItem playcardButtonMenuItem = new CustomMenuItem(new Button("play_card"));
                 playcardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getSpecial()));
                 playcardButtonMenuItem.setOnAction(playCardHandler);
 
@@ -219,15 +219,9 @@ public class ActionPicker extends CirclePopupMenu {
                         picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getInGameUserController().playSandbagCard(picker.movingPlayer, picker.cardIndex,
                                 picker.mapPaneTile.getPosition());
                         picker.mapPaneTile.getControl().resetTargetPlayer();
-                        picker.mapPaneTile.getControl().resetHighlighting();
-                        ControllerChan cChan = picker.mapPaneTile.getControl().getGameWindow().getControllerChan();
-                        Action currentAction = cChan.getCurrentAction();
-                        if(!cChan.getGameFlowController().isPausedToDiscard()){
-                            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getLevel());
-                        }
                     }
                 };
-                CustomMenuItem sandBagButtonMenuItem = new CustomMenuItem(new Button("special"));
+                CustomMenuItem sandBagButtonMenuItem = new CustomMenuItem(new Button("sandbag"));
                 sandBagButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
                 sandBagButtonMenuItem.setOnAction(sandBagHandler);
 
