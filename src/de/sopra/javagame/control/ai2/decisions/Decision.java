@@ -212,6 +212,7 @@ public abstract class Decision {
 
     public void setControl(AIController control) {
         this.control = control;
+        this.conditions = new HashMap<>(); //reset conditions
     }
 
     public final void setPreCondition(PreCondition preCondition) {

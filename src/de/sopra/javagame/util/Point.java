@@ -51,7 +51,7 @@ public class Point implements Serializable {
     }
 
     public Direction getPrimaryDirection(Point target) {
-        if (this.equals(target)) return null;
+        if (this.equals(target) || target == null) return null;
         int xDiff = target.xPos - this.xPos;
         int yDiff = target.yPos - this.yPos;
         //LEFT or RIGHT
@@ -70,10 +70,6 @@ public class Point implements Serializable {
         return new Point(this.xPos + deltaX, this.yPos + deltaY);
     }
 
-    public Point add(Point toAdd) {
-        return new Point(this.xPos + toAdd.xPos, this.yPos + toAdd.yPos);
-    }
-
     public Point add(Direction direction) {
         return direction.translate(this);
     }
@@ -85,11 +81,8 @@ public class Point implements Serializable {
      */
     public List<Point> getNeighbours() {
         List<Point> neighbours = new ArrayList<>();
-        neighbours.add(new Point(this.xPos, this.yPos - 1));
-        neighbours.add(new Point(this.xPos - 1, this.yPos));
-        neighbours.add(new Point(this.xPos, this.yPos + 1));
-        neighbours.add(new Point(this.xPos + 1, this.yPos));
-
+        for(Direction direction : Direction.values())
+            neighbours.add(add(direction));
         return neighbours;
     }
 

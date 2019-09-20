@@ -31,7 +31,7 @@ import static de.sopra.javagame.model.ArtifactCardType.*;
 @PreCondition(allTrue = {GAME_LANDING_SITE_IS_FLOODED, GAME_ANY_PLAYER_HAS_HELICOPTER})
 public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
     private Point targetPoint;
-    private EnumSet<PlayerType> dude;
+    private PlayerType dude;
     private Point start;
 
     @Override
@@ -57,7 +57,7 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
                 && control.anyPlayerHasCard(ArtifactCardType.SANDBAGS)) {
             return null;
         }
-        dude.add(player().getType());
+        dude = player().getType();
         start = player().getPosition();
         targetPoint = control.getTile(PlayerType.PILOT).getLeft();
         return this;
@@ -65,7 +65,7 @@ public class TurnFlyActivePlayerToLandingSiteForDraining extends Decision {
 
     @Override
     public ActionQueue act() {
-        return startActionQueue().helicopterCard(start, targetPoint, dude).drain(targetPoint);
+        return startActionQueue().helicopterCard(start, targetPoint, EnumSet.of(dude)).drain(targetPoint);
     }
 
 }
