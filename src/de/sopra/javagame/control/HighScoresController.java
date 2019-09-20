@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class HighScoresController {
 
-    public static final String SCORE_FOLDER = "data/high_scores/scores/";
+    public static final String SCORE_FOLDER = "./data/high_scores/scores/";
 
-    public static final String REPLAY_FOLDER = "data/high_scores/replays/";
+    public static final String REPLAY_FOLDER = "./data/high_scores/replays/";
 
     private List<HighScore> highScores;
 
