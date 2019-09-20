@@ -24,6 +24,7 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
     private Point move;
     private Point firstDrain;
     private Point secondDrain;
+    private PlayerType playerType;
 
     @Override
     public Decision decide() {
@@ -44,6 +45,7 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
                         move = path.getLeft();
                         firstDrain = path.getRight();
                         secondDrain = path2.getRight();
+                        playerType = player().getType();
                         return this;
                     }
                 }
@@ -55,11 +57,11 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
     @Override
     public ActionQueue act() {
         boolean needSpecial = needSpecialToMove(player().getPosition(), move);
-        if (player().getType() == PlayerType.PILOT && needSpecial) {
+        if (playerType == PlayerType.PILOT && needSpecial) {
             return startActionQueue().pilotFlyTo(move).drain(firstDrain).drain(secondDrain);
-        } else if (player().getType() == PlayerType.DIVER && needSpecial) {
+        } else if (playerType == PlayerType.DIVER && needSpecial) {
             return startActionQueue().diverDiveTo(move).drain(firstDrain).drain(secondDrain);
-        } else if (player().getType() == PlayerType.ENGINEER) {
+        } else if (playerType == PlayerType.ENGINEER) {
             return startActionQueue().move(move).engineersDrain(firstDrain).engineersDrain(secondDrain);
         } else {
             return startActionQueue().move(move).drain(firstDrain).drain(secondDrain);
