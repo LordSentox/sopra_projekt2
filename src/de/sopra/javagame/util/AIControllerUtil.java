@@ -42,28 +42,27 @@ public class AIControllerUtil {
 
     private static void step(ControllerChan controllerChan, AIController controller, ActionQueue queue, SimpleAction action) {
         debugAI(" ---> decided to do: " + action.toString());
-        Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
         switch (action.getType()) {
             case MOVE:
-                movePlayer(controllerChan, action, player, false);
+                movePlayer(controllerChan, action, queue.getPlayer(), false);
                 break;
             case DRAIN:
-                drain(controllerChan, action, player);
+                drain(controllerChan, action, queue.getPlayer());
                 break;
             case DISCARD_CARD:
-                discardCard(controllerChan, action, player);
+                discardCard(controllerChan, action, queue.getPlayer());
                 break;
             case TRADE_CARD:
-                tradeCard(controllerChan, controller, action, player);
+                tradeCard(controllerChan, controller, action, queue.getPlayer());
                 break;
             case SPECIAL_CARD:
-                specialCard(controllerChan, action, player);
+                specialCard(controllerChan, action, queue.getPlayer());
                 break;
             case SPECIAL_ABILITY:
-                specialAbility(controllerChan, controller, action, player);
+                specialAbility(controllerChan, controller, action, queue.getPlayer());
                 break;
             case COLLECT_TREASURE:
-                collectTreasure(controllerChan, controller, player);
+                collectTreasure(controllerChan, controller, queue.getPlayer());
                 break;
             case WAIT_AND_DRINK_TEA:
                 endTurn(controllerChan);
@@ -71,7 +70,7 @@ public class AIControllerUtil {
         }
     }
 
-    private static void movePlayer(ControllerChan controller, SimpleAction action, Player player, boolean special) {
+    private static void movePlayer(ControllerChan controller, SimpleAction action, PlayerType playerType, boolean special) {
         //boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
         //player.move(action.getTargetPoint(), !isRescuing, isRescuing);
         //controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
@@ -80,7 +79,7 @@ public class AIControllerUtil {
         controller.getActivePlayerController().move(action.getTargetPoint(), special);
     }
 
-    private static void drain(ControllerChan controllerChan, SimpleAction action, Player player) {
+    private static void drain(ControllerChan controllerChan, SimpleAction action, PlayerType playerType) {
         //player.drain(action.getTargetPoint());
         //controllerChan.getInGameViewAUI().refreshMapTile(action.getTargetPoint(),
         //       controllerChan.getCurrentAction().getMap().get(action.getTargetPoint()));
@@ -92,7 +91,8 @@ public class AIControllerUtil {
         controllerChan.getActivePlayerController().endActionPhase();
     }
 
-    private static void specialCard(ControllerChan controllerChan, SimpleAction action, Player player) {
+    private static void specialCard(ControllerChan controllerChan, SimpleAction action, PlayerType playerType) {
+        Player player = controllerChan.getCurrentAction().getPlayer(playerType);
         int index = -1;
         for (int i = 0; i < player.getHand().size(); i++) {
             if (player.getHand().get(i).getType() == action.getCardType())
@@ -110,7 +110,8 @@ public class AIControllerUtil {
         } else debugAI("THIS SHOULD NEVER HAPPEN!!! action: " + action.toString());
     }
 
-    private static void collectTreasure(ControllerChan controllerChan, AIController controller, Player player) {
+    private static void collectTreasure(ControllerChan controllerChan, AIController controller, PlayerType playerType) {
+        Player player = controllerChan.getCurrentAction().getPlayer(playerType);
         ArtifactType artifactType = player.collectArtifact();
         if (artifactType != NONE) {
             controllerChan.getInGameViewAUI().refreshArtifactsFound();
@@ -120,22 +121,23 @@ public class AIControllerUtil {
         }
     }
 
-    private static void specialAbility(ControllerChan controllerChan, AIController controller, SimpleAction action, Player player) {
+    private static void specialAbility(ControllerChan controllerChan, AIController controller, SimpleAction action, PlayerType playerType) {
         Player targetPlayer;
-        switch (player.getType()) {
+        switch (playerType) {
 
             case COURIER:
-                tradeCard(controllerChan, controller, action, player);
+                tradeCard(controllerChan, controller, action, playerType);
                 break;
             case DIVER:
             case PILOT:
             case EXPLORER:
-                movePlayer(controllerChan, action, player, true);
+                movePlayer(controllerChan, action, playerType, true);
                 break;
             case ENGINEER:
-                drain(controllerChan, action, player);
+                drain(controllerChan, action, playerType);
                 break;
             case NAVIGATOR:
+                Player player = controllerChan.getCurrentAction().getPlayer(playerType);
                 targetPlayer = controller.getCurrentAction().getPlayer(action.getTargetPlayers().stream().findFirst().get());
                 Direction direction = targetPlayer.getPosition().getPrimaryDirection(action.getTargetPoint());
                 player.forcePush(direction, targetPlayer);
@@ -146,17 +148,19 @@ public class AIControllerUtil {
         }
     }
 
-    private static void discardCard(ControllerChan controllerChan, SimpleAction action, Player player) {
-        int index;
-        index = -1;
-        for (int i = 0; i < player.getHand().size(); i++) {
-            if (player.getHand().get(i).getType() == action.getCardType())
-                index = i;
+    private static void discardCard(ControllerChan controllerChan, SimpleAction action, PlayerType playerType) {
+        Player player = controllerChan.getCurrentAction().getPlayer(playerType);
+        List<ArtifactCard> hand = player.getHand();
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand.get(i).getType() == action.getCardType()) {
+                controllerChan.getInGameUserController().discardCard(player.getType(), i);
+                return;
+            }
         }
-        controllerChan.getInGameUserController().discardCard(player.getType(), index);
     }
 
-    private static void tradeCard(ControllerChan controllerChan, AIController controller, SimpleAction action, Player player) {
+    private static void tradeCard(ControllerChan controllerChan, AIController controller, SimpleAction action, PlayerType playerType) {
+        Player player = controllerChan.getCurrentAction().getPlayer(playerType);
         Player targetPlayer;
         ArtifactCard card = null;
         for (int i = 0; i < player.getHand().size(); i++) {

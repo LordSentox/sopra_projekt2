@@ -6,7 +6,6 @@ import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.ClassUtil;
 import de.sopra.javagame.control.ai.SimpleAction;
 import de.sopra.javagame.control.ai2.decisions.Decision;
-import de.sopra.javagame.util.DebugUtil;
 import de.sopra.javagame.util.Pair;
 
 import java.util.*;
@@ -14,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static de.sopra.javagame.control.ai2.DecisionResult.*;
 import static de.sopra.javagame.util.DebugUtil.debug;
+import static de.sopra.javagame.util.DebugUtil.debugAI;
 
 /**
  * <h1>projekt2</h1>
@@ -133,7 +133,7 @@ public class DecisionMaker implements AIProcessor {
             decision.setControl(control);
         decision = decision.decide();
         if (decision != null)
-            DebugUtil.debugAI("# made decision by " + decision.getClass().getSimpleName());
+            debugAI("# made decision by " + decision.getClass().getSimpleName());
         if (decision == null)
             decision = Decision.empty();
         return decision;
@@ -144,6 +144,7 @@ public class DecisionMaker implements AIProcessor {
     }
 
     private Decision makeDiscardDecision(AIController control) {
+        debugAI("# make discard decision");
         return decide(control, DISCARD);
     }
 

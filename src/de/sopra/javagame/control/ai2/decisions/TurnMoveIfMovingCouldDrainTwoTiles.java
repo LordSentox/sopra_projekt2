@@ -36,6 +36,7 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
         }
         List<Pair<Point, Point>> drainablePositionsOneMoveAway = control.getDrainablePositionsOneMoveAway(
                 activePlayer.getPosition(), activePlayer.getType());
+        move = null;
         if (drainablePositionsOneMoveAway.size() >= TWO_POSITIONS) {
             for (Pair<Point, Point> path : drainablePositionsOneMoveAway) {
                 for (Pair<Point, Point> path2 : drainablePositionsOneMoveAway) {
@@ -43,10 +44,10 @@ public class TurnMoveIfMovingCouldDrainTwoTiles extends Decision {
                         move = path.getLeft();
                         firstDrain = path.getRight();
                         secondDrain = path2.getRight();
+                        return this;
                     }
                 }
             }
-            return this;
         }
         return null;
     }

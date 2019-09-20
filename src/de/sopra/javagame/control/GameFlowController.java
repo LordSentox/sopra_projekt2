@@ -52,6 +52,7 @@ public class GameFlowController {
             }
             controllerChan.getInGameViewAUI().refreshArtifactStack(artifactCardStack);
             controllerChan.finishAction();
+            activePlayer = controllerChan.getCurrentAction().getActivePlayer();
         }
         controllerChan.getInGameViewAUI().refreshHand(activePlayer.getType(), activePlayer.getHand());
         if (shuffleBack) {
@@ -66,7 +67,8 @@ public class GameFlowController {
         if (activePlayer.getHand().size() > Player.MAXIMUM_HANDCARDS) {
 
             if (activePlayer.isAi()) {
-                letAIAct(activePlayer.getType()); //Lass AI über Discard entscheiden
+                for (int i = 0; i < activePlayer.getHand().size() - Player.MAXIMUM_HANDCARDS; i++)
+                    letAIAct(activePlayer.getType()); //Lass AI über Discard entscheiden
                 return;
             }
 

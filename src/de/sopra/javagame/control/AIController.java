@@ -251,10 +251,12 @@ public class AIController {
         Set<Pair<Point, Point>> drainableOneMoveAway = new HashSet<>();
         List<Point> oneMoveAway = player.legalMoves(true);
         for (Point possiblePosition : oneMoveAway) {
-            player.setPosition(possiblePosition);
-            drainableOneMoveAway.addAll(player.drainablePositions().stream()
-                    .map(pos -> new Pair<>(possiblePosition, pos))
-                    .collect(Collectors.toList()));
+            final Point finalPos = possiblePosition;
+            player.setPosition(finalPos);
+            List<Pair<Point, Point>> drainableFromHere = player.drainablePositions().stream()
+                    .map(pos -> new Pair<>(finalPos, pos))
+                    .collect(Collectors.toList());
+            drainableOneMoveAway.addAll(drainableFromHere);
         }
 
         // Entferne die Felder, die er auch ohne zusätzliche Bewegung trockenlegen konnte und gib die Übrigen zurück
