@@ -42,6 +42,10 @@ public class WaterLevel implements Copyable<WaterLevel>, Serializable {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     /**
      * erhöht das akutelle Wasserlevel um 1
      */
