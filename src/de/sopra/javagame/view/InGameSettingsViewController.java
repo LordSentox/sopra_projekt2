@@ -80,8 +80,8 @@ public class InGameSettingsViewController extends AbstractViewController {
 //        else
 
 
-        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).playBgm();
-        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).dorfPlayer.pause();
+        getGameWindow().playBgm();
+        getGameWindow().dorfPlayer.pause();
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
@@ -97,14 +97,14 @@ public class InGameSettingsViewController extends AbstractViewController {
         ((SettingsViewController)getGameWindow().getView(ViewState.SETTINGS)).init();
         SaveGameViewController.openModal(getGameWindow());
 //        changeState(ViewState.IN_GAME_SETTINGS, ViewState.SAVE_GAME);
-        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).stopBgm();
-        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).dorfPlayer.stop();
+        getGameWindow().stopBgm();
+        getGameWindow().dorfPlayer.stop();
     }
 
     public void onBackToMenuClicked() {
 
-        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).stopBgm();
-        ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).dorfPlayer.stop();
+        getGameWindow().stopBgm();
+        getGameWindow().dorfPlayer.stop();
         getGameWindow().setDeveloperSettingsActive(developerToolsCheckbox.isSelected());
         ((GamePreparationsViewController)getGameWindow().getView(ViewState.GAME_PREPARATIONS)).init();
         modalCopy.close();
