@@ -85,55 +85,10 @@ public class InGameViewController extends AbstractViewController implements InGa
     Label roundNumber;
     private Timeline timeline;
 
-    public final MediaPlayer dorfPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/villager.wav").toExternalForm()));
-    private MediaPlayer ripPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/landstrassen.wav").toExternalForm()));
-    private List<MediaPlayer> bgmPlayers;
-    private int currentBgm = 0;
 
-    {
-        File[] files = new File("resources/sounds/bgm/").listFiles();
-        List<String> wavFiles = Arrays.stream(files)
-                .map(File::getAbsolutePath)
-                .collect(Collectors.toList());
-        Collections.shuffle(wavFiles);
-        bgmPlayers = wavFiles.stream().map(fileName -> {
-            String path = Paths.get(fileName).toUri().toString();
-            debug(path);
-            MediaPlayer m = new MediaPlayer(new Media(path));
-            m.setOnEndOfMedia(() -> {
-                m.stop();
-                System.out.println("SOOOS");
-                playNext();
-            });
-            return m;
-        }).collect(Collectors.toList());
-        dorfPlayer.setVolume(1);
-    }
-
-    private void playNext() {
-        if(currentBgm == bgmPlayers.size()) {
-            currentBgm = 0;
-            Collections.shuffle(bgmPlayers);
-        }
-        bgmPlayers.get(currentBgm++).play();
-        currentBgm %= bgmPlayers.size();
-    }
-
-    public void playBgm() {
-        bgmPlayers.get(currentBgm).play();
-    }
-
-    public void pauseBgm() {
-        bgmPlayers.get(currentBgm).pause();
-    }
-
-    public void stopBgm() {
-        bgmPlayers.get(currentBgm).stop();
-    }
 
     public void init() {
-        bgmPlayers.forEach(mediaPlayer -> getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> mediaPlayer.volumeProperty().set(newVal.doubleValue() / 100.0)));
-        getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> dorfPlayer.volumeProperty().set(newVal.doubleValue() / 100.0));
+        getGameWindow().getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> getGameWindow().dorfPlayer.volumeProperty().set(newVal.doubleValue() / 100.0));
 
         this.helicopterHelper = null;
         this.rescueHelper = new RescueHelper(this);
@@ -320,11 +275,11 @@ public class InGameViewController extends AbstractViewController implements InGa
     }
 
     public void onSettingsClicked() {
-        dorfPlayer.play();
+        getGameWindow().dorfPlayer.play();
 
         try {
             InGameSettingsViewController.openModal(getGameWindow());
-            pauseBgm();
+            getGameWindow().pauseBgm();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -392,12 +347,12 @@ public class InGameViewController extends AbstractViewController implements InGa
         }
         if (notification.isGameWon()) {
             header = "Herzlichen Glückwunsch! Ihr habt die Insel besiegt.";
-            stopBgm();
-            dorfPlayer.play();
+            getGameWindow().stopBgm();
+            getGameWindow().dorfPlayer.play();
         } else if (notification.isGameLost()) {
             header = "Ihr habt leider verloren!";
-            stopBgm();
-            ripPlayer.play();
+            getGameWindow().stopBgm();
+            getGameWindow().ripPlayer.play();
         }
        getGameWindow().getControllerChan().getAiController().setActive(false);
         DialogPack endGameDialogue = new DialogPack(getGameWindow().getMainStage(), "", header, notification.message());
@@ -405,11 +360,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         endGameDialogue.setStageStyle(StageStyle.UNDECORATED);
         endGameDialogue.addButton(confirmationButtonText, () -> {
             openSaveDialogue();
-            dorfPlayer.stop();
+            getGameWindow().dorfPlayer.stop();
         });
         endGameDialogue.addButton(cancelButtonText, () -> {
             endGameBackToMenu();
-            dorfPlayer.stop();
+            getGameWindow().dorfPlayer.stop();
         });
         endGameDialogue.open();
     }
@@ -797,10 +752,13 @@ public class InGameViewController extends AbstractViewController implements InGa
             return;
         }
 
+
+
         this.getGameWindow().getControllerChan().getInGameUserController().playHelicopterCard(helicopterHelper.getCaster(),
                 helicopterHelper.getCardIndex(),
                 new Pair<>(helicopterHelper.getStartTile().getPosition(), helicopterHelper.getDestinationTile().getPosition()),
                 new ArrayList<>(helicopterHelper.getToTransportConst()));
+        getGameWindow().sugoiSugoi();
 
         // Dehighlight all and reset Helicopter card
         refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());

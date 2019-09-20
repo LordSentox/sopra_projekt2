@@ -160,7 +160,6 @@ public class ActionPicker extends CirclePopupMenu {
                     picker.mapPaneTile.getControl().setTransferActive(true);
                     picker.mapPaneTile.getControl().setTargetPlayer(picker.movingPlayer);
                     picker.mapPaneTile.getControl().refreshHand(picker.delegatingPlayer, picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getCurrentAction().getActivePlayer().getHand());
-
                 };
                 CustomMenuItem giveCardButtonMenuItem = new CustomMenuItem(new Button("give"));
                 giveCardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getGiveCard()));

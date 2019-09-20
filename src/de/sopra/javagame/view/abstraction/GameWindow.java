@@ -14,14 +14,19 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Schnittstelle für alle Views und die Controller Schicht
@@ -42,12 +47,69 @@ public class GameWindow implements NotificationAUI {
     private ViewState currentViewState;
     private boolean developerSettings;
 
+    public final MediaPlayer dorfPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/villager.wav").toExternalForm()));
+    public final MediaPlayer ripPlayer = new MediaPlayer(new Media(getClass().getResource("/sounds/landstrassen.wav").toExternalForm()));
+    public final String sugoiFile = getClass().getResource("/sounds/sugoi.wav").toExternalForm();
+    private MediaPlayer sugoiPlayer;
+    private List<String> bgmFiles;
+    private MediaPlayer currentPlayer;
+    private int currentBgm = 0;
+
     public GameWindow(Stage stage) {
         this.settings = GameSettings.load();
         this.controllerChan = new ControllerChan();
         this.views = new EnumMap<>(ViewState.class);
         this.mainStage = stage;
         stage.centerOnScreen();
+
+        File[] files = new File("resources/sounds/bgm/").listFiles();
+        bgmFiles = Arrays.stream(files)
+                .map(File::getAbsolutePath)
+                .map(Paths::get)
+                .map(Path::toUri)
+                .map(URI::toString)
+                .collect(Collectors.toList());
+        Collections.shuffle(bgmFiles);
+        dorfPlayer.setVolume(1);
+    }
+
+    private void nextBgm() {
+        if(currentBgm == bgmFiles.size()) {
+            currentBgm = 0;
+            Collections.shuffle(bgmFiles);
+        }
+
+        currentPlayer = new MediaPlayer(new Media(bgmFiles.get(currentBgm++)));
+        getSettings().getMusicVolume().addListener((x, oldVal, newVal) -> currentPlayer.volumeProperty().set(newVal.doubleValue() / 100.0));
+        currentPlayer.setOnEndOfMedia(() -> {
+            currentPlayer.stop();
+            DebugUtil.debug("SOOOS");
+            nextBgm();
+        });
+        currentBgm %= bgmFiles.size();
+    }
+
+    public void playBgm() {
+        if(currentPlayer == null) nextBgm();
+        currentPlayer.play();
+    }
+
+    public void pauseBgm() {
+        if(currentPlayer == null) nextBgm();
+        currentPlayer.pause();
+    }
+
+    public void stopBgm() {
+        if(currentPlayer == null) nextBgm();
+        currentPlayer.stop();
+    }
+
+    public void sugoiSugoi() {
+        sugoiPlayer = new MediaPlayer(new Media(sugoiFile));
+        sugoiPlayer.setVolume(1);
+        sugoiPlayer.setOnEndOfMedia(currentPlayer::play);
+        currentPlayer.pause();
+        sugoiPlayer.play();
     }
 
     public void init() throws IOException {
