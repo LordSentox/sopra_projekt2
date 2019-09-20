@@ -4,10 +4,7 @@ import de.sopra.javagame.control.AIController;
 import de.sopra.javagame.control.ControllerChan;
 import de.sopra.javagame.control.ai.ActionQueue;
 import de.sopra.javagame.control.ai.SimpleAction;
-import de.sopra.javagame.model.Action;
-import de.sopra.javagame.model.ArtifactCard;
-import de.sopra.javagame.model.ArtifactCardType;
-import de.sopra.javagame.model.ArtifactType;
+import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.Courier;
 import de.sopra.javagame.model.player.Player;
 import de.sopra.javagame.model.player.PlayerType;
@@ -47,7 +44,7 @@ public class AIControllerUtil {
                 movePlayer(controllerChan, action, queue.getPlayer(), false);
                 break;
             case DRAIN:
-                drain(controllerChan, action, queue.getPlayer());
+                drain(controllerChan, action);
                 break;
             case DISCARD_CARD:
                 discardCard(controllerChan, action, queue.getPlayer());
@@ -71,18 +68,19 @@ public class AIControllerUtil {
     }
 
     private static void movePlayer(ControllerChan controller, SimpleAction action, PlayerType playerType, boolean special) {
-        //boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
-        //player.move(action.getTargetPoint(), !isRescuing, isRescuing);
-        //controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
-
-        // TODO
-        controller.getActivePlayerController().move(action.getTargetPoint(), special);
+        Player player = controller.getCurrentAction().getPlayer(playerType);
+        boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
+        if (isRescuing) {
+            if (player.move(action.getTargetPoint(), false, playerType != PlayerType.PILOT)) {
+                controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
+                controller.getInGameViewAUI().refreshActionsLeft(player.getActionsLeft());
+                controller.finishAction();
+                debugAI("Trying to rescue a player");
+            } else debugAI("Failed to rescue player");
+        } else controller.getActivePlayerController().move(action.getTargetPoint(), special);
     }
 
-    private static void drain(ControllerChan controllerChan, SimpleAction action, PlayerType playerType) {
-        //player.drain(action.getTargetPoint());
-        //controllerChan.getInGameViewAUI().refreshMapTile(action.getTargetPoint(),
-        //       controllerChan.getCurrentAction().getMap().get(action.getTargetPoint()));
+    private static void drain(ControllerChan controllerChan, SimpleAction action) {
         controllerChan.getActivePlayerController().drain(action.getTargetPoint());
     }
 
@@ -134,7 +132,7 @@ public class AIControllerUtil {
                 movePlayer(controllerChan, action, playerType, true);
                 break;
             case ENGINEER:
-                drain(controllerChan, action, playerType);
+                drain(controllerChan, action);
                 break;
             case NAVIGATOR:
                 Player player = controllerChan.getCurrentAction().getPlayer(playerType);
