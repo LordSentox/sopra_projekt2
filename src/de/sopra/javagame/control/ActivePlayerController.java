@@ -20,6 +20,8 @@ public class ActivePlayerController {
 
     private final ControllerChan controllerChan;
 
+    private final int ONE = 1;
+
     ActivePlayerController(ControllerChan controllerChan) {
         this.controllerChan = controllerChan;
     }
@@ -124,7 +126,7 @@ public class ActivePlayerController {
                 List<Player> players = controllerChan.getGameFlowController().playersPausedToDiscard();
                 for (Player playersPaused : players) {
                     int amountOfSurplusCards = playersPaused.getHand().size() - Player.MAXIMUM_HANDCARDS;
-                    if (amountOfSurplusCards == 1) {
+                    if (amountOfSurplusCards == ONE) {
                         controllerChan.getInGameViewAUI()
                                 .showNotification("Der Spieler " + playersPaused.getName() + " (" + playersPaused.getType() + ")"
                                         + "\nhat eine Karte zu viel!\nWirf eine Karte von " + playersPaused.getName() + " ab,\num weiterspielen zu können.");

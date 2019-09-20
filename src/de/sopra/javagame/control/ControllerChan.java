@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import de.sopra.javagame.control.ai.GameAI;
 import de.sopra.javagame.model.*;
 import de.sopra.javagame.model.player.PlayerType;
+import de.sopra.javagame.util.HighScore;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Triple;
 import de.sopra.javagame.util.cardstack.CardStack;
@@ -24,7 +25,7 @@ import static de.sopra.javagame.util.DebugUtil.debug;
  */
 public class ControllerChan {
     public static final String SAVE_GAME_FOLDER = "data/save_games/";
-    public static final String REPLAY_FOLDER = "data/replays/";
+    public static final String REPLAY_FOLDER = "data/high_scores/replays/";
     public static final File SETTINGS_FILE = new File("data/settings.json");
 
     private final ActivePlayerController activePlayerController;
@@ -213,6 +214,8 @@ public class ControllerChan {
         File saveFile;
         if (gameFinished) {
             saveFile = new File(ControllerChan.REPLAY_FOLDER + this.getGameName() + ".replay");
+            HighScore score = new HighScore(gameName, getJavaGame().getMapName(), getJavaGame().calculateScore(), gameName);
+            getHighScoresController().saveHighScore(score);
         } else {
             saveFile = new File( ControllerChan.SAVE_GAME_FOLDER + this.getGameName() + ".save");
         }

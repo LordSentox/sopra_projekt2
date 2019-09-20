@@ -357,8 +357,12 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     public void onFloodCardDrawStackClicked() {
         if ((getGameWindow().getControllerChan().getCurrentAction() != null &&
-                getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD))
+                getGameWindow().getControllerChan().getCurrentAction().getState() == TurnState.FLOOD)) {
             this.getGameWindow().getControllerChan().getGameFlowController().drawFloodCard();
+            if (getGameWindow().getControllerChan().getCurrentAction() != null) {
+                refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
+            }
+        }
     }
 
     public void setFloodCardStackHighlighted(boolean highlight) {
@@ -367,6 +371,9 @@ public class InGameViewController extends AbstractViewController implements InGa
             styleClass.add(HIGHLIGHT);
         else if (!highlight)
             styleClass.removeIf(s -> s.equals(HIGHLIGHT));
+        if (getGameWindow().getControllerChan().getCurrentAction() != null) {
+        refreshFloodStack(getGameWindow().getControllerChan().getCurrentAction().getFloodCardStack());
+        }
     }
 
     @Override
@@ -539,7 +546,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         for (int i = 0; i < stack.size(); i += 2) {
             CardView v = new FloodCardView(MapTileProperties.values()[(new Random().nextInt(7))], ACTIVE_CARD_SIZE);
             v.showBackImage();
-            v.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> onFloodCardDrawStackClicked());
+            v.addEventFilter(MouseEvent.MOUSE_CLICKED, (event) -> {onFloodCardDrawStackClicked();});
             floodCardDrawStackGridPane.getChildren().add(v);
             GridPane.setConstraints(v, i, 0);
         }
@@ -560,7 +567,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     @Override
     public void refreshPlayerPosition(Point position, PlayerType player) {
         mapPane.movePlayer(position, player);
-        resetHighlighting();
+        refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
     }
 
     //TODO neue refresh map einbauen
@@ -578,7 +585,7 @@ public class InGameViewController extends AbstractViewController implements InGa
     public void refreshActivePlayer() {
         Action action = this.getGameWindow().getControllerChan().getCurrentAction();
         refreshPlayerCardImages(action);
-        resetHighlighting();
+        refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 
         roundNumber.setText("Runde: " + getGameWindow().getControllerChan().getJavaGame().numTurns());
     }
@@ -637,8 +644,7 @@ public class InGameViewController extends AbstractViewController implements InGa
         Point targetPoint = recommendation.getTargetPoint();
         ArtifactCardType card = recommendation.getCardType();
         String notification = "";
-
-        resetHighlighting();
+        refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
 
         switch (recommendation.getType()) {
             case MOVE:
@@ -682,7 +688,11 @@ public class InGameViewController extends AbstractViewController implements InGa
         resetHighlighting();
         switch (turnState) {
             case PLAYER_ACTION:
-                this.rotateTurnSpinner(0);
+                this.refreshActionsLeft(getGameWindow()
+                        .getControllerChan()
+                        .getCurrentAction()
+                        .getActivePlayer()
+                        .getActionsLeft());
                 this.endTurnButton.setDisable(false);
                 break;
             case DRAW_ARTIFACT_CARD:
@@ -703,10 +713,8 @@ public class InGameViewController extends AbstractViewController implements InGa
 
     @Override
     public void refreshHopefullyAll(Action action) {
-        resetHighlighting();
         resetTargetPlayer();
         setSpecialActive(false);
-        System.out.println(action.getDiscoveredArtifacts().size());
         //refreshArtifacts found
         highlightArtifacts(action.getDiscoveredArtifacts());
         //refresh active player
@@ -773,7 +781,7 @@ public class InGameViewController extends AbstractViewController implements InGa
                 new ArrayList<>(helicopterHelper.getToTransportConst()));
 
         // Dehighlight all and reset Helicopter card
-        this.resetHighlighting();
+        refreshTurnState(getGameWindow().getControllerChan().getCurrentAction().getState());
         this.helicopterHelper = null;
     }
 

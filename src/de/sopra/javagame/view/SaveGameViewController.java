@@ -1,5 +1,6 @@
 package de.sopra.javagame.view;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import de.sopra.javagame.util.DebugUtil;
@@ -34,6 +35,8 @@ public class SaveGameViewController extends AbstractViewController {
     Label loadMapViewLabel, notificationLabel;
     @FXML
     JFXTextField saveGameTextField;
+    @FXML
+    JFXButton saveGameButton, backButton;
 
     private Stage modalCopy;
     private File[] loadFiles;
