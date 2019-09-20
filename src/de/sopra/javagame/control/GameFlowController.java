@@ -137,14 +137,12 @@ public class GameFlowController {
             gameLostNotification();
             return;
         }
-
         if (checkIsLost(position, tile)) {
             controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
             controllerChan.getCurrentAction().setGameEnded(true);
             controllerChan.getCurrentAction().setGameWon(false);
             gameLostNotification();
         }
-
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
         endFloodCardDrawAction(floodCardCardStack);
     }
@@ -279,11 +277,11 @@ public class GameFlowController {
     }
 
     //KI wenn sie sich retten soll
-    private void makeMoveToRescue(PlayerType type) {
+    /*private void makeMoveToRescue(PlayerType type) {
         //KI auffordern sich selbst zu retten
         //KI erkennt die Rettungssituation indem der gegebene Spieler auf MapTile mit GONE steht
         letAIAct(type);
-    }
+    }*/
 
     //KI - Neuer Zug
     public void beginNewTurn() {
