@@ -247,7 +247,8 @@ public class AIController {
 
         // Bewege den Spieler zu allen Positionen, zu denen er darf und schaue, welche Felder er dann trockenlegen darf
         Set<Pair<Point, Point>> drainableOneMoveAway = new HashSet<>();
-        for (Point possiblePosition : player.legalMoves(true)) {
+        List<Point> oneMoveAway = player.legalMoves(true);
+        for (Point possiblePosition : oneMoveAway) {
             player.setPosition(possiblePosition);
             drainableOneMoveAway.addAll(player.drainablePositions().stream().map(pos -> new Pair<>(possiblePosition, pos)).collect(Collectors.toList()));
         }
