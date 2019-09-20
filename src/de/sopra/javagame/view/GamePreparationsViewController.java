@@ -114,7 +114,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         editDifficultyComboBox.getItems().addAll("Novize", "Normal", "Elite", "Legende");
         editDifficultyComboBox.getSelectionModel().select(0);
 
-        disablePlayerThreeAndFour(!getGameWindow().getSettings().devToolsEnabled().get());
+        disablePlayerThreeAndFour(!getGameWindow().getDeveloperSettings());
 
 
         initComboBox(chooseMapComboBox, MapController.MAP_FOLDER, DOT_MAP_ENDING_LENGTH, null);
@@ -126,9 +126,9 @@ public class GamePreparationsViewController extends AbstractViewController {
         chooseMapComboBox.getSelectionModel().selectLast();
         cannotStartGameLabel.setTextFill(Paint.valueOf("#FF0000"));
 
-        makeDeveloperToolsVisible(getGameWindow().getSettings().devToolsEnabled().get());
+        makeDeveloperToolsVisible(getGameWindow().getDeveloperSettings());
 
-        if (getGameWindow().getSettings().devToolsEnabled().get()) {
+        if (getGameWindow().getDeveloperSettings()) {
             playerOneNameTextField.setText("Hartmut im Spanienurlaub");
             playerOneChooseCharakterComboBox.getSelectionModel().select("Taucher");
             playerTwoNameTextField.setText("Hartmut trägt Pizza aus");
@@ -256,7 +256,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         addPlayerThreeToggleButton.setSelected(false);
         addPlayerFourToggleButton.setSelected(false);
 
-        if (!getGameWindow().getSettings().devToolsEnabled().get()) {
+        if (!getGameWindow().getDeveloperSettings()) {
             
             if (chooseMapComboBox.getValue() == null) {
                 cannotStartGameLabel.setText("Es ist keine Map ausgewählt");

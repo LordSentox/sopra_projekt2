@@ -18,8 +18,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -178,11 +176,18 @@ public class MapPaneTile extends StackPane implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
-        // Wenn Spieler zum Helikoptern ausgewählt wurden, sollen sie geflogen werden
-        //control.getGameWindow().getControllerChan().getInGameUserController().playHelicopterCard();
+        // Wenn die momentane Aktion null ist, ist nichts zu tun
+        if (control.getGameWindow().getControllerChan().getCurrentAction() == null)
+            return;
 
         MapTile tile = control.getGameWindow().getControllerChan().getCurrentAction().getMap().get(this.position);
         DebugUtil.debug("Peace brudi, das tile is " + tile + ": " + position.xPos + ", " + position.yPos + " " + tile.getState());
+
+        // Wenn der gerade ein Spieler gerettet werden soll, versuche ihn hier zu retten.
+        PlayerType rescueing = this.getControl().getRescueHelper().getCurrentlyRescueing();
+        if (this.getControl().getRescueHelper().isCurrentlyRescueing() && rescueing != PlayerType.NONE) {
+            this.getControl().getGameWindow().getControllerChan().getInGameUserController().rescueMove(rescueing, this.position);
+        }
 
         // Wenn gerade eine Helikopterkarte gespielt wird, und das Tile angeklickt wird, versuche abzuheben
         if (this.getControl().getHelicopterHelper() != null && this.getControl().getHelicopterHelper().getDestinationTile() != this) {

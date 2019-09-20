@@ -79,7 +79,7 @@ public class SaveGameViewController extends AbstractViewController {
     public void onSaveGameClicked() {
         String selectedGame = saveGameTextField.getText();
         if (selectedGame.isEmpty()) {
-            showNotificatoin("Das Feld ist nicht ausgefüllt");
+            showNotification("Das Feld ist nicht ausgefüllt");
             return;
         }
         getGameWindow().getControllerChan().saveGame(selectedGame);
@@ -109,7 +109,7 @@ public class SaveGameViewController extends AbstractViewController {
         stage.requestFocus();
     }
 
-    public void showNotificatoin(String notification) {
+    public void showNotification(String notification) {
         notificationLabel.setText(notification);
     }
 

@@ -12,12 +12,10 @@ import de.sopra.javagame.view.HighScoresViewAUI;
 import de.sopra.javagame.view.InGameViewAUI;
 import de.sopra.javagame.view.MapEditorViewAUI;
 import de.sopra.javagame.view.abstraction.Notification;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.Field;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -225,6 +223,11 @@ public class TestDummy {
         @Override
         public void refreshHopefullyAll(Action action) {
             refreshedAll++;
+        }
+
+        @Override
+        public void refreshPlayersToRescue(Set<PlayerType> players) {
+            throw new NotImplementedException();
         }
 
         @Override

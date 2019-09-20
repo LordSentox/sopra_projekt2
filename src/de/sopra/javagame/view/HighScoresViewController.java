@@ -52,6 +52,9 @@ public class HighScoresViewController extends AbstractViewController implements 
 
 
         File scoreFile = new File(HighScoresController.SCORE_FOLDER);
+        System.out.println(scoreFile.isDirectory());
+        File[] myScores = scoreFile.listFiles();
+       
         File[] scoreFiles = scoreFile.listFiles(file -> !file.getName().startsWith(".")
                 && file.getName().endsWith(".score") && file.getName().length() > 6);
         List<String> scoreNames = Arrays.stream(scoreFiles).map(File::getName).collect(Collectors.toList());
