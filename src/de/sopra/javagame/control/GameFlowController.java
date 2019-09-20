@@ -156,8 +156,10 @@ public class GameFlowController {
         }
 
         if (lost) {
-            gameLostNotification();
             controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
+            controllerChan.getCurrentAction().setGameEnded(true);
+            controllerChan.getCurrentAction().setGameWon(false);
+            gameLostNotification();
         }
 
         // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
