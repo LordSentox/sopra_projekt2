@@ -138,6 +138,16 @@ public class GameFlowController {
             return;
         }
 
+        if (checkIsLost(position, tile)) {
+            gameLostNotification();
+            controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
+        }
+
+        // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
+        endFloodCardDrawAction(floodCardCardStack);
+    }
+
+    private boolean checkIsLost(Point position, MapTile tile) {
         // Überprüfe, ob das Spiel verloren ist, wenn das Tile untergeht und ein Spieler darauf sich nicht retten kann
         boolean lost = false;
         if (tile.getState() == GONE) {
@@ -154,14 +164,7 @@ public class GameFlowController {
             if (!controllerChan.getCurrentAction().getDiscoveredArtifacts().contains(hidden))
                 lost |= hidden != NONE && controllerChan.getCurrentAction().getMap().stream().filter(til -> til.getProperties().getHidden() == hidden && til.getState() == GONE).count() == 2;
         }
-
-        if (lost) {
-            gameLostNotification();
-            controllerChan.getInGameViewAUI().refreshHopefullyAll(controllerChan.getCurrentAction());
-        }
-
-        // Wenn der Spieler keine Flutkarten mehr ziehen muss ended der Zug.
-        endFloodCardDrawAction(floodCardCardStack);
+        return lost;
     }
 
 
