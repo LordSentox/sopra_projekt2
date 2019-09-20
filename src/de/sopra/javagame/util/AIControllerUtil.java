@@ -44,7 +44,7 @@ public class AIControllerUtil {
         Player player = controller.getCurrentAction().getPlayer(queue.getPlayer());
         switch (action.getType()) {
             case MOVE:
-                movePlayer(controllerChan, action, player);
+                movePlayer(controllerChan, action, player, false);
                 break;
             case DRAIN:
                 drain(controllerChan, action, player);
@@ -70,13 +70,13 @@ public class AIControllerUtil {
         }
     }
 
-    private static void movePlayer(ControllerChan controller, SimpleAction action, Player player) {
+    private static void movePlayer(ControllerChan controller, SimpleAction action, Player player, boolean special) {
         //boolean isRescuing = controller.getAiController().getTile(player.getPosition()).getState() == MapTileState.GONE;
         //player.move(action.getTargetPoint(), !isRescuing, isRescuing);
         //controller.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
 
         // TODO
-        controller.getActivePlayerController().move(action.getTargetPoint(), false);
+        controller.getActivePlayerController().move(action.getTargetPoint(), special);
     }
 
     private static void drain(ControllerChan controllerChan, SimpleAction action, Player player) {
@@ -129,8 +129,7 @@ public class AIControllerUtil {
             case DIVER:
             case PILOT:
             case EXPLORER:
-                player.move(action.getTargetPoint(), true, true);
-                controllerChan.getInGameViewAUI().refreshPlayerPosition(action.getTargetPoint(), player.getType());
+                movePlayer(controllerChan, action, player, true);
                 break;
             case ENGINEER:
                 drain(controllerChan, action, player);
