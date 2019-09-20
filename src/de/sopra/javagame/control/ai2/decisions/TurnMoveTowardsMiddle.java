@@ -25,11 +25,8 @@ public class TurnMoveTowardsMiddle extends Decision {
 
     @Override
     public Decision decide() {
-
         Collection<Point> points = action().getMap().validPoints();
-
         List<Path> paths = new LinkedList<>();
-
         //erstelle alle Pfade, werden nicht doppelt erstellt
         for (Point start : points) {
             for (Point target : points) {
@@ -39,9 +36,32 @@ public class TurnMoveTowardsMiddle extends Decision {
                     paths.add(path);
             }
         }
-
         //suche den Punkt, dessen weitester Weg zu einem anderen Punkt, der kürzeste im Vergleich zu allen anderen ist
         int min = 100;
+        setMin(points,min,paths);
+//        for (Point point : points) {
+//            //maximale Strecke zu einem anderen Punkt
+//            int max = paths.stream()
+//                    .filter(path -> path.hasPoint(point))
+//                    .map(Path::getMinActions)
+//                    .reduce(Integer::max).get();
+//            if (max < min) {
+//                min = max;
+//                middle = point;
+//            }
+//        }
+        //wenn der Spieler da schon steht, passts
+        Point playerPosition = player().getPosition();
+        if (playerPosition.equals(middle) || middle == null)
+            return null;
+        //Punkt auf einen erreichbaren Punkt setzen
+        if (!player().legalMoves(true).contains(middle))
+            middle = playerPosition.getPrimaryDirection(middle).translate(playerPosition);
+        return this;
+    }
+    
+    //cause PMD
+    public void setMin(Collection<Point> points, int min, List<Path> paths){
         for (Point point : points) {
             //maximale Strecke zu einem anderen Punkt
             int max = paths.stream()
@@ -53,18 +73,6 @@ public class TurnMoveTowardsMiddle extends Decision {
                 middle = point;
             }
         }
-
-        //wenn der Spieler da schon steht, passts
-        Point playerPosition = player().getPosition();
-        if (playerPosition.equals(middle))
-            return null;
-
-        //Punkt auf einen erreichbaren Punkt setzen
-        if (!player().legalMoves(true).contains(middle))
-            middle = playerPosition.getPrimaryDirection(middle).translate(playerPosition);
-
-
-        return this;
     }
 
     @Override

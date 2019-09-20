@@ -272,9 +272,9 @@ public class GamePreparationsViewController extends AbstractViewController {
             
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", currentMap, playerList, difficulty);
-            System.out.println(chooseMapComboBox.getSelectionModel().getSelectedItem() );
-            System.out.println(chooseMapComboBox.getValue());
-            System.out.println(currentMap);
+            debug(chooseMapComboBox.getSelectionModel().getSelectedItem() );
+            debug(chooseMapComboBox.getValue());
+            debug(currentMap.toString());
         } else {
             
             if (chooseDeveloperMapComboBox.getValue() == null) {
@@ -302,6 +302,7 @@ public class GamePreparationsViewController extends AbstractViewController {
             
             
             this.getGameWindow().getControllerChan().startNewGame("Coole Carte", tournamentTriple, playerList, difficulty);
+            ((InGameViewController) this.getGameWindow().getControllerChan().getInGameViewAUI()).playBgm();
         }
         
         getGameWindow().getControllerChan().getInGameViewAUI().refreshHopefullyAll(getGameWindow().getControllerChan().getCurrentAction());
@@ -310,6 +311,7 @@ public class GamePreparationsViewController extends AbstractViewController {
         // this.getGameWindow().getControllerChan().startNewGame("vulcan_island", new MapLoader().loadMap("vulcan_island"), playerList, difficulty);
 
         getGameWindow().getControllerChan().getInGameViewAUI().refreshWaterLevel(getGameWindow().getControllerChan().getCurrentAction().getWaterLevel().getLevel());
+        getGameWindow().getControllerChan().getAiController().setActive(true);
     }
     
     public void onDeveloperCardStacksClicked () {

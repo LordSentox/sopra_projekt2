@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static de.sopra.javagame.util.DebugUtil.debug;
+
 
 public class ActionPicker extends CirclePopupMenu {
 
@@ -98,6 +100,9 @@ public class ActionPicker extends CirclePopupMenu {
                                     .mapPaneTile
                                     .getControl()
                                     .isSpecialActive());
+                    picker.mapPaneTile.getControl().resetHighlighting();
+                    debug("view - delegate move to: " + picker.mapPaneTile.getPosition().toString()
+                            + " -> with special: " + picker.mapPaneTile.getControl().isSpecialActive());
                 };
                 CustomMenuItem moveButtonMenuItem = new CustomMenuItem(new Button("move"));
                 moveButtonMenuItem.setGraphic(new ImageView(TextureLoader.getMove()));
@@ -113,6 +118,7 @@ public class ActionPicker extends CirclePopupMenu {
                     picker.mapPaneTile.getControl().getGameWindow().getControllerChan()
                             .getActivePlayerController().drain(picker.mapPaneTile.getPosition());
                     picker.mapPaneTile.getControl().resetHighlighting();
+                    debug("view delegate drain: " + picker.mapPaneTile.getPosition().toString());
                 };
                 CustomMenuItem drainButtonMenuItem = new CustomMenuItem(new Button("drain"));
                 drainButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
@@ -138,6 +144,7 @@ public class ActionPicker extends CirclePopupMenu {
                         picker.mapPaneTile.getControl().resetHighlighting();
                         picker.mapPaneTile.getControl().setTargetPlayer(picker.movingPlayer);
                         controllerChan.getInGameUserController().showMovements(picker.movingPlayer, false);
+                        debug("navigator clicked on different player, showing movements for: " + picker.movingPlayer.name());
                     }
                 };
                 CustomMenuItem specialButtonMenuItem = new CustomMenuItem(new Button("move"));
@@ -168,7 +175,7 @@ public class ActionPicker extends CirclePopupMenu {
             @Override
             public CustomMenuItem apply(ActionPicker picker) {
                 EventHandler<ActionEvent> findArtifactHandler = e -> picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getActivePlayerController().collectArtifact();
-                CustomMenuItem findArtifactButtonMenuItem = new CustomMenuItem(new Button("move"));
+                CustomMenuItem findArtifactButtonMenuItem = new CustomMenuItem(new Button("collect_artifact"));
                 findArtifactButtonMenuItem.setGraphic(new ImageView(TextureLoader.getFindArtifact()));
                 findArtifactButtonMenuItem.setOnAction(findArtifactHandler);
 
@@ -200,7 +207,7 @@ public class ActionPicker extends CirclePopupMenu {
 
                     }
                 };
-                CustomMenuItem playcardButtonMenuItem = new CustomMenuItem(new Button("special"));
+                CustomMenuItem playcardButtonMenuItem = new CustomMenuItem(new Button("play_card"));
                 playcardButtonMenuItem.setGraphic(new ImageView(TextureLoader.getSpecial()));
                 playcardButtonMenuItem.setOnAction(playCardHandler);
 
@@ -215,19 +222,13 @@ public class ActionPicker extends CirclePopupMenu {
                     @Override
                     public void handle(ActionEvent e) {
                         //SANDBAG
-                        System.out.println("on card clicked: " + "keine card mehr? " + picker.cardIndex + " " + picker.movingPlayer + " " + picker.mapPaneTile.getPosition());
+                        debug("on card clicked: " + "keine card mehr? " + picker.cardIndex + " " + picker.movingPlayer + " " + picker.mapPaneTile.getPosition());
                         picker.mapPaneTile.getControl().getGameWindow().getControllerChan().getInGameUserController().playSandbagCard(picker.movingPlayer, picker.cardIndex,
                                 picker.mapPaneTile.getPosition());
                         picker.mapPaneTile.getControl().resetTargetPlayer();
-                        picker.mapPaneTile.getControl().resetHighlighting();
-                        ControllerChan cChan = picker.mapPaneTile.getControl().getGameWindow().getControllerChan();
-                        Action currentAction = cChan.getCurrentAction();
-                        if(!cChan.getGameFlowController().isPausedToDiscard()){
-                            currentAction.setFloodCardsToDraw(currentAction.getWaterLevel().getLevel());
-                        }
                     }
                 };
-                CustomMenuItem sandBagButtonMenuItem = new CustomMenuItem(new Button("special"));
+                CustomMenuItem sandBagButtonMenuItem = new CustomMenuItem(new Button("sandbag"));
                 sandBagButtonMenuItem.setGraphic(new ImageView(TextureLoader.getDrain()));
                 sandBagButtonMenuItem.setOnAction(sandBagHandler);
 

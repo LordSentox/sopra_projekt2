@@ -6,7 +6,6 @@ import de.sopra.javagame.model.player.PlayerType;
 import de.sopra.javagame.util.Pair;
 import de.sopra.javagame.util.Point;
 import de.sopra.javagame.util.map.MapFull;
-import de.sopra.javagame.view.abstraction.Notification;
 import de.sopra.javagame.view.abstraction.Notifications;
 
 import java.util.ArrayList;
@@ -77,7 +76,9 @@ public class InGameUserController {
         PlayerType sourcePlayer = sourceInformation.getLeft();
         int handCardIndex = sourceInformation.getRight();
         //entferne die gespielte Karte von der Spieler-Hand
+        currentAction.getArtifactCardStack().discard((currentAction.getPlayer(sourcePlayer).getHand().get(handCardIndex)));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
+        currentAction = controllerChan.finishAction();
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
         //bewege die players
         for (PlayerType currentPlayerType : players) {
@@ -215,7 +216,9 @@ public class InGameUserController {
         }
 
         //entferne die gespielte Karte von der Spieler-Hand
+        currentAction.getArtifactCardStack().discard(handCards.get(handCardIndex));
         currentAction.getPlayer(sourcePlayer).getHand().remove(handCardIndex);
+        currentAction = controllerChan.finishAction();
         controllerChan.getInGameViewAUI().refreshHand(sourcePlayer, currentAction.getPlayer(sourcePlayer).getHand());
 
         //lege das gewählte MapTile trocken
@@ -238,7 +241,7 @@ public class InGameUserController {
         //Prüfe, ob genug Karten auf der Hand des Spielers vorhanden sind
         if (handCards.size() <= Player.MAXIMUM_HANDCARDS) {
             controllerChan.getInGameViewAUI().showNotification("Es darf keine Karte abgeworfen werden!");
-            throw new IllegalStateException("Es darf keine Karte abgeworfen werden!");
+            return;
         }
         //Falls sich am handCardIndex des sourcePlayers keine Karte befindet war der Aufruf ungültig
         if (handCards.size() <= handCardIndex || handCards.get(handCardIndex) == null) {
